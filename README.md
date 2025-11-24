@@ -4,12 +4,16 @@ AI Marketplace & App Store Platform - Frontend Application
 
 ## 🚀 Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
-- **UI Library:** React 18
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Component Library:** shadcn/ui
-- **Hosting:** Vercel
+- **Framework:** Next.js 15.0.3 (App Router, Turbopack, React 19)
+- **UI Library:** React 19.0.0 (Server Components, Actions)
+- **Language:** TypeScript 5.7.2 (Strict Mode)
+- **Styling:** Tailwind CSS 3.4.15
+- **Component Library:** shadcn/ui (Radix UI Primitives)
+- **Authentication:** NextAuth.js v5 (Auth.js)
+- **Payments:** Stripe 17.3.1 SDK + @stripe/stripe-js 4.10.0
+- **Icons:** Lucide React 0.460.0
+- **Validation:** Zod 3.23.8
+- **Hosting:** Vercel (Edge Network)
 - **CI/CD:** GitHub Actions
 
 ---
@@ -28,19 +32,20 @@ AI Marketplace & App Store Platform - Frontend Application
 ┌─────────────────────────────────────────────────────────────────┐
 │                      VERCEL EDGE NETWORK                         │
 │  ┌────────────────────────────────────────────────────────┐     │
-│  │              Next.js 14 Application                     │     │
+│  │              Next.js 15 Application                     │     │
 │  │  ┌──────────────────────────────────────────────┐      │     │
 │  │  │         App Router (RSC + Client)            │      │     │
-│  │  │  • Server Components (Default)               │      │     │
+│  │  │  • Server Components (Default, React 19)     │      │     │
 │  │  │  • Client Components ('use client')          │      │     │
-│  │  │  • Server Actions (Form submissions)         │      │     │
+│  │  │  • Server Actions (Type-safe mutations)      │      │     │
+│  │  │  • Turbopack (Dev bundler)                   │      │     │
 │  │  └──────────────────────────────────────────────┘      │     │
 │  │                                                          │     │
 │  │  ┌──────────────────────────────────────────────┐      │     │
-│  │  │          React 18 Components                 │      │     │
+│  │  │          React 19 Components                 │      │     │
 │  │  │  • shadcn/ui Design System                   │      │     │
-│  │  │  • Radix UI Primitives                       │      │     │
-│  │  │  • Tailwind CSS Styling                      │      │     │
+│  │  │  • Radix UI Primitives (Latest)              │      │     │
+│  │  │  • Tailwind CSS 3.4.15 Styling               │      │     │
 │  │  └──────────────────────────────────────────────┘      │     │
 │  └────────────────────────────────────────────────────────┘     │
 └───────────────┬──────────────────────────────────────────────────┘
@@ -244,10 +249,11 @@ beelia-frontend/
 │
 ├── .env.local                           # Environment variables
 ├── .gitignore
-├── next.config.js                       # Next.js config
-├── package.json
-├── tailwind.config.ts                   # Tailwind config
-├── tsconfig.json                        # TypeScript config
+├── next.config.ts                       # Next.js 15 config (TypeScript)
+├── package.json                         # Dependencies (latest)
+├── tailwind.config.ts                   # Tailwind 3.4.15 config
+├── tsconfig.json                        # TypeScript 5.7 config
+├── postcss.config.js                    # PostCSS config
 ├── components.json                      # shadcn/ui config
 └── README.md
 ```
@@ -264,12 +270,12 @@ beelia-frontend/
 
 ## 🚦 Getting Started
 
-**Prerequisites:** Node.js 18+, npm/yarn/pnpm
+**Prerequisites:** Node.js 18+ or Bun 1.0+
 
 ```bash
-npm install
+bun install
 cp .env.example .env.local
-npm run dev
+bun dev
 ```
 
 **Environment:** `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`
