@@ -252,382 +252,53 @@ beelia-frontend/
 └── README.md
 ```
 
-### Component Flow Diagram
+### User Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    USER INTERACTION FLOW                     │
-└─────────────────────────────────────────────────────────────┘
-
-1. Homepage Visit
-   ┌──────────┐
-   │ page.tsx │ → Server Component (RSC)
-   └────┬─────┘
-        │
-        ├─→ Header (navigation)
-        ├─→ HeroSection (marketing)
-        ├─→ FeaturedTools (tool cards)
-        └─→ Footer
-
-2. Browse Marketplace
-   ┌──────────────────┐
-   │ marketplace/     │ → Server Component
-   │ page.tsx         │    Fetches tools server-side
-   └────┬─────────────┘
-        │
-        ├─→ SearchBar ('use client')
-        │   └─→ useDebounce hook
-        │
-        ├─→ FilterPanel ('use client')
-        │   └─→ Category selection
-        │       └─→ Price range filter
-        │
-        └─→ ToolGrid (Server Component)
-            └─→ ToolCard[] ('use client')
-                └─→ onClick → navigate to tool detail
-
-3. View Tool Details
-   ┌──────────────────┐
-   │ tools/[id]/      │ → Server Component
-   │ page.tsx         │    Dynamic route
-   └────┬─────────────┘
-        │
-        ├─→ Fetch tool data (RSC)
-        │
-        ├─→ ToolDetail component
-        │   ├─→ Images carousel
-        │   ├─→ Description
-        │   ├─→ Features list
-        │   └─→ Reviews
-        │
-        └─→ PricingCard ('use client')
-            └─→ "Buy Now" button
-                └─→ onClick → initiate checkout
-
-4. Checkout Flow
-   ┌──────────────────┐
-   │ checkout/        │ → Client Component
-   │ page.tsx         │    'use client'
-   └────┬─────────────┘
-        │
-        ├─→ CheckoutForm
-        │   ├─→ Stripe Elements
-        │   └─→ Payment details
-        │
-        ├─→ Server Action: createCheckout()
-        │   └─→ POST /api/stripe/checkout
-        │       └─→ Stripe Checkout Session
-        │
-        └─→ Redirect to Stripe
-            └─→ On success → /checkout/success
-            └─→ On cancel → /checkout/cancel
-
-5. User Dashboard
-   ┌──────────────────┐
-   │ dashboard/       │ → Protected route
-   │ page.tsx         │    Middleware check
-   └────┬─────────────┘
-        │
-        ├─→ StatsCard (purchases, favorites)
-        ├─→ PurchaseList
-        │   └─→ Fetch /api/user/purchases
-        │
-        └─→ RecentActivity timeline
-```
-
-### State Management Pattern
-
-```typescript
-// Server Component (Default - No 'use client')
-// app/marketplace/page.tsx
-async function MarketplacePage() {
-  // Direct database/API calls on server
-  const tools = await fetchTools();
-  
-  return (
-    <div>
-      <SearchBar /> {/* Client Component */}
-      <ToolGrid tools={tools} /> {/* Server Component */}
-    </div>
-  );
-}
-
-// Client Component
-// components/marketplace/search-bar.tsx
-'use client';
-
-import { useState } from 'react';
-import { useDebounce } from '@/lib/hooks/use-debounce';
-
-export function SearchBar() {
-  const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query, 300);
-  
-  // Client-side interactivity
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
-  
-  return <input onChange={handleSearch} />;
-}
-
-// Server Action (Form submission)
-// app/actions/checkout.ts
-'use server';
-
-export async function createCheckoutSession(formData: FormData) {
-  const toolId = formData.get('toolId');
-  
-  // Server-side logic
-  const session = await stripe.checkout.sessions.create({
-    // ... configuration
-  });
-  
-  redirect(session.url);
-}
-```
-
-### API Integration Pattern
-
-```typescript
-// lib/api/client.ts
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-export async function apiClient<T>(
-  endpoint: string,
-  options?: RequestInit
-): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-  });
-  
-  if (!response.ok) {
-    throw new Error(`API Error: ${response.statusText}`);
-  }
-  
-  return response.json();
-}
-
-// lib/api/tools.ts
-import { apiClient } from './client';
-import { Tool } from '@/lib/types/tool';
-
-export async function getTools(): Promise<Tool[]> {
-  return apiClient<Tool[]>('/api/tools');
-}
-
-export async function getToolById(id: string): Promise<Tool> {
-  return apiClient<Tool>(`/api/tools/${id}`);
-}
-```
-
----
-
-## 🎨 Styling Architecture
-
-### Tailwind CSS + shadcn/ui Pattern
-
-```typescript
-// Using cn() utility for conditional classes
-import { cn } from '@/lib/utils/cn';
-
-export function ToolCard({ featured, className }: Props) {
-  return (
-    <div
-      className={cn(
-        // Base styles
-        "rounded-lg border bg-card p-6 shadow-sm transition-all",
-        // Conditional styles
-        featured && "border-primary ring-2 ring-primary/20",
-        // User override
-        className
-      )}
-    >
-      {/* Content */}
-    </div>
-  );
-}
-```
-
-### Theme Configuration
-
-```typescript
-// tailwind.config.ts
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        // ... other theme colors
-      },
-    },
-  },
-};
+1. Homepage → Browse Marketplace → Tool Details → Checkout → Success
+2. User Registration/Login → Dashboard → View Purchases
+3. Search & Filter → Tool Results → Tool Selection
 ```
 
 ---
 
 ## 🚦 Getting Started
 
-### Prerequisites
-
-- Node.js 18+ and npm/yarn/pnpm
-- Git
-
-### Installation
+**Prerequisites:** Node.js 18+, npm/yarn/pnpm
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd beelia-frontend
-
-# Install dependencies
 npm install
-
-# Set up environment variables
 cp .env.example .env.local
-
-# Run development server
 npm run dev
 ```
 
-### Environment Variables
+**Environment:** `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_SECRET_KEY`
 
-```bash
-# .env.local
-NEXT_PUBLIC_API_URL=https://api.beelia.ai
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_SECRET_KEY=sk_test_...
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-### Build & Deploy
-
-```bash
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Deploy to Vercel (automatic via GitHub integration)
-git push origin main
-```
+**Deploy:** Push to main branch → Auto-deploy via Vercel
 
 ---
 
-## 📦 Key Features Implementation
+## 📦 Key Features
 
-### 1. Server Components (Default)
-- Fast initial page loads
-- Zero JavaScript by default
-- Direct database/API access
-- SEO-friendly
-
-### 2. Client Components ('use client')
-- Interactive UI elements
-- Form handling
-- Real-time updates
-- Browser APIs
-
-### 3. Server Actions
-- Type-safe mutations
-- Progressive enhancement
-- No API routes needed for forms
-
-### 4. Streaming & Suspense
-- Instant page transitions
-- Loading states
-- Partial page updates
+- **Server Components** - Fast SSR, SEO-friendly
+- **Client Components** - Interactive UI with 'use client'
+- **Server Actions** - Type-safe mutations
+- **Streaming & Suspense** - Progressive loading
 
 ---
 
-## 🔐 Authentication Flow
+## 🔐 Authentication
 
-```
-User Login
-   ↓
-NextAuth.js
-   ↓
-JWT Token (httpOnly cookie)
-   ↓
-Middleware validates token
-   ↓
-Protected routes accessible
-```
+**Flow:** NextAuth.js → JWT (httpOnly) → Middleware validation → Protected routes
 
----
+## 💳 Payments
 
-## 💳 Payment Integration (Stripe)
+**Flow:** Buy Now → Server Action → Stripe Checkout → Payment → Webhook → DB Update → Success
 
-```
-1. User clicks "Buy Now"
-2. Frontend calls Server Action
-3. Server Action creates Stripe Checkout Session
-4. User redirected to Stripe
-5. Payment completed
-6. Stripe webhook → Backend
-7. Database updated
-8. User redirected to success page
-```
+## ⚡ Performance
 
----
-
-## 📊 Performance Optimization
-
-- **Image Optimization**: Next.js Image component
-- **Code Splitting**: Automatic route-based splitting
-- **Lazy Loading**: Dynamic imports for heavy components
-- **Caching**: Vercel Edge Network + ISR
-- **Font Optimization**: next/font for custom fonts
-
----
-
-## 🧪 Testing
-
-```bash
-# Unit tests
-npm run test
-
-# E2E tests
-npm run test:e2e
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-```
-
----
-
-## 📚 Additional Resources
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [React Documentation](https://react.dev)
-- [shadcn/ui Components](https://ui.shadcn.com)
-- [Tailwind CSS](https://tailwindcss.com)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs)
-
----
-
-## 👥 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
----
+- Next.js Image optimization
+- Automatic code splitting
+- Vercel Edge caching + ISR
+- Dynamic imports for heavy components
 
