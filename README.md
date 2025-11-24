@@ -631,6 +631,3 @@ npm run lint
 
 ---
 
-## 📄 License
-
-[Your License Here]
