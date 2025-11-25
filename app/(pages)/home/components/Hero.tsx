@@ -1,10 +1,24 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { Button } from "@/components/ui";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export function Hero() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 640);
+    
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 640);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="relative flex min-h-screen w-full flex-col items-start justify-start overflow-hidden bg-black">
       {/* Background Ripple Effect */}
@@ -50,6 +64,41 @@ export function Hero() {
             </Button>
           </motion.div>
         </div>
+
+        {/* Product Preview */}
+        <motion.div 
+          className="mt-12 sm:mt-16 md:mt-20 px-4 sm:px-6 lg:px-8"
+          initial={{ opacity: 0, y: 60 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6, ease: 'easeOut' }}
+        >
+          <div className="relative rounded-none sm:rounded-t-[44px] overflow-visible border-x-0 sm:border-2 border-[#FEDA24] border-b-0 shadow-2xl max-w-full sm:max-w-[1800px] mx-auto"
+            style={{
+              boxShadow: '0 0 30px rgba(254, 218, 36, 0.5), 0 0 60px rgba(254, 218, 36, 0.3), 0 0 90px rgba(239, 148, 31, 0.2)',
+            }}
+          >
+            <Image
+              src="/images/dashboard.png"
+              alt="Beelia.ai Dashboard Preview"
+              width={1920}
+              height={1080}
+              className="w-full h-auto relative z-10 rounded-none sm:rounded-t-[44px]"
+              priority
+            />
+            {/* Animated shadow overlay */}
+            <motion.div 
+              className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-20"
+              animate={{
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            />
+          </div>
+        </motion.div>
       </div>
     </div>
   );

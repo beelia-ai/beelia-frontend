@@ -104,6 +104,90 @@
     animation: gradient-shift 3s ease-in-out infinite;
   }
 
+  @keyframes border-beam {
+    0% {
+      offset-distance: 0%;
+    }
+    100% {
+      offset-distance: 100%;
+    }
+  }
+
+  .animate-border-beam {
+    animation: border-beam 4s linear infinite;
+  }
+
+  @keyframes border-beam-top {
+    0% {
+      left: 0%;
+      opacity: 0;
+    }
+    5% {
+      opacity: 1;
+    }
+    28% {
+      opacity: 1;
+    }
+    33% {
+      left: 100%;
+      opacity: 0;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes border-beam-right {
+    0%, 33% {
+      top: 0%;
+      opacity: 0;
+    }
+    38% {
+      opacity: 1;
+    }
+    61% {
+      opacity: 1;
+    }
+    66% {
+      top: 100%;
+      opacity: 0;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes border-beam-left {
+    0%, 66% {
+      bottom: 0%;
+      opacity: 0;
+    }
+    71% {
+      opacity: 1;
+    }
+    94% {
+      opacity: 1;
+    }
+    100% {
+      bottom: 100%;
+      opacity: 0;
+    }
+  }
+
+  .animate-border-beam-top {
+    animation: border-beam-top 10s ease-in-out infinite;
+  }
+
+  .animate-border-beam-right {
+    animation: border-beam-right 10s ease-in-out infinite;
+  }
+
+  .animate-border-beam-left {
+    animation: border-beam-left 10s ease-in-out infinite;
+  }
+
   @keyframes cell-ripple {
     0% {
       opacity: 0.5;

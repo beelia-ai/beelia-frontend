@@ -41,8 +41,8 @@ export function Navbar() {
                 className="relative px-4 py-2 text-gray-300 hover:text-white rounded-lg transition-colors group"
               >
                 <span className="text-sm font-medium">{item.name}</span>
-                {/* Animated underline */}
-                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left" />
+                {/* Animated underline with Beelia colors */}
+                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-[#FEDA24] to-[#EF941F] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left" />
               </Link>
             ))}
             <div className="ml-4">

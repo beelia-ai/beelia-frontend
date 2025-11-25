@@ -18,7 +18,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     
     const variants = {
       primary: 'bg-black text-white border-2 border-black focus-visible:ring-gray-500',
-      secondary: 'bg-white text-black border-2 border-white focus-visible:ring-gray-500',
+      secondary: 'bg-gradient-to-r from-[#FEDA24] to-[#EF941F] text-black border-2 border-[#FEDA24] focus-visible:ring-[#EF941F]',
       outline: 'border-2 border-white text-white focus-visible:ring-gray-500',
       ghost: 'text-white border-2 border-transparent focus-visible:ring-gray-500',
       danger: 'bg-red-600 text-white border-2 border-red-600 focus-visible:ring-red-500',
@@ -26,7 +26,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     
     const fillColors = {
       primary: 'white',
-      secondary: 'black',
+      secondary: 'linear-gradient(to right, #EF941F, #FEDA24)',
       outline: 'white',
       ghost: 'rgba(255, 255, 255, 0.1)',
       danger: 'transparent',
@@ -34,7 +34,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     
     const textColors = {
       primary: 'group-hover:text-black',
-      secondary: 'group-hover:text-white',
+      secondary: 'group-hover:text-black',
       outline: 'group-hover:text-black',
       ghost: 'group-hover:text-white',
       danger: 'group-hover:text-red-600',
