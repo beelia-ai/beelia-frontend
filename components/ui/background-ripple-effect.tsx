@@ -23,8 +23,7 @@ export const BackgroundRippleEffect = ({
       ref={ref}
       className={cn(
         "absolute inset-0 h-full w-full",
-        "[--cell-border-color:var(--color-neutral-300)] [--cell-fill-color:var(--color-neutral-100)] [--cell-shadow-color:var(--color-neutral-500)]",
-        "dark:[--cell-border-color:var(--color-neutral-700)] dark:[--cell-fill-color:var(--color-neutral-900)] dark:[--cell-shadow-color:var(--color-neutral-800)]",
+        "[--cell-border-color:rgba(254,218,36,0.5)] [--cell-fill-color:rgba(254,218,36,0.1)] [--cell-shadow-color:rgba(254,218,36,0.6)]"
       )}
     >
       <div className="relative h-auto w-auto overflow-hidden">
@@ -71,8 +70,8 @@ const DivGrid = ({
   rows = 7,
   cols = 30,
   cellSize = 56,
-  borderColor = "#3f3f46",
-  fillColor = "rgba(14,165,233,0.3)",
+  borderColor = "rgba(254,218,36,0.5)",
+  fillColor = "rgba(254,218,36,0.1)",
   clickedCell = null,
   onCellClick = () => {},
   interactive = true,
@@ -113,8 +112,8 @@ const DivGrid = ({
           <div
             key={idx}
             className={cn(
-              "cell relative border-[0.5px] opacity-40 transition-opacity duration-150 will-change-transform hover:opacity-80 dark:shadow-[0px_0px_40px_1px_var(--cell-shadow-color)_inset]",
-              clickedCell && "animate-cell-ripple [animation-fill-mode:none]",
+              "cell relative border-[0.5px] opacity-50 transition-opacity duration-150 will-change-transform hover:opacity-90",
+              clickedCell && "animate-cell-ripple",
               !interactive && "pointer-events-none",
             )}
             style={{

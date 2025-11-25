@@ -89,4 +89,41 @@
   .animate-breathing {
     animation: breathing 3s ease-in-out infinite;
   }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% auto;
+    animation: gradient-shift 3s ease-in-out infinite;
+  }
+
+  @keyframes cell-ripple {
+    0% {
+      opacity: 0.5;
+      background-color: rgba(254, 218, 36, 0.1);
+      border-color: rgba(254, 218, 36, 0.5);
+    }
+    50% {
+      opacity: 1;
+      background-color: rgba(254, 218, 36, 0.25);
+      border-color: rgba(254, 218, 36, 0.8);
+    }
+    100% {
+      opacity: 0.5;
+      background-color: rgba(254, 218, 36, 0.1);
+      border-color: rgba(254, 218, 36, 0.5);
+    }
+  }
+
+  .animate-cell-ripple {
+    animation: cell-ripple var(--duration, 200ms) ease-out forwards var(--delay, 0ms);
+  }
 }
+
