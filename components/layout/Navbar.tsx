@@ -21,13 +21,13 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center group">
+          <Link href="/" className="flex items-center">
             <Image
               src="/icons/Beelia.svg"
               alt="Beelia.ai"
               width={136}
               height={36}
-              className="h-9 w-auto group-hover:opacity-80 transition-opacity"
+              className="h-9 w-auto"
               priority
             />
           </Link>
@@ -38,13 +38,15 @@ export function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                className="relative px-4 py-2 text-gray-300 hover:text-white rounded-lg transition-colors group"
               >
                 <span className="text-sm font-medium">{item.name}</span>
+                {/* Animated underline */}
+                <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left" />
               </Link>
             ))}
             <div className="ml-4">
-              <Button size="sm" className="bg-white text-black hover:bg-gray-200">
+              <Button size="sm" variant="secondary">
                 Join Waitlist
               </Button>
             </div>
@@ -85,7 +87,8 @@ export function Navbar() {
           ))}
           <div className="pt-4 space-y-2 border-t border-white/5">
             <Button
-              className="w-full justify-center bg-white text-black hover:bg-gray-200"
+              variant="secondary"
+              className="w-full justify-center"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Join Waitlist
