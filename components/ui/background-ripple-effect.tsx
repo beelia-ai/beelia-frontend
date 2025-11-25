@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export const BackgroundRippleEffect = ({
@@ -17,6 +17,28 @@ export const BackgroundRippleEffect = ({
   } | null>(null);
   const [rippleKey, setRippleKey] = useState(0);
   const ref = useRef<any>(null);
+
+  useEffect(() => {
+    const triggerRandomRipple = () => {
+      const randomRow = Math.floor(Math.random() * rows);
+      const randomCol = Math.floor(Math.random() * cols);
+      setClickedCell({ row: randomRow, col: randomCol });
+      setRippleKey((k) => k + 1);
+    };
+
+    // Trigger first ripple after a short delay
+    const initialDelay = setTimeout(triggerRandomRipple, 2000);
+
+    // Then trigger random ripples every 4-6 seconds
+    const interval = setInterval(() => {
+      triggerRandomRipple();
+    }, Math.random() * 2000 + 4000); // Random interval between 4-6 seconds
+
+    return () => {
+      clearTimeout(initialDelay);
+      clearInterval(interval);
+    };
+  }, [rows, cols]);
 
   return (
     <div
@@ -41,7 +63,7 @@ export const BackgroundRippleEffect = ({
             setClickedCell({ row, col });
             setRippleKey((k) => k + 1);
           }}
-          interactive
+          interactive={false}
         />
       </div>
     </div>
