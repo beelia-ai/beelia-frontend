@@ -20,12 +20,12 @@ export function Hero() {
   }, []);
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-start justify-start overflow-hidden bg-black">
+    <div className="relative flex min-h-screen w-full flex-col items-start justify-between overflow-hidden bg-black">
       {/* Background Ripple Effect */}
       <BackgroundRippleEffect />
       
       {/* Content Container */}
-      <div className="relative z-10 w-full mt-60">
+      <div className="relative z-10 w-full mt-60 flex-1 flex flex-col justify-between">
         <div className="text-center space-y-6 sm:space-y-8 px-4 sm:px-6 lg:px-8">
           {/* Main heading with stagger animation */}
           <motion.h1 
@@ -67,12 +67,12 @@ export function Hero() {
 
         {/* Product Preview */}
         <motion.div 
-          className="mt-12 sm:mt-16 md:mt-20 px-4 sm:px-6 lg:px-8"
+          className="mt-auto px-0 sm:px-6 lg:px-8 sm:mt-16 md:mt-20"
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6, ease: 'easeOut' }}
         >
-          <div className="relative rounded-none sm:rounded-t-[44px] overflow-visible border-x-0 sm:border-2 border-[#FEDA24] border-b-0 shadow-2xl max-w-full sm:max-w-[1800px] mx-auto"
+          <div className="relative rounded-none sm:rounded-t-[44px] overflow-visible border-x-0 sm:border-2 border-[#FEDA24] border-b-0 shadow-2xl max-w-full sm:max-w-5xl lg:max-w-6xl mx-auto"
             style={{
               boxShadow: '0 0 30px rgba(254, 218, 36, 0.5), 0 0 60px rgba(254, 218, 36, 0.3), 0 0 90px rgba(239, 148, 31, 0.2)',
             }}
