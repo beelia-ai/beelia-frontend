@@ -1,4 +1,5 @@
 export { Hero } from './Hero'
+export { MainHero } from './MainHero'
 export { Features } from './Features'
 export { HowItWorks } from './HowItWorks'
 export { PopularTools } from './PopularTools'

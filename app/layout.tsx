@@ -1,9 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Navbar } from '@/components/layout';
+import { Inter, Inria_Sans, Instrument_Serif } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
+const inriaSans = Inria_Sans({ 
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-inria-sans'
+});
+const instrumentSerif = Instrument_Serif({ 
+  weight: ['400'],
+  style: ['italic'],
+  subsets: ['latin'],
+  variable: '--font-instrument-serif'
+});
 
 export const metadata: Metadata = {
   title: 'Beelia.ai - AI Marketplace',
@@ -24,8 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Navbar />
+      <body className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable}`}>
         {children}
       </body>
     </html>
