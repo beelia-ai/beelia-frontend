@@ -18,6 +18,10 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        'inria-sans': ['var(--font-inria-sans)', 'sans-serif'],
+        'instrument-serif': ['var(--font-instrument-serif)', 'serif'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
