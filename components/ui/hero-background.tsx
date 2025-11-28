@@ -13,10 +13,10 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
   return (
     <div
       className={cn("relative w-full h-screen flex items-center justify-center bg-black", className)}
-      style={style}
+      style={{ ...style, zIndex: 1 }}
     >
       {/* Liquid Ether Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <LiquidEther
           colors={['#FEDA24', '#EF941F', '#FEDA24']}
           mouseForce={40}
@@ -37,7 +37,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
       </div>
       
       {/* Honeycomb Background with fade - above background, behind logo */}
-      <div className="absolute inset-0 z-5 h-screen flex items-center justify-center">
+      <div className="absolute inset-0 h-screen flex items-center justify-center" style={{ zIndex: 2 }}>
         <div className="relative w-full h-full">
           <Image
             src="/images/honeycomb.svg"
@@ -60,7 +60,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
       </div>
       
       {/* Centered Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center gap-8">
+      <div className="relative flex flex-col items-center justify-center gap-8" style={{ zIndex: 3 }}>
         {/* Tagline Text */}
         <p 
           className="text-white uppercase text-center max-w-[658px] opacity-80"
