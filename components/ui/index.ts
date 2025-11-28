@@ -16,11 +16,14 @@ export type { BadgeProps } from './badge'
 export { Input } from './input'
 export type { InputProps } from './input'
 
-export { default as FluidGlass } from './fluid-glass'
-export type { FluidGlassProps } from './fluid-glass'
-
 export { default as LiquidEther } from './liquid-ether'
 export type { LiquidEtherProps } from './liquid-ether'
 
 export { HeroBackground } from './hero-background'
 export type { HeroBackgroundProps } from './hero-background'
+
+export { WaitlistButton } from './waitlist-button'
+export type { WaitlistButtonProps } from './waitlist-button'
+
+export { FluidGlassButton } from './fluid-glass-button'
+export type { FluidGlassButtonProps } from './fluid-glass-button'
