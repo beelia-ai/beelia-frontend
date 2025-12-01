@@ -92,8 +92,8 @@ export default function BubbleMenu({
   const containerClassName = [
     'bubble-menu',
     useFixedPosition ? 'fixed' : 'absolute',
-    'left-0 right-0 top-8',
-    'flex items-center justify-between',
+    'left-0 top-8',
+    'flex items-center justify-start',
     'gap-4 px-8',
     'pointer-events-none',
     'z-[1001]',
@@ -237,81 +237,53 @@ export default function BubbleMenu({
       `}</style>
 
       <nav className={containerClassName} style={style} aria-label="Main navigation">
-        <div
-          className={[
-            'bubble logo-bubble',
-            'inline-flex items-center justify-center',
-            'rounded-full',
-            'bg-white',
-            'shadow-[0_4px_16px_rgba(0,0,0,0.12)]',
-            'pointer-events-auto',
-            'h-12 md:h-14',
-            'px-4 md:px-8',
-            'gap-2',
-            'will-change-transform'
-          ].join(' ')}
-          aria-label="Logo"
-          style={{
-            background: menuBg,
-            minHeight: '48px',
-            borderRadius: '9999px'
-          }}
-        >
-          <span
-            className={['logo-content', 'inline-flex items-center justify-center', 'w-[120px] h-full'].join(' ')}
-            style={
-              {
-                ['--logo-max-height']: '60%',
-                ['--logo-max-width']: '100%'
-              } as CSSProperties
-            }
-          >
-            {typeof logo === 'string' ? (
-              <img src={logo} alt="Logo" className="bubble-logo max-h-[60%] max-w-full object-contain block" />
-            ) : (
-              logo
-            )}
-          </span>
-        </div>
-
         <button
           type="button"
           className={[
             'bubble toggle-bubble menu-btn',
             isMenuOpen ? 'open' : '',
-            'inline-flex flex-col items-center justify-center',
-            'rounded-full',
-            'bg-white',
-            'shadow-[0_4px_16px_rgba(0,0,0,0.12)]',
+            'inline-flex items-center gap-4',
             'pointer-events-auto',
-            'w-12 h-12 md:w-14 md:h-14',
             'border-0 cursor-pointer p-0',
-            'will-change-transform'
+            'will-change-transform',
+            'bg-transparent'
           ].join(' ')}
           onClick={handleToggle}
           aria-label={menuAriaLabel}
           aria-pressed={isMenuOpen}
-          style={{ background: menuBg }}
+          style={{ background: 'transparent' }}
         >
+          <div className="flex flex-col items-center justify-center">
+            <span
+              className="menu-line block rounded-[2px]"
+              style={{
+                width: 44,
+                height: 2,
+                background: '#fff',
+                transform: isMenuOpen ? 'translateY(5px) rotate(45deg)' : 'none'
+              }}
+            />
+            <span
+              className="menu-line block rounded-[2px]"
+              style={{
+                marginTop: '8px',
+                width: 44,
+                height: 2,
+                background: '#fff',
+                transform: isMenuOpen ? 'translateY(-5px) rotate(-45deg)' : 'none'
+              }}
+            />
+          </div>
           <span
-            className="menu-line block mx-auto rounded-[2px]"
+            className="font-inria-sans font-normal uppercase text-white"
             style={{
-              width: 26,
-              height: 2,
-              background: menuContentColor,
-              transform: isMenuOpen ? 'translateY(4px) rotate(45deg)' : 'none'
+              fontSize: '21px',
+              lineHeight: '100%',
+              letterSpacing: '0.06em',
             }}
-          />
-          <span
-            className="menu-line short block mx-auto rounded-[2px]"
-            style={{
-              marginTop: '6px',
-              width: 26,
-              height: 2,
-              background: menuContentColor,
-              transform: isMenuOpen ? 'translateY(-4px) rotate(-45deg)' : 'none'
-            }}
-          />
+          >
+            menu
+          </span>
         </button>
       </nav>
 
@@ -413,3 +385,4 @@ export default function BubbleMenu({
     </>
   );
 }
+
