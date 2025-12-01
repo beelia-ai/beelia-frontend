@@ -316,7 +316,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   };
 
   const glassSurfaceClasses =
-    'relative flex items-center justify-center overflow-hidden transition-opacity duration-[260ms] ease-out';
+    'relative flex items-center justify-center overflow-hidden transition-opacity duration-[260ms] ease-out transition-all duration-700 ease-out';
 
   const focusVisibleClasses = isDarkMode
     ? 'focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2'
@@ -329,8 +329,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
       style={getContainerStyles()}
     >
       <svg
-        className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10"
+        className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10 transition-all duration-700 ease-out"
         xmlns="http://www.w3.org/2000/svg"
+        style={{
+          filter: 'transition: all 0.7s ease-out',
+        }}
       >
         <defs>
           <filter id={filterId} colorInterpolationFilters="sRGB" x="-10%" y="-10%" width="120%" height="120%">
