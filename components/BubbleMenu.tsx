@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import GlassSurface from '@/components/GlassSurface';
 
 type MenuItem = {
   label: string;
@@ -34,35 +35,35 @@ const DEFAULT_ITEMS: MenuItem[] = [
     href: '#',
     ariaLabel: 'Home',
     rotation: -8,
-    hoverStyles: { bgColor: '#3b82f6', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'rgba(59, 130, 246, 0.4)', textColor: '#ffffff' }
   },
   {
     label: 'about',
     href: '#',
     ariaLabel: 'About',
     rotation: 8,
-    hoverStyles: { bgColor: '#10b981', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'rgba(16, 185, 129, 0.4)', textColor: '#ffffff' }
   },
   {
     label: 'projects',
     href: '#',
     ariaLabel: 'Documentation',
     rotation: 8,
-    hoverStyles: { bgColor: '#f59e0b', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'rgba(245, 158, 11, 0.4)', textColor: '#ffffff' }
   },
   {
     label: 'blog',
     href: '#',
     ariaLabel: 'Blog',
     rotation: 8,
-    hoverStyles: { bgColor: '#ef4444', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'rgba(239, 68, 68, 0.4)', textColor: '#ffffff' }
   },
   {
     label: 'contact',
     href: '#',
     ariaLabel: 'Contact',
     rotation: -8,
-    hoverStyles: { bgColor: '#8b5cf6', textColor: '#ffffff' }
+    hoverStyles: { bgColor: 'rgba(139, 92, 246, 0.4)', textColor: '#ffffff' }
   }
 ];
 
@@ -188,6 +189,12 @@ export default function BubbleMenu({
           transition: transform 0.3s ease, opacity 0.3s ease;
           transform-origin: center;
         }
+        .beelia-gradient-text {
+          background: linear-gradient(135deg, #FEDA24 0%, #EF941F 50%, #FEDA24 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
         .bubble-menu-items .pill-list .pill-col:nth-child(4):nth-last-child(2) {
           margin-left: calc(100% / 6);
         }
@@ -197,11 +204,6 @@ export default function BubbleMenu({
         @media (min-width: 900px) {
           .bubble-menu-items .pill-link {
             transform: rotate(var(--item-rot));
-          }
-          .bubble-menu-items .pill-link:hover {
-            transform: rotate(var(--item-rot)) scale(1.06);
-            background: var(--hover-bg) !important;
-            color: var(--hover-color) !important;
           }
           .bubble-menu-items .pill-link:active {
             transform: rotate(var(--item-rot)) scale(.94);
@@ -221,14 +223,8 @@ export default function BubbleMenu({
             overflow: visible;
           }
           .bubble-menu-items .pill-link {
-            font-size: clamp(1.2rem, 3vw, 4rem);
             padding: clamp(1rem, 2vw, 2rem) 0;
             min-height: 80px !important;
-          }
-          .bubble-menu-items .pill-link:hover {
-            transform: scale(1.06);
-            background: var(--hover-bg);
-            color: var(--hover-color);
           }
           .bubble-menu-items .pill-link:active {
             transform: scale(.94);
@@ -327,55 +323,40 @@ export default function BubbleMenu({
                   role="menuitem"
                   href={item.href}
                   aria-label={item.ariaLabel || item.label}
-                  className={[
-                    'pill-link',
-                    'w-full',
-                    'rounded-[999px]',
-                    'no-underline',
-                    'bg-white',
-                    'text-inherit',
-                    'shadow-[0_4px_14px_rgba(0,0,0,0.10)]',
-                    'flex items-center justify-center',
-                    'relative',
-                    'transition-[background,color] duration-300 ease-in-out',
-                    'box-border',
-                    'whitespace-nowrap overflow-hidden'
-                  ].join(' ')}
-                  style={
-                    {
-                      ['--item-rot']: `${item.rotation ?? 0}deg`,
-                      ['--pill-bg']: menuBg,
-                      ['--pill-color']: menuContentColor,
-                      ['--hover-bg']: item.hoverStyles?.bgColor || '#f3f4f6',
-                      ['--hover-color']: item.hoverStyles?.textColor || menuContentColor,
-                      background: 'var(--pill-bg)',
-                      color: 'var(--pill-color)',
-                      minHeight: 'var(--pill-min-h, 160px)',
-                      padding: 'clamp(1.5rem, 3vw, 8rem) 0',
-                      fontSize: 'clamp(1.5rem, 4vw, 4rem)',
-                      fontWeight: 400,
-                      lineHeight: 0,
-                      willChange: 'transform',
-                      height: 10
-                    } as CSSProperties
-                  }
+                  className="pill-link w-full no-underline"
+                  style={{
+                    ['--item-rot' as string]: `${item.rotation ?? 0}deg`,
+                    ['--hover-bg' as string]: item.hoverStyles?.bgColor || 'rgba(255, 255, 255, 0.3)',
+                    ['--hover-color' as string]: item.hoverStyles?.textColor || '#fff',
+                  }}
                   ref={el => {
                     if (el) bubblesRef.current[idx] = el;
                   }}
                 >
-                  <span
-                    className="pill-label inline-block"
-                    style={{
-                      willChange: 'transform, opacity',
-                      height: '1.2em',
-                      lineHeight: 1.2
-                    }}
-                    ref={el => {
-                      if (el) labelRefs.current[idx] = el;
-                    }}
+                  <GlassSurface
+                    width="100%"
+                    height={160}
+                    borderRadius={999}
+                    chromaticAberration={0.25}
+                    className="w-full hover:scale-105 transition-transform duration-300"
                   >
-                    {item.label}
-                  </span>
+                    <span
+                      className="pill-label inline-block font-inria-sans font-normal uppercase beelia-gradient-text"
+                      style={{
+                        willChange: 'transform, opacity',
+                        fontSize: 'clamp(2rem, 5vw, 4rem)',
+                        lineHeight: '100%',
+                        letterSpacing: '0.06em',
+                        color: '#FEDA24',
+                        textShadow: '0 0 30px rgba(254, 218, 36, 0.8), 0 0 60px rgba(239, 148, 31, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
+                      }}
+                      ref={el => {
+                        if (el) labelRefs.current[idx] = el;
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                  </GlassSurface>
                 </a>
               </li>
             ))}
