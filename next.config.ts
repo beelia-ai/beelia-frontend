@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     domains: ['assets.beelia.ai'],
     formats: ['image/avif', 'image/webp'],

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Inria_Sans, Instrument_Serif } from 'next/font/google';
-import { Navbar } from '@/components/layout';
+// import { Navbar } from '@/components/layout';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -31,12 +31,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable}`}>
-        <Navbar />
+      <body className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
+        {/* <Navbar /> */}
         {children}
       </body>
     </html>

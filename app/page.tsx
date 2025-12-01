@@ -1,12 +1,21 @@
-import Image from 'next/image'
-import { MainHero } from './(pages)/home/components'
+"use client";
+
+// import Image from 'next/image'
+// import { MainHero } from './(pages)/home/components'
+import dynamic from 'next/dynamic'
+
+const Scene = dynamic(() => import('@/components/liquid-button/Scene'), {
+  ssr: false,
+  loading: () => <div className="w-full h-screen" />,
+})
 
 export default function HomePage() {
   return (
     <main className="min-h-screen" style={{ isolation: 'isolate' }}>
-      <MainHero />
+      <Scene key="scene" />
+      {/* <MainHero />
       
-      {/* Demo Section 1 - Gradient Background */}
+      Demo Section 1 - Gradient Background
       <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
         <div className="text-center">
           <Image 
@@ -20,7 +29,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Section 2 - Dark with Logo */}
+      Demo Section 2 - Dark with Logo
       <section className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
           <Image 
@@ -34,7 +43,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Section 3 - Colorful Stripes */}
+      Demo Section 3 - Colorful Stripes
       <section className="min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 flex" style={{ zIndex: -1 }}>
           <div className="flex-1 bg-red-500" />
@@ -57,7 +66,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Section 4 - Gradient */}
+      Demo Section 4 - Gradient
       <section className="min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">
         <div className="text-center">
           <Image 
@@ -71,7 +80,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Section 5 - Pattern */}
+      Demo Section 5 - Pattern
       <section className="min-h-screen flex items-center justify-center bg-white overflow-hidden">
         <div 
           className="absolute inset-0 opacity-20"
@@ -99,7 +108,7 @@ export default function HomePage() {
           />
           <p className="mt-8 text-black text-2xl font-light">Test refraction on pattern</p>
         </div>
-      </section>
+      </section> */}
     </main>
   )
 }

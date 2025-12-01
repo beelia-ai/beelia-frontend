@@ -22,8 +22,5 @@ export type { LiquidEtherProps } from './liquid-ether'
 export { HeroBackground } from './hero-background'
 export type { HeroBackgroundProps } from './hero-background'
 
-export { GlassButton } from './glass-button'
-export type { GlassButtonProps } from './glass-button'
 
-export { LiquidGlassButton } from './liquid-glass-button'
-export type { LiquidGlassButtonProps } from './liquid-glass-button'
+
