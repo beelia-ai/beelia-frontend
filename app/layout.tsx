@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Inria_Sans, Instrument_Serif } from 'next/font/google';
-// import { Navbar } from '@/components/layout';
+import NavbarClient from '@/components/layout/NavbarClient';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
-        {/* <Navbar /> */}
+        <NavbarClient />
         {children}
       </body>
     </html>

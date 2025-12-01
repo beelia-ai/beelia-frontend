@@ -1,18 +1,12 @@
 "use client";
 
 // import Image from 'next/image'
-// import { MainHero } from './(pages)/home/components'
-import dynamic from 'next/dynamic'
-
-const Scene = dynamic(() => import('@/components/liquid-button/Scene'), {
-  ssr: false,
-  loading: () => <div className="w-full h-screen" />,
-})
+import { MainHero } from './(pages)/home/components'
 
 export default function HomePage() {
   return (
     <main className="min-h-screen" style={{ isolation: 'isolate' }}>
-      <Scene key="scene" />
+      <MainHero />
       {/* <MainHero />
       
       Demo Section 1 - Gradient Background
