@@ -18,6 +18,7 @@ export interface GlassSurfaceProps {
   blueOffset?: number;
   xChannel?: 'R' | 'G' | 'B';
   yChannel?: 'R' | 'G' | 'B';
+  chromaticAberration?: number;
   mixBlendMode?:
     | 'normal'
     | 'multiply'
@@ -77,6 +78,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   xChannel = 'R',
   yChannel = 'G',
   mixBlendMode = 'difference',
+  chromaticAberration = 0.15,
   className = '',
   style = {}
 }) => {
@@ -91,6 +93,9 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const greenChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const blueChannelRef = useRef<SVGFEDisplacementMapElement>(null);
   const gaussianBlurRef = useRef<SVGFEGaussianBlurElement>(null);
+  const redOffsetRef = useRef<SVGFEOffsetElement>(null);
+  const greenOffsetRef = useRef<SVGFEOffsetElement>(null);
+  const blueOffsetRef = useRef<SVGFEOffsetElement>(null);
 
   const isDarkMode = useDarkMode();
 
@@ -141,6 +146,21 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     });
 
     gaussianBlurRef.current?.setAttribute('stdDeviation', displace.toString());
+
+    // Apply chromatic aberration offsets
+    const aberrationAmount = chromaticAberration * 2; // Scale for visual effect
+    if (redOffsetRef.current) {
+      redOffsetRef.current.setAttribute('dx', (-aberrationAmount).toString());
+      redOffsetRef.current.setAttribute('dy', (-aberrationAmount * 0.5).toString());
+    }
+    if (greenOffsetRef.current) {
+      greenOffsetRef.current.setAttribute('dx', '0');
+      greenOffsetRef.current.setAttribute('dy', '0');
+    }
+    if (blueOffsetRef.current) {
+      blueOffsetRef.current.setAttribute('dx', aberrationAmount.toString());
+      blueOffsetRef.current.setAttribute('dy', (aberrationAmount * 0.5).toString());
+    }
   }, [
     width,
     height,
@@ -156,7 +176,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     blueOffset,
     xChannel,
     yChannel,
-    mixBlendMode
+    mixBlendMode,
+    chromaticAberration
   ]);
 
   useEffect(() => {
@@ -312,9 +333,10 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+          <filter id={filterId} colorInterpolationFilters="sRGB" x="-10%" y="-10%" width="120%" height="120%">
             <feImage ref={feImageRef} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" />
 
+            {/* Red channel with chromatic aberration offset */}
             <feDisplacementMap ref={redChannelRef} in="SourceGraphic" in2="map" id="redchannel" result="dispRed" />
             <feColorMatrix
               in="dispRed"
@@ -323,9 +345,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
                       0 0 0 0 0
                       0 0 0 0 0
                       0 0 0 1 0"
-              result="red"
+              result="redChannel"
             />
+            <feOffset ref={redOffsetRef} in="redChannel" result="red" dx="0" dy="0" />
 
+            {/* Green channel (centered, no offset) */}
             <feDisplacementMap
               ref={greenChannelRef}
               in="SourceGraphic"
@@ -340,9 +364,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
                       0 1 0 0 0
                       0 0 0 0 0
                       0 0 0 1 0"
-              result="green"
+              result="greenChannel"
             />
+            <feOffset ref={greenOffsetRef} in="greenChannel" result="green" dx="0" dy="0" />
 
+            {/* Blue channel with chromatic aberration offset */}
             <feDisplacementMap ref={blueChannelRef} in="SourceGraphic" in2="map" id="bluechannel" result="dispBlue" />
             <feColorMatrix
               in="dispBlue"
@@ -351,9 +377,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
                       0 0 0 0 0
                       0 0 1 0 0
                       0 0 0 1 0"
-              result="blue"
+              result="blueChannel"
             />
+            <feOffset ref={blueOffsetRef} in="blueChannel" result="blue" dx="0" dy="0" />
 
+            {/* Blend RGB channels with chromatic aberration */}
             <feBlend in="red" in2="green" mode="screen" result="rg" />
             <feBlend in="rg" in2="blue" mode="screen" result="output" />
             <feGaussianBlur ref={gaussianBlurRef} in="output" stdDeviation="0.7" />

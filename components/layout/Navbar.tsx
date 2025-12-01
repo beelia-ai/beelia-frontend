@@ -10,6 +10,7 @@ export function Navbar() {
         width={245}
         height={65}
         borderRadius={50}
+        chromaticAberration={0.25}
         className="group cursor-pointer hover:scale-45 transition-transform"
       >
         <div className="w-full flex items-center justify-end gap-3 pr-6">
