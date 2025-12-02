@@ -18,7 +18,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
       {/* Liquid Ether Background */}
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <LiquidEther
-          colors={['#FEDA24', '#EF941F', '#FEDA24']}
+          colors={['#FFD700', '#FFE55C', '#FFD700']}
           mouseForce={40}
           cursorSize={150}
           isViscous={false}

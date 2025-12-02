@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import GlassSurface from '@/components/GlassSurface';
+import { Overlay } from '@/components/ui/overlay';
 
 type MenuItem = {
   label: string;
@@ -190,7 +191,51 @@ export default function BubbleMenu({
           transform-origin: center;
         }
         .beelia-gradient-text {
+          background: linear-gradient(135deg, #FFD700 0%, #FFE55C 50%, #FFD700 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .pill-link {
+          position: relative;
+        }
+        .pill-link .glass-surface-wrapper {
+          position: relative;
+          overflow: hidden;
+          border-radius: 999px;
+        }
+        .pill-link .glass-surface-wrapper::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 160px;
           background: linear-gradient(135deg, #FEDA24 0%, #EF941F 50%, #FEDA24 100%);
+          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: translateX(-100%);
+          z-index: 1;
+          border-radius: 999px;
+          pointer-events: none;
+        }
+        .pill-link:hover .glass-surface-wrapper::after {
+          transform: translateX(0);
+        }
+        .pill-link .glass-surface-wrapper > * {
+          position: relative;
+          z-index: 2;
+        }
+        .pill-link .pill-label {
+          position: relative;
+          z-index: 10 !important;
+          background: linear-gradient(135deg, #FEDA24 0%, #EF941F 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          transition: all 0.3s ease;
+        }
+        .pill-link:hover .pill-label {
+          background: #FFFFFF;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -283,6 +328,16 @@ export default function BubbleMenu({
         </button>
       </nav>
 
+      {/* Background Overlay */}
+      <Overlay
+        isOpen={isMenuOpen}
+        onClick={handleToggle}
+        background="rgba(0, 0, 0, 0.7)"
+        blur={12}
+        zIndex={999}
+        animationDuration={300}
+      />
+
       {showOverlay && (
         <div
           ref={overlayRef}
@@ -333,22 +388,25 @@ export default function BubbleMenu({
                     if (el) bubblesRef.current[idx] = el;
                   }}
                 >
-                  <GlassSurface
-                    width="100%"
-                    height={160}
-                    borderRadius={999}
-                    chromaticAberration={0.25}
-                    className="w-full hover:scale-105 transition-transform duration-300"
-                  >
+                  <div className="glass-surface-wrapper">
+                    <GlassSurface
+                      width="100%"
+                      height={160}
+                      borderRadius={999}
+                      chromaticAberration={0.25}
+                      className="w-full hover:scale-105 transition-transform duration-300 relative"
+                      style={{ position: 'relative', zIndex: 2 }}
+                    >
                     <span
-                      className="pill-label inline-block font-inria-sans font-normal uppercase beelia-gradient-text"
+                      className="pill-label inline-block font-inria-sans font-bold uppercase"
                       style={{
                         willChange: 'transform, opacity',
-                        fontSize: 'clamp(2rem, 5vw, 4rem)',
+                        fontSize: 'clamp(2.5rem, 6.5vw, 5.5rem)',
                         lineHeight: '100%',
-                        letterSpacing: '0.06em',
-                        color: '#FEDA24',
-                        textShadow: '0 0 30px rgba(254, 218, 36, 0.8), 0 0 60px rgba(239, 148, 31, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3)'
+                        letterSpacing: '0.08em',
+                        fontWeight: 700,
+                        position: 'relative',
+                        zIndex: 10
                       }}
                       ref={el => {
                         if (el) labelRefs.current[idx] = el;
@@ -357,6 +415,7 @@ export default function BubbleMenu({
                       {item.label}
                     </span>
                   </GlassSurface>
+                  </div>
                 </a>
               </li>
             ))}
