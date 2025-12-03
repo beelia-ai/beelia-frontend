@@ -19,20 +19,20 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <LiquidEther
           colors={['#FFD700', '#FFE55C', '#FFD700']}
-          mouseForce={40}
+          mouseForce={10}
           cursorSize={150}
-          isViscous={false}
-          viscous={30}
+          isViscous={true}
+          viscous={80}
           iterationsViscous={32}
           iterationsPoisson={32}
           resolution={0.5}
           isBounce={false}
           autoDemo={true}
-          autoSpeed={0.6}
-          autoIntensity={2.2}
-          takeoverDuration={0.25}
+          autoSpeed={0.1}
+          autoIntensity={0.6}
+          takeoverDuration={0.6}
           autoResumeDelay={0}
-          autoRampDuration={0.6}
+          autoRampDuration={1.5}
         />
       </div>
       
