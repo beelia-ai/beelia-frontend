@@ -393,9 +393,17 @@ export default function BubbleMenu({
                       width="100%"
                       height={160}
                       borderRadius={999}
-                      chromaticAberration={0.25}
+                      chromaticAberration={0.6}
+                      borderWidth={0.01}
+                      blur={8}
+                      opacity={0.95}
+                      brightness={60}
                       className="w-full hover:scale-105 transition-transform duration-300 relative"
-                      style={{ position: 'relative', zIndex: 2 }}
+                      style={{ 
+                        position: 'relative', 
+                        zIndex: 2,
+                        overflow: 'hidden'
+                      }}
                     >
                     <span
                       className="pill-label inline-block font-inria-sans font-bold uppercase"
@@ -406,7 +414,8 @@ export default function BubbleMenu({
                         letterSpacing: '0.08em',
                         fontWeight: 700,
                         position: 'relative',
-                        zIndex: 10
+                        zIndex: 10,
+                        fontFamily: 'var(--font-inria-sans), sans-serif'
                       }}
                       ref={el => {
                         if (el) labelRefs.current[idx] = el;
