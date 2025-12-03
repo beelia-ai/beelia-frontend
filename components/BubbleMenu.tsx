@@ -212,14 +212,14 @@ export default function BubbleMenu({
           width: 100%;
           height: 160px;
           background: linear-gradient(135deg, #FEDA24 0%, #EF941F 50%, #FEDA24 100%);
-          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: translateX(-100%);
+          transition: clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          clip-path: inset(0 100% 0 0 round 999px);
           z-index: 1;
           border-radius: 999px;
           pointer-events: none;
         }
         .pill-link:hover .glass-surface-wrapper::after {
-          transform: translateX(0);
+          clip-path: inset(0 0 0 0 round 999px);
         }
         .pill-link .glass-surface-wrapper > * {
           position: relative;
