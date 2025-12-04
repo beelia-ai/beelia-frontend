@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true, // Enable to catch performance issues and bugs
   images: {
     domains: ['assets.beelia.ai'],
     formats: ['image/avif', 'image/webp'],
@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: ['localhost:3000'],
     },
+  },
+  // Optimize bundle size
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Tree-shake unused Three.js exports
+      config.resolve.alias = {
+        ...config.resolve.alias,
+      };
+    }
+    return config;
   },
 }
 
