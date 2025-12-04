@@ -85,10 +85,12 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
         <Image
           src="/icons/Union.svg"
           alt="Beelia.ai Logo"
-          width={400}
-          height={400}
+          width={1302}
+          height={363}
           className="relative w-auto h-64 md:h-80 lg:h-96"
           priority
+          fetchPriority="high"
+          style={{ aspectRatio: '1302/363' }}
         />
         
         {/* Tagline Text */}
