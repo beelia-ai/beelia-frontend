@@ -110,8 +110,9 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
             whiteSpace: 'nowrap'
           }}
         >
-          <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>by Everyone, </span>
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>AI for Everyone</span>
+          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>AI </span>
+          <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for Everyone, </span>
+          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>By Everyone</span>
         </p>
       </div>
     </div>
