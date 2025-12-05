@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import LiquidEther from '@/components/ui/liquid-ether'
 
 export function Footer() {
   const scrollToTop = () => {
@@ -10,29 +9,86 @@ export function Footer() {
 
   return (
     <footer className="relative w-full min-h-screen bg-black overflow-hidden">
-      {/* Blurred Flames Background */}
-      <div className="absolute inset-0" style={{ zIndex: 1, filter: 'blur(40px)' }}>
-        <LiquidEther
-          colors={['#FFD700', '#EF941F', '#FFD700']}
-          mouseForce={5}
-          cursorSize={200}
-          isViscous={true}
-          viscous={100}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.3}
-          isBounce={false}
-          autoDemo={true}
-          autoSpeed={0.15}
-          autoIntensity={0.8}
-          takeoverDuration={0.8}
-          autoResumeDelay={0}
-          autoRampDuration={2}
-        />
+      {/* Animated Waves CSS */}
+      <style>{`
+        @keyframes move-forever {
+          0% { transform: translate3d(-90px, 0, 0); }
+          100% { transform: translate3d(85px, 0, 0); }
+        }
+        .waves-container {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+        .waves {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 40vh;
+          min-height: 200px;
+          max-height: 400px;
+        }
+        .waves .parallax > use {
+          animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+        }
+        .waves .parallax > use:nth-child(1) {
+          animation-delay: -2s;
+          animation-duration: 7s;
+        }
+        .waves .parallax > use:nth-child(2) {
+          animation-delay: -3s;
+          animation-duration: 10s;
+        }
+        .waves .parallax > use:nth-child(3) {
+          animation-delay: -4s;
+          animation-duration: 13s;
+        }
+        .waves .parallax > use:nth-child(4) {
+          animation-delay: -5s;
+          animation-duration: 20s;
+        }
+        .waves .parallax > use:nth-child(5) {
+          animation-delay: -6s;
+          animation-duration: 15s;
+        }
+      `}</style>
+
+      {/* Animated Waves Background - Blurred Flames Effect */}
+      <div className="waves-container" style={{ zIndex: 1, filter: 'blur(50px)' }}>
+        <svg 
+          className="waves" 
+          xmlns="http://www.w3.org/2000/svg" 
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          viewBox="0 24 150 28" 
+          preserveAspectRatio="none" 
+          shapeRendering="auto"
+        >
+          <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            <linearGradient id="flame-gradient-1" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#EF941F" />
+              <stop offset="100%" stopColor="#FFD700" />
+            </linearGradient>
+            <linearGradient id="flame-gradient-2" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#FEDA24" />
+              <stop offset="100%" stopColor="#EF941F" />
+            </linearGradient>
+          </defs>
+          <g className="parallax">
+            <use xlinkHref="#gentle-wave" x="48" y="-5" fill="url(#flame-gradient-1)" opacity="0.9" />
+            <use xlinkHref="#gentle-wave" x="48" y="0" fill="#FFD700" opacity="0.7" />
+            <use xlinkHref="#gentle-wave" x="48" y="3" fill="url(#flame-gradient-2)" opacity="0.6" />
+            <use xlinkHref="#gentle-wave" x="48" y="5" fill="#FEDA24" opacity="0.5" />
+            <use xlinkHref="#gentle-wave" x="48" y="7" fill="#EF941F" opacity="0.8" />
+          </g>
+        </svg>
       </div>
 
       {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2 }} />
+      <div className="absolute inset-0 bg-black/10" style={{ zIndex: 2 }} />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col min-h-screen px-8 md:px-16 lg:px-24 py-12">
