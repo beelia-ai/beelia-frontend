@@ -1,12 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import dynamic from 'next/dynamic'
+
+const GlassSurface = dynamic(() => import('@/components/GlassSurface'), { 
+  ssr: false,
+  loading: () => (
+    <div 
+      className="flex items-center justify-center"
+      style={{ 
+        width: '100%', 
+        height: '60px', 
+        borderRadius: '50px',
+        background: 'rgba(255, 255, 255, 0.1)',
+      }}
+    >
+      <span className="text-white/50">Loading...</span>
+    </div>
+  )
+})
 
 export default function WaitlistPage() {
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isButtonHovered, setIsButtonHovered] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -20,6 +45,39 @@ export default function WaitlistPage() {
 
   return (
     <main className="relative min-h-screen bg-black overflow-hidden">
+      {/* Hover fill styles */}
+      <style>{`
+        .glass-btn-wrapper {
+          position: relative;
+          overflow: hidden;
+          border-radius: 50px;
+          display: block;
+        }
+        .glass-btn-wrapper::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #FEDA24 0%, #EF941F 50%, #FEDA24 100%);
+          transition: clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          clip-path: inset(0 100% 0 0);
+          z-index: 1;
+          border-radius: 50px;
+          pointer-events: none;
+        }
+        .glass-btn-wrapper:hover::after {
+          clip-path: inset(0 0 0 0);
+        }
+        .glass-btn-wrapper > * {
+          position: relative;
+          z-index: 2;
+        }
+      `}</style>
+
       {/* Noise texture overlay */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03]"
@@ -142,28 +200,105 @@ export default function WaitlistPage() {
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-4 rounded-xl font-medium text-black transition-all duration-300 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-                style={{ 
-                  fontFamily: 'var(--font-inria-sans), sans-serif',
-                  fontSize: '15px',
-                  background: 'linear-gradient(135deg, #FEDA24 0%, #EF941F 100%)',
-                }}
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                    </svg>
-                    Joining...
+              {isMounted ? (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    perspective: '1000px',
+                    transformStyle: 'preserve-3d',
+                  }}
+                  onMouseEnter={() => setIsButtonHovered(true)}
+                  onMouseLeave={() => setIsButtonHovered(false)}
+                >
+                  <div className="glass-btn-wrapper" style={{ width: '100%' }}>
+                    <GlassSurface
+                      width={448}
+                      height={60}
+                      borderRadius={50}
+                      chromaticAberration={isButtonHovered ? 0.4 : 0.25}
+                      style={{
+                        width: '100%',
+                        maxWidth: '100%',
+                        transform: isButtonHovered 
+                          ? 'translateZ(30px) rotateX(-2deg) rotateY(2deg) scale(1.02)' 
+                          : 'translateZ(20px) rotateX(0deg) rotateY(0deg) scale(1)',
+                        boxShadow: isButtonHovered
+                          ? '0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset, 0 0 80px rgba(147, 51, 234, 0.5)'
+                          : '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 60px rgba(147, 51, 234, 0.3)',
+                        transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.7s ease-out, box-shadow 0.7s ease-out',
+                        willChange: 'transform, filter, box-shadow',
+                      }}
+                    >
+                      <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                        {isLoading ? (
+                          <span className="flex items-center gap-2 text-white">
+                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none"/>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            </svg>
+                            <span 
+                              style={{
+                                fontFamily: 'var(--font-inria-sans), sans-serif',
+                                fontSize: '18px',
+                                lineHeight: '100%',
+                                letterSpacing: '0.06em',
+                                textTransform: 'uppercase',
+                              }}
+                            >
+                              Joining...
+                            </span>
+                          </span>
+                        ) : (
+                          <>
+                            <span 
+                              className="text-white uppercase"
+                              style={{
+                                fontFamily: 'var(--font-inria-sans), sans-serif',
+                                fontSize: '18px',
+                                lineHeight: '100%',
+                                letterSpacing: '0.06em',
+                              }}
+                            >
+                              Join Waitlist
+                            </span>
+                            <Image
+                              src="/icons/Vector.svg"
+                              alt="arrow"
+                              width={18}
+                              height={18}
+                              className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                            />
+                          </>
+                        )}
+                      </div>
+                    </GlassSurface>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-4 rounded-full flex items-center justify-center gap-3 transition-all duration-300"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                  }}
+                >
+                  <span 
+                    className="text-white uppercase"
+                    style={{
+                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontSize: '18px',
+                      lineHeight: '100%',
+                      letterSpacing: '0.06em',
+                    }}
+                  >
+                    Join Waitlist
                   </span>
-                ) : (
-                  'Join Waitlist'
-                )}
-              </button>
+                </button>
+              )}
             </form>
 
             {/* Privacy Note */}
