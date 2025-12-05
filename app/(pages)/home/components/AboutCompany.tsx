@@ -258,7 +258,7 @@ function TableBeam({
   
   return (
     <>
-      {/* Beam element - tapered glowing trail */}
+      {/* Beam element - slim elegant line */}
       {beamPos && (
         <div
           className="absolute pointer-events-none z-20"
@@ -268,51 +268,15 @@ function TableBeam({
             transform: 'translate(-50%, -50%)',
           }}
         >
-          {/* Tapered beam using SVG for precise shape */}
-          <svg
-            width={beamPos.direction === 'horizontal' ? '100' : '12'}
-            height={beamPos.direction === 'horizontal' ? '12' : '100'}
-            style={{
-              overflow: 'visible',
-              filter: 'drop-shadow(0 0 8px #FEDA24) drop-shadow(0 0 15px rgba(239, 148, 31, 0.6))',
-            }}
-          >
-            <defs>
-              <linearGradient 
-                id="beamGradient" 
-                x1={beamPos.direction === 'horizontal' ? '0%' : '50%'} 
-                y1={beamPos.direction === 'horizontal' ? '50%' : '0%'} 
-                x2={beamPos.direction === 'horizontal' ? '100%' : '50%'} 
-                y2={beamPos.direction === 'horizontal' ? '50%' : '100%'}
-              >
-                <stop offset="0%" stopColor="#FEDA24" stopOpacity="0" />
-                <stop offset="20%" stopColor="#FEDA24" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
-                <stop offset="80%" stopColor="#FEDA24" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#FEDA24" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            {/* Tapered shape - thick in center, narrow at ends */}
-            {beamPos.direction === 'horizontal' ? (
-              <path
-                d="M 0,6 Q 25,2 50,0 Q 75,2 100,6 Q 75,10 50,12 Q 25,10 0,6 Z"
-                fill="url(#beamGradient)"
-              />
-            ) : (
-              <path
-                d="M 6,0 Q 2,25 0,50 Q 2,75 6,100 Q 10,75 12,50 Q 10,25 6,0 Z"
-                fill="url(#beamGradient)"
-              />
-            )}
-          </svg>
-          {/* Additional outer glow */}
+          {/* Slim line beam */}
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
             style={{
-              width: beamPos.direction === 'horizontal' ? '120px' : '30px',
-              height: beamPos.direction === 'horizontal' ? '30px' : '120px',
-              background: 'radial-gradient(ellipse, rgba(254, 218, 36, 0.4) 0%, rgba(239, 148, 31, 0.15) 40%, transparent 70%)',
-              filter: 'blur(12px)',
+              width: beamPos.direction === 'horizontal' ? '200px' : '3px',
+              height: beamPos.direction === 'horizontal' ? '3px' : '200px',
+              background: beamPos.direction === 'horizontal'
+                ? 'linear-gradient(90deg, transparent 0%, #FEDA24 20%, #ffffff 50%, #FEDA24 80%, transparent 100%)'
+                : 'linear-gradient(180deg, transparent 0%, #FEDA24 20%, #ffffff 50%, #FEDA24 80%, transparent 100%)',
+              borderRadius: '2px',
             }}
           />
         </div>
