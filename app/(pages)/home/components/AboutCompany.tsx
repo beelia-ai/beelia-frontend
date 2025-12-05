@@ -43,25 +43,10 @@ const teamMembers: TeamMember[] = [
 
 export function AboutCompany() {
   return (
-    <section className="relative w-full min-h-screen bg-black py-16 px-8 md:px-16 lg:px-24 overflow-hidden">
-      {/* Background gradient orbs */}
+    <section className="relative w-full bg-black py-24 px-8 md:px-16 lg:px-24 overflow-hidden">
+      {/* Background gradient orbs - randomly generated */}
       <GradientOrbs 
-        orbs={[
-          {
-            size: 700,
-            color1: 'rgba(254, 218, 36, 0.1)',
-            color2: 'rgba(239, 148, 31, 0.05)',
-            top: '-200px',
-            right: '-100px',
-          },
-          {
-            size: 500,
-            color1: 'rgba(239, 148, 31, 0.08)',
-            color2: 'rgba(254, 218, 36, 0.03)',
-            bottom: '10%',
-            left: '-100px',
-          },
-        ]}
+        count={12}
         showGrid={false}
       />
 
@@ -92,37 +77,65 @@ export function AboutCompany() {
             />
           </div>
 
-          {/* Video Placeholder */}
+          {/* Video */}
           <div 
-            className="relative w-full aspect-video rounded-2xl overflow-hidden cursor-pointer group"
+            className="relative w-full aspect-video rounded-2xl overflow-hidden"
             style={{ 
               background: 'linear-gradient(135deg, rgba(50, 50, 50, 0.8) 0%, rgba(30, 30, 30, 0.9) 100%)'
             }}
           >
-            {/* Placeholder blur effect */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-600/30 to-gray-800/50 backdrop-blur-sm" />
-            
-            {/* Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div 
-                className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' }}
-              >
-                <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M24 14L0 28V0L24 14Z" fill="#333" />
-                </svg>
-              </div>
-            </div>
+            <video 
+              className="w-full h-full object-cover"
+              controls
+              playsInline
+              preload="auto"
+            >
+              <source src="/videos/beelia-intro.mov" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>
 
       {/* Team Section */}
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto relative rounded-lg" style={{ background: 'transparent' }}>
+        {/* Left vertical line - extended with fade */}
+        <div 
+          className="absolute left-0 pointer-events-none"
+          style={{
+            width: '0.5px',
+            top: '-40px',
+            bottom: '-40px',
+            background: 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #EF941F 50%, #FEDA24 85%, transparent 100%)',
+          }}
+        />
+        {/* Right vertical line - extended with fade */}
+        <div 
+          className="absolute right-0 pointer-events-none"
+          style={{
+            width: '0.5px',
+            top: '-40px',
+            bottom: '-40px',
+            background: 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #EF941F 50%, #FEDA24 85%, transparent 100%)',
+          }}
+        />
+        {/* Center vertical line - extended with fade */}
+        <div 
+          className="hidden md:block absolute left-1/2 -translate-x-1/2 pointer-events-none"
+          style={{
+            width: '0.5px',
+            top: '-40px',
+            bottom: '-40px',
+            background: 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #EF941F 50%, #FEDA24 85%, transparent 100%)',
+          }}
+        />
+
+        {/* Intersection dots container - will be populated per row */}
+
         {/* CEO Section - First Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border border-dashed border-white/20 rounded-lg overflow-hidden mb-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
           {/* Left - Profile */}
-          <div className="p-8 border-b md:border-b-0 md:border-r border-dashed border-white/20">
+          <div className="p-8 relative">
             <div className="flex items-start gap-4 mb-6">
               {/* Profile Image */}
               <div className="w-16 h-16 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
@@ -184,12 +197,49 @@ export function AboutCompany() {
               {teamMembers[0].quote}
             </p>
           </div>
+
+          {/* Horizontal divider - extended with fade */}
+          <div 
+            className="absolute bottom-0 pointer-events-none"
+            style={{ 
+              height: '0.5px',
+              left: '-200px',
+              right: '-200px',
+              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+            }}
+          />
+          {/* Intersection dots */}
+          <div className="absolute bottom-0 left-0 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="hidden md:block absolute bottom-0 left-1/2 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#FEDA24] translate-x-1/2 translate-y-1/2 z-10" />
+        </div>
+
+        {/* Separator Row 1 */}
+        <div 
+          className="w-full relative"
+          style={{ height: '56px' }}
+        >
+          <div className="absolute inset-0" style={{ opacity: 0.01 }} />
+          {/* Horizontal divider - extended with fade */}
+          <div 
+            className="absolute bottom-0 pointer-events-none"
+            style={{ 
+              height: '0.5px',
+              left: '-200px',
+              right: '-200px',
+              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+            }}
+          />
+          {/* Intersection dots */}
+          <div className="absolute bottom-0 left-0 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="hidden md:block absolute bottom-0 left-1/2 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#FEDA24] translate-x-1/2 translate-y-1/2 z-10" />
         </div>
 
         {/* Second Row - Emmanuel & Sanzhar */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-x border-b border-dashed border-white/20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
           {/* Emmanuel */}
-          <div className="p-8 border-b md:border-b-0 md:border-r border-dashed border-white/20">
+          <div className="p-8 relative">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
                 <Image 
@@ -261,12 +311,49 @@ export function AboutCompany() {
               </div>
             </div>
           </div>
+
+          {/* Horizontal divider - extended with fade */}
+          <div 
+            className="absolute bottom-0 pointer-events-none"
+            style={{ 
+              height: '0.5px',
+              left: '-200px',
+              right: '-200px',
+              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+            }}
+          />
+          {/* Intersection dots */}
+          <div className="absolute bottom-0 left-0 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="hidden md:block absolute bottom-0 left-1/2 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#FEDA24] translate-x-1/2 translate-y-1/2 z-10" />
+        </div>
+
+        {/* Separator Row 2 */}
+        <div 
+          className="w-full relative"
+          style={{ height: '56px' }}
+        >
+          <div className="absolute inset-0" style={{ opacity: 0.01 }} />
+          {/* Horizontal divider - extended with fade */}
+          <div 
+            className="absolute bottom-0 pointer-events-none"
+            style={{ 
+              height: '0.5px',
+              left: '-200px',
+              right: '-200px',
+              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+            }}
+          />
+          {/* Intersection dots */}
+          <div className="absolute bottom-0 left-0 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="hidden md:block absolute bottom-0 left-1/2 w-2 h-2 rounded-full bg-[#FEDA24] -translate-x-1/2 translate-y-1/2 z-10" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#FEDA24] translate-x-1/2 translate-y-1/2 z-10" />
         </div>
 
         {/* Third Row - Placeholder & Arshdeep */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-x border-b border-dashed border-white/20 rounded-b-lg overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
           {/* Placeholder */}
-          <div className="p-8 border-b md:border-b-0 md:border-r border-dashed border-white/20">
+          <div className="p-8 relative">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
                 <div className="w-full h-full bg-gradient-to-br from-gray-500 to-gray-700" />

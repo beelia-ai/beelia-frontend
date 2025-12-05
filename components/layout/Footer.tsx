@@ -27,9 +27,9 @@ export function Footer() {
           position: absolute;
           bottom: 0;
           width: 100%;
-          height: 40vh;
-          min-height: 200px;
-          max-height: 400px;
+          height: 50vh;
+          min-height: 350px;
+          max-height: 600px;
         }
         .waves .parallax > use {
           animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;

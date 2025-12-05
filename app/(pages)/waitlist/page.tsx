@@ -79,8 +79,8 @@ export default function WaitlistPage() {
         }
       `}</style>
 
-      {/* Background elements for glass refraction */}
-      <GradientOrbs className="fixed" />
+      {/* Background elements for glass refraction - randomly spawned orbs */}
+      <GradientOrbs className="fixed" count={15} />
 
       {/* Noise texture overlay */}
       <div 
@@ -187,11 +187,13 @@ export default function WaitlistPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="w-full px-5 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none rounded-xl transition-all duration-300 focus:bg-white/[0.05]"
+                  className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontSize: '15px',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '50px',
+                    height: '60px',
                   }}
                 />
               </div>
