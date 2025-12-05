@@ -304,9 +304,9 @@ const teamMembers: TeamMember[] = [
     image: '/images/SANZHAR.png'
   },
   {
-    name: '--',
-    role: '--',
-    image: ''
+    name: 'Juan Carlos Calvo Rivera',
+    role: 'Investor & Advisor',
+    image: '/images/RIVERA.png'
   },
   {
     name: 'Arshdeep Singh',
@@ -475,7 +475,7 @@ export function AboutCompany() {
             width: '0.5px',
             top: '-40px',
             bottom: '-40px',
-            background: 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #EF941F 50%, #FEDA24 85%, transparent 100%)',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
           }}
         />
         {/* Right vertical line - extended with fade */}
@@ -485,7 +485,7 @@ export function AboutCompany() {
             width: '0.5px',
             top: '-40px',
             bottom: '-40px',
-            background: 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #EF941F 50%, #FEDA24 85%, transparent 100%)',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
           }}
         />
         {/* Center vertical line - extended with fade */}
@@ -495,7 +495,7 @@ export function AboutCompany() {
             width: '0.5px',
             top: '-40px',
             bottom: '-40px',
-            background: 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #EF941F 50%, #FEDA24 85%, transparent 100%)',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
           }}
         />
 
@@ -574,7 +574,7 @@ export function AboutCompany() {
               height: '0.5px',
               left: '-200px',
               right: '-200px',
-              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
             }}
           />
           {/* Intersection dots */}
@@ -597,7 +597,7 @@ export function AboutCompany() {
               height: '0.5px',
               left: '-200px',
               right: '-200px',
-              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
             }}
           />
           {/* Intersection dots */}
@@ -689,7 +689,7 @@ export function AboutCompany() {
               height: '0.5px',
               left: '-200px',
               right: '-200px',
-              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
             }}
           />
           {/* Intersection dots */}
@@ -712,7 +712,7 @@ export function AboutCompany() {
               height: '0.5px',
               left: '-200px',
               right: '-200px',
-              background: 'linear-gradient(90deg, transparent 0%, #FEDA24 10%, #EF941F 50%, #FEDA24 90%, transparent 100%)',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
             }}
           />
           {/* Intersection dots */}
@@ -723,11 +723,17 @@ export function AboutCompany() {
 
         {/* Third Row - Placeholder & Arshdeep */}
         <div ref={row3Ref} className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
-          {/* Placeholder */}
+          {/* Rivera */}
           <div className="p-8 relative">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
-                <div className="w-full h-full bg-gradient-to-br from-gray-500 to-gray-700" />
+                <Image 
+                  src={teamMembers[3].image} 
+                  alt={teamMembers[3].name}
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <h3 
@@ -741,7 +747,7 @@ export function AboutCompany() {
                   {teamMembers[3].name}
                 </h3>
                 <p 
-                  className="text-white/50"
+                  className="text-[#FEDA24]"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 400,
