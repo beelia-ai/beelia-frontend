@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import GlassSurface from '@/components/GlassSurface'
 import BubbleMenu from '@/components/BubbleMenu'
 
@@ -53,8 +54,9 @@ export function Navbar() {
 
       {/* Glass Button on the right */}
       <nav className="fixed top-0 right-0 z-[9999] p-6">
-        <div 
-          className="group cursor-pointer"
+        <Link 
+          href="/waitlist"
+          className="group cursor-pointer block"
           style={{
             perspective: '1000px',
             transformStyle: 'preserve-3d',
@@ -101,7 +103,7 @@ export function Navbar() {
               </div>
             </GlassSurface>
           </div>
-        </div>
+        </Link>
       </nav>
     </>
   )

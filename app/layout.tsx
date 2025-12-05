@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
 import NavbarClient from "@/components/layout/NavbarClient";
+import { Footer } from "@/components/layout/Footer";
 import { PreloadLogo } from "@/components/PreloadLogo";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({
         <PreloadLogo />
         <NavbarClient />
         {children}
+        <Footer />
       </body>
     </html>
   );
