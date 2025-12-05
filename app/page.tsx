@@ -1,11 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { MainHero } from './(pages)/home/components'
-
-export default function HomePage() {
-  return (
-    <main className="min-h-screen" style={{ isolation: 'isolate' }}>
-      <MainHero />
-    </main>
-  )
+export default function RootPage() {
+  redirect("/home");
 }
