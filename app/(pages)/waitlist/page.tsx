@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
+import { GradientOrbs } from '@/components/ui'
 
 const GlassSurface = dynamic(() => import('@/components/GlassSurface'), { 
   ssr: false,
@@ -78,20 +79,15 @@ export default function WaitlistPage() {
         }
       `}</style>
 
+      {/* Background elements for glass refraction */}
+      <GradientOrbs className="fixed" />
+
       {/* Noise texture overlay */}
       <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.03]"
+        className="fixed inset-0 pointer-events-none opacity-[0.04]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundRepeat: 'repeat',
-        }}
-      />
-
-      {/* Subtle gradient glow */}
-      <div 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(254, 218, 36, 0.08) 0%, transparent 60%)',
         }}
       />
 

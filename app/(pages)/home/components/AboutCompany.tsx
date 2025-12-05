@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { GradientOrbs } from '@/components/ui'
 
 interface TeamMember {
   name: string
@@ -42,7 +43,28 @@ const teamMembers: TeamMember[] = [
 
 export function AboutCompany() {
   return (
-    <section className="relative w-full min-h-screen bg-black py-16 px-8 md:px-16 lg:px-24">
+    <section className="relative w-full min-h-screen bg-black py-16 px-8 md:px-16 lg:px-24 overflow-hidden">
+      {/* Background gradient orbs */}
+      <GradientOrbs 
+        orbs={[
+          {
+            size: 700,
+            color1: 'rgba(254, 218, 36, 0.1)',
+            color2: 'rgba(239, 148, 31, 0.05)',
+            top: '-200px',
+            right: '-100px',
+          },
+          {
+            size: 500,
+            color1: 'rgba(239, 148, 31, 0.08)',
+            color2: 'rgba(254, 218, 36, 0.03)',
+            bottom: '10%',
+            left: '-100px',
+          },
+        ]}
+        showGrid={false}
+      />
+
       {/* Video Section */}
       <div className="flex justify-center mb-16">
         <div className="relative w-full max-w-4xl">

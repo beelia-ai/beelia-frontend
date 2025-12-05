@@ -25,5 +25,8 @@ export type { HeroBackgroundProps } from './hero-background'
 export { Overlay } from './overlay'
 export type { OverlayProps } from './overlay'
 
+export { GradientOrbs } from './gradient-orbs'
+export type { GradientOrbsProps, GradientOrb } from './gradient-orbs'
+
 
 
