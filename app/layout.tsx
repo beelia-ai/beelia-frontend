@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
-import NavbarClient from "@/components/layout/NavbarClient";
+import { Navbar } from "@/components/layout/Navbar";
 import { PreloadLogo } from "@/components/PreloadLogo";
 import "./globals.css";
 
@@ -41,7 +41,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <PreloadLogo />
-        <NavbarClient />
+        <Navbar />
         {children}
       </body>
     </html>
