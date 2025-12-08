@@ -578,7 +578,7 @@ export function HeroBanner3D() {
             >
               <span className="w-2 h-2 rounded-full bg-[#FEDA24] animate-pulse" />
               <span className="text-[#FEDA24] text-sm font-medium tracking-wide uppercase">
-                AI Marketplace
+                BEELIA.AI
               </span>
             </motion.div>
             
@@ -587,17 +587,22 @@ export function HeroBanner3D() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
-              className="text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] mb-6"
+              className="text-4xl lg:text-5xl xl:text-5xl font-bold text-white leading-[1.1] mb-6 whitespace-nowrap"
               style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
             >
-              The AI Marketplace{' '}
-              <span 
-                className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent"
-                style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}
-              >
-                for Everyone
-              </span>
+              The App Store <span className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for AI</span>
             </motion.h1>
+            
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              className="text-xl lg:text-2xl text-white/60 mb-6 -mt-2"
+              style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+            >
+              for the AI Marketplace
+            </motion.p>
             
             {/* Description */}
             <motion.p
@@ -607,8 +612,7 @@ export function HeroBanner3D() {
               className="text-lg lg:text-xl text-white/70 leading-relaxed mb-10"
               style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
             >
-              A curated AI marketplace where anyone can discover, trust, and use 
-              the right tools instantly — no technical skills required.
+              A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
             </motion.p>
             
             {/* CTA Buttons */}
