@@ -115,7 +115,6 @@ export function HeroBanner3D() {
   const dragRotationRef = useRef({ x: Math.PI / 2, y: 0 }) // Accumulated rotation from dragging
   
   const [isLoaded, setIsLoaded] = useState(false)
-  const [loadingProgress, setLoadingProgress] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   
   // Smooth mouse tracking with springs
@@ -438,10 +437,7 @@ export function HeroBanner3D() {
         scene.add(model)
         setIsLoaded(true)
       },
-      (progress) => {
-        const percent = (progress.loaded / progress.total) * 100
-        setLoadingProgress(percent)
-      },
+      undefined,
       (error) => {
         console.error('Error loading model:', error)
       }
@@ -529,43 +525,21 @@ export function HeroBanner3D() {
         }}
       />
       
+      {/* Full-screen centered loading indicator */}
+      {!isLoaded && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90">
+          <div className="text-center">
+            <p className="text-[#FEDA24] text-xl font-medium tracking-wide animate-pulse">
+              Preparing something amazing...
+            </p>
+          </div>
+        </div>
+      )}
+      
       {/* Main content container */}
       <div className="relative z-10 flex h-full">
         {/* Left side - 3D Scene */}
         <div ref={canvasContainerRef} className="w-1/2 h-full relative">
-          {/* Loading indicator */}
-          {!isLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center z-20">
-              <div className="text-center">
-                <div className="w-24 h-24 relative">
-                  <svg className="animate-spin" viewBox="0 0 100 100">
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="40"
-                      fill="none"
-                      stroke="rgba(254, 218, 36, 0.2)"
-                      strokeWidth="8"
-                    />
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="40"
-                      fill="none"
-                      stroke="#FEDA24"
-                      strokeWidth="8"
-                      strokeLinecap="round"
-                      strokeDasharray={`${loadingProgress * 2.51} 251`}
-                      transform="rotate(-90 50 50)"
-                    />
-                  </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[#FEDA24] font-bold">
-                    {Math.round(loadingProgress)}%
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
           
           {/* Three.js Canvas */}
           <canvas 
