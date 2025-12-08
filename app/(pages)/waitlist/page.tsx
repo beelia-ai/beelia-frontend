@@ -39,9 +39,30 @@ export default function WaitlistPage() {
     if (!email) return
     
     setIsLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setIsLoading(false)
-    setIsSubmitted(true)
+    
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to join waitlist')
+      }
+      
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Waitlist submission error:', error)
+      // You can add error handling UI here if needed
+      alert(error instanceof Error ? error.message : 'Failed to join waitlist. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

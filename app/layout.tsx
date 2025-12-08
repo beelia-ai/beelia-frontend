@@ -3,6 +3,7 @@ import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
 import NavbarClient from "@/components/layout/NavbarClient";
 import { Footer } from "@/components/layout/Footer";
 import { PreloadLogo } from "@/components/PreloadLogo";
+import { GlobalBackground } from "@/components/GlobalBackground";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -38,13 +39,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable}`}
+        className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable} bg-black`}
         suppressHydrationWarning
       >
+        <GlobalBackground />
         <PreloadLogo />
         <NavbarClient />
-        {children}
-        <Footer />
+        <div className="relative" style={{ zIndex: 1 }}>
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   );

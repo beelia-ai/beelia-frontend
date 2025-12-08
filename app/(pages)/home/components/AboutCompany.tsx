@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
-import { GradientOrbs } from '@/components/ui'
 
 interface TeamMember {
   name: string
@@ -410,13 +409,7 @@ export function AboutCompany() {
   const isDotLit = useCallback((dotId: string) => litDots.has(dotId), [litDots])
   
   return (
-    <section className="relative w-full bg-black py-24 px-8 md:px-16 lg:px-24 overflow-hidden">
-      {/* Background gradient orbs - randomly generated */}
-      <GradientOrbs 
-        count={12}
-        showGrid={false}
-      />
-
+    <section className="relative w-full py-24 px-8 md:px-16 lg:px-24 overflow-hidden">
       {/* Video Section */}
       <div className="flex justify-center mb-16">
         <div className="relative w-full max-w-4xl">

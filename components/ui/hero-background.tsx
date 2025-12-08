@@ -12,27 +12,27 @@ export interface HeroBackgroundProps {
 export function HeroBackground({ className, style }: HeroBackgroundProps) {
   return (
     <div
-      className={cn("relative w-full h-screen flex items-center justify-center bg-black", className)}
+      className={cn("relative w-full h-screen flex items-center justify-center", className)}
       style={{ ...style, zIndex: 1 }}
     >
-      {/* Liquid Ether Background */}
+      {/* Liquid Ether Background - Optimized for performance */}
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <LiquidEther
           colors={['#FFD700', '#FFE55C', '#FFD700']}
-          mouseForce={15}
-          cursorSize={150}
-          isViscous={true}
-          viscous={60}
-          iterationsViscous={32}
-          iterationsPoisson={32}
-          resolution={0.5}
+          mouseForce={12}
+          cursorSize={120}
+          isViscous={false}
+          viscous={30}
+          iterationsViscous={6}
+          iterationsPoisson={6}
+          resolution={0.2}
           isBounce={false}
           autoDemo={true}
-          autoSpeed={0.3}
-          autoIntensity={1.5}
-          takeoverDuration={0.5}
-          autoResumeDelay={0}
-          autoRampDuration={0.5}
+          autoSpeed={0.25}
+          autoIntensity={1.2}
+          takeoverDuration={0.4}
+          autoResumeDelay={500}
+          autoRampDuration={0.4}
         />
       </div>
       
@@ -63,7 +63,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
       <div className="relative flex flex-col items-center justify-center gap-8" style={{ zIndex: 3 }}>
         {/* Tagline Text */}
         <p 
-          className="text-white uppercase text-center max-w-[658px] opacity-80"
+          className="text-white uppercase text-center max-w-[700px] opacity-80"
           style={{
             fontFamily: 'var(--font-inria-sans), sans-serif',
             fontWeight: 400,
@@ -73,12 +73,10 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
             textAlign: 'center',
             textTransform: 'uppercase',
             color: '#FFFFFF',
-            width: '658px',
-            height: '52px',
             opacity: 0.8
           }}
         >
-          The App Store for AI, giving people a seamless way to find the right tools and start using them instantly, no setup, no friction.
+          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
         </p>
         
         {/* Beelia Logo */}
@@ -95,22 +93,20 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
         
         {/* Tagline Text */}
         <p 
-          className="text-white text-right opacity-90 whitespace-nowrap self-end -translate-x-16"
+          className="text-white text-center opacity-90 whitespace-nowrap"
           style={{
             fontFamily: 'var(--font-inria-sans), var(--font-instrument-serif), sans-serif',
             fontWeight: 400,
             fontSize: '44px',
             lineHeight: '100%',
             letterSpacing: '0%',
-            textAlign: 'right',
+            textAlign: 'center',
             color: '#FFFFFF',
-            width: '490px',
-            height: '57px',
             opacity: 0.9,
             whiteSpace: 'nowrap'
           }}
         >
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>AI </span>
+          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>The AI Marketplace </span>
           <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for Everyone, </span>
           <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>By Everyone</span>
         </p>

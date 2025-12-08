@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { Button } from "@/components/ui";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -20,9 +19,7 @@ export function Hero() {
   }, []);
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-start justify-between overflow-hidden bg-black">
-      {/* Background Ripple Effect */}
-      <BackgroundRippleEffect />
+    <div className="relative flex min-h-screen w-full flex-col items-start justify-between overflow-hidden">
       
       {/* Content Container */}
       <div className="relative z-10 w-full mt-60 flex-1 flex flex-col justify-between">

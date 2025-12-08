@@ -8,7 +8,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="relative w-full min-h-screen bg-black overflow-hidden">
+    <footer className="relative w-full min-h-screen overflow-hidden">
       {/* Flame rotation animation CSS */}
       <style>{`
         @keyframes flame-rotate-cw {
