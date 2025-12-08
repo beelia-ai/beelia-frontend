@@ -1,34 +1,30 @@
 'use client'
 
-import { ReactNode, createContext, useContext, useMemo, useState, useEffect, useRef } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion'
 
-// Context to share scroll progress between sections
+// Context to share scroll progress
 interface ScrollContextType {
   scrollYProgress: MotionValue<number>
-  totalSections: number
   isMounted: boolean
 }
 
 const ScrollContext = createContext<ScrollContextType | null>(null)
 
-// Wrapper for all scroll sections
+// Simple scroll container
 interface ScrollContainerProps {
   children: ReactNode
-  totalSections: number
 }
 
-export function ScrollContainer({ children, totalSections }: ScrollContainerProps) {
+export function ScrollContainer({ children }: ScrollContainerProps) {
   const [isMounted, setIsMounted] = useState(false)
   
   useEffect(() => {
     setIsMounted(true)
   }, [])
   
-  // Use window scroll
   const { scrollYProgress } = useScroll()
   
-  // Smooth spring physics for buttery animations
   const smoothProgress = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -37,9 +33,8 @@ export function ScrollContainer({ children, totalSections }: ScrollContainerProp
   
   const contextValue = useMemo(() => ({ 
     scrollYProgress: smoothProgress, 
-    totalSections,
     isMounted
-  }), [smoothProgress, totalSections, isMounted])
+  }), [smoothProgress, isMounted])
   
   return (
     <ScrollContext.Provider value={contextValue}>
@@ -50,41 +45,36 @@ export function ScrollContainer({ children, totalSections }: ScrollContainerProp
   )
 }
 
-// Hero Section Component - Fixed, fades out
+// Hero Section - Fixed, fades out as you scroll
 function HeroSection({ children, className }: { children: ReactNode, className: string }) {
   const context = useContext(ScrollContext)
   const scrollYProgress = context?.scrollYProgress
   
   const heroScale = useTransform(
     scrollYProgress ?? new MotionValue(0), 
-    [0, 0.15, 0.35], 
+    [0, 0.15, 0.3], 
     [1, 0.98, 0.85]
   )
   const heroOpacity = useTransform(
     scrollYProgress ?? new MotionValue(0), 
-    [0, 0.2, 0.35], 
+    [0, 0.15, 0.25], 
     [1, 0.8, 0]
   )
   const heroY = useTransform(
     scrollYProgress ?? new MotionValue(0),
-    [0, 0.35],
+    [0, 0.3],
     ['0%', '-10%']
   )
   const heroBlur = useTransform(
     scrollYProgress ?? new MotionValue(0),
-    [0.15, 0.35],
+    [0.1, 0.25],
     [0, 8]
-  )
-  const heroRotateX = useTransform(
-    scrollYProgress ?? new MotionValue(0),
-    [0, 0.35],
-    [0, 5]
   )
   const heroFilter = useTransform(heroBlur, (v) => `blur(${v}px)`)
   
   return (
     <>
-      {/* Spacer for scroll height */}
+      {/* Spacer - pushes content down */}
       <div style={{ height: '100vh' }} />
       
       {/* Fixed hero */}
@@ -94,7 +84,6 @@ function HeroSection({ children, className }: { children: ReactNode, className: 
           scale: heroScale,
           opacity: heroOpacity,
           y: heroY,
-          rotateX: heroRotateX,
           filter: heroFilter,
           zIndex: 1,
           transformPerspective: 1200,
@@ -107,92 +96,32 @@ function HeroSection({ children, className }: { children: ReactNode, className: 
   )
 }
 
-// Card Section Component - Slides up and covers previous section
-function CardSection({ 
+// Regular Section - Just scrolls naturally with the page
+function RegularSection({ 
   children, 
   index, 
   className, 
-  height
+  height 
 }: { 
   children: ReactNode
   index: number
   className: string
   height: string
 }) {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  
-  // Track this section's scroll progress
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "start start"]
-  })
-  
-  // Smooth the progress
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-  })
-  
-  // Card slides up from bottom
-  const cardY = useTransform(
-    smoothProgress, 
-    [0, 1], 
-    ['50%', '0%']
-  )
-  
-  // Scale animation
-  const cardScale = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0.95, 1]
-  )
-  
-  // 3D rotation
-  const cardRotateX = useTransform(
-    smoothProgress,
-    [0, 1],
-    [8, 0]
-  )
-  
-  // Shadow opacity
-  const shadowOpacity = useTransform(
-    smoothProgress,
-    [0, 1],
-    [0.8, 0.3]
-  )
-  
   return (
-    <motion.section
-      ref={sectionRef}
+    <section
       className={`relative ${className}`}
       style={{ 
-        y: cardY,
-        scale: cardScale,
-        rotateX: cardRotateX,
         zIndex: index + 10,
-        transformPerspective: 1200,
-        transformOrigin: 'center top',
         minHeight: height === 'auto' ? 'auto' : height,
       }}
     >
-      {/* Top shadow for depth */}
-      <motion.div 
-        className="absolute inset-x-0 -top-32 h-32 pointer-events-none z-50"
-        style={{
-          opacity: shadowOpacity,
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 100%)',
-        }}
-      />
-      
-      {/* Content wrapper */}
-      <div className="relative w-full">
-        {children}
-      </div>
-    </motion.section>
+      {children}
+    </section>
   )
 }
 
-// Individual scroll section - routes to Hero or Card
+// Individual scroll section
 interface ScrollSectionProps {
   children: ReactNode
   index: number
@@ -206,13 +135,15 @@ export function ScrollSection({
   className = '',
   height = '100vh'
 }: ScrollSectionProps) {
+  // Hero (index 0) - fixed with effects
   if (index === 0) {
     return <HeroSection className={className}>{children}</HeroSection>
   }
   
+  // All other sections - just scroll naturally
   return (
-    <CardSection index={index} className={className} height={height}>
+    <RegularSection index={index} className={className} height={height}>
       {children}
-    </CardSection>
+    </RegularSection>
   )
 }

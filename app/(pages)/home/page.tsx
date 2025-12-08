@@ -4,6 +4,7 @@ import { HeroBanner3D, AboutCompany, ScrollSection, ScrollContainer } from './co
 import { GradientOrbs } from '@/components/ui'
 import { Footer } from '@/components/layout/Footer'
 import { useEffect } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 // Card wrapper component for consistent styling
 function CardSection({ 
@@ -49,9 +50,35 @@ function CardSection({
   )
 }
 
-export default function HomePage() {
-  const totalSections = 3
+// Scroll indicator component that hides on scroll
+function ScrollIndicator() {
+  const { scrollY } = useScroll()
+  const opacity = useTransform(scrollY, [0, 100], [0.5, 0])
   
+  return (
+    <motion.div 
+      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+      style={{ opacity }}
+    >
+      <div className="flex flex-col items-center gap-2 animate-bounce">
+        <span className="text-white/50 text-xs tracking-widest uppercase">Scroll</span>
+        <svg 
+          width="24" 
+          height="24" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="1.5"
+          className="text-white/50"
+        >
+          <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+      </div>
+    </motion.div>
+  )
+}
+
+export default function HomePage() {
   // Hide the global footer on home page since we have our own scroll-animated one
   useEffect(() => {
     const globalFooter = document.querySelector('body > div > footer')
@@ -79,7 +106,7 @@ export default function HomePage() {
       
       {/* Scroll Sections */}
       <div className="relative z-10">
-        <ScrollContainer totalSections={totalSections}>
+        <ScrollContainer>
           {/* Hero Section */}
           <ScrollSection index={0}>
             <HeroBanner3D />
@@ -101,23 +128,8 @@ export default function HomePage() {
         </ScrollContainer>
       </div>
       
-      {/* Scroll indicator for first section */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-        <div className="flex flex-col items-center gap-2 animate-bounce opacity-50">
-          <span className="text-white/50 text-xs tracking-widest uppercase">Scroll</span>
-          <svg 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1.5"
-            className="text-white/50"
-          >
-            <path d="M12 5v14M5 12l7 7 7-7"/>
-          </svg>
-        </div>
-      </div>
+      {/* Scroll indicator - hides on scroll */}
+      <ScrollIndicator />
     </main>
   )
 }
