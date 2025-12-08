@@ -1,12 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import GlassSurface from '@/components/GlassSurface'
 import BubbleMenu from '@/components/BubbleMenu'
 
 export function Navbar() {
   const [isHovered, setIsHovered] = useState(false)
+  const pathname = usePathname()
+  const isWaitlistPage = pathname === '/waitlist'
 
   return (
     <>
@@ -53,8 +57,9 @@ export function Navbar() {
 
       {/* Glass Button on the right */}
       <nav className="fixed top-0 right-0 z-[9999] p-6">
-        <div 
-          className="group cursor-pointer"
+        <Link 
+          href={isWaitlistPage ? "/home" : "/waitlist"}
+          className="group cursor-pointer block"
           style={{
             perspective: '1000px',
             transformStyle: 'preserve-3d',
@@ -81,6 +86,15 @@ export function Navbar() {
               }}
             >
               <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                {isWaitlistPage && (
+                  <Image
+                    src="/icons/Vector.svg"
+                    alt="arrow"
+                    width={20}
+                    height={20}
+                    className="transition-transform duration-500 ease-in-out rotate-[225deg] group-hover:rotate-[270deg]"
+                  />
+                )}
                 <span 
                   className="waitlist-btn-text font-inria-sans font-normal uppercase"
                   style={{
@@ -89,19 +103,21 @@ export function Navbar() {
                     letterSpacing: '6%',
                   }}
                 >
-                  join waitlist
+                  {isWaitlistPage ? 'back to home' : 'join waitlist'}
                 </span>
-                <Image
-                  src="/icons/Vector.svg"
-                  alt="arrow"
-                  width={20}
-                  height={20}
-                  className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
-                />
+                {!isWaitlistPage && (
+                  <Image
+                    src="/icons/Vector.svg"
+                    alt="arrow"
+                    width={20}
+                    height={20}
+                    className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                  />
+                )}
               </div>
             </GlassSurface>
           </div>
-        </div>
+        </Link>
       </nav>
     </>
   )
