@@ -469,10 +469,10 @@ export default function WaitlistPage() {
       {/* Global Background - Fixed, covers entire page */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <GradientOrbs 
-          count={16}
+          count={20}
           animate={true}
           showGrid={true}
-          gridOpacity={0.02}
+          gridOpacity={0.06}
         />
       </div>
       
