@@ -9,21 +9,21 @@ export function Footer() {
 
   return (
     <footer className="relative w-full min-h-screen overflow-hidden">
-      {/* Flame rotation animation CSS */}
+      {/* Flame rotation animation CSS - slower for better performance */}
       <style>{`
         @keyframes flame-rotate-cw {
           0%, 100% { transform: translate(-50%, -50%) rotate(105deg); }
-          50% { transform: translate(-50%, -50%) rotate(135deg); }
+          50% { transform: translate(-50%, -50%) rotate(125deg); }
         }
         @keyframes flame-rotate-ccw {
-          0%, 100% { transform: translate(-50%, -50%) rotate(135deg); }
+          0%, 100% { transform: translate(-50%, -50%) rotate(125deg); }
           50% { transform: translate(-50%, -50%) rotate(105deg); }
         }
         .flame-img-1 {
-          animation: flame-rotate-cw 8s ease-in-out infinite;
+          animation: flame-rotate-cw 15s ease-in-out infinite;
         }
         .flame-img-2 {
-          animation: flame-rotate-ccw 8s ease-in-out infinite;
+          animation: flame-rotate-ccw 15s ease-in-out infinite;
         }
       `}</style>
 
@@ -33,10 +33,10 @@ export function Footer() {
         <div 
           className="flame-img-1 absolute"
           style={{
-            left: '50%',
+            left: '90%',
             top: '70%',
             width: '80%',
-            height: '70%',
+            height: '90%',
             backgroundImage: 'url(/images/footer-img1.svg)',
             backgroundSize: 'contain',
             backgroundPosition: 'center bottom',
@@ -48,10 +48,10 @@ export function Footer() {
         <div 
           className="flame-img-2 absolute"
           style={{
-            left: '50%',
+            left: '90%',
             top: '70%',
             width: '80%',
-            height: '70%',
+            height: '90%',
             backgroundImage: 'url(/images/footer-img2.svg)',
             backgroundSize: 'contain',
             backgroundPosition: 'center bottom',

@@ -293,18 +293,17 @@ function WaitlistHero() {
                       width={448}
                       height={60}
                       borderRadius={50}
-                      chromaticAberration={isButtonHovered ? 0.4 : 0.25}
+                      chromaticAberration={isButtonHovered ? 0.3 : 0.15}
                       style={{
                         width: '100%',
                         maxWidth: '100%',
                         transform: isButtonHovered 
-                          ? 'translateZ(30px) rotateX(-2deg) rotateY(2deg) scale(1.02)' 
-                          : 'translateZ(20px) rotateX(0deg) rotateY(0deg) scale(1)',
+                          ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)' 
+                          : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
                         boxShadow: isButtonHovered
-                          ? '0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2) inset, 0 0 80px rgba(147, 51, 234, 0.5)'
-                          : '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 60px rgba(147, 51, 234, 0.3)',
-                        transition: 'all 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.7s ease-out, box-shadow 0.7s ease-out',
-                        willChange: 'transform, filter, box-shadow',
+                          ? '0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)'
+                          : '0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)',
+                        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                       }}
                     >
                       <div className="w-full flex items-center justify-center gap-3 relative z-10">

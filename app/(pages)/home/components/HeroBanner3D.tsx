@@ -14,7 +14,7 @@ class ParticleSystem {
   offsets: Float32Array // Random offsets for each particle's animation phase
   speeds: Float32Array // Random speeds for each particle
   
-  constructor(count: number = 400) {
+  constructor(count: number = 150) {
     this.geometry = new THREE.BufferGeometry()
     const positions = new Float32Array(count * 3)
     this.originalPositions = new Float32Array(count * 3)
@@ -120,8 +120,8 @@ export function HeroBanner3D() {
   // Smooth mouse tracking with springs - optimized for performance
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 })
-  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 })
+  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 })
+  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 })
   
   // Transform for text parallax
   const textX = useTransform(smoothMouseX, [-0.5, 0.5], [10, -10])
@@ -210,7 +210,7 @@ export function HeroBanner3D() {
       powerPreference: 'high-performance',
     })
     renderer.setSize(canvasContainerRef.current.clientWidth, canvasContainerRef.current.clientHeight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     renderer.outputColorSpace = THREE.SRGBColorSpace
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.2
@@ -228,8 +228,8 @@ export function HeroBanner3D() {
     const keyLight = new THREE.DirectionalLight(0xFEDA24, 2)
     keyLight.position.set(5, 5, 5)
     keyLight.castShadow = true
-    keyLight.shadow.mapSize.width = 2048
-    keyLight.shadow.mapSize.height = 2048
+    keyLight.shadow.mapSize.width = 1024
+    keyLight.shadow.mapSize.height = 1024
     keyLight.shadow.camera.near = 0.5
     keyLight.shadow.camera.far = 50
     scene.add(keyLight)
@@ -268,7 +268,7 @@ export function HeroBanner3D() {
     scene.add(hemiLight)
     
     // ============ PARTICLE SYSTEM ============
-    const particleSystem = new ParticleSystem(100)
+    const particleSystem = new ParticleSystem(80)
     particleSystemRef.current = particleSystem
     scene.add(particleSystem.getMesh())
     
@@ -552,8 +552,8 @@ export function HeroBanner3D() {
           <div 
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none"
             style={{
-              background: 'radial-gradient(circle, rgba(254, 218, 36, 0.15) 0%, rgba(239, 148, 31, 0.05) 40%, transparent 70%)',
-              filter: 'blur(40px)',
+              background: 'radial-gradient(circle, rgba(254, 218, 36, 0.12) 0%, rgba(239, 148, 31, 0.04) 40%, transparent 70%)',
+              filter: 'blur(25px)',
             }}
           />
         </div>
