@@ -442,12 +442,20 @@ export function AboutCompany() {
   }, [])
   
   return (
-    <section className="relative w-full py-24 px-8 md:px-16 lg:px-24 overflow-visible">
-      {/* Subtle top gradient for smooth transition from hero */}
+    <section className="relative w-full min-h-screen pt-16 pb-24 px-8 md:px-16 lg:px-24 overflow-visible rounded-t-[48px]" style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #000000 100%)' }}>
+      {/* Card top edge glow */}
       <div 
-        className="absolute top-0 left-0 right-0 h-40 pointer-events-none -mt-20"
+        className="absolute top-0 left-0 right-0 h-[2px] rounded-t-[48px]"
         style={{
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(254,218,36,0.5) 20%, rgba(254,218,36,0.8) 50%, rgba(254,218,36,0.5) 80%, transparent 100%)',
+          boxShadow: '0 0 20px rgba(254,218,36,0.3), 0 0 40px rgba(254,218,36,0.1)',
+        }}
+      />
+      {/* Subtle inner shadow at top */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-32 rounded-t-[48px] pointer-events-none"
+        style={{
+          background: 'linear-gradient(180deg, rgba(254,218,36,0.03) 0%, transparent 100%)',
         }}
       />
       
