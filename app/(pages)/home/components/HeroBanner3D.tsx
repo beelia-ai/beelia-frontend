@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { GradientOrbs } from '@/components/ui/gradient-orbs'
 import Link from 'next/link'
 
 // Particle system for magical effect - smooth floating stars
@@ -498,23 +497,12 @@ export function HeroBanner3D() {
     <div 
       ref={containerRef}
       className="relative w-full h-screen overflow-hidden"
-      style={{ background: '#000' }}
     >
-      {/* Gradient Orbs Background - covers entire hero */}
-      <div className="absolute inset-0 z-0">
-        <GradientOrbs 
-          count={15}
-          animate={true}
-          showGrid={true}
-          gridOpacity={0.03}
-        />
-      </div>
-      
-      {/* Radial gradient overlay for depth - centered for both halves */}
+      {/* Subtle radial gradient overlay for depth - lets global orbs show through */}
       <div 
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.8) 100%)',
+          background: 'radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(0,0,0,0.2) 70%, rgba(0,0,0,0.4) 100%)',
         }}
       />
       
@@ -709,13 +697,6 @@ export function HeroBanner3D() {
         </div>
       </div>
       
-      {/* Bottom gradient fade */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 h-32 z-20 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to top, #000 0%, transparent 100%)',
-        }}
-      />
       
       {/* Scroll indicator */}
       <motion.div

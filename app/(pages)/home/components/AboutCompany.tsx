@@ -442,7 +442,15 @@ export function AboutCompany() {
   }, [])
   
   return (
-    <section className="relative w-full py-24 px-8 md:px-16 lg:px-24">
+    <section className="relative w-full py-24 px-8 md:px-16 lg:px-24 overflow-visible">
+      {/* Subtle top gradient for smooth transition from hero */}
+      <div 
+        className="absolute top-0 left-0 right-0 h-40 pointer-events-none -mt-20"
+        style={{
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.1) 50%, transparent 100%)',
+        }}
+      />
+      
       {/* Video Section */}
       <div className="flex justify-center mb-16">
         <div className="relative w-full max-w-4xl">
