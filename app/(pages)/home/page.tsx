@@ -92,8 +92,8 @@ export default function HomePage() {
             </CardSection>
           </ScrollSection>
           
-          {/* Footer Section */}
-          <ScrollSection index={2} height="100vh">
+          {/* Footer Section - slides up to cover About */}
+          <ScrollSection index={2} height="100vh" isLast={true}>
             <CardSection>
               <Footer />
             </CardSection>
