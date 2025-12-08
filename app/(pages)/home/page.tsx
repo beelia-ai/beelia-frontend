@@ -19,9 +19,6 @@ function CardSection({
   return (
     <div 
       className={`relative rounded-t-[48px] overflow-hidden min-h-screen ${className}`}
-      style={{ 
-        background: 'linear-gradient(180deg, #0a0a0a 0%, #000000 100%)',
-      }}
     >
       {/* Card top edge glow */}
       {showGlow && (
@@ -97,8 +94,8 @@ export default function HomePage() {
       {/* Global Background - Fixed, covers entire page */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <GradientOrbs 
-          count={10}
-          animate={false}
+          count={12}
+          animate={true}
           showGrid={true}
           gridOpacity={0.02}
         />
