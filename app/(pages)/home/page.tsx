@@ -94,7 +94,7 @@ export default function HomePage() {
       {/* Global Background - Fixed, covers entire page */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <GradientOrbs 
-          count={12}
+          count={10}
           animate={true}
           showGrid={true}
           gridOpacity={0.02}

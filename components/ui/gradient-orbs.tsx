@@ -65,18 +65,18 @@ function generateRandomOrbs(count: number): GradientOrb[] {
   return orbs
 }
 
-// Animation configs with longer durations and varied delays
+// Animation configs - varied durations, no delay for immediate start
 const animationConfigs = [
-  { duration: 15, delay: 0 },
-  { duration: 20, delay: 2 },
-  { duration: 12, delay: 4 },
-  { duration: 18, delay: 1 },
-  { duration: 25, delay: 3 },
-  { duration: 14, delay: 5 },
-  { duration: 22, delay: 1.5 },
-  { duration: 16, delay: 3.5 },
-  { duration: 19, delay: 0.5 },
-  { duration: 13, delay: 4.5 },
+  { duration: 25 },
+  { duration: 30 },
+  { duration: 22 },
+  { duration: 28 },
+  { duration: 35 },
+  { duration: 24 },
+  { duration: 32 },
+  { duration: 27 },
+  { duration: 20 },
+  { duration: 26 },
 ]
 
 export function GradientOrbs({
@@ -102,58 +102,38 @@ export function GradientOrbs({
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
-      {/* Keyframe animations - smooth movement and opacity */}
+      {/* Keyframe animations - smooth continuous drift with subtle opacity */}
       <style jsx>{`
         @keyframes orbDrift0 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.85; }
-          15% { transform: translate(40px, -25px) scale(1.08); opacity: 0.45; }
-          30% { transform: translate(-20px, 50px) scale(0.95); opacity: 0.9; }
-          45% { transform: translate(-50px, 15px) scale(1.1); opacity: 0.35; }
-          60% { transform: translate(25px, -40px) scale(0.9); opacity: 0.75; }
-          75% { transform: translate(-30px, -20px) scale(1.05); opacity: 0.3; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.85; }
+          0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+          25% { transform: translate(20px, -15px); opacity: 0.65; }
+          50% { transform: translate(30px, 10px); opacity: 0.6; }
+          75% { transform: translate(10px, 20px); opacity: 0.65; }
         }
         @keyframes orbDrift1 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
-          20% { transform: translate(-45px, 35px) scale(1.12); opacity: 0.3; }
-          40% { transform: translate(35px, -45px) scale(0.88); opacity: 0.85; }
-          60% { transform: translate(50px, 20px) scale(1.08); opacity: 0.4; }
-          80% { transform: translate(-25px, -35px) scale(0.95); opacity: 0.7; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+          0%, 100% { transform: translate(0, 0); opacity: 0.65; }
+          25% { transform: translate(-18px, 12px); opacity: 0.6; }
+          50% { transform: translate(-28px, -10px); opacity: 0.55; }
+          75% { transform: translate(-10px, -22px); opacity: 0.6; }
         }
         @keyframes orbDrift2 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.75; }
-          12% { transform: translate(25px, 40px) scale(1.15); opacity: 0.35; }
-          25% { transform: translate(-40px, 20px) scale(0.85); opacity: 0.9; }
-          37% { transform: translate(-15px, -50px) scale(1.1); opacity: 0.4; }
-          50% { transform: translate(45px, -25px) scale(0.92); opacity: 0.8; }
-          62% { transform: translate(20px, 35px) scale(1.05); opacity: 0.3; }
-          75% { transform: translate(-35px, -15px) scale(0.9); opacity: 0.85; }
-          87% { transform: translate(-50px, 25px) scale(1.12); opacity: 0.45; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.75; }
+          0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+          25% { transform: translate(15px, 22px); opacity: 0.55; }
+          50% { transform: translate(-12px, 28px); opacity: 0.5; }
+          75% { transform: translate(-25px, 8px); opacity: 0.55; }
         }
         @keyframes orbDrift3 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.9; }
-          25% { transform: translate(-55px, 45px) scale(1.18); opacity: 0.3; }
-          50% { transform: translate(40px, -35px) scale(0.82); opacity: 0.85; }
-          75% { transform: translate(50px, 40px) scale(1.1); opacity: 0.35; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
-        }
-        @keyframes orbDrift4 {
-          0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
-          16% { transform: translate(35px, -50px) scale(1.2); opacity: 0.25; }
-          33% { transform: translate(-45px, -20px) scale(0.85); opacity: 0.8; }
-          50% { transform: translate(-25px, 45px) scale(1.08); opacity: 0.35; }
-          66% { transform: translate(50px, 25px) scale(0.92); opacity: 0.75; }
-          83% { transform: translate(15px, -40px) scale(1.12); opacity: 0.4; }
-          100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+          0%, 100% { transform: translate(0, 0); opacity: 0.75; }
+          25% { transform: translate(-22px, -12px); opacity: 0.7; }
+          50% { transform: translate(-10px, -30px); opacity: 0.65; }
+          75% { transform: translate(18px, -15px); opacity: 0.7; }
         }
       `}</style>
 
       {/* Gradient orbs */}
       {displayOrbs.map((orb, index) => {
         const config = animationConfigs[index % animationConfigs.length]
-        const driftVariant = index % 5
+        const driftVariant = index % 4
         return (
           <div
             key={index}
@@ -168,11 +148,9 @@ export function GradientOrbs({
               bottom: orb.bottom,
               left: orb.left,
               right: orb.right,
-              filter: 'blur(2px)',
               animation: animate
-                ? `orbDrift${driftVariant} ${config.duration}s ease-in-out ${config.delay}s infinite`
+                ? `orbDrift${driftVariant} ${config.duration}s linear infinite`
                 : 'none',
-              willChange: animate ? 'transform, opacity' : 'auto',
             }}
           />
         )
