@@ -117,11 +117,11 @@ export function HeroBanner3D() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   
-  // Smooth mouse tracking with springs
+  // Smooth mouse tracking with springs - optimized for performance
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 })
-  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 })
+  const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 })
+  const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 })
   
   // Transform for text parallax
   const textX = useTransform(smoothMouseX, [-0.5, 0.5], [10, -10])
@@ -268,7 +268,7 @@ export function HeroBanner3D() {
     scene.add(hemiLight)
     
     // ============ PARTICLE SYSTEM ============
-    const particleSystem = new ParticleSystem(150)
+    const particleSystem = new ParticleSystem(100)
     particleSystemRef.current = particleSystem
     scene.add(particleSystem.getMesh())
     
@@ -451,13 +451,13 @@ export function HeroBanner3D() {
       
       // Update model rotation with smooth interpolation - follows mouse on both axes
       if (modelRef.current) {
-        const rotationSpeed = 0.08 // Faster for more responsive feel
+        const rotationSpeed = 0.15 // Faster for snappier response
         // Smooth interpolation on both X and Y axes
         modelRef.current.rotation.x += (targetRotationRef.current.x - modelRef.current.rotation.x) * rotationSpeed
         modelRef.current.rotation.y += (targetRotationRef.current.y - modelRef.current.rotation.y) * rotationSpeed
         
         // Gentle floating animation
-        modelRef.current.position.y = Math.sin(time * 0.001) * 0.08
+        modelRef.current.position.y = Math.sin(time * 0.002) * 0.05
       }
       
       // Update particle system
@@ -470,12 +470,12 @@ export function HeroBanner3D() {
         materialRef.current.uniforms.uTime.value = time * 0.001
       }
       
-      // Animate point lights
-      pointLight1.position.x = Math.sin(time * 0.001) * 3
-      pointLight1.position.z = Math.cos(time * 0.001) * 3
+      // Animate point lights - slower for performance
+      pointLight1.position.x = Math.sin(time * 0.0005) * 3
+      pointLight1.position.z = Math.cos(time * 0.0005) * 3
       
-      pointLight2.position.x = Math.cos(time * 0.0015) * 3
-      pointLight2.position.y = Math.sin(time * 0.0015) * 2
+      pointLight2.position.x = Math.cos(time * 0.0008) * 3
+      pointLight2.position.y = Math.sin(time * 0.0008) * 2
       
       renderer.render(scene, camera)
     }

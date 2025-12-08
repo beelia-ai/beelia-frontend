@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, createContext, useContext, useMemo, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
 
 // Context to share scroll progress
 interface ScrollContextType {
@@ -23,18 +23,13 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     setIsMounted(true)
   }, [])
   
+  // Direct scroll progress - no spring for better performance
   const { scrollYProgress } = useScroll()
   
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  })
-  
   const contextValue = useMemo(() => ({ 
-    scrollYProgress: smoothProgress, 
+    scrollYProgress, 
     isMounted
-  }), [smoothProgress, isMounted])
+  }), [scrollYProgress, isMounted])
   
   return (
     <ScrollContext.Provider value={contextValue}>
@@ -52,23 +47,23 @@ function HeroSection({ children, className }: { children: ReactNode, className: 
   
   const heroScale = useTransform(
     scrollYProgress ?? new MotionValue(0), 
-    [0, 0.15, 0.3], 
-    [1, 0.98, 0.85]
+    [0, 0.2, 0.35], 
+    [1, 0.98, 0.92]
   )
   const heroOpacity = useTransform(
     scrollYProgress ?? new MotionValue(0), 
-    [0, 0.15, 0.25], 
-    [1, 0.8, 0]
+    [0, 0.15, 0.3], 
+    [1, 0.7, 0]
   )
   const heroY = useTransform(
     scrollYProgress ?? new MotionValue(0),
-    [0, 0.3],
-    ['0%', '-10%']
+    [0, 0.35],
+    ['0%', '-8%']
   )
   const heroBlur = useTransform(
     scrollYProgress ?? new MotionValue(0),
-    [0.1, 0.25],
-    [0, 8]
+    [0.15, 0.3],
+    [0, 6]
   )
   const heroFilter = useTransform(heroBlur, (v) => `blur(${v}px)`)
   
@@ -86,8 +81,9 @@ function HeroSection({ children, className }: { children: ReactNode, className: 
           y: heroY,
           filter: heroFilter,
           zIndex: 1,
-          transformPerspective: 1200,
+          transformPerspective: 1000,
           transformOrigin: 'center top',
+          willChange: 'transform, opacity, filter',
         }}
       >
         {children}
