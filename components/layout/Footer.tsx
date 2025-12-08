@@ -27,6 +27,7 @@ export function Footer() {
         }
       `}</style>
 
+
       {/* Flame Background Images - Layered with slow rotation */}
       <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 1 }}>
         {/* First flame image - rotates clockwise */}
