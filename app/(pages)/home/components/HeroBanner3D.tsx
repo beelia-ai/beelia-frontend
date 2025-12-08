@@ -116,6 +116,17 @@ export function HeroBanner3D() {
   
   const [isLoaded, setIsLoaded] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  
+  // Detect mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
   
   // Smooth mouse tracking with springs - optimized for performance
   const mouseX = useMotionValue(0)
@@ -123,9 +134,9 @@ export function HeroBanner3D() {
   const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 })
   const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 })
   
-  // Transform for text parallax
-  const textX = useTransform(smoothMouseX, [-0.5, 0.5], [10, -10])
-  const textY = useTransform(smoothMouseY, [-0.5, 0.5], [10, -10])
+  // Transform for text parallax - disabled on mobile
+  const textX = useTransform(smoothMouseX, [-0.5, 0.5], isMobile ? [0, 0] : [10, -10])
+  const textY = useTransform(smoothMouseY, [-0.5, 0.5], isMobile ? [0, 0] : [10, -10])
   
   // Handle mouse down on canvas - start dragging
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -515,7 +526,7 @@ export function HeroBanner3D() {
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden"
+      className="relative w-full min-h-screen md:h-screen overflow-hidden"
     >
       {/* Subtle radial gradient overlay for depth - lets global orbs show through */}
       <div 
@@ -537,9 +548,9 @@ export function HeroBanner3D() {
       )}
       
       {/* Main content container */}
-      <div className="relative z-10 flex h-full">
-        {/* Left side - 3D Scene */}
-        <div ref={canvasContainerRef} className="w-1/2 h-full relative">
+      <div className="relative z-10 flex flex-col lg:flex-row min-h-screen lg:h-full">
+        {/* 3D Scene - First on mobile, left side on desktop */}
+        <div ref={canvasContainerRef} className="w-full h-[45vh] min-h-[300px] md:h-[50vh] lg:w-1/2 lg:h-full relative flex-shrink-0">
           
           {/* Three.js Canvas */}
           <canvas 
@@ -550,7 +561,7 @@ export function HeroBanner3D() {
           
           {/* Glow effect behind model */}
           <div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] pointer-events-none"
             style={{
               background: 'radial-gradient(circle, rgba(254, 218, 36, 0.15) 0%, rgba(239, 148, 31, 0.05) 40%, transparent 70%)',
               filter: 'blur(40px)',
@@ -558,10 +569,10 @@ export function HeroBanner3D() {
           />
         </div>
         
-        {/* Right side - Text content */}
-        <div className="w-1/2 h-full flex items-center justify-center px-12 lg:px-20">
+        {/* Text content - Below on mobile, right side on desktop */}
+        <div className="w-full lg:w-1/2 lg:h-full flex items-start lg:items-center justify-center lg:justify-center px-4 sm:px-6 md:px-10 lg:px-12 xl:px-20 py-4 sm:py-6 md:py-8 lg:py-0 flex-grow overflow-y-auto">
           <motion.div 
-            className="max-w-xl"
+            className="max-w-xl w-full text-center md:text-center lg:text-left"
             style={{ x: textX, y: textY }}
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -572,23 +583,29 @@ export function HeroBanner3D() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#FEDA24]/30 bg-[#FEDA24]/5 mb-8"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 md:px-4 md:py-2 rounded-full border border-[#FEDA24]/40 bg-[#FEDA24]/10 backdrop-blur-sm mb-4 sm:mb-5 md:mb-6 lg:mb-8"
             >
-              <span className="w-2 h-2 rounded-full bg-[#FEDA24] animate-pulse" />
-              <span className="text-[#FEDA24] text-sm font-medium tracking-wide uppercase">
+              <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#FEDA24] animate-pulse" />
+              <span className="text-[#FEDA24] text-xs sm:text-sm md:text-base font-semibold tracking-wide uppercase">
                 BEELIA.AI
               </span>
             </motion.div>
             
-            {/* Main heading */}
+            {/* Main heading - single line on mobile */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
-              className="text-4xl lg:text-5xl xl:text-5xl font-bold text-white leading-[1.1] mb-6 whitespace-nowrap"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-5xl font-bold text-white leading-[1.1] mb-3 sm:mb-4 md:mb-5 lg:mb-6 whitespace-nowrap"
               style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
             >
-              The App Store <span className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for AI</span>
+              The App Store{' '}
+              <span 
+                className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent inline" 
+                style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}
+              >
+                for AI
+              </span>
             </motion.h1>
             
             {/* Subtitle */}
@@ -596,7 +613,7 @@ export function HeroBanner3D() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.1 }}
-              className="text-xl lg:text-2xl text-white/60 mb-6 -mt-2"
+              className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-white/70 mb-4 sm:mb-5 md:mb-5 lg:mb-6"
               style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
             >
               for the AI Marketplace
@@ -607,8 +624,8 @@ export function HeroBanner3D() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="text-lg lg:text-xl text-white/70 leading-relaxed mb-10"
-              style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+              className="text-sm sm:text-base md:text-base lg:text-lg xl:text-xl text-white/80 leading-relaxed mb-6 sm:mb-8 md:mb-8 lg:mb-10 xl:mb-10"
+              style={{ fontFamily: 'var(--font-inria-sans), sans-serif', lineHeight: '1.7' }}
             >
               A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
             </motion.p>
@@ -618,11 +635,11 @@ export function HeroBanner3D() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.4 }}
-              className="flex items-center gap-4"
+              className="flex flex-col sm:flex-row items-stretch sm:items-stretch md:items-center md:justify-center lg:items-start lg:justify-start gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-6 lg:mb-8 lg:mt-0"
             >
-              <Link href="/waitlist">
+              <Link href="/waitlist" className="flex-1 sm:flex-1 md:flex-none lg:flex-none">
                 <motion.button
-                  className="group relative px-8 py-4 rounded-full font-semibold text-black overflow-hidden"
+                  className="group relative w-full px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base md:text-base text-black overflow-hidden"
                   style={{
                     background: 'linear-gradient(135deg, #FEDA24 0%, #EF941F 100%)',
                     fontFamily: 'var(--font-inria-sans), sans-serif',
@@ -630,14 +647,14 @@ export function HeroBanner3D() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span className="relative z-10 flex items-center gap-2">
+                  <span className="relative z-10 flex items-center justify-center gap-2">
                     Join Waitlist
                     <svg 
-                      width="20" 
-                      height="20" 
+                      width="18" 
+                      height="18" 
                       viewBox="0 0 24 24" 
                       fill="none" 
-                      className="transition-transform group-hover:translate-x-1"
+                      className="transition-transform group-hover:translate-x-1 md:w-5 md:h-5"
                     >
                       <path 
                         d="M5 12H19M19 12L12 5M19 12L12 19" 
@@ -658,7 +675,7 @@ export function HeroBanner3D() {
               </Link>
               
               <motion.button
-                className="px-8 py-4 rounded-full font-semibold text-white border border-white/20 backdrop-blur-sm hover:border-[#FEDA24]/50 hover:bg-white/5 transition-all duration-300"
+                className="w-full sm:w-full md:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base md:text-base text-white border border-white/20 backdrop-blur-sm hover:border-[#FEDA24]/50 hover:bg-white/5 transition-all duration-300"
                 style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -675,21 +692,21 @@ export function HeroBanner3D() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.6 }}
-              className="flex items-center gap-8 mt-12 pt-8 border-t border-white/10"
+              className="flex items-center justify-center md:justify-center lg:justify-start gap-8 sm:gap-10 md:gap-12 lg:gap-8 pt-4 sm:pt-5 md:pt-6 lg:pt-8 border-t border-white/10 pb-2 sm:pb-0"
             >
               {[
                 { value: '100+', label: 'AI Tools', id: 'tools' },
                 { value: '500+', label: 'On Waitlist', id: 'waitlist' },
               ].map((stat) => (
-                <div key={stat.id} className="text-center">
+                <div key={stat.id} className="text-center flex-shrink-0">
                   <div 
-                    className="text-2xl lg:text-3xl font-bold text-[#FEDA24]"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-2xl xl:text-3xl font-bold text-[#FEDA24] leading-tight"
                     style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
                   >
                     {stat.value}
                   </div>
                   <div 
-                    className="text-sm text-white/50 mt-1"
+                    className="text-xs sm:text-sm md:text-base lg:text-sm text-white/50 mt-1"
                     style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
                   >
                     {stat.label}
@@ -702,9 +719,9 @@ export function HeroBanner3D() {
       </div>
       
       
-      {/* Scroll indicator */}
+      {/* Scroll indicator - hidden on mobile, shown on desktop */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+        className="hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 2 }}
@@ -722,9 +739,9 @@ export function HeroBanner3D() {
         </motion.div>
       </motion.div>
       
-      {/* Cursor glow effect */}
+      {/* Cursor glow effect - hidden on mobile */}
       <motion.div
-        className="fixed w-64 h-64 rounded-full pointer-events-none z-50 mix-blend-screen"
+        className="hidden md:block fixed w-64 h-64 rounded-full pointer-events-none z-50 mix-blend-screen"
         style={{
           background: 'radial-gradient(circle, rgba(254, 218, 36, 0.1) 0%, transparent 70%)',
           x: useTransform(smoothMouseX, (v) => v * (containerRef.current?.clientWidth ?? 0) - 128),
