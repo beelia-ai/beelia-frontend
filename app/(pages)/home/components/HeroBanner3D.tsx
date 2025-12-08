@@ -110,9 +110,13 @@ export function HeroBanner3D() {
   const animationRef = useRef<number | null>(null)
   const mouseRef = useRef({ x: 0, y: 0 })
   const targetRotationRef = useRef({ x: Math.PI / 2, y: 0 }) // X = PI/2 to keep model upright
+  const isDraggingRef = useRef(false)
+  const lastDragPosRef = useRef({ x: 0, y: 0 })
+  const dragRotationRef = useRef({ x: Math.PI / 2, y: 0 }) // Accumulated rotation from dragging
   
   const [isLoaded, setIsLoaded] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
   
   // Smooth mouse tracking with springs
   const mouseX = useMotionValue(0)
@@ -123,6 +127,26 @@ export function HeroBanner3D() {
   // Transform for text parallax
   const textX = useTransform(smoothMouseX, [-0.5, 0.5], [10, -10])
   const textY = useTransform(smoothMouseY, [-0.5, 0.5], [10, -10])
+  
+  // Handle mouse down on canvas - start dragging
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    isDraggingRef.current = true
+    setIsDragging(true)
+    lastDragPosRef.current = { x: e.clientX, y: e.clientY }
+    // Store current rotation as starting point for drag
+    if (modelRef.current) {
+      dragRotationRef.current = {
+        x: modelRef.current.rotation.x,
+        y: modelRef.current.rotation.y
+      }
+    }
+  }, [])
+  
+  // Handle mouse up - stop dragging
+  const handleMouseUp = useCallback(() => {
+    isDraggingRef.current = false
+    setIsDragging(false)
+  }, [])
   
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!containerRef.current) return
@@ -135,10 +159,30 @@ export function HeroBanner3D() {
     mouseX.set(x)
     mouseY.set(y)
     
-    // Update target rotation for model - both axes follow mouse exactly
-    targetRotationRef.current = {
-      x: Math.PI / 2 + y * 0.5, // Vertical tilt based on mouse Y
-      y: x * 0.8 // Horizontal rotation based on mouse X
+    // If dragging, rotate based on drag delta
+    if (isDraggingRef.current) {
+      const deltaX = e.clientX - lastDragPosRef.current.x
+      const deltaY = e.clientY - lastDragPosRef.current.y
+      
+      // Update drag rotation (accumulate the rotation)
+      dragRotationRef.current = {
+        x: dragRotationRef.current.x + deltaY * 0.01,
+        y: dragRotationRef.current.y + deltaX * 0.01
+      }
+      
+      // Set target to drag rotation
+      targetRotationRef.current = {
+        x: dragRotationRef.current.x,
+        y: dragRotationRef.current.y
+      }
+      
+      lastDragPosRef.current = { x: e.clientX, y: e.clientY }
+    } else {
+      // Normal mouse follow when not dragging
+      targetRotationRef.current = {
+        x: Math.PI / 2 + y * 0.5, // Vertical tilt based on mouse Y
+        y: x * 0.8 // Horizontal rotation based on mouse X
+      }
     }
   }, [mouseX, mouseY])
   
@@ -253,29 +297,25 @@ export function HeroBanner3D() {
         // Rotate model to stand upright (vertical)
         model.rotation.x = Math.PI / 2
         
-        // Apply enhanced holographic Beelia material
+        // Apply Beelia gradient material - yellow dominant
         const holographicMaterial = new THREE.ShaderMaterial({
           uniforms: {
             uTime: { value: 0 },
-            color1: { value: new THREE.Color(0xFEDA24) }, // Golden yellow
-            color2: { value: new THREE.Color(0xEF941F) }, // Orange
-            color3: { value: new THREE.Color(0xFFE55C) }, // Light yellow
-            lightPosition: { value: new THREE.Vector3(5, 5, 5) },
-            viewPosition: { value: camera.position },
+            color1: { value: new THREE.Color(0xFEDA24) }, // Golden yellow (Beelia primary)
+            color2: { value: new THREE.Color(0xF5B800) }, // Darker golden (instead of orange)
+            color3: { value: new THREE.Color(0xFFE55C) }, // Bright yellow highlight
           },
           vertexShader: `
             uniform float uTime;
             
             varying vec3 vNormal;
             varying vec3 vPosition;
-            varying vec2 vUv;
             varying vec3 vWorldPosition;
             varying vec3 vViewDir;
             
             void main() {
               vNormal = normalize(normalMatrix * normal);
               vPosition = position;
-              vUv = uv;
               vec4 worldPosition = modelMatrix * vec4(position, 1.0);
               vWorldPosition = worldPosition.xyz;
               vViewDir = normalize(cameraPosition - worldPosition.xyz);
@@ -287,77 +327,58 @@ export function HeroBanner3D() {
             uniform vec3 color1;
             uniform vec3 color2;
             uniform vec3 color3;
-            uniform vec3 lightPosition;
-            uniform vec3 viewPosition;
             
             varying vec3 vNormal;
             varying vec3 vPosition;
-            varying vec2 vUv;
             varying vec3 vWorldPosition;
             varying vec3 vViewDir;
             
-            // HSV to RGB conversion for holographic effect
-            vec3 hsv2rgb(vec3 c) {
-              vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-              vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-              return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-            }
-            
             void main() {
-              // Base gradient based on position
-              float gradientFactor = (vPosition.y + 1.0) * 0.5;
-              vec3 baseColor = mix(color2, color1, gradientFactor);
-              baseColor = mix(baseColor, color3, smoothstep(0.6, 1.0, gradientFactor) * 0.4);
-              
-              // Lighting calculations
-              vec3 lightDir = normalize(lightPosition - vWorldPosition);
+              // Always use corrected normal for consistent look on both sides
+              vec3 normal = normalize(vNormal);
               vec3 viewDir = normalize(vViewDir);
-              vec3 halfDir = normalize(lightDir + viewDir);
-              vec3 reflectDir = reflect(-lightDir, vNormal);
               
-              // Fresnel effect (view-dependent)
-              float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 2.5);
+              // Use absolute dot product so both sides look the same
+              float viewDot = abs(dot(viewDir, normal));
               
-              // Holographic/iridescent effect on edges
-              float hue = fract(fresnel * 2.0 + uTime * 0.1 + vPosition.x * 0.5 + vPosition.y * 0.3);
-              vec3 holoColor = hsv2rgb(vec3(hue, 0.6, 1.0));
+              // Beelia gradient - darker golden at bottom, bright yellow at top
+              float gradientFactor = clamp((vWorldPosition.y + 3.0) * 0.2, 0.0, 1.0);
+              vec3 baseColor = mix(color2, color1, gradientFactor); // Dark golden to golden yellow
+              baseColor = mix(baseColor, color3, smoothstep(0.6, 1.0, gradientFactor) * 0.4); // Add bright yellow at top
               
-              // Energy pulse wave
-              float pulse = sin(vPosition.y * 8.0 - uTime * 3.0) * 0.5 + 0.5;
-              pulse = smoothstep(0.3, 0.7, pulse);
+              // Simple lighting that works on both sides
+              vec3 lightDir1 = normalize(vec3(1.0, 1.0, 1.0));
+              vec3 lightDir2 = normalize(vec3(-1.0, 0.5, -0.5));
               
-              // Diffuse lighting
-              float diff = max(dot(vNormal, lightDir), 0.0);
+              float diff1 = abs(dot(normal, lightDir1)) * 0.5;
+              float diff2 = abs(dot(normal, lightDir2)) * 0.3;
+              float diff = diff1 + diff2 + 0.35;
               
-              // Specular highlights (Blinn-Phong)
-              float spec = pow(max(dot(vNormal, halfDir), 0.0), 128.0);
+              // Fresnel rim effect - always positive
+              float fresnel = pow(1.0 - viewDot, 2.5);
               
-              // Secondary specular for extra shine
-              float spec2 = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+              // Specular highlight
+              vec3 halfDir = normalize(lightDir1 + viewDir);
+              float spec = pow(max(abs(dot(normal, halfDir)), 0.0), 80.0);
               
-              // Animated rim glow
-              float rimPulse = sin(uTime * 2.0) * 0.15 + 0.85;
-              float rimGlow = fresnel * rimPulse;
+              // Energy pulse wave traveling up
+              float pulse = sin(vWorldPosition.y * 5.0 - uTime * 2.0) * 0.5 + 0.5;
+              pulse = smoothstep(0.3, 0.7, pulse) * 0.2;
               
-              // Combine everything
-              vec3 ambient = baseColor * 0.25;
-              vec3 diffuse = baseColor * diff * 0.7;
-              vec3 specular = vec3(1.0, 0.95, 0.8) * (spec * 0.8 + spec2 * 0.3);
+              // Animated glow
+              float glowPulse = sin(uTime * 1.5) * 0.1 + 0.9;
               
-              // Holographic rim
-              vec3 holoRim = holoColor * rimGlow * 0.5;
+              // Combine colors with Beelia gradient
+              vec3 ambient = baseColor * 0.45;
+              vec3 diffuse = baseColor * diff;
+              vec3 specular = color3 * spec * 0.7; // Bright yellow specular
+              vec3 rim = color1 * fresnel * glowPulse * 0.5; // Golden rim
+              vec3 pulseGlow = color3 * pulse * fresnel; // Bright yellow pulse
               
-              // Energy pulse glow
-              vec3 pulseGlow = color1 * pulse * fresnel * 0.3;
+              vec3 finalColor = ambient + diffuse + specular + rim + pulseGlow;
               
-              // Golden rim light
-              vec3 rimLight = color1 * rimGlow * 0.4;
-              
-              vec3 finalColor = ambient + diffuse + specular + holoRim + pulseGlow + rimLight;
-              
-              // Add subtle bloom on bright areas
-              float brightness = dot(finalColor, vec3(0.299, 0.587, 0.114));
-              finalColor += finalColor * smoothstep(0.8, 1.2, brightness) * 0.2;
+              // Clamp to valid range
+              finalColor = clamp(finalColor, vec3(0.0), vec3(2.0));
               
               gl_FragColor = vec4(finalColor, 1.0);
             }
@@ -467,6 +488,7 @@ export function HeroBanner3D() {
     
     // Event listeners
     globalThis.addEventListener('mousemove', handleMouseMove)
+    globalThis.addEventListener('mouseup', handleMouseUp)
     
     // Resize handler - use canvas container (left half) dimensions
     const handleResize = () => {
@@ -485,13 +507,14 @@ export function HeroBanner3D() {
     // Cleanup
     return () => {
       globalThis.removeEventListener('mousemove', handleMouseMove)
+      globalThis.removeEventListener('mouseup', handleMouseUp)
       globalThis.removeEventListener('resize', handleResize)
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
       renderer.dispose()
     }
-  }, [handleMouseMove])
+  }, [handleMouseMove, handleMouseUp])
   
   return (
     <div 
@@ -547,7 +570,8 @@ export function HeroBanner3D() {
           {/* Three.js Canvas */}
           <canvas 
             ref={canvasRef}
-            className={`w-full h-full transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onMouseDown={handleMouseDown}
+            className={`w-full h-full transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
           />
           
           {/* Glow effect behind model */}
@@ -678,8 +702,7 @@ export function HeroBanner3D() {
             >
               {[
                 { value: '100+', label: 'AI Tools', id: 'tools' },
-                { value: '50K+', label: 'Users', id: 'users' },
-                { value: '99%', label: 'Uptime', id: 'uptime' },
+                { value: '500+', label: 'On Waitlist', id: 'waitlist' },
               ].map((stat) => (
                 <div key={stat.id} className="text-center">
                   <div 
