@@ -1,21 +1,3 @@
-export { Button } from './button'
-export type { ButtonProps } from './button'
-
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card'
-export type { CardProps } from './card'
-
-export { Container } from './container'
-export type { ContainerProps } from './container'
-
-export { Section } from './section'
-export type { SectionProps } from './section'
-
-export { Badge } from './badge'
-export type { BadgeProps } from './badge'
-
-export { Input } from './input'
-export type { InputProps } from './input'
-
 export { default as LiquidEther } from './liquid-ether'
 export type { LiquidEtherProps } from './liquid-ether'
 
@@ -27,6 +9,3 @@ export type { OverlayProps } from './overlay'
 
 export { GradientOrbs } from './gradient-orbs'
 export type { GradientOrbsProps, GradientOrb } from './gradient-orbs'
-
-
-
