@@ -114,9 +114,11 @@ export default function HomePage() {
           
           {/* About Company Section - auto height for content */}
           <ScrollSection index={1} height="auto">
-            <CardSection>
-              <AboutCompany />
-            </CardSection>
+            <div id="about-company">
+              <CardSection>
+                <AboutCompany />
+              </CardSection>
+            </div>
           </ScrollSection>
           
           {/* Footer Section */}

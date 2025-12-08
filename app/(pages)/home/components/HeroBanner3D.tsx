@@ -662,6 +662,9 @@ export function HeroBanner3D() {
                 style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  document.getElementById('about-company')?.scrollIntoView({ behavior: 'smooth' })
+                }}
               >
                 Learn More
               </motion.button>
