@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import Link from 'next/link'
 
 // Particle system for magical effect - smooth floating stars
 class ParticleSystem {
@@ -613,52 +612,48 @@ export function HeroBanner3D() {
               A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
             </motion.p>
             
-            {/* CTA Buttons */}
+            {/* CTA Button */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.4 }}
-              className="flex items-center gap-4"
             >
-              <Link href="/waitlist">
-                <motion.button
-                  className="group relative px-8 py-4 rounded-full font-semibold text-black overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(135deg, #FEDA24 0%, #EF941F 100%)',
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Join Waitlist
-                    <svg 
-                      width="20" 
-                      height="20" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      className="transition-transform group-hover:translate-x-1"
-                    >
-                      <path 
-                        d="M5 12H19M19 12L12 5M19 12L12 19" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  <div 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background: 'linear-gradient(135deg, #FFE55C 0%, #FEDA24 100%)',
-                    }}
-                  />
-                </motion.button>
-              </Link>
-              
+              <style>{`
+                .learn-more-btn {
+                  position: relative;
+                  overflow: hidden;
+                  border-radius: 50px;
+                  background: transparent;
+                  border: 2px solid rgba(254, 218, 36, 0.5);
+                }
+                .learn-more-btn::after {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: linear-gradient(135deg, #FEDA24 0%, #EF941F 50%, #FEDA24 100%);
+                  transition: clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                  clip-path: inset(0 100% 0 0);
+                  z-index: 0;
+                  border-radius: 50px;
+                  pointer-events: none;
+                }
+                .learn-more-btn:hover::after {
+                  clip-path: inset(0 0 0 0);
+                }
+                .learn-more-btn:hover {
+                  border-color: transparent;
+                }
+                .learn-more-btn:hover .btn-text {
+                  color: black;
+                }
+              `}</style>
               <motion.button
-                className="px-8 py-4 rounded-full font-semibold text-white border border-white/20 backdrop-blur-sm hover:border-[#FEDA24]/50 hover:bg-white/5 transition-all duration-300"
+                className="learn-more-btn group px-8 py-4 font-semibold cursor-pointer"
                 style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -666,7 +661,24 @@ export function HeroBanner3D() {
                   document.getElementById('about-company')?.scrollIntoView({ behavior: 'smooth' })
                 }}
               >
-                Learn More
+                <span className="btn-text relative z-10 flex items-center gap-2 text-white transition-colors duration-500">
+                  Learn More
+                  <svg 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    className="transition-transform duration-300 group-hover:rotate-90"
+                    stroke="currentColor"
+                  >
+                    <path 
+                      d="M5 12H19M19 12L12 5M19 12L12 19" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               </motion.button>
             </motion.div>
             
