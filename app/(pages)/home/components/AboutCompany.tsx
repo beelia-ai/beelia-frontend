@@ -442,7 +442,7 @@ export function AboutCompany() {
   }, [])
   
   return (
-    <section className="relative w-full py-24 px-8 md:px-16 lg:px-24 overflow-hidden">
+    <section className="relative w-full py-24 px-8 md:px-16 lg:px-24">
       {/* Video Section */}
       <div className="flex justify-center mb-16">
         <div className="relative w-full max-w-4xl">
