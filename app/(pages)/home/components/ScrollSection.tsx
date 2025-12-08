@@ -112,21 +112,19 @@ function CardSection({
   children, 
   index, 
   className, 
-  height,
-  isLast
+  height
 }: { 
   children: ReactNode
   index: number
   className: string
   height: string
-  isLast: boolean
 }) {
   const sectionRef = useRef<HTMLDivElement>(null)
   
   // Track this section's scroll progress
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: isLast ? ["start end", "start 20%"] : ["start end", "start start"]
+    offset: ["start end", "start start"]
   })
   
   // Smooth the progress
@@ -139,7 +137,7 @@ function CardSection({
   const cardY = useTransform(
     smoothProgress, 
     [0, 1], 
-    ['100%', '0%']
+    ['50%', '0%']
   )
   
   // Scale animation
@@ -163,58 +161,26 @@ function CardSection({
     [0.8, 0.3]
   )
   
-  // For the last section (footer), make it sticky to cover the previous section
-  if (isLast) {
-    return (
-      <div 
-        ref={sectionRef}
-        className="relative"
-      >
-        <motion.section
-          className={`sticky top-0 ${className}`}
-          style={{ 
-            y: cardY,
-            scale: cardScale,
-            rotateX: cardRotateX,
-            zIndex: index + 10,
-            transformPerspective: 1200,
-            transformOrigin: 'center top',
-            minHeight: height === 'auto' ? 'auto' : height,
-          }}
-        >
-          {/* Top shadow for depth */}
-          <motion.div 
-            className="absolute inset-x-0 -top-32 h-32 pointer-events-none z-50"
-            style={{
-              opacity: shadowOpacity,
-              background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 100%)',
-            }}
-          />
-          
-          {/* Content wrapper */}
-          <div className="relative w-full">
-            {children}
-          </div>
-        </motion.section>
-      </div>
-    )
-  }
-  
-  // Regular card section
   return (
     <motion.section
       ref={sectionRef}
       className={`relative ${className}`}
       style={{ 
+        y: cardY,
+        scale: cardScale,
+        rotateX: cardRotateX,
         zIndex: index + 10,
+        transformPerspective: 1200,
+        transformOrigin: 'center top',
         minHeight: height === 'auto' ? 'auto' : height,
       }}
     >
       {/* Top shadow for depth */}
-      <div 
-        className="absolute inset-x-0 -top-20 h-20 pointer-events-none z-50"
+      <motion.div 
+        className="absolute inset-x-0 -top-32 h-32 pointer-events-none z-50"
         style={{
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          opacity: shadowOpacity,
+          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.9) 100%)',
         }}
       />
       
@@ -232,22 +198,20 @@ interface ScrollSectionProps {
   index: number
   className?: string
   height?: string
-  isLast?: boolean
 }
 
 export function ScrollSection({ 
   children, 
   index, 
   className = '',
-  height = '100vh',
-  isLast = false
+  height = '100vh'
 }: ScrollSectionProps) {
   if (index === 0) {
     return <HeroSection className={className}>{children}</HeroSection>
   }
   
   return (
-    <CardSection index={index} className={className} height={height} isLast={isLast}>
+    <CardSection index={index} className={className} height={height}>
       {children}
     </CardSection>
   )
