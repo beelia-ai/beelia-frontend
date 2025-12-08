@@ -355,9 +355,11 @@ export function AboutCompany() {
   const row2Ref = useRef<HTMLDivElement>(null)
   const sep2Ref = useRef<HTMLDivElement>(null)
   const row3Ref = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   
   const [litDots, setLitDots] = useState<Set<string>>(new Set())
   const [rowPositions, setRowPositions] = useState<number[]>([0, 0, 0, 0, 0, 0])
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   
   // Calculate actual row positions from DOM
   useEffect(() => {
@@ -408,6 +410,37 @@ export function AboutCompany() {
   
   const isDotLit = useCallback((dotId: string) => litDots.has(dotId), [litDots])
   
+  const handlePlayVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.play()
+      setIsVideoPlaying(true)
+    }
+  }
+  
+  const handleVideoPlay = () => {
+    setIsVideoPlaying(true)
+  }
+  
+  const handleVideoPause = () => {
+    setIsVideoPlaying(false)
+  }
+  
+  // Ensure video shows first frame when loaded
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    
+    const handleLoadedMetadata = () => {
+      video.currentTime = 0.1 // Set to a small value to show first frame
+    }
+    
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+    }
+  }, [])
+  
   return (
     <section className="relative w-full py-24 px-8 md:px-16 lg:px-24 overflow-hidden">
       {/* Video Section */}
@@ -437,22 +470,110 @@ export function AboutCompany() {
             />
           </div>
 
-          {/* Video */}
+          {/* Video Container */}
           <div 
             className="relative w-full aspect-video rounded-2xl overflow-hidden"
             style={{ 
               background: 'linear-gradient(135deg, rgba(50, 50, 50, 0.8) 0%, rgba(30, 30, 30, 0.9) 100%)'
             }}
           >
+            {/* Video Element - Blurred when paused */}
             <video 
-              className="w-full h-full object-cover"
-              controls
+              ref={videoRef}
+              className={`w-full h-full object-cover transition-all duration-500 ${
+                !isVideoPlaying ? 'blur-[8px] scale-105' : 'blur-0 scale-100'
+              }`}
+              controls={isVideoPlaying}
               playsInline
-              preload="auto"
+              preload="metadata"
+              onPlay={handleVideoPlay}
+              onPause={handleVideoPause}
+              onEnded={handleVideoPause}
             >
               <source src="/videos/beelia-intro.mov" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+            
+            {/* Preview Overlay with Play Button */}
+            {!isVideoPlaying && (
+              <div 
+                className="absolute inset-0 z-10 cursor-pointer"
+                onClick={handlePlayVideo}
+              >
+                {/* Additional dark overlay for better contrast */}
+                <div className="absolute inset-0 bg-black/15" />
+                
+                {/* Glass border effect */}
+                <div 
+                  className="absolute inset-0 rounded-2xl"
+                  style={{
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(1px)',
+                    boxShadow: 'inset 0 0 20px rgba(255, 255, 255, 0.05)',
+                  }}
+                />
+                
+                {/* Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div 
+                    className="relative group w-20 h-20"
+                  >
+                    {/* Outer glow ring */}
+                    <div 
+                      className="absolute inset-0 rounded-full transition-all duration-300 group-hover:scale-[1.3]"
+                      style={{
+                        background: 'rgba(254, 218, 36, 0.2)',
+                        filter: 'blur(10px)',
+                        transform: 'scale(1.2)',
+                      }}
+                    />
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        background: 'rgba(254, 218, 36, 0.3)',
+                        filter: 'blur(10px)',
+                        transform: 'scale(1.3)',
+                      }}
+                    />
+                    
+                    {/* Glass button background */}
+                    <div 
+                      className="absolute inset-0 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 group-hover:scale-110"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)',
+                      }}
+                    >
+                      <div 
+                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.15)',
+                          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.15)',
+                        }}
+                      />
+                      {/* Play Icon */}
+                      <svg 
+                        width="32" 
+                        height="32" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="ml-1 relative z-10"
+                        style={{
+                          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
+                        }}
+                      >
+                        <path 
+                          d="M8 5V19L19 12L8 5Z" 
+                          fill="white"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
