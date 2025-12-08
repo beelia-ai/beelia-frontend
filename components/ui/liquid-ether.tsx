@@ -100,8 +100,7 @@ export default function LiquidEther({
   autoRampDuration = 0.6
 }: LiquidEtherProps): React.ReactElement {
   const mountRef = useRef<HTMLDivElement | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const webglRef = useRef<any>(null);
+  const webglRef = useRef<unknown>(null);
   const rafRef = useRef<number | null>(null);
   const isVisibleRef = useRef<boolean>(true);
   const lastFrameTimeRef = useRef<number>(0);
@@ -575,8 +574,7 @@ export default function LiquidEther({
         this.scene = new THREE.Scene();
         this.camera = new THREE.Camera();
         if (this.uniforms && this.props.material) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          this.material = new THREE.RawShaderMaterial(this.props.material as any);
+          this.material = new THREE.RawShaderMaterial(this.props.material as THREE.ShaderMaterialParameters);
           this.geometry = new THREE.PlaneGeometry(2, 2);
           this.plane = new THREE.Mesh(this.geometry, this.material);
           this.scene.add(this.plane);
