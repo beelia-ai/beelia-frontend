@@ -11,39 +11,39 @@ export function Footer() {
     <footer className="relative w-full min-h-screen overflow-hidden">
       {/* Flame Background Container */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-        {/* Static Bottom Layer - Figma dimensions */}
+        {/* Static Bottom Layer */}
         <Image
           src="/images/image 365.png"
           alt="Footer background"
-          width={1399}
-          height={2091}
-          className="absolute w-auto h-auto max-w-none"
+          width={2000}
+          height={1400}
+          className="absolute w-auto h-auto max-w-none animate-oscillate-clockwise"
           style={{
             zIndex: 1,
-            width: '1399.3px',
-            height: '2090.82px',
-            top: '-502.18px',
-            left: '-581.63px',
-            transform: 'rotate(-120deg)', // Negated for CSS
+            width: '2800px',
+            height: '1700px',
+            bottom: '-550px',
+            left: '-400px',
+            transform: 'rotate(10deg)',
             transformOrigin: 'center center',
-            opacity: 1,
+            opacity: 0.9,
           }}
           priority
         />
-        {/* Oscillating Top Layer - Figma dimensions */}
+        {/* Top Layer */}
         <Image
           src="/images/image 366.png"
           alt="Footer flame effect"
-          width={1399}
-          height={2091}
-          className="absolute w-auto h-auto max-w-none"
+          width={2000}
+          height={1400}
+          className="absolute w-auto h-auto max-w-none animate-oscillate-counterclockwise"
           style={{
-            zIndex: 2,
-            width: '1399.3px',
-            height: '2090.82px',
-            top: '-291.94px',
-            left: '-875.71px',
-            transform: 'rotate(-114.63deg)', // Negated for CSS
+            zIndex: 3,
+            width: '1400px',
+            height: '2000px',
+            bottom: '-800px',
+            left: '-200px',
+            transform: 'rotate(0deg)',
             transformOrigin: 'center center',
             opacity: 1,
             mixBlendMode: 'screen',
