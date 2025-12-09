@@ -250,7 +250,27 @@ function TableBeam({
     const x = startX + (endX - startX) * beam.progress
     const y = startY + (endY - startY) * beam.progress
     
-    return { x, y, direction: beam.direction }
+    // Calculate opacity based on position - fade out near edges
+    let opacity = 1
+    const fadeMargin = 12 // percentage from edge to start fading
+    
+    if (beam.direction === 'horizontal') {
+      // Horizontal beams fade at left/right edges
+      if (x < fadeMargin) {
+        opacity = Math.min(opacity, x / fadeMargin)
+      } else if (x > 100 - fadeMargin) {
+        opacity = Math.min(opacity, (100 - x) / fadeMargin)
+      }
+    } else {
+      // Vertical beams fade at top/bottom edges
+      if (y < fadeMargin) {
+        opacity = Math.min(opacity, y / fadeMargin)
+      } else if (y > 100 - fadeMargin) {
+        opacity = Math.min(opacity, (100 - y) / fadeMargin)
+      }
+    }
+    
+    return { x, y, direction: beam.direction, opacity: Math.max(0, opacity) }
   }
   
   const beamPos = getBeamPosition()
@@ -265,6 +285,8 @@ function TableBeam({
             left: `${beamPos.x}%`,
             top: `${beamPos.y}%`,
             transform: 'translate(-50%, -50%)',
+            opacity: beamPos.opacity,
+            transition: 'opacity 0.1s ease-out',
           }}
         >
           {/* Slim line beam */}
