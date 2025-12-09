@@ -64,12 +64,12 @@ function CardSection({
 }) {
   return (
     <div 
-      className="relative rounded-t-[48px] overflow-hidden min-h-screen"
+      className="relative overflow-hidden min-h-screen"
     >
       {/* Card top edge glow */}
       {showGlow && (
         <div 
-          className="absolute top-0 left-0 right-0 h-[2px] rounded-t-[48px] z-20"
+          className="absolute top-0 left-0 right-0 h-[2px] z-20"
           style={{
             background: 'linear-gradient(90deg, transparent 0%, rgba(254,218,36,0.4) 15%, rgba(254,218,36,0.8) 50%, rgba(254,218,36,0.4) 85%, transparent 100%)',
             boxShadow: '0 0 30px rgba(254,218,36,0.4), 0 0 60px rgba(254,218,36,0.15)',
@@ -79,7 +79,7 @@ function CardSection({
       
       {/* Subtle inner glow at top */}
       <div 
-        className="absolute top-0 left-0 right-0 h-40 rounded-t-[48px] pointer-events-none z-10"
+        className="absolute top-0 left-0 right-0 h-40 pointer-events-none z-10"
         style={{
           background: 'linear-gradient(180deg, rgba(254,218,36,0.03) 0%, transparent 100%)',
         }}
