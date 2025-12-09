@@ -221,10 +221,10 @@
 
   @keyframes oscillate-counterclockwise {
     0%, 100% {
-      transform: rotate(10deg);
+      transform: rotate(0deg);
     }
     50% {
-      transform: rotate(-10deg);
+      transform: rotate(-20deg);
     }
   }
 

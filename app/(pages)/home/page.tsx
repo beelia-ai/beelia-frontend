@@ -1,7 +1,7 @@
 "use client";
 
 import { AboutCompany, ScrollSection, ScrollContainer } from './components'
-import { GradientOrbs, HeroBackground } from '@/components/ui'
+import { HeroBackground } from '@/components/ui'
 import { Footer } from '@/components/layout/Footer'
 import { useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
@@ -90,17 +90,7 @@ export default function HomePage() {
   }, [])
   
   return (
-    <main className="min-h-screen relative bg-black overflow-hidden">
-      {/* Global Background - Fixed, covers entire page */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <GradientOrbs 
-          count={10}
-          animate={true}
-          showGrid={true}
-          gridOpacity={0.02}
-        />
-      </div>
-      
+    <main className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#000000' }}>
       {/* Scroll Sections */}
       <div className="relative z-10">
         <ScrollContainer>

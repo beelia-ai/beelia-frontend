@@ -240,6 +240,7 @@ export default function LiquidEther({
       takeoverTo = new THREE.Vector2();
       onInteract: (() => void) | null = null;
       private boundHandlers: { type: string; handler: EventListener; target: EventTarget }[] = [];
+      private userControlResetTimer: number | null = null;
 
       init(container: HTMLElement) {
         this.container = container;
@@ -275,7 +276,15 @@ export default function LiquidEther({
           this.hasUserControl = true;
         }) as EventListener;
 
-        const onLeave = (() => { this.isHoverInside = false; }) as EventListener;
+        const onLeave = (() => { 
+          this.isHoverInside = false;
+          // Reset user control when mouse leaves
+          if (this.userControlResetTimer) window.clearTimeout(this.userControlResetTimer);
+          this.userControlResetTimer = window.setTimeout(() => {
+            this.hasUserControl = false;
+            this.userControlResetTimer = null;
+          }, 500);
+        }) as EventListener;
 
         // Use passive listeners for better scroll performance
         win.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -296,6 +305,10 @@ export default function LiquidEther({
           target.removeEventListener(type, handler);
         });
         this.boundHandlers = [];
+        if (this.userControlResetTimer) {
+          window.clearTimeout(this.userControlResetTimer);
+          this.userControlResetTimer = null;
+        }
       }
 
       private isPointInside(clientX: number, clientY: number) {
@@ -307,6 +320,7 @@ export default function LiquidEther({
       setCoords(x: number, y: number) {
         if (!this.container) return;
         if (this.timer) window.clearTimeout(this.timer);
+        if (this.userControlResetTimer) window.clearTimeout(this.userControlResetTimer);
         const rect = this.container.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0) return;
         const nx = (x - rect.left) / rect.width;
@@ -314,6 +328,11 @@ export default function LiquidEther({
         this.coords.set(nx * 2 - 1, -(ny * 2 - 1));
         this.mouseMoved = true;
         this.timer = window.setTimeout(() => { this.mouseMoved = false; }, 100);
+        // Reset user control after mouse stops moving for 1 second
+        this.userControlResetTimer = window.setTimeout(() => {
+          this.hasUserControl = false;
+          this.userControlResetTimer = null;
+        }, 1000);
       }
 
       setNormalized(nx: number, ny: number) {
@@ -384,7 +403,8 @@ export default function LiquidEther({
           if (this.active) this.forceStop();
           return;
         }
-        if (this.mouse.isHoverInside) {
+        // Don't start auto if user has control or mouse is hovering
+        if (this.mouse.hasUserControl || this.mouse.isHoverInside) {
           if (this.active) this.forceStop();
           return;
         }

@@ -10,32 +10,45 @@ export function Footer() {
   return (
     <footer className="relative w-full min-h-screen overflow-hidden">
       {/* Flame Background Container */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <div 
-          className="absolute inset-0 w-full h-full"
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        {/* Static Bottom Layer - Figma dimensions */}
+        <Image
+          src="/images/image 365.png"
+          alt="Footer background"
+          width={1399}
+          height={2091}
+          className="absolute w-auto h-auto max-w-none"
           style={{
-            backgroundImage: 'url(/images/footer-img2.svg)',
-            backgroundPosition: 'bottom center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
             zIndex: 1,
+            width: '1399.3px',
+            height: '2090.82px',
+            top: '-502.18px',
+            left: '-581.63px',
+            transform: 'rotate(-120deg)', // Negated for CSS
+            transformOrigin: 'center center',
+            opacity: 1,
           }}
-        />  
-        <div 
-          className="absolute inset-0 w-full h-full animate-oscillate-counterclockwise"
+          priority
+        />
+        {/* Oscillating Top Layer - Figma dimensions */}
+        <Image
+          src="/images/image 366.png"
+          alt="Footer flame effect"
+          width={1399}
+          height={2091}
+          className="absolute w-auto h-auto max-w-none"
           style={{
-            backgroundImage: 'url(/images/footer-img1.svg)',
-            backgroundPosition: 'bottom left', // Change this: 'bottom left', 'bottom right', 'center center', etc.
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
             zIndex: 2,
+            width: '1399.3px',
+            height: '2090.82px',
+            top: '-291.94px',
+            left: '-875.71px',
+            transform: 'rotate(-114.63deg)', // Negated for CSS
+            transformOrigin: 'center center',
+            opacity: 1,
             mixBlendMode: 'screen',
-            opacity: 0.9,
-            transformOrigin: 'bottom left', // Change this: 'bottom center', 'top center', 'left center', etc.
-            transform: 'translateX(50px) translateY(40px)',
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)',
           }}
+          priority
         />
       </div>
 
