@@ -57,34 +57,13 @@ function ScrollIndicator() {
 // Card wrapper component for consistent styling
 function CardSection({ 
   children, 
-  showGlow = true,
 }: { 
   children: React.ReactNode
-  showGlow?: boolean
 }) {
   return (
     <div 
       className="relative overflow-hidden min-h-screen"
     >
-      {/* Card top edge glow */}
-      {showGlow && (
-        <div 
-          className="absolute top-0 left-0 right-0 h-[2px] z-20"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(254,218,36,0.4) 15%, rgba(254,218,36,0.8) 50%, rgba(254,218,36,0.4) 85%, transparent 100%)',
-            boxShadow: '0 0 30px rgba(254,218,36,0.4), 0 0 60px rgba(254,218,36,0.15)',
-          }}
-        />
-      )}
-      
-      {/* Subtle inner glow at top */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-40 pointer-events-none z-10"
-        style={{
-          background: 'linear-gradient(180deg, rgba(254,218,36,0.03) 0%, transparent 100%)',
-        }}
-      />
-      
       {/* Content */}
       <div className="relative z-0">
         {children}
@@ -97,7 +76,7 @@ function CardSection({
 function WaitlistHero() {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
-  const [platform, setPlatform] = useState('')
+  const [company, setCompany] = useState('')
   const [step, setStep] = useState<'email' | 'details' | 'complete'>('email')
   const [isLoading, setIsLoading] = useState(false)
   const [isButtonHovered, setIsButtonHovered] = useState(false)
@@ -154,7 +133,7 @@ function WaitlistHero() {
         body: JSON.stringify({ 
           email, 
           name, 
-          platform,
+          company,
           action: 'update'
         }),
       })
@@ -328,33 +307,20 @@ function WaitlistHero() {
               </div>
 
               <div className="relative">
-                <select
-                  value={platform}
-                  onChange={(e) => setPlatform(e.target.value)}
-                  className="w-full px-6 py-4 bg-white/[0.03] text-white outline-none transition-all duration-300 focus:bg-white/[0.05] appearance-none cursor-pointer"
+                <input
+                  type="text"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="Your company"
+                  className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontSize: '15px',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '50px',
                     height: '60px',
-                    color: platform ? '#FFFFFF' : 'rgba(255, 255, 255, 0.3)',
                   }}
-                >
-                  <option value="" style={{ background: '#1a1a1a', color: 'rgba(255, 255, 255, 0.3)' }}>How did you hear about us?</option>
-                  <option value="twitter" style={{ background: '#1a1a1a', color: '#FFFFFF' }}>Twitter / X</option>
-                  <option value="linkedin" style={{ background: '#1a1a1a', color: '#FFFFFF' }}>LinkedIn</option>
-                  <option value="instagram" style={{ background: '#1a1a1a', color: '#FFFFFF' }}>Instagram</option>
-                  <option value="friend" style={{ background: '#1a1a1a', color: '#FFFFFF' }}>Friend / Referral</option>
-                  <option value="search" style={{ background: '#1a1a1a', color: '#FFFFFF' }}>Google Search</option>
-                  <option value="other" style={{ background: '#1a1a1a', color: '#FFFFFF' }}>Other</option>
-                </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2">
-                    <path d="M6 9l6 6 6-6"/>
-                  </svg>
-                </div>
+                />
               </div>
 
               {isMounted ? (

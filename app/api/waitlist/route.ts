@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, name, platform, action } = await request.json();
+    const { email, name, company, action } = await request.json();
 
     // Validate email
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -29,11 +29,11 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
-    // If this is an update action, include name and platform
+    // If this is an update action, include name and company
     if (action === 'update') {
       payload.action = 'update';
       if (name) payload.name = name;
-      if (platform) payload.platform = platform;
+      if (company) payload.company = company;
     }
 
     console.log('Sending to Google Apps Script:', {
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       email: email,
       action: action || 'create',
       name: name || '',
-      platform: platform || '',
+      company: company || '',
     });
 
     // Send data to Google Apps Script

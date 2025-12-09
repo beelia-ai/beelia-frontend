@@ -89,48 +89,50 @@ export function Navbar() {
             />
           </Link>
 
-          {/* Navigation links in the center */}
-          <div className="hidden md:flex items-center gap-12">
-            <button
-              onClick={() => {}}
-              className="nav-link cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontSize: '16px',
-                fontWeight: 400,
-                background: 'none',
-                border: 'none',
-              }}
-            >
-              Creators
-            </button>
-            <button
-              onClick={() => scrollToSection('about-company')}
-              className="nav-link cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontSize: '16px',
-                fontWeight: 400,
-                background: 'none',
-                border: 'none',
-              }}
-            >
-              Team
-            </button>
-            <button
-              onClick={() => scrollToSection('footer')}
-              className="nav-link cursor-pointer"
-              style={{
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontSize: '16px',
-                fontWeight: 400,
-                background: 'none',
-                border: 'none',
-              }}
-            >
-              Contact
-            </button>
-          </div>
+          {/* Navigation links in the center - hidden on waitlist page */}
+          {!isWaitlistPage && (
+            <div className="hidden md:flex items-center gap-12">
+              <button
+                onClick={() => {}}
+                className="nav-link cursor-pointer"
+                style={{
+                  fontFamily: 'var(--font-inria-sans), sans-serif',
+                  fontSize: '16px',
+                  fontWeight: 400,
+                  background: 'none',
+                  border: 'none',
+                }}
+              >
+                Creators
+              </button>
+              <button
+                onClick={() => scrollToSection('about-company')}
+                className="nav-link cursor-pointer"
+                style={{
+                  fontFamily: 'var(--font-inria-sans), sans-serif',
+                  fontSize: '16px',
+                  fontWeight: 400,
+                  background: 'none',
+                  border: 'none',
+                }}
+              >
+                Team
+              </button>
+              <button
+                onClick={() => scrollToSection('footer')}
+                className="nav-link cursor-pointer"
+                style={{
+                  fontFamily: 'var(--font-inria-sans), sans-serif',
+                  fontSize: '16px',
+                  fontWeight: 400,
+                  background: 'none',
+                  border: 'none',
+                }}
+              >
+                Contact
+              </button>
+            </div>
+          )}
 
           {/* JOIN WAITLIST button on the right */}
           <Link 

@@ -130,7 +130,7 @@ export function Footer() {
           {/* Logo, Tagline and Links Row */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-8">
             {/* Logo and Tagline */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col items-start gap-3">
               <Image
                 src="/icons/Beelia.svg"
                 alt="Beelia Logo"

@@ -9,36 +9,15 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 // Card wrapper component for consistent styling
 function CardSection({ 
   children, 
-  showGlow = true,
   className = '' 
 }: { 
   children: React.ReactNode
-  showGlow?: boolean
   className?: string 
 }) {
   return (
     <div 
       className={`relative overflow-hidden min-h-screen ${className}`}
     >
-      {/* Card top edge glow */}
-      {showGlow && (
-        <div 
-          className="absolute top-0 left-0 right-0 h-[2px] z-20"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(254,218,36,0.4) 15%, rgba(254,218,36,0.8) 50%, rgba(254,218,36,0.4) 85%, transparent 100%)',
-            boxShadow: '0 0 30px rgba(254,218,36,0.4), 0 0 60px rgba(254,218,36,0.15)',
-          }}
-        />
-      )}
-      
-      {/* Subtle inner glow at top */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-40 pointer-events-none z-10"
-        style={{
-          background: 'linear-gradient(180deg, rgba(254,218,36,0.03) 0%, transparent 100%)',
-        }}
-      />
-      
       {/* Content */}
       <div className="relative z-0">
         {children}
