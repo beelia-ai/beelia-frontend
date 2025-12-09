@@ -91,24 +91,16 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
           style={{ aspectRatio: '1302/363' }}
         />
         
-        {/* Tagline Text */}
-        <p 
-          className="text-white text-center opacity-90 whitespace-nowrap"
-          style={{
-            fontFamily: 'var(--font-inria-sans), var(--font-instrument-serif), sans-serif',
-            fontWeight: 400,
-            fontSize: '44px',
-            lineHeight: '100%',
-            letterSpacing: '0%',
-            textAlign: 'center',
-            color: '#FFFFFF',
-            opacity: 0.9,
-            whiteSpace: 'nowrap'
-          }}
-        >
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>The App Store for AI, for </span>
-          <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>The AI Marketplace</span>
-        </p>
+        {/* Header Bottom Image */}
+        <Image
+          src="/images/Header bottom.png"
+          alt="AI for Everyone, by Everyone"
+          width={800}
+          height={100}
+          className="relative w-auto h-auto max-w-full"
+          style={{ opacity: 0.9 }}
+          priority
+        />
       </div>
     </div>
   );
