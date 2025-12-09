@@ -76,7 +76,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
             opacity: 0.8
           }}
         >
-          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
+          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
         </p>
         
         {/* Beelia Logo */}
@@ -106,9 +106,8 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
             whiteSpace: 'nowrap'
           }}
         >
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>The AI Marketplace </span>
-          <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for Everyone, </span>
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>By Everyone</span>
+          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>The App Store for AI, for </span>
+          <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>The AI Marketplace</span>
         </p>
       </div>
     </div>
