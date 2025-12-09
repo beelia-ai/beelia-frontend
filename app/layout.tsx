@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
 import NavbarClient from "@/components/layout/NavbarClient";
 import { Footer } from "@/components/layout/Footer";
-import { PreloadLogo } from "@/components/PreloadLogo";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import "./globals.css";
 
@@ -43,7 +42,6 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <GlobalBackground />
-        <PreloadLogo />
         <NavbarClient />
         <div className="relative" style={{ zIndex: 1 }}>
           {children}

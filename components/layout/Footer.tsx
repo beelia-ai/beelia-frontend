@@ -8,7 +8,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="relative w-full min-h-screen overflow-hidden">
+    <footer id="footer" className="relative w-full min-h-screen overflow-hidden">
       {/* Flame Background Container */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
         {/* Static Bottom Layer */}

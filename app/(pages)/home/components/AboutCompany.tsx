@@ -270,12 +270,12 @@ function TableBeam({
           {/* Slim line beam */}
           <div
             style={{
-              width: beamPos.direction === 'horizontal' ? '200px' : '3px',
-              height: beamPos.direction === 'horizontal' ? '3px' : '200px',
+              width: beamPos.direction === 'horizontal' ? '350px' : '1.5px',
+              height: beamPos.direction === 'horizontal' ? '1.5px' : '350px',
               background: beamPos.direction === 'horizontal'
-                ? 'linear-gradient(90deg, transparent 0%, #FEDA24 20%, #ffffff 50%, #FEDA24 80%, transparent 100%)'
-                : 'linear-gradient(180deg, transparent 0%, #FEDA24 20%, #ffffff 50%, #FEDA24 80%, transparent 100%)',
-              borderRadius: '2px',
+                ? 'linear-gradient(90deg, transparent 0%, #FEDA24 15%, #ffffff 50%, #FEDA24 85%, transparent 100%)'
+                : 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #ffffff 50%, #FEDA24 85%, transparent 100%)',
+              borderRadius: '1px',
             }}
           />
         </div>

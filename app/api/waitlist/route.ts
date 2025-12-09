@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, name, platform, action } = await request.json();
 
     // Validate email
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -23,9 +23,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Prepare data based on action type
+    const payload: Record<string, string> = {
+      email,
+      timestamp: new Date().toISOString(),
+    };
+
+    // If this is an update action, include name and platform
+    if (action === 'update') {
+      payload.action = 'update';
+      if (name) payload.name = name;
+      if (platform) payload.platform = platform;
+    }
+
     console.log('Sending to Google Apps Script:', {
       url: scriptUrl.replace(/\/[^\/]+$/, '/***'), // Hide script ID in logs
       email: email,
+      action: action || 'create',
+      name: name || '',
+      platform: platform || '',
     });
 
     // Send data to Google Apps Script
@@ -34,10 +50,7 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        timestamp: new Date().toISOString(),
-      }),
+      body: JSON.stringify(payload),
       redirect: 'follow', // Important for Google Apps Script
     });
 
@@ -65,7 +78,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         success: true, 
-        message: 'Email added to waitlist successfully',
+        message: action === 'update' ? 'Profile updated successfully' : 'Email added to waitlist successfully',
         data: result 
       },
       { status: 200 }
@@ -74,7 +87,7 @@ export async function POST(request: NextRequest) {
     console.error('Waitlist submission error:', error);
     return NextResponse.json(
       { 
-        error: 'Failed to add email to waitlist',
+        error: 'Failed to process request',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
