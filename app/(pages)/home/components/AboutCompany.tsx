@@ -442,12 +442,11 @@ export function AboutCompany() {
   }, [])
   
   return (
-    <section className="relative w-full min-h-screen pt-20 pb-24 px-8 md:px-16 lg:px-24 overflow-visible">
+    <section className="relative w-full h-screen flex flex-col items-center justify-center px-8 md:px-16 lg:px-24 overflow-visible">
       
-      {/* Video Section */}
+      {/* Video Section - Commented out
       <div className="flex justify-center mb-16">
         <div className="relative w-full max-w-4xl">
-          {/* A short-intro text - positioned adjacent to video */}
           <div 
             className="absolute flex items-center gap-2"
             style={{ 
@@ -471,14 +470,12 @@ export function AboutCompany() {
             />
           </div>
 
-          {/* Video Container */}
           <div 
             className="relative w-full aspect-video rounded-2xl overflow-hidden"
             style={{ 
               background: 'linear-gradient(135deg, rgba(50, 50, 50, 0.8) 0%, rgba(30, 30, 30, 0.9) 100%)'
             }}
           >
-            {/* Video Element - Blurred when paused */}
             <video 
               ref={videoRef}
               className={`w-full h-full object-cover transition-all duration-500 ${
@@ -495,16 +492,13 @@ export function AboutCompany() {
               Your browser does not support the video tag.
             </video>
             
-            {/* Preview Overlay with Play Button */}
             {!isVideoPlaying && (
               <div 
                 className="absolute inset-0 z-10 cursor-pointer"
                 onClick={handlePlayVideo}
               >
-                {/* Additional dark overlay for better contrast */}
                 <div className="absolute inset-0 bg-black/15" />
                 
-                {/* Glass border effect */}
                 <div 
                   className="absolute inset-0 rounded-2xl"
                   style={{
@@ -514,12 +508,10 @@ export function AboutCompany() {
                   }}
                 />
                 
-                {/* Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div 
                     className="relative group w-20 h-20"
                   >
-                    {/* Outer glow ring */}
                     <div 
                       className="absolute inset-0 rounded-full transition-all duration-300 group-hover:scale-[1.3]"
                       style={{
@@ -537,7 +529,6 @@ export function AboutCompany() {
                       }}
                     />
                     
-                    {/* Glass button background */}
                     <div 
                       className="absolute inset-0 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 group-hover:scale-110"
                       style={{
@@ -553,7 +544,6 @@ export function AboutCompany() {
                           boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.15)',
                         }}
                       />
-                      {/* Play Icon */}
                       <svg 
                         width="32" 
                         height="32" 
@@ -578,6 +568,7 @@ export function AboutCompany() {
           </div>
         </div>
       </div>
+      */}
 
       {/* Team Section */}
       <div ref={tableRef} className="max-w-6xl mx-auto relative rounded-lg" style={{ background: 'transparent' }}>

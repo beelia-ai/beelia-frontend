@@ -9,60 +9,35 @@ export function Footer() {
 
   return (
     <footer className="relative w-full min-h-screen overflow-hidden">
-      {/* Flame rotation animation CSS - slower for better performance */}
-      <style>{`
-        @keyframes flame-rotate-cw {
-          0%, 100% { transform: translate(-50%, -50%) rotate(105deg); }
-          50% { transform: translate(-50%, -50%) rotate(125deg); }
-        }
-        @keyframes flame-rotate-ccw {
-          0%, 100% { transform: translate(-50%, -50%) rotate(125deg); }
-          50% { transform: translate(-50%, -50%) rotate(105deg); }
-        }
-        .flame-img-1 {
-          animation: flame-rotate-cw 15s ease-in-out infinite;
-        }
-        .flame-img-2 {
-          animation: flame-rotate-ccw 15s ease-in-out infinite;
-        }
-      `}</style>
-
-      {/* Flame Background Images - Layered with slow rotation */}
-      <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 1 }}>
-        {/* First flame image - rotates clockwise */}
+      {/* Flame Background Container */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <div 
-          className="flame-img-1 absolute"
+          className="absolute inset-0 w-full h-full"
           style={{
-            left: '90%',
-            top: '70%',
-            width: '80%',
-            height: '90%',
-            backgroundImage: 'url(/images/footer-img1.svg)',
-            backgroundSize: 'contain',
-            backgroundPosition: 'center bottom',
-            backgroundRepeat: 'no-repeat',
-            opacity: 0.9,
-          }}
-        />
-        {/* Second flame image - rotates counter-clockwise */}
-        <div 
-          className="flame-img-2 absolute"
-          style={{
-            left: '90%',
-            top: '70%',
-            width: '80%',
-            height: '90%',
             backgroundImage: 'url(/images/footer-img2.svg)',
-            backgroundSize: 'contain',
-            backgroundPosition: 'center bottom',
+            backgroundPosition: 'bottom center',
             backgroundRepeat: 'no-repeat',
-            opacity: 0.8,
+            backgroundSize: 'cover',
+            zIndex: 1,
+          }}
+        />  
+        <div 
+          className="absolute inset-0 w-full h-full animate-oscillate-counterclockwise"
+          style={{
+            backgroundImage: 'url(/images/footer-img1.svg)',
+            backgroundPosition: 'bottom left', // Change this: 'bottom left', 'bottom right', 'center center', etc.
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            zIndex: 2,
+            mixBlendMode: 'screen',
+            opacity: 0.9,
+            transformOrigin: 'bottom left', // Change this: 'bottom center', 'top center', 'left center', etc.
+            transform: 'translateX(50px) translateY(40px)',
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)',
           }}
         />
       </div>
-
-      {/* Dark overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/10" style={{ zIndex: 2 }} />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col min-h-screen px-8 md:px-16 lg:px-24 py-12">

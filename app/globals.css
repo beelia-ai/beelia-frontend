@@ -209,5 +209,31 @@
   .animate-cell-ripple {
     animation: cell-ripple var(--duration, 200ms) ease-out forwards var(--delay, 0ms);
   }
+
+  @keyframes oscillate-clockwise {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(5deg);
+    }
+  }
+
+  @keyframes oscillate-counterclockwise {
+    0%, 100% {
+      transform: rotate(10deg);
+    }
+    50% {
+      transform: rotate(-10deg);
+    }
+  }
+
+  .animate-oscillate-clockwise {
+    animation: oscillate-clockwise 8s ease-in-out infinite;
+  }
+
+  .animate-oscillate-counterclockwise {
+    animation: oscillate-counterclockwise 6s ease-in-out infinite;
+  }
 }
 
