@@ -6,14 +6,18 @@ import Image from 'next/image'
 import Link from 'next/link'
 import GlassSurface from '@/components/GlassSurface'
 
-export function Navbar() {
+interface NavbarProps {
+  forceShow?: boolean
+}
+
+export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const [isHovered, setIsHovered] = useState(false)
   const pathname = usePathname()
   const isWaitlistPage = pathname === '/waitlist'
   const isHomePage = pathname === '/home'
 
-  // Hide navbar on home page
-  if (isHomePage) {
+  // Hide navbar on home page unless forced to show
+  if (isHomePage && !forceShow) {
     return null
   }
 
@@ -109,7 +113,7 @@ export function Navbar() {
                   border: 'none',
                 }}
               >
-                Creators
+                Creator
               </button>
               <button
                 onClick={() => scrollToSection('about-company')}

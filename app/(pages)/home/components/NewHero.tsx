@@ -9,7 +9,7 @@ export function NewHero() {
   const beeliaColors = [
     [0.133, 0.99, 0.57], // #FEDA24 - bright gold
     [0.089, 0.87, 0.53], // #EF941F - orange
-    [0.067, 1.0, 0.60],  // #FF8C32 - bright orange
+    [0.067, 1, 0.6],  // #FF8C32 - bright orange
     [0.089, 0.87, 0.53], // #EF941F - orange (repeat for gradient)
     [0.133, 0.99, 0.57]  // #FEDA24 - bright gold (repeat for gradient)
   ]
