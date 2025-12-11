@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
-import NavbarClient from "@/components/layout/NavbarClient";
-import { Footer } from "@/components/layout/Footer";
-import { GlobalBackground } from "@/components/GlobalBackground";
 import "./globals.css";
+import { Preloader } from "@/components/Preloader";
+import NavbarClient from "@/components/layout/NavbarClient";
 
 const inter = Inter({ subsets: ["latin"] });
 const inriaSans = Inria_Sans({
@@ -41,11 +40,10 @@ export default function RootLayout({
         className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable} bg-black`}
         suppressHydrationWarning
       >
-        <GlobalBackground />
+        <Preloader />
         <NavbarClient />
         <div className="relative" style={{ zIndex: 1 }}>
           {children}
-          <Footer />
         </div>
       </body>
     </html>

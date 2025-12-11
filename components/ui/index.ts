@@ -9,3 +9,9 @@ export type { OverlayProps } from './overlay'
 
 export { GradientOrbs } from './gradient-orbs'
 export type { GradientOrbsProps, GradientOrb } from './gradient-orbs'
+
+export { HexagonalGridBackground } from './hexagonal-grid-background'
+export type { HexagonalGridBackgroundProps } from './hexagonal-grid-background'
+
+export { ParticleSpritesBackground } from './particle-sprites-background'
+export type { ParticleSpritesBackgroundProps } from './particle-sprites-background'
