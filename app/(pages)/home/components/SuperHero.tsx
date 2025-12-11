@@ -70,6 +70,24 @@ export function SuperHero() {
     : 1
 
   const getPresets = useCallback((): Record<string, Preset> => ({
+    beelia: {
+      sphereCount: isMobile ? 4 : 6,
+      ambientIntensity: 0.15,
+      diffuseIntensity: 1.4,
+      specularIntensity: 2.8,
+      specularPower: 3,
+      fresnelPower: 0.6,
+      backgroundColor: new THREE.Color(0x050200),
+      sphereColor: new THREE.Color(0xFF8C00),
+      lightColor: new THREE.Color(0xFFD700),
+      lightPosition: new THREE.Vector3(0.8, 1.2, 1.0),
+      smoothness: 0.8,
+      contrast: 1.4,
+      fogDensity: 0.03,
+      cursorGlowIntensity: 1.4,
+      cursorGlowRadius: 2.2,
+      cursorGlowColor: new THREE.Color(0xFFE55C)
+    },
     moody: {
       sphereCount: isMobile ? 4 : 6,
       ambientIntensity: 0.02,
@@ -161,8 +179,8 @@ export function SuperHero() {
 
     const presets = getPresets()
     const settings: Settings = {
-      preset: 'holographic',
-      ...presets.holographic,
+      preset: 'beelia',
+      ...presets.beelia,
       fixedTopLeftRadius: 0.8,
       fixedBottomRightRadius: 0.9,
       smallTopLeftRadius: 0.3,
@@ -837,14 +855,14 @@ export function SuperHero() {
           z-index: 10;
           color: #ffffff;
           width: 90%;
-          max-width: 800px;
+          max-width: 900px;
         }
         
         .hero h1 {
           font-family: "PP Neue Montreal", sans-serif;
           font-weight: 400;
-          font-size: 4rem;
-          line-height: 0.9;
+          font-size: 6rem;
+          line-height: 0.95;
           letter-spacing: -0.02em;
           color: #ffffff;
           text-transform: none;
@@ -852,16 +870,18 @@ export function SuperHero() {
         }
         
         .hero h2 {
-          font-family: "PPSupplyMono", monospace;
-          font-size: 10px;
+          font-family: "PP Neue Montreal", sans-serif;
+          font-size: 1.25rem;
           color: #cccccc;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          line-height: 1.4;
-          opacity: 0.7;
+          text-transform: none;
+          letter-spacing: 0.01em;
+          line-height: 1.5;
+          opacity: 0.8;
           transition: opacity 0.3s ease;
-          font-weight: normal;
+          font-weight: 400;
           margin: 0;
+          max-width: 600px;
+          margin: 0 auto;
         }
         
         .hero:hover h2 {
@@ -963,7 +983,11 @@ export function SuperHero() {
         
         @media (max-width: 768px) {
           .hero h1 {
-            font-size: 3rem;
+            font-size: 4rem;
+          }
+          
+          .hero h2 {
+            font-size: 1rem;
           }
           
           .footer-links {
@@ -998,7 +1022,11 @@ export function SuperHero() {
           }
           
           .hero h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
+          }
+          
+          .hero h2 {
+            font-size: 0.9rem;
           }
           
           .circle {
@@ -1024,24 +1052,10 @@ export function SuperHero() {
       <section className="hero-section">
         <div id="container" ref={containerRef}></div>
         
-        <div className="header-area">
-          <div className="logo-container">
-            <div className="logo-circles">
-              <div className="circle circle-1"></div>
-              <div className="circle circle-2"></div>
-            </div>
-          </div>
-          <div className="center-logo">
-            <h1 className="logo-text">Beelia.</h1>
-          </div>
-        </div>
-        
         <div className="hero">
-          <h1>Where matter becomes<br/>thought and thought<br/>becomes form</h1>
-          <h2 ref={storyTextRef}>
-            our vessel drifts at coordinates (0.00, 0.00)<br/>
-            gravitational field extends 0.10 units into quantum foam<br/>
-            currently merging with 0 other entities
+          <h1>AI for Everyone<br/>by Everyone</h1>
+          <h2>
+            A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
           </h2>
         </div>
         
@@ -1059,8 +1073,8 @@ export function SuperHero() {
         </div>
         
         <div className="coordinates">
-          <p>Beelia State • Active</p>
-          <p>where consciousness flows</p>
+          <p>Beelia.AI</p>
+          <p>A product by Cesno Group</p>
         </div>
       </section>
     </>
