@@ -67,11 +67,12 @@ export function NewHero() {
       {/* Particle Sprites Background */}
       <ParticleSpritesBackground 
         className="absolute inset-0"
-        particleCount={100}
+        particleCount={150}
         followMouse={true}
         mouseSensitivity={0.05}
         colors={beeliaColors}
         cycleColors={false}
+        sizes={[5, 5, 5, 5, 5]}
       />
       
       {/* Light Rays */}

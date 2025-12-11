@@ -131,8 +131,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 >
                   Creators
                 </button>
-                <button
-                  onClick={() => scrollToSection('footer')}
+                <a
+                  href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
                   className="nav-link cursor-pointer"
                   style={{
                     fontFamily: 'var(--font-inria-sans), sans-serif',
@@ -140,23 +140,23 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     fontWeight: 400,
                     background: 'none',
                     border: 'none',
+                    textDecoration: 'none',
                   }}
                 >
                   Investors
-                </button>
+                </a>
               </div>
             )}
           </div>
 
-          {/* INVESTORS button on the right */}
+          {/* JOIN WAITLIST button on the right */}
           <div className="flex items-center justify-end">
-            <a 
-              href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
+            <Link 
+              href={isWaitlistPage ? "/home" : "/waitlist"}
               className="group cursor-pointer block"
               style={{
                 perspective: '1000px',
                 transformStyle: 'preserve-3d',
-                textDecoration: 'none',
               }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -179,6 +179,15 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   }}
                 >
                   <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                    {isWaitlistPage && (
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out rotate-[225deg] group-hover:rotate-[270deg]"
+                      />
+                    )}
                     <span 
                       className="waitlist-btn-text uppercase"
                       style={{
@@ -188,19 +197,21 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         letterSpacing: '0.06em',
                       }}
                     >
-                      Investors
+                      {isWaitlistPage ? 'back home' : 'join waitlist'}
                     </span>
-                    <Image
-                      src="/icons/Vector.svg"
-                      alt="arrow"
-                      width={16}
-                      height={16}
-                      className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
-                    />
+                    {!isWaitlistPage && (
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                      />
+                    )}
                   </div>
                 </GlassSurface>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
