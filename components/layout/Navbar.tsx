@@ -10,6 +10,12 @@ export function Navbar() {
   const [isHovered, setIsHovered] = useState(false)
   const pathname = usePathname()
   const isWaitlistPage = pathname === '/waitlist'
+  const isHomePage = pathname === '/home'
+
+  // Hide navbar on home page
+  if (isHomePage) {
+    return null
+  }
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
