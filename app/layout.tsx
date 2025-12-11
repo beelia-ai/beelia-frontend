@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
-import { NavbarWrapper } from "@/components/ui/NavbarWrapper";
 import { Preloader } from "@/components/Preloader";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -42,7 +41,6 @@ export default function RootLayout({
       >
         <Preloader />
         <div className="relative" style={{ zIndex: 1 }}>
-          <NavbarWrapper />
           {children}
         </div>
       </body>
