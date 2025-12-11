@@ -1003,15 +1003,33 @@ export function SuperHero() {
         }
         
         .contact-email {
-          display: block;
+          display: inline-block;
           color: #ffffff;
           text-decoration: none;
           transition: all 0.3s ease;
           cursor: pointer;
+          position: relative;
+          font-weight: 400;
+        }
+        
+        .contact-email::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -2px;
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #FF8C32, #FEDA24);
+          transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .contact-email:hover {
-          color: #cccccc;
+          color: #000000;
+          font-weight: 600;
+        }
+        
+        .contact-email:hover::after {
+          width: 100%;
         }
         
         .footer-links {
@@ -1036,6 +1054,7 @@ export function SuperHero() {
           padding-left: 0;
           text-transform: none;
           font-size: 1rem;
+          font-weight: 400;
         }
         
         .footer-link::before {
@@ -1045,20 +1064,36 @@ export function SuperHero() {
           top: 50%;
           width: 0;
           height: 1px;
-          background-color: #ffffff;
+          background-color: #000000;
           transform: translateY(-50%);
           transition: width 0.3s ease, opacity 0.3s ease;
           opacity: 0;
         }
         
+        .footer-link::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -2px;
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #FF8C32, #FEDA24);
+          transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
         .footer-link:hover {
-          color: #ffffff;
+          color: #000000;
           padding-left: 1.2rem;
+          font-weight: 600;
         }
         
         .footer-link:hover::before {
           width: 0.8rem;
           opacity: 1;
+        }
+        
+        .footer-link:hover::after {
+          width: 100%;
         }
         
         .coordinates {
