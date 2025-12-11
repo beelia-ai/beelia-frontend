@@ -11,7 +11,7 @@ import {
   NavbarLogo,
   NavbarButton,
 } from "@/components/ui/resizable-navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import GlassSurface from "@/components/GlassSurface";
@@ -25,6 +25,11 @@ const navItems = [
 export function NavbarWrapper() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <>
@@ -83,23 +88,64 @@ export function NavbarWrapper() {
               onMouseLeave={() => setIsHovered(false)}
             >
               <div className="waitlist-btn-wrapper">
-                <GlassSurface
-                  width={200}
-                  height={55}
-                  borderRadius={50}
-                  chromaticAberration={isHovered ? 0.4 : 0.25}
-                  className="group-hover:scale-105"
-                  style={{
-                    transform: isHovered 
-                      ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
-                      : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
-                    boxShadow: isHovered
-                      ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
-                      : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                >
-                  <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                {isMounted ? (
+                  <GlassSurface
+                    width={200}
+                    height={55}
+                    borderRadius={50}
+                    chromaticAberration={0}
+                    redOffset={0}
+                    greenOffset={0}
+                    blueOffset={0}
+                    distortionScale={0}
+                    blur={16}
+                    brightness={60}
+                    opacity={0.95}
+                    className="group-hover:scale-105"
+                    style={{
+                      transform: isHovered 
+                        ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
+                        : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
+                      boxShadow: isHovered
+                        ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
+                        : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
+                  >
+                    <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                      <span 
+                        className="waitlist-btn-text uppercase"
+                        style={{
+                          fontFamily: 'var(--font-inria-sans), sans-serif',
+                          fontSize: '14px',
+                          lineHeight: '100%',
+                          letterSpacing: '0.06em',
+                        }}
+                      >
+                        join waitlist
+                      </span>
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                      />
+                    </div>
+                  </GlassSurface>
+                ) : (
+                  <div 
+                    className="group-hover:scale-105 flex items-center justify-center gap-2 relative z-10"
+                    style={{
+                      width: '200px',
+                      height: '55px',
+                      borderRadius: '50px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
+                  >
                     <span 
                       className="waitlist-btn-text uppercase"
                       style={{
@@ -119,7 +165,7 @@ export function NavbarWrapper() {
                       className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
                     />
                   </div>
-                </GlassSurface>
+                )}
               </div>
             </Link>
           </div>
@@ -157,23 +203,63 @@ export function NavbarWrapper() {
               onMouseLeave={() => setIsHovered(false)}
             >
               <div className="waitlist-btn-wrapper">
-                <GlassSurface
-                  width="100%"
-                  height={55}
-                  borderRadius={50}
-                  chromaticAberration={isHovered ? 0.4 : 0.25}
-                  className="group-hover:scale-105"
-                  style={{
-                    transform: isHovered 
-                      ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
-                      : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
-                    boxShadow: isHovered
-                      ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
-                      : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                >
-                  <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                {isMounted ? (
+                  <GlassSurface
+                    width="100%"
+                    height={55}
+                    borderRadius={50}
+                    chromaticAberration={0}
+                    redOffset={0}
+                    greenOffset={0}
+                    blueOffset={0}
+                    distortionScale={0}
+                    blur={16}
+                    brightness={60}
+                    opacity={0.95}
+                    className="group-hover:scale-105"
+                    style={{
+                      transform: isHovered 
+                        ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
+                        : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
+                      boxShadow: isHovered
+                        ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
+                        : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
+                  >
+                    <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                      <span 
+                        className="waitlist-btn-text uppercase"
+                        style={{
+                          fontFamily: 'var(--font-inria-sans), sans-serif',
+                          fontSize: '14px',
+                          lineHeight: '100%',
+                          letterSpacing: '0.06em',
+                        }}
+                      >
+                        join waitlist
+                      </span>
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                      />
+                    </div>
+                  </GlassSurface>
+                ) : (
+                  <div 
+                    className="group-hover:scale-105 flex items-center justify-center gap-2 relative z-10 w-full"
+                    style={{
+                      height: '55px',
+                      borderRadius: '50px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
+                  >
                     <span 
                       className="waitlist-btn-text uppercase"
                       style={{
@@ -193,7 +279,7 @@ export function NavbarWrapper() {
                       className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
                     />
                   </div>
-                </GlassSurface>
+                )}
               </div>
             </Link>
           </div>
