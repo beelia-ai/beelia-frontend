@@ -12,6 +12,7 @@ export interface ParticleSpritesBackgroundProps {
   readonly sizes?: number[] // Array of particle sizes
   readonly followMouse?: boolean
   readonly mouseSensitivity?: number
+  readonly cycleColors?: boolean // Whether to cycle through colors over time
 }
 
 export function ParticleSpritesBackground({
@@ -27,7 +28,8 @@ export function ParticleSpritesBackground({
   ],
   sizes = [20, 15, 10, 8, 5],
   followMouse = true,
-  mouseSensitivity = 0.05
+  mouseSensitivity = 0.05,
+  cycleColors = true
 }: ParticleSpritesBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<THREE.Scene | null>(null)
@@ -203,14 +205,25 @@ export function ParticleSpritesBackground({
         }
       })
 
-      // Update material colors (cycling through hues)
-      materials.forEach((material, i) => {
-        const color = colors[i]
-        if (color) {
-          const h = ((360 * (color[0] + time)) % 360) / 360
-          material.color.setHSL(h, color[1], color[2], THREE.SRGBColorSpace)
-        }
-      })
+      // Update material colors (cycling through hues only if enabled)
+      if (cycleColors) {
+        materials.forEach((material, i) => {
+          const color = colors[i]
+          if (color) {
+            const h = ((360 * (color[0] + time)) % 360) / 360
+            material.color.setHSL(h, color[1], color[2], THREE.SRGBColorSpace)
+          }
+        })
+      } else {
+        // Keep colors static - set them once if not already set
+        materials.forEach((material, i) => {
+          const color = colors[i]
+          if (color && !material.userData.colorSet) {
+            material.color.setHSL(color[0], color[1], color[2], THREE.SRGBColorSpace)
+            material.userData.colorSet = true
+          }
+        })
+      }
 
       renderer.render(scene, camera)
     }
@@ -251,7 +264,7 @@ export function ParticleSpritesBackground({
         rendererRef.current.domElement.remove()
       }
     }
-  }, [particleCount, fogDensity, colors, sizes, followMouse, mouseSensitivity])
+  }, [particleCount, fogDensity, colors, sizes, followMouse, mouseSensitivity, cycleColors])
 
   return (
     <div

@@ -4,14 +4,26 @@ import LightRays from '@/components/LightRays'
 import { ParticleSpritesBackground } from '@/components/ui'
 
 export function NewHero() {
+  // Beelia gradient colors in HSL format (normalized 0-1)
+  // #FEDA24 (gold), #EF941F (orange), #FF8C32 (bright orange)
+  const beeliaColors = [
+    [0.133, 0.99, 0.57], // #FEDA24 - bright gold
+    [0.089, 0.87, 0.53], // #EF941F - orange
+    [0.067, 1.0, 0.60],  // #FF8C32 - bright orange
+    [0.089, 0.87, 0.53], // #EF941F - orange (repeat for gradient)
+    [0.133, 0.99, 0.57]  // #FEDA24 - bright gold (repeat for gradient)
+  ]
+
   return (
     <section className="h-screen bg-black relative overflow-hidden">
       {/* Particle Sprites Background */}
       <ParticleSpritesBackground 
         className="absolute inset-0"
-        particleCount={10000}
+        particleCount={300}
         followMouse={true}
         mouseSensitivity={0.05}
+        colors={beeliaColors}
+        cycleColors={false}
       />
       
       {/* Light Rays */}
