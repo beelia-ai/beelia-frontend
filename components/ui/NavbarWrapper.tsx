@@ -56,7 +56,7 @@ export function NavbarWrapper() {
             <a
               key={`mobile-link-${idx}`}
               href={item.link}
-              className="w-full text-neutral-600 dark:text-neutral-300"
+              className="w-full text-neutral-300 hover:text-white transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               {item.name}
