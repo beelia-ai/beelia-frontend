@@ -1,10 +1,20 @@
 'use client'
 
 import LightRays from '@/components/LightRays'
+import { ParticleSpritesBackground } from '@/components/ui'
 
 export function NewHero() {
   return (
     <section className="h-screen bg-black relative overflow-hidden">
+      {/* Particle Sprites Background */}
+      <ParticleSpritesBackground 
+        className="absolute inset-0"
+        particleCount={10000}
+        followMouse={true}
+        mouseSensitivity={0.05}
+      />
+      
+      {/* Light Rays */}
       <LightRays 
        raysOrigin="top-center"
        raysColor="#4699F8"
