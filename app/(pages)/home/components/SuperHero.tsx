@@ -1061,20 +1061,19 @@ export function SuperHero() {
         
         <div className="contact-info">
           <p className="contact-heading">+Get in touch</p>
-          <span className="contact-email">hi@beelia.ai</span>
+          <span className="contact-email">juancarloscalvofresno@cesno.eu</span>
         </div>
         
         <div className="footer-links">
-          <a href="#" className="footer-link">Fluid Dynamics</a>
-          <a href="#" className="footer-link">Organic Shapes</a>
-          <a href="#" className="footer-link">Interactive Forms</a>
-          <a href="#" className="footer-link">Motion Studies</a>
+          <a href="#" className="footer-link">Product Overview</a>
+          <a href="#" className="footer-link">Features</a>
+          <a href="#" className="footer-link">About Team</a>
           <a href="#" className="footer-link">Contact</a>
         </div>
         
         <div className="coordinates">
           <p>Beelia.AI</p>
-          <p>A product by Cesno Group</p>
+          <p>A Cesno Company</p>
         </div>
       </section>
     </>

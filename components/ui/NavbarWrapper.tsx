@@ -14,10 +14,9 @@ import {
 import { useState } from "react";
 
 const navItems = [
-  { name: "Features", link: "#features" },
-  { name: "Pricing", link: "#pricing" },
-  { name: "About", link: "#about" },
-  { name: "Contact", link: "#contact" },
+  { name: "Users", link: "#users" },
+  { name: "Creators", link: "#creators" },
+  { name: "Investors", link: "#investors" },
 ];
 
 export function NavbarWrapper() {
@@ -30,11 +29,8 @@ export function NavbarWrapper() {
         <NavbarLogo />
         <NavItems items={navItems} />
         <div className="flex items-center gap-4">
-          <NavbarButton variant="secondary" href="/login">
-            Login
-          </NavbarButton>
-          <NavbarButton variant="primary" href="/signup">
-            Get Started
+          <NavbarButton variant="primary" href="/waitlist">
+            Join Waitlist
           </NavbarButton>
         </div>
       </NavBody>
@@ -63,11 +59,8 @@ export function NavbarWrapper() {
             </a>
           ))}
           <div className="flex w-full flex-col gap-4">
-            <NavbarButton variant="secondary" href="/login" className="w-full">
-              Login
-            </NavbarButton>
-            <NavbarButton variant="primary" href="/signup" className="w-full">
-              Get Started
+            <NavbarButton variant="primary" href="/waitlist" className="w-full">
+              Join Waitlist
             </NavbarButton>
           </div>
         </MobileNavMenu>
