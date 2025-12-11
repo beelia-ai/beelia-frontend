@@ -131,74 +131,66 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 >
                   Creators
                 </button>
-                <button
-                  onClick={() => scrollToSection('footer')}
-                  className="nav-link cursor-pointer"
-                  style={{
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                    fontSize: '16px',
-                    fontWeight: 400,
-                    background: 'none',
-                    border: 'none',
-                  }}
-                >
-                  Investors
-                </button>
+              <a
+                href="mailto:juancarloscalvofresno@cesno.eu?subject=Investor Inquiry - Beelia.ai&body=Hi Beelia Team,%0D%0A%0D%0AI'm interested in learning more about investment opportunities with Beelia.%0D%0A%0D%0APlease let me know the next steps.%0D%0A%0D%0ABest regards"
+                className="nav-link cursor-pointer"
+                style={{
+                  fontFamily: 'var(--font-inria-sans), sans-serif',
+                  fontSize: '16px',
+                  fontWeight: 400,
+                  background: 'none',
+                  border: 'none',
+                  textDecoration: 'none',
+                }}
+              >
+                Investors
+              </a>
               </div>
             )}
           </div>
 
-          {/* JOIN WAITLIST button on the right */}
+          {/* INVESTORS button on the right */}
           <div className="flex items-center justify-end">
-            <Link 
-              href={isWaitlistPage ? "/home" : "/waitlist"}
+            <a 
+              href="mailto:juancarloscalvofresno@cesno.eu?subject=Investor Inquiry - Beelia.ai&body=Hi Beelia Team,%0D%0A%0D%0AI'm interested in learning more about investment opportunities with Beelia.%0D%0A%0D%0APlease let me know the next steps.%0D%0A%0D%0ABest regards"
               className="group cursor-pointer block"
               style={{
                 perspective: '1000px',
                 transformStyle: 'preserve-3d',
+                textDecoration: 'none',
               }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-            <div className="waitlist-btn-wrapper">
-              <GlassSurface
-                width={200}
-                height={55}
-                borderRadius={50}
-                chromaticAberration={isHovered ? 0.4 : 0.25}
-                className="group-hover:scale-105"
-                style={{
-                  transform: isHovered 
-                    ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
-                    : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
-                  boxShadow: isHovered
-                    ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
-                    : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}
-              >
-                <div className="w-full flex items-center justify-center gap-2 relative z-10">
-                  {isWaitlistPage && (
-                    <Image
-                      src="/icons/Vector.svg"
-                      alt="arrow"
-                      width={16}
-                      height={16}
-                      className="transition-transform duration-500 ease-in-out rotate-[225deg] group-hover:rotate-[270deg]"
-                    />
-                  )}
-                  <span 
-                    className="waitlist-btn-text uppercase"
-                    style={{
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '14px',
-                      lineHeight: '100%',
-                      letterSpacing: '0.06em',
-                    }}
-                  >
-                    {isWaitlistPage ? 'back home' : 'join waitlist'}
-                  </span>
-                  {!isWaitlistPage && (
+              <div className="waitlist-btn-wrapper">
+                <GlassSurface
+                  width={200}
+                  height={55}
+                  borderRadius={50}
+                  chromaticAberration={isHovered ? 0.4 : 0.25}
+                  className="group-hover:scale-105"
+                  style={{
+                    transform: isHovered 
+                      ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
+                      : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
+                    boxShadow: isHovered
+                      ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
+                      : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
+                  <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                    <span 
+                      className="waitlist-btn-text uppercase"
+                      style={{
+                        fontFamily: 'var(--font-inria-sans), sans-serif',
+                        fontSize: '14px',
+                        lineHeight: '100%',
+                        letterSpacing: '0.06em',
+                      }}
+                    >
+                      Investors
+                    </span>
                     <Image
                       src="/icons/Vector.svg"
                       alt="arrow"
@@ -206,11 +198,10 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                       height={16}
                       className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
                     />
-                  )}
-                </div>
-              </GlassSurface>
-            </div>
-          </Link>
+                  </div>
+                </GlassSurface>
+              </div>
+            </a>
           </div>
         </div>
       </nav>
