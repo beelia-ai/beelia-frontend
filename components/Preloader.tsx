@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 
 export function Preloader() {
   const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [fadeOut, setFadeOut] = useState(false)
+  const [isNavigating, setIsNavigating] = useState(false)
+  const pathname = usePathname()
 
+  // Initial page load
   useEffect(() => {
     const updateProgress = () => {
       if (document.readyState === 'loading') {
@@ -27,6 +31,29 @@ export function Preloader() {
       document.removeEventListener('readystatechange', updateProgress)
     }
   }, [])
+
+  // Handle route changes
+  useEffect(() => {
+    // Reset states for navigation
+    setIsNavigating(true)
+    setIsComplete(false)
+    setFadeOut(false)
+    setProgress(0)
+
+    // Simulate loading progress
+    const timer1 = setTimeout(() => setProgress(30), 50)
+    const timer2 = setTimeout(() => setProgress(70), 150)
+    const timer3 = setTimeout(() => {
+      setProgress(100)
+      setIsComplete(true)
+    }, 300)
+
+    return () => {
+      clearTimeout(timer1)
+      clearTimeout(timer2)
+      clearTimeout(timer3)
+    }
+  }, [pathname])
 
   // Fade out when complete
   useEffect(() => {
