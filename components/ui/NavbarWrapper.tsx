@@ -124,7 +124,7 @@ export function NavbarWrapper() {
                           height={16}
                           className="transition-transform duration-500 ease-in-out"
                           style={{
-                            transform: isHovered ? 'rotate(-90deg)' : 'rotate(135deg)',
+                            transform: isHovered ? 'rotate(-90deg)' : 'rotate(225deg)',
                           }}
                         />
                       )}
@@ -267,7 +267,7 @@ export function NavbarWrapper() {
                           height={16}
                           className="transition-transform duration-500 ease-in-out"
                           style={{
-                            transform: isHovered ? 'rotate(-90deg)' : 'rotate(135deg)',
+                            transform: isHovered ? 'rotate(-90deg)' : 'rotate(225deg)',
                           }}
                         />
                       )}
