@@ -98,9 +98,9 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
       }}
       style={{
         minWidth: "800px",
-        background: "linear-gradient(135deg, #000000 0%, #1a1a1a 30%, #2a2a2a 50%, #1a1a1a 70%, #000000 100%)",
+        background: "linear-gradient(135deg, #000000 0%, #1a150a 20%, #1a1005 40%, #0f0a00 50%, #1a1005 60%, #1a150a 80%, #000000 100%)",
         border: "1px solid rgba(180, 180, 180, 0.5)",
-        boxShadow: "0 0 30px rgba(0, 0, 0, 0.9), 0 0 60px rgba(150, 150, 150, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(180, 180, 180, 0.4)",
+        boxShadow: "0 0 30px rgba(0, 0, 0, 0.9), 0 0 40px rgba(254, 218, 36, 0.1), 0 0 60px rgba(255, 140, 50, 0.08), inset 0 1px 0 rgba(254, 218, 36, 0.25), inset 0 -1px 0 rgba(255, 140, 50, 0.15), 0 0 0 1px rgba(180, 180, 180, 0.4)",
       }}
       className={cn(
         "relative z-[60] mx-auto hidden w-full max-w-7xl flex-row items-center justify-between self-start rounded-full px-4 py-2 lg:flex",
@@ -161,9 +161,9 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       style={{
-        background: "linear-gradient(135deg, #000000 0%, #1a1a1a 30%, #2a2a2a 50%, #1a1a1a 70%, #000000 100%)",
+        background: "linear-gradient(135deg, #000000 0%, #1a150a 20%, #1a1005 40%, #0f0a00 50%, #1a1005 60%, #1a150a 80%, #000000 100%)",
         border: "1px solid rgba(180, 180, 180, 0.5)",
-        boxShadow: "0 0 30px rgba(0, 0, 0, 0.9), 0 0 60px rgba(150, 150, 150, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(180, 180, 180, 0.4)",
+        boxShadow: "0 0 30px rgba(0, 0, 0, 0.9), 0 0 40px rgba(254, 218, 36, 0.1), 0 0 60px rgba(255, 140, 50, 0.08), inset 0 1px 0 rgba(254, 218, 36, 0.25), inset 0 -1px 0 rgba(255, 140, 50, 0.15), 0 0 0 1px rgba(180, 180, 180, 0.4)",
       }}
       className={cn(
         "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between px-0 py-2 lg:hidden",
@@ -205,9 +205,9 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={{
-            background: "linear-gradient(135deg, #000000 0%, #1a1a1a 30%, #2a2a2a 50%, #1a1a1a 70%, #000000 100%)",
+            background: "linear-gradient(135deg, #000000 0%, #1a150a 20%, #1a1005 40%, #0f0a00 50%, #1a1005 60%, #1a150a 80%, #000000 100%)",
             border: "1px solid rgba(180, 180, 180, 0.5)",
-            boxShadow: "0 0 30px rgba(0, 0, 0, 0.9), 0 0 60px rgba(150, 150, 150, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(180, 180, 180, 0.4)",
+            boxShadow: "0 0 30px rgba(0, 0, 0, 0.9), 0 0 40px rgba(254, 218, 36, 0.1), 0 0 60px rgba(255, 140, 50, 0.08), inset 0 1px 0 rgba(254, 218, 36, 0.25), inset 0 -1px 0 rgba(255, 140, 50, 0.15), 0 0 0 1px rgba(180, 180, 180, 0.4)",
           }}
           className={cn(
             "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg px-4 py-8",
