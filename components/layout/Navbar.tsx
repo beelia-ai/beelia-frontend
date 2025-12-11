@@ -131,20 +131,19 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 >
                   Creators
                 </button>
-              <a
-                href="mailto:juancarloscalvofresno@cesno.eu?subject=Investor Inquiry - Beelia.ai&body=Hi Beelia Team,%0D%0A%0D%0AI'm interested in learning more about investment opportunities with Beelia.%0D%0A%0D%0APlease let me know the next steps.%0D%0A%0D%0ABest regards"
-                className="nav-link cursor-pointer"
-                style={{
-                  fontFamily: 'var(--font-inria-sans), sans-serif',
-                  fontSize: '16px',
-                  fontWeight: 400,
-                  background: 'none',
-                  border: 'none',
-                  textDecoration: 'none',
-                }}
-              >
-                Investors
-              </a>
+                <button
+                  onClick={() => scrollToSection('footer')}
+                  className="nav-link cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    background: 'none',
+                    border: 'none',
+                  }}
+                >
+                  Investors
+                </button>
               </div>
             )}
           </div>
@@ -152,7 +151,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           {/* INVESTORS button on the right */}
           <div className="flex items-center justify-end">
             <a 
-              href="mailto:juancarloscalvofresno@cesno.eu?subject=Investor Inquiry - Beelia.ai&body=Hi Beelia Team,%0D%0A%0D%0AI'm interested in learning more about investment opportunities with Beelia.%0D%0A%0D%0APlease let me know the next steps.%0D%0A%0D%0ABest regards"
+              href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
               className="group cursor-pointer block"
               style={{
                 perspective: '1000px',

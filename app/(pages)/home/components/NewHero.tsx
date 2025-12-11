@@ -124,7 +124,7 @@ export function NewHero() {
           textTransform: 'uppercase',
           width: '605.4130859375px',
           height: '52px',
-          top: '707.33px',
+          top: '710px',
           opacity: 0.8,
           color: '#FFFFFF'
         }}
@@ -133,7 +133,7 @@ export function NewHero() {
       </p>
 
       {/* Join Waitlist Button - positioned below tagline text */}
-      <div className="absolute z-10 left-1/2 -translate-x-1/2" style={{ top: '780px' }}>
+      <div className="absolute z-10 left-1/2 -translate-x-1/2" style={{ top: '800px' }}>
         <Link 
           href="/waitlist"
           className="group cursor-pointer block"
@@ -147,8 +147,8 @@ export function NewHero() {
           <div className="waitlist-btn-wrapper">
             {isMounted ? (
               <GlassSurface
-                width={200}
-                height={55}
+                width={250}
+                height={65}
                 borderRadius={50}
                 chromaticAberration={0.15}
                 redOffset={0}
@@ -174,7 +174,7 @@ export function NewHero() {
                     className="waitlist-btn-text uppercase"
                     style={{
                       fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       lineHeight: '100%',
                       letterSpacing: '0.06em',
                     }}
@@ -184,8 +184,8 @@ export function NewHero() {
                   <Image
                     src="/icons/Vector.svg"
                     alt="arrow"
-                    width={16}
-                    height={16}
+                    width={18}
+                    height={18}
                     className="transition-transform duration-500 ease-in-out"
                     style={{
                       transform: isHovered ? 'rotate(45deg)' : 'rotate(0deg)',
