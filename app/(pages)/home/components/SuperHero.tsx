@@ -47,6 +47,9 @@ export function SuperHero() {
   const materialRef = useRef<THREE.ShaderMaterial | null>(null)
   const clockRef = useRef<THREE.Clock | null>(null)
   const animationIdRef = useRef<number | null>(null)
+  const particleCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const particlesRef = useRef<Array<{x: number, y: number, vx: number, vy: number, size: number, opacity: number, color: string}>>([])
+  const particleAnimationRef = useRef<number | null>(null)
   
   // State refs for animation
   const cursorSphere3DRef = useRef(new THREE.Vector3(0, 0, 0))
@@ -233,6 +236,84 @@ export function SuperHero() {
       display: block !important;
     `
     containerRef.current.appendChild(canvas)
+
+    // Setup 2D particle canvas overlay
+    const particleCanvas = document.createElement('canvas')
+    particleCanvas.width = viewportWidth
+    particleCanvas.height = viewportHeight
+    particleCanvas.style.cssText = `
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 1 !important;
+      pointer-events: none !important;
+    `
+    containerRef.current.appendChild(particleCanvas)
+    particleCanvasRef.current = particleCanvas
+    
+    // Initialize particles with Beelia gradient colors
+    const particleCount = isMobile ? 40 : 80
+    const colors = ['#FEDA24', '#FFE55C', '#FF8C32', '#EF941F']
+    const particles: typeof particlesRef.current = []
+    
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * viewportWidth,
+        y: Math.random() * viewportHeight,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: 2 + Math.random() * 4,
+        opacity: 0.1 + Math.random() * 0.3,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      })
+    }
+    particlesRef.current = particles
+    
+    // Particle animation loop
+    const animateParticles = () => {
+      particleAnimationRef.current = requestAnimationFrame(animateParticles)
+      
+      const ctx = particleCanvas.getContext('2d')
+      if (!ctx) return
+      
+      ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height)
+      
+      particlesRef.current.forEach(particle => {
+        // Update position
+        particle.x += particle.vx
+        particle.y += particle.vy
+        
+        // Wrap around screen
+        if (particle.x < 0) particle.x = particleCanvas.width
+        if (particle.x > particleCanvas.width) particle.x = 0
+        if (particle.y < 0) particle.y = particleCanvas.height
+        if (particle.y > particleCanvas.height) particle.y = 0
+        
+        // Convert hex to rgb values
+        const hex = particle.color.replace('#', '')
+        const r = parseInt(hex.substring(0, 2), 16)
+        const g = parseInt(hex.substring(2, 4), 16)
+        const b = parseInt(hex.substring(4, 6), 16)
+        
+        // Draw particle with glow
+        ctx.beginPath()
+        const gradient = ctx.createRadialGradient(
+          particle.x, particle.y, 0,
+          particle.x, particle.y, particle.size * 3
+        )
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${particle.opacity})`)
+        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${particle.opacity * 0.3})`)
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
+        
+        ctx.fillStyle = gradient
+        ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2)
+        ctx.fill()
+      })
+    }
+    
+    animateParticles()
 
     // Create shader material
     const material = new THREE.ShaderMaterial({
@@ -671,6 +752,12 @@ export function SuperHero() {
       renderer.setSize(width, height)
       renderer.setPixelRatio(currentPixelRatio)
 
+      // Update particle canvas on resize
+      if (particleCanvasRef.current) {
+        particleCanvasRef.current.width = width
+        particleCanvasRef.current.height = height
+      }
+
       material.uniforms.uResolution.value.set(width, height)
       material.uniforms.uActualResolution.value.set(
         width * currentPixelRatio,
@@ -747,6 +834,14 @@ export function SuperHero() {
       }
       geometry.dispose()
       material.dispose()
+      
+      // Cleanup particle animation and canvas
+      if (particleAnimationRef.current) {
+        cancelAnimationFrame(particleAnimationRef.current)
+      }
+      if (particleCanvasRef.current && containerRef.current) {
+        containerRef.current.removeChild(particleCanvasRef.current)
+      }
     }
   }, [devicePixelRatio, getPresets, isMobile, isLowPowerDevice, isSafari, screenToWorldJS, updateStory])
 
