@@ -14,14 +14,13 @@ export function NewHero() {
   useEffect(() => {
     setIsMounted(true)
   }, [])
-  // Beelia gradient colors in HSL format (normalized 0-1)
-  // #FEDA24 (gold), #EF941F (orange), #FF8C32 (bright orange)
+  // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
-    [0.133, 0.99, 0.57], // #FEDA24 - bright gold
-    [0.089, 0.87, 0.53], // #EF941F - orange
-    [0.067, 1, 0.6],  // #FF8C32 - bright orange
-    [0.089, 0.87, 0.53], // #EF941F - orange (repeat for gradient)
-    [0.133, 0.99, 0.57]  // #FEDA24 - bright gold (repeat for gradient)
+    [0, 0, 1],      // Pure white - glossy white
+    [0, 0, 0.9],    // Off-white - bright silver
+    [0, 0, 0.75],   // Silver - medium silver
+    [0, 0, 0.85],   // Light silver - bright silver
+    [0, 0, 0.95]    // Near white - glossy white
   ]
 
   return (
@@ -68,7 +67,7 @@ export function NewHero() {
       {/* Particle Sprites Background */}
       <ParticleSpritesBackground 
         className="absolute inset-0"
-        particleCount={300}
+        particleCount={100}
         followMouse={true}
         mouseSensitivity={0.05}
         colors={beeliaColors}

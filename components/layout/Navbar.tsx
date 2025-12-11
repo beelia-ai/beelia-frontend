@@ -86,75 +86,80 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
 
       {/* Full width navbar */}
       <nav className="fixed top-0 left-0 right-0 z-[9999] px-8 md:px-16 lg:px-24 py-6">
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-3 items-center w-full">
           {/* Logo on the left */}
-          <Link href="/home" className="flex items-center gap-2">
-            <Image
-              src="/icons/Beelia.svg"
-              alt="Beelia Logo"
-              width={150}
-              height={40}
-              className="h-10 w-auto"
-              priority
-            />
-          </Link>
+          <div className="flex items-center justify-start">
+            <Link href="/home" className="flex items-center gap-2">
+              <Image
+                src="/icons/Beelia.svg"
+                alt="Beelia Logo"
+                width={150}
+                height={40}
+                className="h-10 w-auto"
+                priority
+              />
+            </Link>
+          </div>
 
           {/* Navigation links in the center - hidden on waitlist page */}
-          {!isWaitlistPage && (
-            <div className="hidden md:flex items-center gap-12">
-              <button
-                onClick={() => {}}
-                className="nav-link cursor-pointer"
-                style={{
-                  fontFamily: 'var(--font-inria-sans), sans-serif',
-                  fontSize: '16px',
-                  fontWeight: 400,
-                  background: 'none',
-                  border: 'none',
-                }}
-              >
-                Creator
-              </button>
-              <button
-                onClick={() => scrollToSection('about-company')}
-                className="nav-link cursor-pointer"
-                style={{
-                  fontFamily: 'var(--font-inria-sans), sans-serif',
-                  fontSize: '16px',
-                  fontWeight: 400,
-                  background: 'none',
-                  border: 'none',
-                }}
-              >
-                Team
-              </button>
-              <button
-                onClick={() => scrollToSection('footer')}
-                className="nav-link cursor-pointer"
-                style={{
-                  fontFamily: 'var(--font-inria-sans), sans-serif',
-                  fontSize: '16px',
-                  fontWeight: 400,
-                  background: 'none',
-                  border: 'none',
-                }}
-              >
-                Contact
-              </button>
-            </div>
-          )}
+          <div className="flex items-center justify-center">
+            {!isWaitlistPage && (
+              <div className="hidden md:flex items-center gap-12">
+                <button
+                  onClick={() => {}}
+                  className="nav-link cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    background: 'none',
+                    border: 'none',
+                  }}
+                >
+                  Users
+                </button>
+                <button
+                  onClick={() => scrollToSection('about-company')}
+                  className="nav-link cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    background: 'none',
+                    border: 'none',
+                  }}
+                >
+                  Creators
+                </button>
+                <button
+                  onClick={() => scrollToSection('footer')}
+                  className="nav-link cursor-pointer"
+                  style={{
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    background: 'none',
+                    border: 'none',
+                  }}
+                >
+                  Investors
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* JOIN WAITLIST button on the right */}
-          <Link 
-            href={isWaitlistPage ? "/home" : "/waitlist"}
-            className="group cursor-pointer block"
-            style={{
-              perspective: '1000px',
-              transformStyle: 'preserve-3d',
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
+          <div className="flex items-center justify-end">
+            <Link 
+              href={isWaitlistPage ? "/home" : "/waitlist"}
+              className="group cursor-pointer block"
+              style={{
+                perspective: '1000px',
+                transformStyle: 'preserve-3d',
+              }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
             <div className="waitlist-btn-wrapper">
               <GlassSurface
                 width={200}
@@ -206,6 +211,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
               </GlassSurface>
             </div>
           </Link>
+          </div>
         </div>
       </nav>
     </>
