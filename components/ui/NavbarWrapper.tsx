@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import GlassSurface from "@/components/GlassSurface";
 
 const navItems = [
@@ -26,6 +27,8 @@ export function NavbarWrapper() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const pathname = usePathname();
+  const isWaitlistPage = pathname === "/waitlist";
 
   useEffect(() => {
     setIsMounted(true);
@@ -78,7 +81,7 @@ export function NavbarWrapper() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
             <Link 
-              href="/waitlist"
+              href={isWaitlistPage ? "/" : "/waitlist"}
               className="group cursor-pointer block"
               style={{
                 perspective: '1000px',
@@ -113,6 +116,18 @@ export function NavbarWrapper() {
                     }}
                   >
                     <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                      {isWaitlistPage && (
+                        <Image
+                          src="/icons/Vector.svg"
+                          alt="arrow"
+                          width={16}
+                          height={16}
+                          className="transition-transform duration-500 ease-in-out"
+                          style={{
+                            transform: isHovered ? 'rotate(180deg)' : 'rotate(45deg)',
+                          }}
+                        />
+                      )}
                       <span 
                         className="waitlist-btn-text uppercase"
                         style={{
@@ -122,15 +137,17 @@ export function NavbarWrapper() {
                           letterSpacing: '0.06em',
                         }}
                       >
-                        join waitlist
+                        {isWaitlistPage ? "back home" : "join waitlist"}
                       </span>
-                      <Image
-                        src="/icons/Vector.svg"
-                        alt="arrow"
-                        width={16}
-                        height={16}
-                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
-                      />
+                      {!isWaitlistPage && (
+                        <Image
+                          src="/icons/Vector.svg"
+                          alt="arrow"
+                          width={16}
+                          height={16}
+                          className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                        />
+                      )}
                     </div>
                   </GlassSurface>
                 ) : (
@@ -146,6 +163,18 @@ export function NavbarWrapper() {
                       transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                   >
+                    {isWaitlistPage && (
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out"
+                        style={{
+                          transform: isHovered ? 'rotate(-45deg)' : 'rotate(180deg)',
+                        }}
+                      />
+                    )}
                     <span 
                       className="waitlist-btn-text uppercase"
                       style={{
@@ -155,15 +184,17 @@ export function NavbarWrapper() {
                         letterSpacing: '0.06em',
                       }}
                     >
-                      join waitlist
+                      {isWaitlistPage ? "back home" : "join waitlist"}
                     </span>
-                    <Image
-                      src="/icons/Vector.svg"
-                      alt="arrow"
-                      width={16}
-                      height={16}
-                      className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
-                    />
+                    {!isWaitlistPage && (
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -196,7 +227,7 @@ export function NavbarWrapper() {
           ))}
           <div className="flex w-full flex-col gap-4">
             <Link 
-              href="/waitlist"
+              href={isWaitlistPage ? "/" : "/waitlist"}
               className="group cursor-pointer block w-full"
               onClick={() => setMobileMenuOpen(false)}
               onMouseEnter={() => setIsHovered(true)}
@@ -228,6 +259,18 @@ export function NavbarWrapper() {
                     }}
                   >
                     <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                      {isWaitlistPage && (
+                        <Image
+                          src="/icons/Vector.svg"
+                          alt="arrow"
+                          width={16}
+                          height={16}
+                          className="transition-transform duration-500 ease-in-out"
+                          style={{
+                            transform: isHovered ? 'rotate(180deg)' : 'rotate(45deg)',
+                          }}
+                        />
+                      )}
                       <span 
                         className="waitlist-btn-text uppercase"
                         style={{
@@ -237,15 +280,17 @@ export function NavbarWrapper() {
                           letterSpacing: '0.06em',
                         }}
                       >
-                        join waitlist
+                        {isWaitlistPage ? "back home" : "join waitlist"}
                       </span>
-                      <Image
-                        src="/icons/Vector.svg"
-                        alt="arrow"
-                        width={16}
-                        height={16}
-                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
-                      />
+                      {!isWaitlistPage && (
+                        <Image
+                          src="/icons/Vector.svg"
+                          alt="arrow"
+                          width={16}
+                          height={16}
+                          className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                        />
+                      )}
                     </div>
                   </GlassSurface>
                 ) : (
@@ -260,6 +305,18 @@ export function NavbarWrapper() {
                       transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                   >
+                    {isWaitlistPage && (
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out"
+                        style={{
+                          transform: isHovered ? 'rotate(-45deg)' : 'rotate(180deg)',
+                        }}
+                      />
+                    )}
                     <span 
                       className="waitlist-btn-text uppercase"
                       style={{
@@ -269,15 +326,17 @@ export function NavbarWrapper() {
                         letterSpacing: '0.06em',
                       }}
                     >
-                      join waitlist
+                      {isWaitlistPage ? "back home" : "join waitlist"}
                     </span>
-                    <Image
-                      src="/icons/Vector.svg"
-                      alt="arrow"
-                      width={16}
-                      height={16}
-                      className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
-                    />
+                    {!isWaitlistPage && (
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={16}
+                        height={16}
+                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                      />
+                    )}
                   </div>
                 )}
               </div>

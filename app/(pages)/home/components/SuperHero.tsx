@@ -237,7 +237,7 @@ export function SuperHero() {
     `
     containerRef.current.appendChild(canvas)
 
-    // Setup 2D particle canvas overlay
+    // Setup 2D particle canvas - behind the main canvas
     const particleCanvas = document.createElement('canvas')
     particleCanvas.width = viewportWidth
     particleCanvas.height = viewportHeight
@@ -247,10 +247,10 @@ export function SuperHero() {
       left: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-      z-index: 1 !important;
+      z-index: -1 !important;
       pointer-events: none !important;
     `
-    containerRef.current.appendChild(particleCanvas)
+    containerRef.current.insertBefore(particleCanvas, containerRef.current.firstChild)
     particleCanvasRef.current = particleCanvas
     
     // Initialize particles with Beelia gradient colors
