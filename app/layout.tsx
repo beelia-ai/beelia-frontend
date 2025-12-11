@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { NavbarWrapper } from "@/components/ui/NavbarWrapper";
+import { Preloader } from "@/components/Preloader";
 
 const inter = Inter({ subsets: ["latin"] });
 const inriaSans = Inria_Sans({
@@ -39,6 +40,7 @@ export default function RootLayout({
         className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable} bg-black`}
         suppressHydrationWarning
       >
+        <Preloader />
         <div className="relative" style={{ zIndex: 1 }}>
           <NavbarWrapper />
           {children}
