@@ -188,7 +188,7 @@ function AnimatedBorderBeam({
                 rx={rx}
                 fill="none"
                 stroke={`url(#${gradientId})`}
-                strokeWidth="2"
+                strokeWidth="1.2"
                 filter={`url(#${glowFilterId})`}
             />
             <defs>
@@ -256,6 +256,7 @@ export function TraceLinesAnimated({
     }, [])
 
     const glowFilterId = `beam-glow-${stableId}`
+    const staticGlowFilterId = `static-glow-${stableId}`
 
     // Path definitions - these match the Trace_Lines.svg coordinates
     const paths = {
@@ -269,12 +270,16 @@ export function TraceLinesAnimated({
         leftBottom: 'M401.178 185.266L311.948 309.355L256.434 309.355',
     }
 
-    // Beam configurations with staggered delays
+    // Horizontal lines (will have static glow)
+    const horizontalPaths = [
+        { key: 'rightHorizontal', d: paths.rightHorizontal },
+        { key: 'leftHorizontal', d: paths.leftHorizontal },
+    ]
+
+    // Diagonal beam configurations with staggered delays (animated)
     const beamConfigs = [
-        { key: 'rightHorizontal', d: paths.rightHorizontal, delay: 0, reverse: false },
         { key: 'rightTop', d: paths.rightTop, delay: 0.3, reverse: false },
         { key: 'rightBottom', d: paths.rightBottom, delay: 0.6, reverse: false },
-        { key: 'leftHorizontal', d: paths.leftHorizontal, delay: 0.15, reverse: true },
         { key: 'leftTop', d: paths.leftTop, delay: 0.45, reverse: true },
         { key: 'leftBottom', d: paths.leftBottom, delay: 0.75, reverse: true },
     ]
@@ -290,7 +295,7 @@ export function TraceLinesAnimated({
             style={style}
         >
             <defs>
-                {/* Glow filter for the beams */}
+                {/* Glow filter for animated beams */}
                 <filter id={glowFilterId} x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
                     <feMerge>
@@ -298,27 +303,92 @@ export function TraceLinesAnimated({
                         <feMergeNode in="SourceGraphic" />
                     </feMerge>
                 </filter>
+                
+                {/* Static glow filter for horizontal lines */}
+                <filter id={staticGlowFilterId} x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur1" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur2" />
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur3" />
+                    <feMerge>
+                        <feMergeNode in="blur3" />
+                        <feMergeNode in="blur2" />
+                        <feMergeNode in="blur1" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
             </defs>
 
-            {/* Static path lines (background) */}
-            {Object.entries(paths).map(([key, d]) => (
+            {/* Static path lines (background) - diagonal paths */}
+            {beamConfigs.map((config) => (
                 <path
-                    key={`static-${key}`}
-                    d={d}
+                    key={`static-${config.key}`}
+                    d={config.d}
                     stroke={pathColor}
                     strokeWidth={pathWidth}
                     fill="none"
                 />
             ))}
 
-            {/* Animated beams */}
+            {/* Static background for horizontal lines */}
+            {horizontalPaths.map((line) => (
+                <path
+                    key={`static-${line.key}`}
+                    d={line.d}
+                    stroke={pathColor}
+                    strokeWidth={pathWidth}
+                    fill="none"
+                />
+            ))}
+
+            {/* Horizontal lines with static glow */}
+            {horizontalPaths.map((line) => (
+                <g key={`glow-group-${line.key}`}>
+                    {/* Multiple layers for enhanced glow effect */}
+                    <path
+                        d={line.d}
+                        stroke={beamColor}
+                        strokeWidth={beamWidth * 3}
+                        fill="none"
+                        strokeLinecap="round"
+                        opacity="0.4"
+                        filter={`url(#${staticGlowFilterId})`}
+                    />
+                    <path
+                        d={line.d}
+                        stroke={beamColor}
+                        strokeWidth={beamWidth * 1.5}
+                        fill="none"
+                        strokeLinecap="round"
+                        opacity="0.6"
+                        filter={`url(#${staticGlowFilterId})`}
+                    />
+                    <path
+                        d={line.d}
+                        stroke={beamColor}
+                        strokeWidth={beamWidth}
+                        fill="none"
+                        strokeLinecap="round"
+                        opacity="0.9"
+                    />
+                    <path
+                        d={line.d}
+                        stroke="#ffffff"
+                        strokeWidth={beamWidth * 0.4}
+                        fill="none"
+                        strokeLinecap="round"
+                        opacity="0.7"
+                    />
+                </g>
+            ))}
+
+            {/* Animated beams - only diagonal lines */}
             {beamConfigs.map((config) => (
                 <AnimatedPathBeam
                     key={config.key}
                     pathId={config.key}
                     d={config.d}
                     gradientId={`beam-grad-${config.key}-${stableId}`}
-                    beamWidth={beamWidth}
+                    beamWidth={beamWidth * 0.8}
                     glowFilterId={glowFilterId}
                     duration={duration}
                     delay={delay + config.delay}
