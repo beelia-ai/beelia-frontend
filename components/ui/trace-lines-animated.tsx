@@ -397,6 +397,7 @@ export function TraceLinesAnimated({
             ))}
 
             {/* Junction dots - Right side with pulsing animation */}
+            {/* Center junction - continuously pulsing */}
             <motion.circle
                 cx="703.999"
                 cy="185.286"
@@ -415,10 +416,53 @@ export function TraceLinesAnimated({
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
                 }}
             />
-            <circle cx="746.999" cy="58.286" r="2" fill="white" />
-            <circle cx="792.999" cy="309.286" r="2" fill="white" />
+            
+            {/* Right top endpoint - pulses when beam arrives */}
+            <motion.circle
+                cx="746.999"
+                cy="58.286"
+                r="2"
+                fill="white"
+                animate={{
+                    r: [2, 2, 3.5, 2, 2],
+                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
+                }}
+                transition={{
+                    delay: delay + 0.3,
+                    duration: duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.4, 0.5, 0.6, 1],
+                }}
+                style={{
+                    filter: 'drop-shadow(0 0 4px #FEDA24)',
+                }}
+            />
+            
+            {/* Right bottom endpoint - pulses when beam arrives */}
+            <motion.circle
+                cx="792.999"
+                cy="309.286"
+                r="2"
+                fill="white"
+                animate={{
+                    r: [2, 2, 3.5, 2, 2],
+                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
+                }}
+                transition={{
+                    delay: delay + 0.6,
+                    duration: duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.4, 0.5, 0.6, 1],
+                }}
+                style={{
+                    filter: 'drop-shadow(0 0 4px #FEDA24)',
+                }}
+            />
 
             {/* Junction dots - Left side with pulsing animation */}
+            {/* Center junction - continuously pulsing */}
             <motion.circle
                 cx="401.052"
                 cy="185.286"
@@ -438,8 +482,50 @@ export function TraceLinesAnimated({
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
                 }}
             />
-            <circle cx="358.052" cy="58.286" r="2" fill="white" />
-            <circle cx="312.052" cy="309.286" r="2" fill="white" />
+            
+            {/* Left top endpoint - pulses when beam arrives */}
+            <motion.circle
+                cx="358.052"
+                cy="58.286"
+                r="2"
+                fill="white"
+                animate={{
+                    r: [2, 2, 3.5, 2, 2],
+                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
+                }}
+                transition={{
+                    delay: delay + 0.45,
+                    duration: duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.4, 0.5, 0.6, 1],
+                }}
+                style={{
+                    filter: 'drop-shadow(0 0 4px #FEDA24)',
+                }}
+            />
+            
+            {/* Left bottom endpoint - pulses when beam arrives */}
+            <motion.circle
+                cx="312.052"
+                cy="309.286"
+                r="2"
+                fill="white"
+                animate={{
+                    r: [2, 2, 3.5, 2, 2],
+                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
+                }}
+                transition={{
+                    delay: delay + 0.75,
+                    duration: duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    times: [0, 0.4, 0.5, 0.6, 1],
+                }}
+                style={{
+                    filter: 'drop-shadow(0 0 4px #FEDA24)',
+                }}
+            />
 
             {/* Outer rounded rectangles */}
             {showOuterBoxes && (
