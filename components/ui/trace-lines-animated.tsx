@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useId } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -35,7 +35,7 @@ function AnimatedPathBeam({
     duration,
     delay,
     reverse = false,
-}: {
+}: Readonly<{
     pathId: string
     d: string
     gradientId: string
@@ -44,7 +44,7 @@ function AnimatedPathBeam({
     duration: number
     delay: number
     reverse?: boolean
-}) {
+}>) {
     // Parse the path to extract start and end coordinates for proper gradient animation
     // For horizontal paths like "M612.227 185.289H992.05", extract the X coordinates
     const parsePathBounds = (path: string) => {
@@ -53,7 +53,7 @@ function AnimatedPathBeam({
             const xCoords = [numbers[0]]
             // For H command, the last number is the end X
             if (path.includes('H')) {
-                xCoords.push(numbers[numbers.length - 1])
+                xCoords.push(numbers.at(-1)!)
             } else if (path.includes('L')) {
                 // For L commands, extract all X coordinates (every other number starting from 0)
                 for (let i = 2; i < numbers.length; i += 2) {
@@ -72,7 +72,7 @@ function AnimatedPathBeam({
 
     const bounds = parsePathBounds(d)
     const pathLength = bounds.maxX - bounds.minX
-    const beamLength = pathLength * 0.15 // Beam is 15% of path length
+    const beamLength = pathLength * 0.5 // Beam is 50% of path length for long effect
 
     // Determine direction based on path start position and reverse flag
     const goingRight = bounds.startX === bounds.minX
@@ -126,9 +126,109 @@ function AnimatedPathBeam({
                     }}
                 >
                     <stop stopColor="#FEDA24" stopOpacity="0" />
-                    <stop stopColor="#FEDA24" />
-                    <stop offset="32.5%" stopColor="#ffffff" />
+                    <stop offset="2%" stopColor="#FEDA24" stopOpacity="0.2" />
+                    <stop offset="8%" stopColor="#FEDA24" stopOpacity="0.5" />
+                    <stop offset="20%" stopColor="#FEDA24" stopOpacity="0.8" />
+                    <stop offset="35%" stopColor="#FEDA24" />
+                    <stop offset="48%" stopColor="#ffffff" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#ffffff" />
+                    <stop offset="52%" stopColor="#ffffff" stopOpacity="0.9" />
+                    <stop offset="65%" stopColor="#FEDA24" />
+                    <stop offset="80%" stopColor="#FEDA24" stopOpacity="0.8" />
+                    <stop offset="92%" stopColor="#FEDA24" stopOpacity="0.5" />
+                    <stop offset="98%" stopColor="#FEDA24" stopOpacity="0.2" />
                     <stop offset="100%" stopColor="#FEDA24" stopOpacity="0" />
+                </motion.linearGradient>
+            </defs>
+        </>
+    )
+}
+
+// Animated border beam for rectangles
+function AnimatedBorderBeam({
+    x,
+    y,
+    width,
+    height,
+    rx,
+    gradientId,
+    glowFilterId,
+    duration,
+    delay,
+    beamColor,
+}: Readonly<{
+    x: number
+    y: number
+    width: number
+    height: number
+    rx: number
+    gradientId: string
+    glowFilterId: string
+    duration: number
+    delay: number
+    beamColor: string
+}>) {
+    const centerX = x + width / 2
+    const centerY = y + height / 2
+    
+    // Create smooth circular motion around the rectangle perimeter
+    // We'll move the gradient along the perimeter in one continuous direction
+    const topMid = { x: centerX, y }
+    const rightMid = { x: x + width, y: centerY }
+    const bottomMid = { x: centerX, y: y + height }
+    const leftMid = { x, y: centerY }
+    
+    return (
+        <>
+            <rect
+                x={x}
+                y={y}
+                width={width}
+                height={height}
+                rx={rx}
+                fill="none"
+                stroke={`url(#${gradientId})`}
+                strokeWidth="2"
+                filter={`url(#${glowFilterId})`}
+            />
+            <defs>
+                <motion.linearGradient
+                    id={gradientId}
+                    gradientUnits="userSpaceOnUse"
+                    animate={{
+                        x1: [
+                            topMid.x, rightMid.x, bottomMid.x, leftMid.x, topMid.x
+                        ],
+                        y1: [
+                            topMid.y, rightMid.y, bottomMid.y, leftMid.y, topMid.y
+                        ],
+                        x2: [
+                            bottomMid.x, leftMid.x, topMid.x, rightMid.x, bottomMid.x
+                        ],
+                        y2: [
+                            bottomMid.y, leftMid.y, topMid.y, rightMid.y, bottomMid.y
+                        ],
+                    }}
+                    transition={{
+                        delay,
+                        duration: duration * 2,
+                        ease: "linear",
+                        repeat: Infinity,
+                    }}
+                >
+                    <stop stopColor={beamColor} stopOpacity="0" />
+                    <stop offset="2%" stopColor={beamColor} stopOpacity="0.2" />
+                    <stop offset="8%" stopColor={beamColor} stopOpacity="0.5" />
+                    <stop offset="20%" stopColor={beamColor} stopOpacity="0.8" />
+                    <stop offset="35%" stopColor={beamColor} />
+                    <stop offset="48%" stopColor="#ffffff" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#ffffff" />
+                    <stop offset="52%" stopColor="#ffffff" stopOpacity="0.9" />
+                    <stop offset="65%" stopColor={beamColor} />
+                    <stop offset="80%" stopColor={beamColor} stopOpacity="0.8" />
+                    <stop offset="92%" stopColor={beamColor} stopOpacity="0.5" />
+                    <stop offset="98%" stopColor={beamColor} stopOpacity="0.2" />
+                    <stop offset="100%" stopColor={beamColor} stopOpacity="0" />
                 </motion.linearGradient>
             </defs>
         </>
@@ -146,15 +246,13 @@ export function TraceLinesAnimated({
     pathColor = '#444444',
     beamWidth = 2,
     pathWidth = 1,
-}: TraceLineAnimatedProps) {
+}: Readonly<TraceLineAnimatedProps>) {
     // Use a stable ID that's consistent between server and client
     const [stableId, setStableId] = useState('trace-lines')
-    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
         // Generate a unique ID only on the client after mount
-        setStableId(`trace-lines-${Math.random().toString(36).substr(2, 9)}`)
-        setMounted(true)
+        setStableId(`trace-lines-${Math.random().toString(36).substring(2, 11)}`)
     }, [])
 
     const glowFilterId = `beam-glow-${stableId}`
@@ -276,6 +374,7 @@ export function TraceLinesAnimated({
             {/* Outer rounded rectangles */}
             {showOuterBoxes && (
                 <>
+                    {/* Static background boxes */}
                     {/* Right side boxes */}
                     <rect x="992.16" y="129.481" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
                     <rect x="792.23" y="0.5" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
@@ -285,6 +384,83 @@ export function TraceLinesAnimated({
                     <rect x="0.18" y="129.481" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
                     <rect x="197.278" y="0.5" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
                     <rect x="146.17" y="252.641" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
+
+                    {/* Animated border beams on boxes */}
+                    {/* Right side boxes */}
+                    <AnimatedBorderBeam
+                        x={992.16}
+                        y={129.481}
+                        width={109.32}
+                        height={109.32}
+                        rx={31.5}
+                        gradientId={`box-beam-right-center-${stableId}`}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + 0.2}
+                        beamColor={beamColor}
+                    />
+                    <AnimatedBorderBeam
+                        x={792.23}
+                        y={0.5}
+                        width={109.32}
+                        height={109.32}
+                        rx={31.5}
+                        gradientId={`box-beam-right-top-${stableId}`}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + 0.5}
+                        beamColor={beamColor}
+                    />
+                    <AnimatedBorderBeam
+                        x={838.17}
+                        y={254.15}
+                        width={109.32}
+                        height={109.32}
+                        rx={31.5}
+                        gradientId={`box-beam-right-bottom-${stableId}`}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + 0.8}
+                        beamColor={beamColor}
+                    />
+
+                    {/* Left side boxes */}
+                    <AnimatedBorderBeam
+                        x={0.18}
+                        y={129.481}
+                        width={109.32}
+                        height={109.32}
+                        rx={31.5}
+                        gradientId={`box-beam-left-center-${stableId}`}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + 0.35}
+                        beamColor={beamColor}
+                    />
+                    <AnimatedBorderBeam
+                        x={197.278}
+                        y={0.5}
+                        width={109.32}
+                        height={109.32}
+                        rx={31.5}
+                        gradientId={`box-beam-left-top-${stableId}`}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + 0.65}
+                        beamColor={beamColor}
+                    />
+                    <AnimatedBorderBeam
+                        x={146.17}
+                        y={252.641}
+                        width={109.32}
+                        height={109.32}
+                        rx={31.5}
+                        gradientId={`box-beam-left-bottom-${stableId}`}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + 0.95}
+                        beamColor={beamColor}
+                    />
                 </>
             )}
         </svg>
