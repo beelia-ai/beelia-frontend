@@ -62,6 +62,13 @@ export function NewHero() {
           color: #000000;
           font-weight: 600;
         }
+        .waitlist-btn-arrow {
+          filter: brightness(0) invert(1);
+          transition: filter 0.3s ease, transform 0.5s ease-in-out;
+        }
+        .waitlist-btn-wrapper:hover .waitlist-btn-arrow {
+          filter: brightness(0) invert(0);
+        }
       `}</style>
       <section className="h-screen bg-black relative overflow-hidden">
       {/* Particle Sprites Background */}
@@ -73,15 +80,16 @@ export function NewHero() {
         colors={beeliaColors}
         cycleColors={false}
         sizes={[5, 5, 5, 5, 5]}
+        speed={0.3}
       />
       
       {/* Light Rays */}
       <LightRays 
        raysOrigin="top-center"
-       raysColor="#4699F8"
-       raysSpeed={1}
-       lightSpread={0.5}
-       rayLength={3}
+       raysColor="#F5A83B"
+       raysSpeed={0.6}
+       lightSpread={0.7}
+       rayLength={1.6}
        fadeDistance={1}
        saturation={1}
        followMouse={true}
@@ -91,50 +99,66 @@ export function NewHero() {
        className="absolute inset-0"
       />
 
-      {/* AIFOR Image - positioned with specific dimensions, centered */}
-      <div 
-        className="absolute z-10 left-1/2 -translate-x-1/2"
-        style={{
-          width: '675px',
-          height: '80px',
-          top: '607.99px',
-          opacity: 1
-        }}
-      >
-        <Image
-          src="/images/AIFOR.png"
-          alt="AI For Everyone, by Everyone"
-          width={675}
-          height={80}
-          className="w-full h-full object-contain"
-          priority
-        />
-      </div>
+      {/* Vertically centered content container */}
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+        {/* Image Placeholder - above AIFOR */}
+        <div 
+          className="mb-8"
+          style={{
+            width: '1200px',
+            height: '300px',
+          }}
+        >
+          <Image
+            src="/images/imageplaceholder.png"
+            alt="Placeholder"
+            width={1200}
+            height={300}
+            className="w-full h-full object-contain"
+            priority
+          />
+        </div>
 
-      {/* Tagline Text - positioned below AIFOR image */}
-      <p 
-        className="absolute z-10 left-1/2 -translate-x-1/2 uppercase text-center"
-        style={{
-          fontFamily: 'var(--font-inria-sans), Inria Sans, sans-serif',
-          fontWeight: 400,
-          fontStyle: 'normal',
-          fontSize: '17px',
-          lineHeight: '26px',
-          letterSpacing: '0.04em',
-          textAlign: 'center',
-          textTransform: 'uppercase',
-          width: '605.4130859375px',
-          height: '52px',
-          top: '710px',
-          opacity: 0.8,
-          color: '#FFFFFF'
-        }}
-      >
-        A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
-      </p>
+        {/* AIFOR Image */}
+        <div 
+          style={{
+            width: '675px',
+            height: '80px',
+            opacity: 1
+          }}
+        >
+          <Image
+            src="/images/AIFOR.png"
+            alt="AI For Everyone, by Everyone"
+            width={675}
+            height={80}
+            className="w-full h-full object-contain"
+            priority
+          />
+        </div>
 
-      {/* Join Waitlist Button - positioned below tagline text */}
-      <div className="absolute z-10 left-1/2 -translate-x-1/2" style={{ top: '800px' }}>
+        {/* Tagline Text - below AIFOR image */}
+        <p 
+          className="uppercase text-center mt-6"
+          style={{
+            fontFamily: 'var(--font-inria-sans), Inria Sans, sans-serif',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: '17px',
+            lineHeight: '32px',
+            letterSpacing: '0.04em',
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            maxWidth: '605px',
+            opacity: 0.8,
+            color: '#FFFFFF'
+          }}
+        >
+          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
+        </p>
+
+        {/* Join Waitlist Button - below tagline text */}
+        <div className="mt-8">
         <Link 
           href="/waitlist"
           className="group cursor-pointer block"
@@ -148,8 +172,8 @@ export function NewHero() {
           <div className="waitlist-btn-wrapper">
             {isMounted ? (
               <GlassSurface
-                width={250}
-                height={65}
+                width={270}
+                height={80}
                 borderRadius={50}
                 chromaticAberration={0.15}
                 redOffset={0}
@@ -170,12 +194,13 @@ export function NewHero() {
                   transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
-                <div className="w-full flex items-center justify-center gap-2 relative z-10">
+                <div className="w-full flex items-center justify-center gap-3 relative z-10">
                   <span 
                     className="waitlist-btn-text uppercase"
                     style={{
                       fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '16px',
+                      fontSize: '20px',
+                      fontWeight: 800,
                       lineHeight: '100%',
                       letterSpacing: '0.06em',
                     }}
@@ -185,9 +210,9 @@ export function NewHero() {
                   <Image
                     src="/icons/Vector.svg"
                     alt="arrow"
-                    width={18}
-                    height={18}
-                    className="transition-transform duration-500 ease-in-out"
+                    width={20}
+                    height={20}
+                    className="waitlist-btn-arrow transition-transform duration-500 ease-in-out"
                     style={{
                       transform: isHovered ? 'rotate(45deg)' : 'rotate(0deg)',
                     }}
@@ -197,6 +222,7 @@ export function NewHero() {
             ) : null}
           </div>
         </Link>
+        </div>
       </div>
       </section>
     </>

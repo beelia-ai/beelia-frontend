@@ -13,6 +13,7 @@ export interface ParticleSpritesBackgroundProps {
   readonly followMouse?: boolean
   readonly mouseSensitivity?: number
   readonly cycleColors?: boolean // Whether to cycle through colors over time
+  readonly speed?: number // Animation speed multiplier (default: 1.0, lower = slower)
 }
 
 export function ParticleSpritesBackground({
@@ -29,7 +30,8 @@ export function ParticleSpritesBackground({
   sizes = [20, 15, 10, 8, 5],
   followMouse = true,
   mouseSensitivity = 0.05,
-  cycleColors = true
+  cycleColors = true,
+  speed = 1.0
 }: ParticleSpritesBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<THREE.Scene | null>(null)
@@ -189,7 +191,7 @@ export function ParticleSpritesBackground({
 
       animationFrameRef.current = requestAnimationFrame(animate)
 
-      const time = Date.now() * 0.00005
+      const time = Date.now() * 0.00005 * speed
 
       // Update camera position based on mouse
       if (followMouse && camera) {
@@ -264,7 +266,7 @@ export function ParticleSpritesBackground({
         rendererRef.current.domElement.remove()
       }
     }
-  }, [particleCount, fogDensity, colors, sizes, followMouse, mouseSensitivity, cycleColors])
+  }, [particleCount, fogDensity, colors, sizes, followMouse, mouseSensitivity, cycleColors, speed])
 
   return (
     <div

@@ -60,6 +60,18 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
         }
         .waitlist-btn-text {
           color: #FFFFFF;
+          transition: color 0.3s ease;
+        }
+        .waitlist-btn-wrapper:hover .waitlist-btn-text {
+          color: #000000;
+          font-weight: 600;
+        }
+        .waitlist-btn-arrow {
+          filter: brightness(0) invert(1);
+          transition: filter 0.3s ease, transform 0.5s ease-in-out;
+        }
+        .waitlist-btn-wrapper:hover .waitlist-btn-arrow {
+          filter: brightness(0) invert(0);
         }
         .nav-link {
           position: relative;
@@ -72,11 +84,11 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
         .nav-link::after {
           content: '';
           position: absolute;
-          bottom: -4px;
+          bottom: -2px;
           left: 0;
           width: 0;
-          height: 1px;
-          background: #FEDA24;
+          height: 1.4px;
+          background: white;
           transition: width 0.3s ease;
         }
         .nav-link:hover::after {
@@ -185,7 +197,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         alt="arrow"
                         width={16}
                         height={16}
-                        className="transition-transform duration-500 ease-in-out rotate-[225deg] group-hover:rotate-[270deg]"
+                        className="waitlist-btn-arrow transition-transform duration-500 ease-in-out rotate-[225deg] group-hover:rotate-[270deg]"
                       />
                     )}
                     <span 
@@ -205,7 +217,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         alt="arrow"
                         width={16}
                         height={16}
-                        className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                        className="waitlist-btn-arrow transition-transform duration-500 ease-in-out group-hover:rotate-45"
                       />
                     )}
                   </div>
