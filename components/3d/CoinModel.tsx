@@ -10,7 +10,6 @@ export function CoinModel() {
     const spinRef = useRef<Group>(null)
     const pointLight1Ref = useRef<PointLight>(null)
     const pointLight2Ref = useRef<PointLight>(null)
-    const floatRef = useRef<Group>(null)
 
     // Clone the scene to avoid modifying the cached version
     const clonedScene = useMemo(() => scene.clone(), [scene])
@@ -39,14 +38,9 @@ export function CoinModel() {
     const beeliaYellow = '#FEDA24'
     const beeliaOrange = '#ff7c00' // Matching the marching cubes orange point light
 
-    // Animations: float and light movements (marching cubes inspired)
+    // Animations: light movements (marching cubes inspired)
     useFrame((state, delta) => {
         const time = state.clock.getElapsedTime()
-        
-        // Floating animation (subtle up and down)
-        if (floatRef.current) {
-            floatRef.current.position.y = Math.sin(time * 1.5) * 0.15
-        }
 
         // Orbit point light 1 around the coin (like marching cubes)
         if (pointLight1Ref.current) {
@@ -66,7 +60,7 @@ export function CoinModel() {
     })
 
     return (
-        <group ref={floatRef}>
+        <group>
             {/* Rotating coin group with shiny metallic material */}
             <group ref={spinRef} position={[0, 0, 0]}>
                 <primitive object={clonedScene} scale={0.8} />
