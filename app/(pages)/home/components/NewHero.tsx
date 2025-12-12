@@ -6,6 +6,10 @@ import LightRays from '@/components/LightRays'
 import { ParticleSpritesBackground } from '@/components/ui'
 import Image from 'next/image'
 import GlassSurface from '@/components/GlassSurface'
+import TraceLinesAnimated from '@/components/ui/trace-lines-animated'
+import { Canvas } from '@react-three/fiber'
+import { CoinModel } from '@/components/3d/CoinModel'
+import { Environment } from '@react-three/drei'
 
 export function NewHero() {
   const [isHovered, setIsHovered] = useState(false)
@@ -71,159 +75,137 @@ export function NewHero() {
         }
       `}</style>
       <section className="h-screen bg-black relative overflow-hidden">
-      {/* Particle Sprites Background */}
-      <ParticleSpritesBackground 
-        className="absolute inset-0"
-        particleCount={150}
-        followMouse={true}
-        mouseSensitivity={0.05}
-        colors={beeliaColors}
-        cycleColors={false}
-        sizes={[5, 5, 5, 5, 5]}
-        speed={0.3}
-      />
-      
-      {/* Light Rays */}
-      <LightRays 
-       raysOrigin="top-center"
-       raysColor="#F5A83B"
-       raysSpeed={0.6}
-       lightSpread={0.7}
-       rayLength={1.6}
-       fadeDistance={1}
-       saturation={1}
-       followMouse={true}
-       mouseInfluence={0.1}
-       noiseAmount={0}
-       distortion={0}
-       className="absolute inset-0"
-      />
+        {/* Particle Sprites Background */}
+        <ParticleSpritesBackground
+          className="absolute inset-0"
+          particleCount={150}
+          followMouse={true}
+          mouseSensitivity={0.05}
+          colors={beeliaColors}
+          cycleColors={false}
+          sizes={[5, 5, 5, 5, 5]}
+          speed={0.3}
+        />
 
-      {/* Vertically centered content container */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-        {/* Image Placeholder - above AIFOR */}
-        <div 
-          className="mb-8"
-          style={{
-            width: '1200px',
-            height: '300px',
-          }}
-        >
-          <Image
-            src="/images/imageplaceholder.png"
-            alt="Placeholder"
-            width={1200}
-            height={300}
-            className="w-full h-full object-contain"
-            priority
-          />
-        </div>
+        {/* Light Rays */}
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#F5A83B"
+          raysSpeed={0.6}
+          lightSpread={0.7}
+          rayLength={1.6}
+          fadeDistance={1}
+          saturation={1}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0}
+          distortion={0}
+          className="absolute inset-0"
+        />
 
-        {/* AIFOR Image */}
-        <div 
-          style={{
-            width: '675px',
-            height: '80px',
-            opacity: 1
-          }}
-        >
-          <Image
-            src="/images/AIFOR.png"
-            alt="AI For Everyone, by Everyone"
-            width={675}
-            height={80}
-            className="w-full h-full object-contain"
-            priority
-          />
-        </div>
+        {/* Vertically centered content container */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+          {/* Trace Lines + Video Globe Container */}
+          <div className="mb-8 relative w-[1102px] h-[364px]">
+            {/* Trace Lines Animated SVG - background */}
+            <TraceLinesAnimated
+              className="absolute inset-0 w-full h-full object-contain"
+              duration={4}
+              delay={0}
+              beamColor="#FEDA24"
+              beamColorSecondary="#FF8C32"
+              pathColor="#444444"
+              beamWidth={2}
+              pathWidth={1}
+            />
 
-        {/* Tagline Text - below AIFOR image */}
-        <p 
-          className="uppercase text-center mt-6"
-          style={{
-            fontFamily: 'var(--font-inria-sans), Inria Sans, sans-serif',
-            fontWeight: 400,
-            fontStyle: 'normal',
-            fontSize: '17px',
-            lineHeight: '32px',
-            letterSpacing: '0.04em',
-            textAlign: 'center',
-            textTransform: 'uppercase',
-            maxWidth: '605px',
-            opacity: 0.8,
-            color: '#FFFFFF'
-          }}
-        >
-          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
-        </p>
-
-        {/* Join Waitlist Button - below tagline text */}
-        <div className="mt-8">
-        <Link 
-          href="/waitlist"
-          className="group cursor-pointer block"
-          style={{
-            perspective: '1000px',
-            transformStyle: 'preserve-3d',
-          }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div className="waitlist-btn-wrapper">
-            {isMounted ? (
-              <GlassSurface
-                width={270}
-                height={80}
-                borderRadius={50}
-                chromaticAberration={0.15}
-                redOffset={0}
-                greenOffset={10}
-                blueOffset={20}
-                distortionScale={-180}
-                blur={16}
-                brightness={60}
-                opacity={0.95}
-                className="group-hover:scale-105"
-                style={{
-                  transform: isHovered 
-                    ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.03)' 
-                    : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
-                  boxShadow: isHovered
-                    ? '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15) inset'
-                    : '0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}
+            {/* Video Globe - centered on top of trace lines */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-[420px] h-[420px] object-contain mr-0.5"
               >
-                <div className="w-full flex items-center justify-center gap-3 relative z-10">
-                  <span 
-                    className="waitlist-btn-text uppercase"
-                    style={{
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '20px',
-                      fontWeight: 800,
-                      lineHeight: '100%',
-                      letterSpacing: '0.06em',
-                    }}
-                  >
-                    join waitlist
-                  </span>
-                  <Image
-                    src="/icons/Vector.svg"
-                    alt="arrow"
-                    width={20}
-                    height={20}
-                    className="waitlist-btn-arrow transition-transform duration-500 ease-in-out"
-                    style={{
-                      transform: isHovered ? 'rotate(45deg)' : 'rotate(0deg)',
-                    }}
-                  />
-                </div>
-              </GlassSurface>
-            ) : null}
+                <source src="/videos/Beelia ani 2.webm" type="video/webm" />
+              </video>
+            </div>
+
+            {/* 3D DollarBill Overlay - Right Box */}
+            <div className="absolute z-20 pointer-events-none left-[992.16px] top-[129.481px] w-[109.32px] h-[109.32px]">
+              <Canvas camera={{ position: [0, 0, 4.5], fov: 40 }} gl={{ alpha: true }} dpr={[1, 2]}>
+                <ambientLight intensity={0.8} />
+                <directionalLight position={[5, 5, 5]} intensity={1} />
+                <Environment preset="sunset" />
+                <CoinModel />
+              </Canvas>
+            </div>
           </div>
-        </Link>
+
+          {/* AIFOR Image */}
+          <div className="w-[675px] h-[80px]">
+            <Image
+              src="/images/AIFOR.png"
+              alt="AI For Everyone, by Everyone"
+              width={675}
+              height={80}
+              className="w-full h-full object-contain"
+              priority
+            />
+          </div>
+
+          {/* Tagline Text - below AIFOR image */}
+          <p className="mt-6 text-center uppercase text-white/80 text-[17px] leading-[32px] tracking-[0.04em] font-normal max-w-[605px] font-inria-sans">
+            A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
+          </p>
+
+          {/* Join Waitlist Button - below tagline text */}
+          <div className="mt-8">
+            <Link
+              href="/waitlist"
+              className="group cursor-pointer block [perspective:1000px] [transform-style:preserve-3d]"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <div className="waitlist-btn-wrapper">
+                {isMounted ? (
+                  <GlassSurface
+                    width={270}
+                    height={80}
+                    borderRadius={50}
+                    chromaticAberration={0.15}
+                    redOffset={0}
+                    greenOffset={10}
+                    blueOffset={20}
+                    distortionScale={-180}
+                    blur={16}
+                    brightness={60}
+                    opacity={0.95}
+                    className={`group-hover:scale-105 transition-all duration-500 ease-out ${
+                      isHovered
+                        ? '[transform:translateZ(20px)_rotateX(-1deg)_rotateY(1deg)_scale(1.03)] [box-shadow:0_20px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.15)_inset]'
+                        : '[transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]'
+                    }`}
+                  >
+                    <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                      <span className="waitlist-btn-text uppercase text-[20px] font-extrabold leading-[100%] tracking-[0.06em] font-inria-sans">
+                        join waitlist
+                      </span>
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={20}
+                        height={20}
+                        className={`waitlist-btn-arrow transition-transform duration-500 ease-in-out ${isHovered ? 'rotate-45' : 'rotate-0'}`}
+                      />
+                    </div>
+                  </GlassSurface>
+                ) : null}
+              </div>
+            </Link>
+          </div>
         </div>
-      </div>
       </section>
     </>
   )
