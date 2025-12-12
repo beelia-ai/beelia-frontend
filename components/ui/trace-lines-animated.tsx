@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -64,10 +64,11 @@ function AnimatedPathBeam({
                 minX: Math.min(...xCoords),
                 maxX: Math.max(...xCoords),
                 startX: numbers[0],
-                y: numbers[1]
+                y: numbers[1],
+                isHorizontal: path.includes('H')
             }
         }
-        return { minX: 0, maxX: 1000, startX: 0, y: 185 }
+        return { minX: 0, maxX: 1000, startX: 0, y: 185, isHorizontal: false }
     }
 
     const bounds = parsePathBounds(d)
@@ -78,52 +79,80 @@ function AnimatedPathBeam({
     const goingRight = bounds.startX === bounds.minX
     const actualReverse = reverse ? !goingRight : goingRight
 
-    // Calculate gradient animation coordinates
+    // Calculate gradient animation coordinates - ensure proper values for horizontal lines
     const gradientAnim = actualReverse
         ? {
             // Right to left animation
             x1: [bounds.maxX + beamLength, bounds.minX - beamLength],
-            x2: [bounds.maxX, bounds.minX - beamLength * 2],
+            x2: [bounds.maxX + beamLength * 0.5, bounds.minX - beamLength * 1.5],
         }
         : {
             // Left to right animation (default for rightHorizontal)
             x1: [bounds.minX - beamLength, bounds.maxX + beamLength],
-            x2: [bounds.minX, bounds.maxX + beamLength * 2],
+            x2: [bounds.minX - beamLength * 1.5, bounds.maxX + beamLength * 0.5],
         }
 
+    // Ensure gradient coordinates are valid numbers
+    const yPos = bounds.y || 185.289
+    const gradientRef = useRef<SVGLinearGradientElement>(null)
+    
+    // Animate gradient using requestAnimationFrame
+    useEffect(() => {
+        if (!gradientRef.current) return
+        
+        let startTime: number | null = null
+        let animationFrame: number
+        
+        const animateGradient = (timestamp: number) => {
+            startTime ??= timestamp
+            const elapsed = (timestamp - startTime) / 1000 // Convert to seconds
+            const totalDuration = duration + 0.5 // Include repeatDelay
+            
+            // Calculate progress (0 to 1, repeating)
+            const progress = ((elapsed + delay) % totalDuration) / duration
+            const clampedProgress = Math.min(Math.max(progress, 0), 1)
+            
+            // Interpolate gradient position
+            const easeInOutCubic = (t: number) => {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+            }
+            const eased = easeInOutCubic(clampedProgress)
+            
+            // Calculate current gradient position
+            const x1Start = gradientAnim.x1[0]
+            const x1End = gradientAnim.x1[1]
+            const x2Start = gradientAnim.x2[0]
+            const x2End = gradientAnim.x2[1]
+            
+            const currentX1 = x1Start + (x1End - x1Start) * eased
+            const currentX2 = x2Start + (x2End - x2Start) * eased
+            
+            if (gradientRef.current) {
+                gradientRef.current.setAttribute('x1', currentX1.toString())
+                gradientRef.current.setAttribute('x2', currentX2.toString())
+            }
+            
+            animationFrame = requestAnimationFrame(animateGradient)
+        }
+        
+        animationFrame = requestAnimationFrame(animateGradient)
+        
+        return () => {
+            cancelAnimationFrame(animationFrame)
+        }
+    }, [duration, delay, gradientAnim])
+    
     return (
         <>
-            <path
-                d={d}
-                stroke={`url(#${gradientId})`}
-                strokeWidth={beamWidth}
-                fill="none"
-                filter={`url(#${glowFilterId})`}
-                strokeLinecap="round"
-            />
             <defs>
-                <motion.linearGradient
+                <linearGradient
+                    ref={gradientRef}
                     id={gradientId}
                     gradientUnits="userSpaceOnUse"
-                    initial={{
-                        x1: gradientAnim.x1[0],
-                        x2: gradientAnim.x2[0],
-                        y1: bounds.y,
-                        y2: bounds.y,
-                    }}
-                    animate={{
-                        x1: gradientAnim.x1,
-                        x2: gradientAnim.x2,
-                        y1: bounds.y,
-                        y2: bounds.y,
-                    }}
-                    transition={{
-                        delay,
-                        duration,
-                        ease: [0.16, 1, 0.3, 1],
-                        repeat: Infinity,
-                        repeatDelay: 0.5,
-                    }}
+                    x1={gradientAnim.x1[0]}
+                    x2={gradientAnim.x2[0]}
+                    y1={yPos}
+                    y2={yPos}
                 >
                     <stop stopColor="#FEDA24" stopOpacity="0" />
                     <stop offset="2%" stopColor="#FEDA24" stopOpacity="0.2" />
@@ -138,8 +167,16 @@ function AnimatedPathBeam({
                     <stop offset="92%" stopColor="#FEDA24" stopOpacity="0.5" />
                     <stop offset="98%" stopColor="#FEDA24" stopOpacity="0.2" />
                     <stop offset="100%" stopColor="#FEDA24" stopOpacity="0" />
-                </motion.linearGradient>
+                </linearGradient>
             </defs>
+            <path
+                d={d}
+                stroke={`url(#${gradientId})`}
+                strokeWidth={beamWidth}
+                fill="none"
+                filter={`url(#${glowFilterId})`}
+                strokeLinecap="round"
+            />
         </>
     )
 }
@@ -256,7 +293,6 @@ export function TraceLinesAnimated({
     }, [])
 
     const glowFilterId = `beam-glow-${stableId}`
-    const staticGlowFilterId = `static-glow-${stableId}`
 
     // Path definitions - these match the Trace_Lines.svg coordinates
     const paths = {
@@ -270,16 +306,12 @@ export function TraceLinesAnimated({
         leftBottom: 'M401.178 185.266L311.948 309.355L256.434 309.355',
     }
 
-    // Horizontal lines (will have static glow)
-    const horizontalPaths = [
-        { key: 'rightHorizontal', d: paths.rightHorizontal },
-        { key: 'leftHorizontal', d: paths.leftHorizontal },
-    ]
-
-    // Diagonal beam configurations with staggered delays (animated)
+    // All beam configurations with staggered delays (animated) - including horizontal lines
     const beamConfigs = [
+        { key: 'rightHorizontal', d: paths.rightHorizontal, delay: 0, reverse: false },
         { key: 'rightTop', d: paths.rightTop, delay: 0.3, reverse: false },
         { key: 'rightBottom', d: paths.rightBottom, delay: 0.6, reverse: false },
+        { key: 'leftHorizontal', d: paths.leftHorizontal, delay: 0.15, reverse: true },
         { key: 'leftTop', d: paths.leftTop, delay: 0.45, reverse: true },
         { key: 'leftBottom', d: paths.leftBottom, delay: 0.75, reverse: true },
     ]
@@ -303,22 +335,9 @@ export function TraceLinesAnimated({
                         <feMergeNode in="SourceGraphic" />
                     </feMerge>
                 </filter>
-                
-                {/* Static glow filter for horizontal lines */}
-                <filter id={staticGlowFilterId} x="-100%" y="-100%" width="300%" height="300%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur1" />
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur2" />
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur3" />
-                    <feMerge>
-                        <feMergeNode in="blur3" />
-                        <feMergeNode in="blur2" />
-                        <feMergeNode in="blur1" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
             </defs>
 
-            {/* Static path lines (background) - diagonal paths */}
+            {/* Static path lines (background) - all paths */}
             {beamConfigs.map((config) => (
                 <path
                     key={`static-${config.key}`}
@@ -329,75 +348,25 @@ export function TraceLinesAnimated({
                 />
             ))}
 
-            {/* Static background for horizontal lines */}
-            {horizontalPaths.map((line) => (
-                <path
-                    key={`static-${line.key}`}
-                    d={line.d}
-                    stroke={pathColor}
-                    strokeWidth={pathWidth}
-                    fill="none"
-                />
-            ))}
-
-            {/* Horizontal lines with static glow */}
-            {horizontalPaths.map((line) => (
-                <g key={`glow-group-${line.key}`}>
-                    {/* Multiple layers for enhanced glow effect */}
-                    <path
-                        d={line.d}
-                        stroke={beamColor}
-                        strokeWidth={beamWidth * 3}
-                        fill="none"
-                        strokeLinecap="round"
-                        opacity="0.4"
-                        filter={`url(#${staticGlowFilterId})`}
+            {/* Animated beams - all lines including horizontal */}
+            {beamConfigs.map((config) => {
+                const isHorizontal = config.key.includes('Horizontal')
+                return (
+                    <AnimatedPathBeam
+                        key={config.key}
+                        pathId={config.key}
+                        d={config.d}
+                        gradientId={`beam-grad-${config.key}-${stableId}`}
+                        beamWidth={isHorizontal ? beamWidth : beamWidth * 0.8}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + config.delay}
+                        reverse={config.reverse}
                     />
-                    <path
-                        d={line.d}
-                        stroke={beamColor}
-                        strokeWidth={beamWidth * 1.5}
-                        fill="none"
-                        strokeLinecap="round"
-                        opacity="0.6"
-                        filter={`url(#${staticGlowFilterId})`}
-                    />
-                    <path
-                        d={line.d}
-                        stroke={beamColor}
-                        strokeWidth={beamWidth}
-                        fill="none"
-                        strokeLinecap="round"
-                        opacity="0.9"
-                    />
-                    <path
-                        d={line.d}
-                        stroke="#ffffff"
-                        strokeWidth={beamWidth * 0.4}
-                        fill="none"
-                        strokeLinecap="round"
-                        opacity="0.7"
-                    />
-                </g>
-            ))}
-
-            {/* Animated beams - only diagonal lines */}
-            {beamConfigs.map((config) => (
-                <AnimatedPathBeam
-                    key={config.key}
-                    pathId={config.key}
-                    d={config.d}
-                    gradientId={`beam-grad-${config.key}-${stableId}`}
-                    beamWidth={beamWidth * 0.8}
-                    glowFilterId={glowFilterId}
-                    duration={duration}
-                    delay={delay + config.delay}
-                    reverse={config.reverse}
-                />
-            ))}
+                )
+            })}
 
             {/* Junction dots - Right side with pulsing animation */}
-            {/* Center junction - continuously pulsing */}
             <motion.circle
                 cx="703.999"
                 cy="185.286"
@@ -416,53 +385,10 @@ export function TraceLinesAnimated({
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
                 }}
             />
-            
-            {/* Right top endpoint - pulses when beam arrives */}
-            <motion.circle
-                cx="746.999"
-                cy="58.286"
-                r="2"
-                fill="white"
-                animate={{
-                    r: [2, 2, 3.5, 2, 2],
-                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
-                }}
-                transition={{
-                    delay: delay + 0.3,
-                    duration: duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    times: [0, 0.4, 0.5, 0.6, 1],
-                }}
-                style={{
-                    filter: 'drop-shadow(0 0 4px #FEDA24)',
-                }}
-            />
-            
-            {/* Right bottom endpoint - pulses when beam arrives */}
-            <motion.circle
-                cx="792.999"
-                cy="309.286"
-                r="2"
-                fill="white"
-                animate={{
-                    r: [2, 2, 3.5, 2, 2],
-                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
-                }}
-                transition={{
-                    delay: delay + 0.6,
-                    duration: duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    times: [0, 0.4, 0.5, 0.6, 1],
-                }}
-                style={{
-                    filter: 'drop-shadow(0 0 4px #FEDA24)',
-                }}
-            />
+            <circle cx="746.999" cy="58.286" r="2" fill="white" />
+            <circle cx="792.999" cy="309.286" r="2" fill="white" />
 
             {/* Junction dots - Left side with pulsing animation */}
-            {/* Center junction - continuously pulsing */}
             <motion.circle
                 cx="401.052"
                 cy="185.286"
@@ -482,50 +408,8 @@ export function TraceLinesAnimated({
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
                 }}
             />
-            
-            {/* Left top endpoint - pulses when beam arrives */}
-            <motion.circle
-                cx="358.052"
-                cy="58.286"
-                r="2"
-                fill="white"
-                animate={{
-                    r: [2, 2, 3.5, 2, 2],
-                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
-                }}
-                transition={{
-                    delay: delay + 0.45,
-                    duration: duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    times: [0, 0.4, 0.5, 0.6, 1],
-                }}
-                style={{
-                    filter: 'drop-shadow(0 0 4px #FEDA24)',
-                }}
-            />
-            
-            {/* Left bottom endpoint - pulses when beam arrives */}
-            <motion.circle
-                cx="312.052"
-                cy="309.286"
-                r="2"
-                fill="white"
-                animate={{
-                    r: [2, 2, 3.5, 2, 2],
-                    opacity: [0.6, 0.6, 1, 0.6, 0.6],
-                }}
-                transition={{
-                    delay: delay + 0.75,
-                    duration: duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    times: [0, 0.4, 0.5, 0.6, 1],
-                }}
-                style={{
-                    filter: 'drop-shadow(0 0 4px #FEDA24)',
-                }}
-            />
+            <circle cx="358.052" cy="58.286" r="2" fill="white" />
+            <circle cx="312.052" cy="309.286" r="2" fill="white" />
 
             {/* Outer rounded rectangles */}
             {showOuterBoxes && (

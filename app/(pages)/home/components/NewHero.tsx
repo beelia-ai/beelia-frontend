@@ -9,6 +9,7 @@ import GlassSurface from '@/components/GlassSurface'
 import TraceLinesAnimated from '@/components/ui/trace-lines-animated'
 import { Canvas } from '@react-three/fiber'
 import { CoinModel } from '@/components/3d/CoinModel'
+import { Environment } from '@react-three/drei'
 
 export function NewHero() {
   const [isHovered, setIsHovered] = useState(false)
@@ -127,7 +128,7 @@ export function NewHero() {
                 playsInline
                 className="w-[420px] h-[420px] object-contain mr-0.5"
               >
-                <source src="/videos/Beelia ani.webm" type="video/webm" />
+                <source src="/videos/Beelia ani 2.webm" type="video/webm" />
               </video>
             </div>
 
@@ -144,6 +145,7 @@ export function NewHero() {
               <Canvas camera={{ position: [0, 0, 4.5], fov: 40 }} gl={{ alpha: true }} dpr={[1, 2]}>
                 <ambientLight intensity={0.8} />
                 <directionalLight position={[5, 5, 5]} intensity={1} />
+                <Environment preset="sunset" />
                 <CoinModel />
               </Canvas>
             </div>
