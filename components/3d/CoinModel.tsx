@@ -14,9 +14,9 @@ export function CoinModel() {
     // Clone the scene to avoid modifying the cached version
     const clonedScene = useMemo(() => scene.clone(), [scene])
     
-    // Set the coin to stand upright once
+    // Set the coin to stand upright once and flip vertically
     useEffect(() => {
-        clonedScene.rotation.set(Math.PI / 2, 0, 0)
+        clonedScene.rotation.set(Math.PI / 2, 0, Math.PI)
         
         // Apply shiny metallic material to all meshes (marching cubes style)
         clonedScene.traverse((child) => {
