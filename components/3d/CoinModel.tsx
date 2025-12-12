@@ -104,7 +104,7 @@ export function CoinModel() {
         <group>
             {/* DollarBill group with shiny metallic material */}
             <group ref={spinRef} position={[0.08, 0, 0]}>
-                <primitive object={clonedScene} scale={0.92} />
+                <primitive object={clonedScene} scale={0.93} />
             </group>
 
             {/* Lighting setup matching marching cubes example */}
