@@ -1,6 +1,6 @@
 'use client'
 
-import { useId } from 'react'
+import { useState, useEffect, useId } from 'react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -45,14 +45,50 @@ function AnimatedPathBeam({
     delay: number
     reverse?: boolean
 }) {
-    const gradientCoordinates = reverse
+    // Parse the path to extract start and end coordinates for proper gradient animation
+    // For horizontal paths like "M612.227 185.289H992.05", extract the X coordinates
+    const parsePathBounds = (path: string) => {
+        const numbers = path.match(/-?\d+\.?\d*/g)?.map(Number) || []
+        if (numbers.length >= 2) {
+            const xCoords = [numbers[0]]
+            // For H command, the last number is the end X
+            if (path.includes('H')) {
+                xCoords.push(numbers[numbers.length - 1])
+            } else if (path.includes('L')) {
+                // For L commands, extract all X coordinates (every other number starting from 0)
+                for (let i = 2; i < numbers.length; i += 2) {
+                    xCoords.push(numbers[i])
+                }
+            }
+            return {
+                minX: Math.min(...xCoords),
+                maxX: Math.max(...xCoords),
+                startX: numbers[0],
+                y: numbers[1]
+            }
+        }
+        return { minX: 0, maxX: 1000, startX: 0, y: 185 }
+    }
+
+    const bounds = parsePathBounds(d)
+    const pathLength = bounds.maxX - bounds.minX
+    const beamLength = pathLength * 0.15 // Beam is 15% of path length
+
+    // Determine direction based on path start position and reverse flag
+    const goingRight = bounds.startX === bounds.minX
+    const actualReverse = reverse ? !goingRight : goingRight
+
+    // Calculate gradient animation coordinates
+    const gradientAnim = actualReverse
         ? {
-            x1: ["90%", "-10%"],
-            x2: ["100%", "0%"],
+            // Right to left animation
+            x1: [bounds.maxX + beamLength, bounds.minX - beamLength],
+            x2: [bounds.maxX, bounds.minX - beamLength * 2],
         }
         : {
-            x1: ["-10%", "110%"],
-            x2: ["0%", "120%"],
+            // Left to right animation (default for rightHorizontal)
+            x1: [bounds.minX - beamLength, bounds.maxX + beamLength],
+            x2: [bounds.minX, bounds.maxX + beamLength * 2],
         }
 
     return (
@@ -70,16 +106,16 @@ function AnimatedPathBeam({
                     id={gradientId}
                     gradientUnits="userSpaceOnUse"
                     initial={{
-                        x1: gradientCoordinates.x1[0],
-                        x2: gradientCoordinates.x2[0],
-                        y1: "0%",
-                        y2: "0%",
+                        x1: gradientAnim.x1[0],
+                        x2: gradientAnim.x2[0],
+                        y1: bounds.y,
+                        y2: bounds.y,
                     }}
                     animate={{
-                        x1: gradientCoordinates.x1,
-                        x2: gradientCoordinates.x2,
-                        y1: ["0%", "0%"],
-                        y2: ["0%", "0%"],
+                        x1: gradientAnim.x1,
+                        x2: gradientAnim.x2,
+                        y1: bounds.y,
+                        y2: bounds.y,
                     }}
                     transition={{
                         delay,
@@ -111,8 +147,17 @@ export function TraceLinesAnimated({
     beamWidth = 2,
     pathWidth = 1,
 }: TraceLineAnimatedProps) {
-    const id = useId()
-    const glowFilterId = `beam-glow-${id}`
+    // Use a stable ID that's consistent between server and client
+    const [stableId, setStableId] = useState('trace-lines')
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        // Generate a unique ID only on the client after mount
+        setStableId(`trace-lines-${Math.random().toString(36).substr(2, 9)}`)
+        setMounted(true)
+    }, [])
+
+    const glowFilterId = `beam-glow-${stableId}`
 
     // Path definitions - these match the Trace_Lines.svg coordinates
     const paths = {
@@ -174,7 +219,7 @@ export function TraceLinesAnimated({
                     key={config.key}
                     pathId={config.key}
                     d={config.d}
-                    gradientId={`beam-grad-${config.key}-${id}`}
+                    gradientId={`beam-grad-${config.key}-${stableId}`}
                     beamWidth={beamWidth}
                     glowFilterId={glowFilterId}
                     duration={duration}
