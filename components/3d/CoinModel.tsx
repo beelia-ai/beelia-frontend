@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useMemo, useEffect } from 'react'
+import React, { useRef, useMemo, useEffect, useState } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Group, PointLight, Mesh, MeshStandardMaterial, Color, Box3, Vector3 } from 'three'
@@ -18,6 +18,9 @@ export function CoinModel() {
     const targetRotY = useRef(0)
     const currentRotX = useRef(0)
     const currentRotY = useRef(0)
+    
+    // Track if centering has been applied
+    const [isCentered, setIsCentered] = useState(false)
 
     // Clone the scene to avoid modifying the cached version
     const clonedScene = useMemo(() => scene.clone(), [scene])
@@ -38,15 +41,10 @@ export function CoinModel() {
         return () => globalThis.removeEventListener('mousemove', handleMouseMove)
     }, [])
     
-    // Set the coin to stand upright once and flip vertically, and center it
+    // Set the coin to stand upright once and flip vertically, and apply material
     useEffect(() => {
         // First rotate the model
         clonedScene.rotation.set(Math.PI / 2, Math.PI, Math.PI) // Rotated 180 degrees clockwise on Y-axis
-        
-        // Then center the model (after rotation to get correct bounding box)
-        const box = new Box3().setFromObject(clonedScene)
-        const center = box.getCenter(new Vector3())
-        clonedScene.position.set(-center.x, -center.y, -center.z)
         
         // Apply shiny metallic material to all meshes (marching cubes style)
         clonedScene.traverse((child) => {
@@ -71,6 +69,18 @@ export function CoinModel() {
     // Animations: light movements and subtle mouse tilt (marching cubes inspired)
     useFrame((state, delta) => {
         const time = state.clock.getElapsedTime()
+
+        // Center the model on first frame (fixes race condition on page reload)
+        if (!isCentered) {
+            const box = new Box3().setFromObject(clonedScene)
+            const center = box.getCenter(new Vector3())
+            
+            // Only apply centering if bounding box is valid (not empty)
+            if (!box.isEmpty()) {
+                clonedScene.position.set(-center.x, -center.y, -center.z)
+                setIsCentered(true)
+            }
+        }
 
         // Smooth interpolation for mouse-based rotation
         const smoothFactor = 0.1

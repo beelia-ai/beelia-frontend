@@ -133,7 +133,7 @@ export function NewHero() {
             </div>
 
             {/* 3D DollarBill Overlay - Right Box */}
-            <div className="absolute z-20 pointer-events-none left-[992.16px] top-[129.481px] w-[109.32px] h-[109.32px]">
+            <div className="absolute z-20 pointer-events-none left-[990.16px] top-[129.481px] w-[109.32px] h-[109.32px]">
               <Canvas camera={{ position: [0, 0, 4.5], fov: 40 }} gl={{ alpha: true }} dpr={[1, 2]}>
                 <ambientLight intensity={0.8} />
                 <directionalLight position={[5, 5, 5]} intensity={1} />
