@@ -10,9 +10,33 @@ export function CoinModel() {
     const spinRef = useRef<Group>(null)
     const pointLight1Ref = useRef<PointLight>(null)
     const pointLight2Ref = useRef<PointLight>(null)
+    
+    // Global mouse tracking for subtle tilt
+    const mouseX = useRef(0)
+    const mouseY = useRef(0)
+    const targetRotX = useRef(0)
+    const targetRotY = useRef(0)
+    const currentRotX = useRef(0)
+    const currentRotY = useRef(0)
 
     // Clone the scene to avoid modifying the cached version
     const clonedScene = useMemo(() => scene.clone(), [scene])
+    
+    // Global mouse tracking - works even outside Canvas
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            // Normalize mouse position to -1 to 1 based on window dimensions
+            mouseX.current = (e.clientX / globalThis.innerWidth) * 2 - 1
+            mouseY.current = (e.clientY / globalThis.innerHeight) * 2 - 1
+            
+            // Calculate target rotation (subtle tilt)
+            targetRotX.current = mouseY.current * 6
+            targetRotY.current = mouseX.current * 6
+        }
+
+        globalThis.addEventListener('mousemove', handleMouseMove)
+        return () => globalThis.removeEventListener('mousemove', handleMouseMove)
+    }, [])
     
     // Set the coin to stand upright once and flip vertically
     useEffect(() => {
@@ -38,9 +62,20 @@ export function CoinModel() {
     const beeliaYellow = '#FEDA24'
     const beeliaOrange = '#ff7c00' // Matching the marching cubes orange point light
 
-    // Animations: light movements (marching cubes inspired)
+    // Animations: light movements and subtle mouse tilt (marching cubes inspired)
     useFrame((state, delta) => {
         const time = state.clock.getElapsedTime()
+
+        // Smooth interpolation for mouse-based rotation
+        const smoothFactor = 0.1
+        currentRotX.current += (targetRotX.current - currentRotX.current) * smoothFactor
+        currentRotY.current += (targetRotY.current - currentRotY.current) * smoothFactor
+
+        // Apply subtle tilt to coin based on mouse position (coin stays fixed in place)
+        if (spinRef.current) {
+            spinRef.current.rotation.x = currentRotX.current
+            spinRef.current.rotation.y = currentRotY.current
+        }
 
         // Orbit point light 1 around the coin (like marching cubes)
         if (pointLight1Ref.current) {
