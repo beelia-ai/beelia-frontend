@@ -3,10 +3,10 @@
 import React, { useRef, useMemo, useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import { Group, PointLight, Mesh, MeshStandardMaterial, Color } from 'three'
+import { Group, PointLight, Mesh, MeshStandardMaterial, Color, Box3, Vector3 } from 'three'
 
 export function CoinModel() {
-    const { scene } = useGLTF('/assets/3d/coin.glb')
+    const { scene } = useGLTF('/assets/3d/DollarBill.glb')
     const spinRef = useRef<Group>(null)
     const pointLight1Ref = useRef<PointLight>(null)
     const pointLight2Ref = useRef<PointLight>(null)
@@ -30,17 +30,23 @@ export function CoinModel() {
             mouseY.current = (e.clientY / globalThis.innerHeight) * 2 - 1
             
             // Calculate target rotation (subtle tilt)
-            targetRotX.current = mouseY.current * 6
-            targetRotY.current = mouseX.current * 6
+            targetRotX.current = mouseY.current * 0.2
+            targetRotY.current = mouseX.current * 0.2
         }
 
         globalThis.addEventListener('mousemove', handleMouseMove)
         return () => globalThis.removeEventListener('mousemove', handleMouseMove)
     }, [])
     
-    // Set the coin to stand upright once and flip vertically
+    // Set the coin to stand upright once and flip vertically, and center it
     useEffect(() => {
-        clonedScene.rotation.set(Math.PI / 2, 0, Math.PI)
+        // First rotate the model
+        clonedScene.rotation.set(Math.PI / 2, Math.PI, Math.PI) // Rotated 180 degrees clockwise on Y-axis
+        
+        // Then center the model (after rotation to get correct bounding box)
+        const box = new Box3().setFromObject(clonedScene)
+        const center = box.getCenter(new Vector3())
+        clonedScene.position.set(-center.x, -center.y, -center.z)
         
         // Apply shiny metallic material to all meshes (marching cubes style)
         clonedScene.traverse((child) => {
@@ -96,9 +102,9 @@ export function CoinModel() {
 
     return (
         <group>
-            {/* Rotating coin group with shiny metallic material */}
-            <group ref={spinRef} position={[0, 0, 0]}>
-                <primitive object={clonedScene} scale={0.8} />
+            {/* DollarBill group with shiny metallic material */}
+            <group ref={spinRef} position={[0.08, 0, 0]}>
+                <primitive object={clonedScene} scale={0.92} />
             </group>
 
             {/* Lighting setup matching marching cubes example */}
@@ -149,4 +155,4 @@ export function CoinModel() {
     )
 }
 
-useGLTF.preload('/assets/3d/coin.glb')
+useGLTF.preload('/assets/3d/DollarBill.glb')

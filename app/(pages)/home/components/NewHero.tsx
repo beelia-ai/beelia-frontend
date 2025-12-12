@@ -132,17 +132,17 @@ export function NewHero() {
               </video>
             </div>
 
-            {/* 3D Coin Overlay - Right Box */}
+            {/* 3D DollarBill Overlay - Right Box */}
             <div
               className="absolute z-20 pointer-events-none"
               style={{
-                left: '992px',
-                top: '129px',
-                width: '109px',
-                height: '109px',
+                left: '992.16px',
+                top: '129.481px',
+                width: '109.32px',
+                height: '109.32px',
               }}
             >
-              <Canvas camera={{ position: [0, 0, 4], fov: 45 }} gl={{ alpha: true }} dpr={[1, 2]}>
+              <Canvas camera={{ position: [0, 0, 4.5], fov: 40 }} gl={{ alpha: true }} dpr={[1, 2]}>
                 <ambientLight intensity={0.8} />
                 <directionalLight position={[5, 5, 5]} intensity={1} />
                 <Environment preset="city" />
