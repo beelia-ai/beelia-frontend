@@ -7,6 +7,9 @@ import { ParticleSpritesBackground } from '@/components/ui'
 import Image from 'next/image'
 import GlassSurface from '@/components/GlassSurface'
 import TraceLinesAnimated from '@/components/ui/trace-lines-animated'
+import { Canvas } from '@react-three/fiber'
+import { Environment } from '@react-three/drei'
+import { CoinModel } from '@/components/3d/CoinModel'
 
 export function NewHero() {
   const [isHovered, setIsHovered] = useState(false)
@@ -127,6 +130,24 @@ export function NewHero() {
               >
                 <source src="/videos/Beelia ani.webm" type="video/webm" />
               </video>
+            </div>
+
+            {/* 3D Coin Overlay - Right Box */}
+            <div
+              className="absolute z-20 pointer-events-none"
+              style={{
+                left: '992px',
+                top: '129px',
+                width: '109px',
+                height: '109px',
+              }}
+            >
+              <Canvas camera={{ position: [0, 0, 4], fov: 45 }} gl={{ alpha: true }} dpr={[1, 2]}>
+                <ambientLight intensity={0.8} />
+                <directionalLight position={[5, 5, 5]} intensity={1} />
+                <Environment preset="city" />
+                <CoinModel />
+              </Canvas>
             </div>
           </div>
 
