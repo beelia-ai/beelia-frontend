@@ -18,10 +18,10 @@ interface Card3DProps {
 
 export function Card3D({ 
   text = 'discover',
-  width = 3.5, 
-  height = 4.5, 
+  width = 2.5, 
+  height = 3.5, 
   depth = 0.05, 
-  radius = 0.3,
+  radius = 0.25,
   position = [0, 0, 0]
 }: Card3DProps) {
   const cardRef = useRef<Mesh>(null)
@@ -108,7 +108,7 @@ export function Card3D({
     if (!font || !text) return null
     const geometry = new TextGeometry(text.toLowerCase(), {
       font: font,
-      size: 0.4,
+      size: 0.3,
       depth: 0.05,
       curveSegments: 12,
       bevelEnabled: true,
