@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Mesh, MeshStandardMaterial, Color } from 'three'
+import { Mesh, MeshStandardMaterial, Color, Group } from 'three'
 import { RoundedBox } from '@react-three/drei'
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
@@ -14,18 +14,24 @@ interface Card3DProps {
   readonly depth?: number
   readonly radius?: number
   readonly position?: [number, number, number]
+  readonly frameWidth?: number // Width of the frame border
+  readonly hollowWidth?: number // Width of the hollow center area
+  readonly hollowHeight?: number // Height of the hollow center area
 }
 
 export function Card3D({ 
   text = 'discover',
-  width = 2.5, 
-  height = 3.5, 
+  width = 3.2, 
+  height = 4.5, 
   depth = 0.05, 
   radius = 0.25,
-  position = [0, 0, 0]
+  position = [0, 0, 0],
+  frameWidth = 0.12, // Default frame border thickness
+  hollowWidth = 1.8, // Default hollow center width
+  hollowHeight = 2.5 // Default hollow center height
 }: Card3DProps) {
-  const cardRef = useRef<Mesh>(null)
-  const borderRef = useRef<Mesh>(null)
+  const frameGroupRef = useRef<Group>(null)
+  const textRef = useRef<Mesh>(null)
   
   // Global mouse tracking for subtle tilt
   const mouseX = useRef(0)
@@ -53,7 +59,7 @@ export function Card3D({
 
   // Create material matching marching cubes "shiny" material
   // Using Beelia colors but with same properties as marching cubes
-  const cardMaterial = useMemo(
+  const frameMaterial = useMemo(
     () =>
       new MeshStandardMaterial({
         color: new Color('#FFB84D'), // Beelia yellow-orange blend (matching CoinModel)
@@ -64,17 +70,6 @@ export function Card3D({
     []
   )
 
-  // Shiny border material (matching marching cubes shiny appearance)
-  const borderMaterial = useMemo(
-    () =>
-      new MeshStandardMaterial({
-        color: new Color('#FEDA24'), // Beelia yellow for border
-        metalness: 1, // Fully metallic
-        roughness: 0.1, // Same as marching cubes shiny material
-        // envMap will be set by Environment component
-      }),
-    []
-  )
 
   // Text material matching the card material
   const textMaterial = useMemo(
@@ -90,7 +85,6 @@ export function Card3D({
 
   // Load font and create text geometry
   const [font, setFont] = useState<any>(null)
-  const textRef = useRef<Mesh>(null)
 
   useEffect(() => {
     const loader = new FontLoader()
@@ -129,14 +123,10 @@ export function Card3D({
     currentRotX.current += (targetRotX.current - currentRotX.current) * smoothFactor
     currentRotY.current += (targetRotY.current - currentRotY.current) * smoothFactor
 
-    // Apply subtle tilt to card based on mouse position
-    if (cardRef.current) {
-      cardRef.current.rotation.x = currentRotX.current
-      cardRef.current.rotation.y = currentRotY.current
-    }
-    if (borderRef.current) {
-      borderRef.current.rotation.x = currentRotX.current
-      borderRef.current.rotation.y = currentRotY.current
+    // Apply subtle tilt to frame based on mouse position
+    if (frameGroupRef.current) {
+      frameGroupRef.current.rotation.x = currentRotX.current
+      frameGroupRef.current.rotation.y = currentRotY.current
     }
     // Text rotates with the card
     if (textRef.current) {
@@ -145,29 +135,59 @@ export function Card3D({
     }
   })
 
+  // Calculate frame dimensions - make borders thin
+  const borderThickness = frameWidth
+  const outerTopY = height / 2
+  const outerBottomY = -height / 2
+  const outerLeftX = -width / 2
+  const outerRightX = width / 2
+
   return (
     <group position={position}>
-      {/* Main card with curved edges */}
-      <RoundedBox
-        ref={cardRef}
-        args={[width, height, depth]}
-        radius={radius}
-        smoothness={4}
-        material={cardMaterial}
-      />
+      {/* Frame Group - creates 3D borders with hollow center */}
+      <group ref={frameGroupRef}>
+        {/* Top border - full width */}
+        <group position={[0, outerTopY - borderThickness / 2, 0]}>
+          <RoundedBox
+            args={[width, borderThickness, depth]}
+            radius={Math.min(radius, borderThickness * 0.4)}
+            smoothness={4}
+            material={frameMaterial}
+          />
+        </group>
 
-      {/* Shiny border - slightly larger and offset */}
-      <group position={[0, 0, -depth / 2 - 0.01]}>
-        <RoundedBox
-          ref={borderRef}
-          args={[width + 0.08, height + 0.08, depth + 0.01]}
-          radius={radius + 0.02}
-          smoothness={4}
-          material={borderMaterial}
-        />
+        {/* Bottom border - full width */}
+        <group position={[0, outerBottomY + borderThickness / 2, 0]}>
+          <RoundedBox
+            args={[width, borderThickness, depth]}
+            radius={Math.min(radius, borderThickness * 0.4)}
+            smoothness={4}
+            material={frameMaterial}
+          />
+        </group>
+
+        {/* Left border - full height, positioned at outer edge */}
+        <group position={[outerLeftX + borderThickness / 2, 0, 0]}>
+          <RoundedBox
+            args={[borderThickness, height - borderThickness * 2, depth]}
+            radius={Math.min(radius, borderThickness * 0.4)}
+            smoothness={4}
+            material={frameMaterial}
+          />
+        </group>
+
+        {/* Right border - full height, positioned at outer edge */}
+        <group position={[outerRightX - borderThickness / 2, 0, 0]}>
+          <RoundedBox
+            args={[borderThickness, height - borderThickness * 2, depth]}
+            radius={Math.min(radius, borderThickness * 0.4)}
+            smoothness={4}
+            material={frameMaterial}
+          />
+        </group>
       </group>
 
-      {/* 3D Text "discover" inside the card */}
+      {/* 3D Text in the center of the hollow area */}
       {textGeometry && (
         <mesh
           ref={textRef}
