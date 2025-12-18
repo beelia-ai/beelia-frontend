@@ -1,5 +1,11 @@
 import { NewHero } from './components/NewHero'
+import { CardDemoSection } from './components/CardDemoSection'
 
 export default function HomePage() {
-  return <NewHero />
+  return (
+    <>
+      {/* <NewHero /> */}
+      <CardDemoSection />
+    </>
+  )
 }
