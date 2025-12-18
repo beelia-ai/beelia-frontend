@@ -1,7 +1,6 @@
 'use client'
 
 import { Canvas } from '@react-three/fiber'
-import { Environment } from '@react-three/drei'
 import { Card3D } from '@/components/3d/Card3D'
 
 export function CardDemoSection() {
@@ -9,7 +8,7 @@ export function CardDemoSection() {
     <section className="min-h-screen relative overflow-hidden py-20" style={{ backgroundColor: '#050505' }}>
       <div className="container mx-auto px-4 h-full flex items-center justify-center">
         <div className="w-full h-[600px] relative">
-          <Canvas camera={{ position: [0, 0, 5], fov: 45 }} gl={{ alpha: false }} dpr={[1, 2]}>
+          <Canvas camera={{ position: [0, 0, 8], fov: 45 }} gl={{ alpha: false }} dpr={[1, 2]}>
             {/* Environment map for reflections (matching marching cubes) */}
             {/* <Environment preset="sunset" /> */}
             
@@ -33,8 +32,10 @@ export function CardDemoSection() {
             {/* 3. Ambient Light (matching marching cubes 0x323232, intensity 3) */}
             <ambientLight intensity={3} color="#323232" />
 
-            {/* Card3D Component */}
-            <Card3D position={[0, 0, 0]} />
+            {/* Three Card3D Components */}
+            <Card3D text="discover" position={[-4, 0, 0]} />
+            <Card3D text="subscribe" position={[0, 0, 0]} />
+            <Card3D text="safety" position={[4, 0, 0]} />
           </Canvas>
         </div>
       </div>

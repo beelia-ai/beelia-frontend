@@ -1,11 +1,14 @@
 'use client'
 
-import React, { useRef, useEffect, useMemo } from 'react'
+import React, { useRef, useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Mesh, MeshStandardMaterial, Color } from 'three'
 import { RoundedBox } from '@react-three/drei'
+import { FontLoader } from 'three/addons/loaders/FontLoader.js'
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 
 interface Card3DProps {
+  readonly text?: string
   readonly width?: number
   readonly height?: number
   readonly depth?: number
@@ -14,10 +17,11 @@ interface Card3DProps {
 }
 
 export function Card3D({ 
-  width = 2, 
-  height = 3, 
+  text = 'discover',
+  width = 3.5, 
+  height = 4.5, 
   depth = 0.05, 
-  radius = 0.2,
+  radius = 0.3,
   position = [0, 0, 0]
 }: Card3DProps) {
   const cardRef = useRef<Mesh>(null)
@@ -72,6 +76,53 @@ export function Card3D({
     []
   )
 
+  // Text material matching the card material
+  const textMaterial = useMemo(
+    () =>
+      new MeshStandardMaterial({
+        color: new Color('#FFFFFF'), // White text
+        metalness: 1, // Fully metallic
+        roughness: 0.1, // Very smooth/shiny surface
+        // envMap will be set by Environment component
+      }),
+    []
+  )
+
+  // Load font and create text geometry
+  const [font, setFont] = useState<any>(null)
+  const textRef = useRef<Mesh>(null)
+
+  useEffect(() => {
+    const loader = new FontLoader()
+    // Load font from three.js examples
+    loader.load(
+      'https://threejs.org/examples/fonts/helvetiker_bold.typeface.json',
+      (loadedFont) => {
+        setFont(loadedFont)
+      }
+    )
+  }, [])
+
+  // Create text geometry when font is loaded
+  const textGeometry = useMemo(() => {
+    if (!font || !text) return null
+    const geometry = new TextGeometry(text.toLowerCase(), {
+      font: font,
+      size: 0.4,
+      depth: 0.05,
+      curveSegments: 12,
+      bevelEnabled: true,
+      bevelThickness: 0.02,
+      bevelSize: 0.015,
+      bevelSegments: 4,
+    })
+    geometry.computeBoundingBox()
+    // Center the text
+    const centerOffset = -0.5 * ((geometry.boundingBox?.max.x || 0) - (geometry.boundingBox?.min.x || 0))
+    geometry.translate(centerOffset, 0, 0)
+    return geometry
+  }, [font, text])
+
   // Smooth interpolation for mouse-based rotation
   useFrame(() => {
     const smoothFactor = 0.1
@@ -86,6 +137,11 @@ export function Card3D({
     if (borderRef.current) {
       borderRef.current.rotation.x = currentRotX.current
       borderRef.current.rotation.y = currentRotY.current
+    }
+    // Text rotates with the card
+    if (textRef.current) {
+      textRef.current.rotation.x = currentRotX.current
+      textRef.current.rotation.y = currentRotY.current
     }
   })
 
@@ -110,6 +166,16 @@ export function Card3D({
           material={borderMaterial}
         />
       </group>
+
+      {/* 3D Text "discover" inside the card */}
+      {textGeometry && (
+        <mesh
+          ref={textRef}
+          position={[0, 0, depth / 2 + 0.02]}
+          geometry={textGeometry}
+          material={textMaterial}
+        />
+      )}
     </group>
   )
 }
