@@ -21,23 +21,49 @@ export function GlowCard({
   const cardRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const UPDATE = ({ x, y }: { x: number; y: number }) => {
-      if (!cardRef.current) return
-      const bounds = cardRef.current.getBoundingClientRect()
+    const card = cardRef.current
+    if (!card) return
+
+    // Initialize default position (center of card)
+    const bounds = card.getBoundingClientRect()
+    card.style.setProperty('--x', `${bounds.width / 2}px`)
+    card.style.setProperty('--y', `${bounds.height / 2}px`)
+
+    const UPDATE = (x: number, y: number) => {
+      const bounds = card.getBoundingClientRect()
       const relativeX = x - bounds.left
       const relativeY = y - bounds.top
       
-      cardRef.current.style.setProperty('--x', relativeX.toFixed(2))
-      cardRef.current.style.setProperty('--y', relativeY.toFixed(2))
+      // Update CSS variables with 'px' suffix
+      card.style.setProperty('--x', `${relativeX.toFixed(2)}px`)
+      card.style.setProperty('--y', `${relativeY.toFixed(2)}px`)
     }
 
-    const handlePointerMove = (e: PointerEvent) => {
-      UPDATE({ x: e.clientX, y: e.clientY })
+    const handleMouseMove = (e: MouseEvent) => {
+      e.stopPropagation()
+      UPDATE(e.clientX, e.clientY)
     }
 
-    document.body.addEventListener('pointermove', handlePointerMove)
+    const handleMouseEnter = (e: MouseEvent) => {
+      UPDATE(e.clientX, e.clientY)
+    }
+
+    const handleMouseLeave = () => {
+      // Reset to center when leaving
+      const bounds = card.getBoundingClientRect()
+      card.style.setProperty('--x', `${bounds.width / 2}px`)
+      card.style.setProperty('--y', `${bounds.height / 2}px`)
+    }
+
+    // Use mouse events instead of pointer events for better compatibility
+    card.addEventListener('mousemove', handleMouseMove, { passive: true })
+    card.addEventListener('mouseenter', handleMouseEnter)
+    card.addEventListener('mouseleave', handleMouseLeave)
+    
     return () => {
-      document.body.removeEventListener('pointermove', handlePointerMove)
+      card.removeEventListener('mousemove', handleMouseMove)
+      card.removeEventListener('mouseenter', handleMouseEnter)
+      card.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [])
 
@@ -60,6 +86,7 @@ export function GlowCard({
           border-radius: var(--radius);
           width: 260px;
           position: relative;
+          z-index: 10;
           display: grid;
           grid-template-rows: 1fr auto;
           gap: 1rem;
@@ -68,15 +95,16 @@ export function GlowCard({
           backdrop-filter: blur(5px);
           background-image: radial-gradient(
             var(--spotlight-size) var(--spotlight-size) at
-            calc(var(--x, 0) * 1px)
-            calc(var(--y, 0) * 1px),
+            var(--x, 130px)
+            var(--y, 173px),
             hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.1)), transparent
           );
           background-color: var(--backdrop, transparent);
           background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
           background-position: 50% 50%;
-          background-attachment: fixed;
+          background-attachment: local;
           border: var(--border-size) solid var(--backup-border);
+          will-change: background-image;
         }
 
         .glow-card::before,
@@ -87,7 +115,7 @@ export function GlowCard({
           inset: calc(var(--border-size) * -1);
           border: var(--border-size) solid transparent;
           border-radius: var(--radius);
-          background-attachment: fixed;
+          background-attachment: local;
           background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
           background-repeat: no-repeat;
           background-position: 50% 50%;
@@ -96,27 +124,30 @@ export function GlowCard({
             linear-gradient(white, white);
           mask-clip: padding-box, border-box;
           mask-composite: intersect;
+          will-change: background-image;
         }
 
         .glow-card::before {
           background-image: radial-gradient(
             calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
-            calc(var(--x, 0) * 1px)
-            calc(var(--y, 0) * 1px),
+            var(--x, 130px)
+            var(--y, 173px),
             hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 50) * 1%) / var(--border-spot-opacity, 1)), transparent 100%
           );
           z-index: 2;
           filter: brightness(2);
+          transition: background-image 0.1s ease-out;
         }
 
         .glow-card::after {
           background-image: radial-gradient(
             calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
-            calc(var(--x, 0) * 1px)
-            calc(var(--y, 0) * 1px),
+            var(--x, 130px)
+            var(--y, 173px),
             hsl(0 100% 100% / var(--border-light-opacity, 1)), transparent 100%
           );
           z-index: 2;
+          transition: background-image 0.1s ease-out;
         }
 
         .glow-card__content {

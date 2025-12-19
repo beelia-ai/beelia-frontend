@@ -76,7 +76,7 @@ export function AboutProduct() {
         </div>
 
         {/* Cards - attached to bottom lines with spacing */}
-        <div className="w-full flex justify-center items-start -mt-[150px]">
+        <div className="w-full flex justify-center items-start -mt-[150px] relative z-20">
           <div className="flex gap-8 items-start">
             {CARD_DATA.map((card) => (
               <GlowCard
