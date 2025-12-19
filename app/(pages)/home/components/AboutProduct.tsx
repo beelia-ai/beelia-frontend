@@ -3,6 +3,13 @@
 import Image from 'next/image'
 import { BottomLinesAnimated } from '@/components/ui/bottom-lines-animated'
 import { GlowCard } from '@/components/ui/glow-card'
+import { Outfit } from 'next/font/google'
+
+const outfit = Outfit({
+  weight: ["600"],
+  subsets: ["latin"],
+  variable: "--font-outfit",
+})
 
 // Intersection dot component - always glowing
 function IntersectionDot({ 
@@ -166,11 +173,17 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-4"
+                  className="mb-4 whitespace-nowrap"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                    fontWeight: 700,
-                    fontSize: '18px',
+                    width: '305px',
+                    height: '29px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontSize: '24px',
+                    lineHeight: '122%',
+                    letterSpacing: '-2%',
+                    textAlign: 'left',
                     color: '#FFFFFF'
                   }}
                 >
@@ -179,10 +192,14 @@ export function AboutProduct() {
                 <p 
                   className="mb-6 text-white/70"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    width: '400px',
+                    height: '66px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
                     fontWeight: 400,
-                    fontSize: '14px',
-                    lineHeight: '160%',
+                    fontStyle: 'normal',
+                    fontSize: '16px',
+                    lineHeight: '140%',
+                    letterSpacing: '2%',
                     color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
@@ -204,11 +221,17 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-4"
+                  className="mb-4 whitespace-nowrap"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                    fontWeight: 700,
-                    fontSize: '18px',
+                    width: '305px',
+                    height: '29px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontSize: '24px',
+                    lineHeight: '122%',
+                    letterSpacing: '-2%',
+                    textAlign: 'left',
                     color: '#FFFFFF'
                   }}
                 >
@@ -217,10 +240,14 @@ export function AboutProduct() {
                 <p 
                   className="mb-6 text-white/70"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    width: '400px',
+                    height: '66px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
                     fontWeight: 400,
-                    fontSize: '14px',
-                    lineHeight: '160%',
+                    fontStyle: 'normal',
+                    fontSize: '16px',
+                    lineHeight: '140%',
+                    letterSpacing: '2%',
                     color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
@@ -260,11 +287,17 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-4"
+                  className="mb-4 whitespace-nowrap"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                    fontWeight: 700,
-                    fontSize: '18px',
+                    width: '305px',
+                    height: '29px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontSize: '24px',
+                    lineHeight: '122%',
+                    letterSpacing: '-2%',
+                    textAlign: 'left',
                     color: '#FFFFFF'
                   }}
                 >
@@ -273,10 +306,14 @@ export function AboutProduct() {
                 <p 
                   className="text-white/70"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    width: '400px',
+                    height: '66px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
                     fontWeight: 400,
-                    fontSize: '14px',
-                    lineHeight: '160%',
+                    fontStyle: 'normal',
+                    fontSize: '16px',
+                    lineHeight: '140%',
+                    letterSpacing: '2%',
                     color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
@@ -289,11 +326,17 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-4"
+                  className="mb-4 whitespace-nowrap"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                    fontWeight: 700,
-                    fontSize: '18px',
+                    width: '305px',
+                    height: '29px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
+                    fontWeight: 600,
+                    fontStyle: 'normal',
+                    fontSize: '24px',
+                    lineHeight: '122%',
+                    letterSpacing: '-2%',
+                    textAlign: 'left',
                     color: '#FFFFFF'
                   }}
                 >
@@ -302,10 +345,14 @@ export function AboutProduct() {
                 <p 
                   className="text-white/70"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    width: '400px',
+                    height: '66px',
+                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
                     fontWeight: 400,
-                    fontSize: '14px',
-                    lineHeight: '160%',
+                    fontStyle: 'normal',
+                    fontSize: '16px',
+                    lineHeight: '140%',
+                    letterSpacing: '2%',
                     color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >

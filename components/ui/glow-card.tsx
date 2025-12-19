@@ -2,6 +2,13 @@
 
 import { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
+import { Outfit } from 'next/font/google'
+
+const outfit = Outfit({
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  variable: "--font-outfit",
+})
 
 interface GlowCardProps {
   title: string
@@ -168,18 +175,26 @@ export function GlowCard({
         }
 
         .glow-card__content span {
-          font-weight: 100;
-          font-size: 1.5rem;
+          font-family: var(--font-outfit), Outfit, sans-serif;
+          font-weight: 600;
+          font-style: normal;
+          font-size: 24px;
+          line-height: 122%;
+          letter-spacing: -2%;
+          text-align: left;
           margin: 0;
-          color: hsl(0 0% 90%);
+          color: #FFFFFF;
+          white-space: nowrap;
         }
 
         .glow-card__description {
-          font-size: 0.875rem;
-          font-weight: 120;
-          color: hsl(0 0% 70%);
-          line-height: 1.6;
-          opacity: 0.8;
+          font-family: var(--font-outfit), Outfit, sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          font-size: 16px;
+          line-height: 140%;
+          letter-spacing: 2%;
+          color: rgba(255, 255, 255, 0.7);
           margin: 0;
         }
 
@@ -227,7 +242,7 @@ export function GlowCard({
           border-radius: var(--radius);
         }
       `}</style>
-      <article ref={cardRef} className={cn('glow-card', className)}>
+      <article ref={cardRef} className={cn('glow-card', outfit.variable, className)}>
         <div className="glow-card__content">
           <span dangerouslySetInnerHTML={{ __html: title }} />
           <div className="glow-card__icons">
