@@ -24,10 +24,8 @@ export function GlowCard({
     const card = cardRef.current
     if (!card) return
 
-    // Initialize default position (center of card)
-    const bounds = card.getBoundingClientRect()
-    card.style.setProperty('--x', `${bounds.width / 2}px`)
-    card.style.setProperty('--y', `${bounds.height / 2}px`)
+    // Initialize with glow hidden (opacity 0)
+    card.style.setProperty('--glow-opacity', '0')
 
     const UPDATE = (x: number, y: number) => {
       const bounds = card.getBoundingClientRect()
@@ -37,6 +35,7 @@ export function GlowCard({
       // Update CSS variables with 'px' suffix
       card.style.setProperty('--x', `${relativeX.toFixed(2)}px`)
       card.style.setProperty('--y', `${relativeY.toFixed(2)}px`)
+      card.style.setProperty('--glow-opacity', '1')
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -49,10 +48,8 @@ export function GlowCard({
     }
 
     const handleMouseLeave = () => {
-      // Reset to center when leaving
-      const bounds = card.getBoundingClientRect()
-      card.style.setProperty('--x', `${bounds.width / 2}px`)
-      card.style.setProperty('--y', `${bounds.height / 2}px`)
+      // Hide glow when leaving
+      card.style.setProperty('--glow-opacity', '0')
     }
 
     // Use mouse events instead of pointer events for better compatibility
@@ -72,16 +69,19 @@ export function GlowCard({
       <style jsx>{`
         .glow-card {
           --border-size: 2px;
-          --spotlight-size: 150px;
-          --hue: 210;
+          --spotlight-size: 200px;
+          --hue: 35;
           --saturation: 100;
-          --lightness: 70;
-          --radius: 12px;
-          --backdrop: hsl(0 0% 60% / 0.15);
-          --backup-border: hsl(0 0% 60% / 0.2);
-          --bg-spot-opacity: 0.1;
+          --lightness: 60;
+          --radius: 8px;
+          --backdrop: hsl(0 0% 60% / 0.05);
+          --backup-border: hsl(0 0% 60% / 0.4);
+          --bg-spot-opacity: 0.6;
           --border-spot-opacity: 1;
           --border-light-opacity: 1;
+          --glow-opacity: 0;
+          --x: 130px;
+          --y: 173px;
           aspect-ratio: 3 / 4;
           border-radius: var(--radius);
           width: 260px;
@@ -92,12 +92,16 @@ export function GlowCard({
           gap: 1rem;
           padding: 1rem;
           box-shadow: 0 1rem 2rem -1rem black;
-          backdrop-filter: blur(5px);
+          backdrop-filter: blur(3px);
+          background-color: var(--backdrop, transparent);
           background-image: radial-gradient(
             var(--spotlight-size) var(--spotlight-size) at
             var(--x, 130px)
             var(--y, 173px),
-            hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.1)), transparent
+            hsl(var(--hue, 35) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 60) * 1%) / calc(var(--bg-spot-opacity, 0.6) * var(--glow-opacity, 0))),
+            hsl(calc(var(--hue, 35) + 10) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / calc(var(--bg-spot-opacity, 0.6) * 0.7 * var(--glow-opacity, 0))),
+            hsl(calc(var(--hue, 35) + 15) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 75) * 1%) / calc(var(--bg-spot-opacity, 0.6) * 0.4 * var(--glow-opacity, 0))),
+            transparent
           );
           background-color: var(--backdrop, transparent);
           background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
@@ -129,24 +133,30 @@ export function GlowCard({
 
         .glow-card::before {
           background-image: radial-gradient(
-            calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
+            calc(var(--spotlight-size) * 0.85) calc(var(--spotlight-size) * 0.85) at
             var(--x, 130px)
             var(--y, 173px),
-            hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 50) * 1%) / var(--border-spot-opacity, 1)), transparent 100%
+            hsl(var(--hue, 35) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 65) * 1%) / calc(var(--border-spot-opacity, 1) * var(--glow-opacity, 0))),
+            hsl(calc(var(--hue, 35) + 10) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / calc(var(--border-spot-opacity, 1) * 0.9 * var(--glow-opacity, 0))),
+            hsl(calc(var(--hue, 35) + 15) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 75) * 1%) / calc(var(--border-spot-opacity, 1) * 0.6 * var(--glow-opacity, 0))),
+            transparent 100%
           );
           z-index: 2;
-          filter: brightness(2);
+          filter: brightness(1.8);
           transition: background-image 0.1s ease-out;
         }
 
         .glow-card::after {
           background-image: radial-gradient(
-            calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
+            calc(var(--spotlight-size) * 0.6) calc(var(--spotlight-size) * 0.6) at
             var(--x, 130px)
             var(--y, 173px),
-            hsl(0 100% 100% / var(--border-light-opacity, 1)), transparent 100%
+            hsl(var(--hue, 35) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 95) * 1%) / calc(var(--border-light-opacity, 1) * var(--glow-opacity, 0))),
+            hsl(calc(var(--hue, 35) + 5) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 90) * 1%) / calc(var(--border-light-opacity, 1) * 0.7 * var(--glow-opacity, 0))),
+            transparent 100%
           );
           z-index: 2;
+          filter: brightness(1.3);
           transition: background-image 0.1s ease-out;
         }
 
@@ -154,19 +164,23 @@ export function GlowCard({
           color: hsl(0 0% 70%);
           display: grid;
           grid-template-rows: auto 1fr auto;
+          gap: 1rem;
         }
 
         .glow-card__content span {
-          font-size: 0.875rem;
-          font-weight: 120;
-          opacity: 0.5;
-        }
-
-        .glow-card__content h2 {
           font-weight: 100;
           font-size: 1.5rem;
           margin: 0;
           color: hsl(0 0% 90%);
+        }
+
+        .glow-card__description {
+          font-size: 0.875rem;
+          font-weight: 120;
+          color: hsl(0 0% 70%);
+          line-height: 1.6;
+          opacity: 0.8;
+          margin: 0;
         }
 
         .glow-card__icons {
@@ -215,7 +229,7 @@ export function GlowCard({
       `}</style>
       <article ref={cardRef} className={cn('glow-card', className)}>
         <div className="glow-card__content">
-          {subtitle && <span>{subtitle}</span>}
+          <span dangerouslySetInnerHTML={{ __html: title }} />
           <div className="glow-card__icons">
             {[0, 1, 2, 3].map((index) => (
               <svg
@@ -235,11 +249,13 @@ export function GlowCard({
               </svg>
             ))}
           </div>
-          <h2 dangerouslySetInnerHTML={{ __html: title }} />
+          {description && (
+            <p 
+              className="glow-card__description"
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          )}
         </div>
-        <a href="#" className="glow-card__button">
-          Follow
-        </a>
       </article>
     </>
   )
