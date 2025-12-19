@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
+import { Inter, Inria_Sans, Instrument_Serif, Outfit } from "next/font/google";
 import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
@@ -15,6 +15,11 @@ const instrumentSerif = Instrument_Serif({
   style: ["italic"],
   subsets: ["latin"],
   variable: "--font-instrument-serif",
+});
+const outfit = Outfit({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-outfit",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable} bg-black`}
+        className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable} ${outfit.variable} bg-black`}
         suppressHydrationWarning
       >
         <Preloader />
