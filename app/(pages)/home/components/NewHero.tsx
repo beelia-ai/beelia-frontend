@@ -14,6 +14,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-mot
 export function NewHero() {
   const [isHovered, setIsHovered] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
 
   // Track scroll progress for this section
@@ -30,31 +31,18 @@ export function NewHero() {
   const contentScale = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 1.2, 1.2])
   // Blur starts AFTER zoom completes - no blur during zoom (0-30%), then blur increases (30-50%)
   const contentBlur = useTransform(scrollYProgress, [0, 0.3, 0.5], [0, 0, 10])
+  const contentBlurFilter = useTransform(contentBlur, (blur) => `blur(${blur}px)`)
 
-  // Trace lines fade out faster and reverse - from 0% to 50% scroll (slower animation)
-  const traceLinesOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  // Trace lines scale animation only - no fade out, no clip-path
   const traceLinesScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9])
-  
-  // Clip path progress to make lines appear to trace back (0% = full, 100% = clipped/vanished)
-  // This creates the effect of lines tracing back along their path
-  const traceLinesClipProgress = useTransform(scrollYProgress, [0, 0.5], [0, 100])
-  
-  // State to control clip-path
-  const [clipPathValue, setClipPathValue] = useState('inset(0% 0% 0% 0%)')
-  
-  // Update clip-path based on scroll progress
-  useMotionValueEvent(traceLinesClipProgress, 'change', (latest) => {
-    // Create clip-path that reveals from center outward, then clips from edges
-    // This makes it appear lines are tracing back
-    const progress = latest / 100
-    if (progress < 0.5) {
-      // First half: clip from right and left edges (lines trace back)
-      const clipAmount = progress * 2 * 50 // 0 to 50%
-      setClipPathValue(`inset(0% ${clipAmount}% 0% ${clipAmount}%)`)
-    } else {
-      // Second half: continue clipping and fade
-      const clipAmount = 50 + (progress - 0.5) * 2 * 50 // 50% to 100%
-      setClipPathValue(`inset(0% ${clipAmount}% 0% ${clipAmount}%)`)
+
+  // Track when animation starts to disable hover effects
+  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
+    if (latest > 0 && !isAnimating) {
+      setIsAnimating(true)
+      setIsHovered(false) // Disable hover when animation starts
+    } else if (latest === 0 && isAnimating) {
+      setIsAnimating(false)
     }
   })
 
@@ -89,6 +77,12 @@ export function NewHero() {
         .waitlist-btn-wrapper:hover::after {
           transform: translateX(0);
         }
+        .waitlist-btn-wrapper.no-hover::after {
+          transform: translateX(-100%) !important;
+        }
+        .waitlist-btn-wrapper.no-hover:hover::after {
+          transform: translateX(-100%) !important;
+        }
         .waitlist-btn-wrapper > * {
           position: relative;
           z-index: 2;
@@ -101,12 +95,20 @@ export function NewHero() {
           color: #000000;
           font-weight: 600;
         }
+        .waitlist-btn-wrapper.no-hover:hover .waitlist-btn-text {
+          color: #FFFFFF !important;
+          font-weight: normal !important;
+        }
         .waitlist-btn-arrow {
           filter: brightness(0) invert(1);
           transition: filter 0.3s ease, transform 0.5s ease-in-out;
         }
         .waitlist-btn-wrapper:hover .waitlist-btn-arrow {
           filter: brightness(0) invert(0);
+        }
+        .waitlist-btn-wrapper.no-hover:hover .waitlist-btn-arrow {
+          filter: brightness(0) invert(1) !important;
+          transform: rotate(0deg) !important;
         }
       `}</style>
 
@@ -156,12 +158,10 @@ export function NewHero() {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-32">
           {/* Trace Lines Animated SVG - positioned at top with scroll animation */}
           <motion.div 
-            className="relative w-[1102px] h-[364px] mb-12 overflow-hidden"
+            className="relative w-[1102px] h-[364px] mb-12"
             style={{
-              opacity: traceLinesOpacity,
               scale: traceLinesScale,
-              clipPath: clipPathValue,
-              willChange: 'opacity, transform, clip-path'
+              willChange: 'transform'
             }}
           >
             <TraceLinesAnimated
@@ -192,7 +192,7 @@ export function NewHero() {
             style={{
               opacity: contentOpacity,
               scale: contentScale,
-              filter: useTransform(contentBlur, (blur) => `blur(${blur}px)`),
+              filter: contentBlurFilter,
               transformStyle: 'preserve-3d',
               willChange: 'opacity, transform, filter'
             }}
@@ -218,11 +218,11 @@ export function NewHero() {
             <div className="mt-8">
             <Link
               href="/waitlist"
-              className="group cursor-pointer block [perspective:1000px] [transform-style:preserve-3d]"
-              onMouseEnter={() => setIsHovered(true)}
+              className={`group block [perspective:1000px] [transform-style:preserve-3d] ${isAnimating ? 'pointer-events-none' : 'cursor-pointer'}`}
+              onMouseEnter={() => !isAnimating && setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <div className="waitlist-btn-wrapper">
+              <div className={`waitlist-btn-wrapper ${isAnimating ? 'no-hover' : ''}`}>
                 {isMounted ? (
                   <GlassSurface
                     width={270}
@@ -236,8 +236,8 @@ export function NewHero() {
                     blur={16}
                     brightness={60}
                     opacity={0.95}
-                    className={`group-hover:scale-105 transition-all duration-500 ease-out ${
-                      isHovered
+                    className={`${isAnimating ? '' : 'group-hover:scale-105'} transition-all duration-500 ease-out ${
+                      isHovered && !isAnimating
                         ? '[transform:translateZ(20px)_rotateX(-1deg)_rotateY(1deg)_scale(1.03)] [box-shadow:0_20px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.15)_inset]'
                         : '[transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]'
                     }`}
