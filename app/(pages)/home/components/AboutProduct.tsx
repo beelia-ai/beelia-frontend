@@ -21,7 +21,7 @@ export function AboutProduct() {
 
         {/* Description text under OneStop Image */}
         <p
-          className="text-center"
+          className="text-center mb-12"
           style={{
             width: '457.771484375px',
             height: '44px',
@@ -37,6 +37,17 @@ export function AboutProduct() {
         >
           —giving people a seamless way to find the right tools and start using them instantly, no setup, no friction.
         </p>
+
+        {/* Bottom Lines SVG - under the globe */}
+        <div className="w-full flex justify-center -mt-7">
+          <Image
+            src="/icons/Bottom_Lines.svg"
+            alt="Bottom Lines"
+            width={1200}
+            height={200}
+            className="w-auto h-auto object-contain"
+          />
+        </div>
       </div>
     </div>
   )
