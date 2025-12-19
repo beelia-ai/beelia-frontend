@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { BottomLinesAnimated } from '@/components/ui/bottom-lines-animated'
 
 export function AboutProduct() {
   return (
@@ -38,14 +39,17 @@ export function AboutProduct() {
           —giving people a seamless way to find the right tools and start using them instantly, no setup, no friction.
         </p>
 
-        {/* Bottom Lines SVG - under the globe */}
+        {/* Bottom Lines SVG - under the globe with animated beams */}
         <div className="w-full flex justify-center -mt-7">
-          <Image
-            src="/icons/Bottom_Lines.svg"
-            alt="Bottom Lines"
-            width={1200}
-            height={200}
-            className="w-auto h-auto object-contain"
+          <BottomLinesAnimated
+            duration={4}
+            delay={0}
+            beamColor="#FEDA24"
+            beamColorSecondary="#FF8C32"
+            pathColor="#444444"
+            beamWidth={2}
+            pathWidth={1}
+            className="w-auto h-auto"
           />
         </div>
       </div>
