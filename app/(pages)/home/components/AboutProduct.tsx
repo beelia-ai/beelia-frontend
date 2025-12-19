@@ -4,28 +4,61 @@ import Image from 'next/image'
 import { BottomLinesAnimated } from '@/components/ui/bottom-lines-animated'
 import { GlowCard } from '@/components/ui/glow-card'
 
+// Intersection dot component - always glowing
+function IntersectionDot({ 
+  position, 
+  dotId 
+}: { 
+  position: 'left' | 'right'
+  dotId: string
+}) {
+  const positionClasses = {
+    left: 'left-0 -translate-x-1/2',
+    right: 'right-0 translate-x-1/2'
+  }
+  
+  return (
+    <div 
+      data-dot-id={dotId}
+      className={`absolute bottom-0 translate-y-1/2 z-10 transition-all duration-200 ${positionClasses[position]}`}
+    >
+      <div 
+        className="w-2 h-2 rounded-full transition-all duration-200"
+        style={{
+          background: '#FEDA24',
+          boxShadow: '0 0 10px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24',
+        }}
+      />
+    </div>
+  )
+}
+
 const CARD_DATA = [
   {
     title: 'DISCOVER',
     subtitle: '',
     description: 'Browse thousands of curated AI tools instantly. Find exactly what you need without the technical complexity.',
-    iconPath: 'M17.303 5.197A7.5 7.5 0 0 0 6.697 15.803a.75.75 0 0 1-1.061 1.061A9 9 0 1 1 21 10.5a.75.75 0 0 1-1.5 0c0-1.92-.732-3.839-2.197-5.303Zm-2.121 2.121a4.5 4.5 0 0 0-6.364 6.364.75.75 0 1 1-1.06 1.06A6 6 0 1 1 18 10.5a.75.75 0 0 1-1.5 0c0-1.153-.44-2.303-1.318-3.182Zm-3.634 1.314a.75.75 0 0 1 .82.311l5.228 7.917a.75.75 0 0 1-.777 1.148l-2.097-.43 1.045 3.9a.75.75 0 0 1-1.45.388l-1.044-3.899-1.601 1.42a.75.75 0 0 1-1.247-.606l.569-9.47a.75.75 0 0 1 .554-.68Z',
+    // Magnifying glass icon (Heroicons)
+    iconPath: 'M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z',
   },
   {
     title: 'SUBSCRIBE',
     subtitle: '',
     description: 'One-click access to premium AI tools.<br/>No setup, no configuration. Start using tools instantly.',
-    iconPath: 'M14.447 3.026a.75.75 0 0 1 .527.921l-4.5 16.5a.75.75 0 0 1-1.448-.394l4.5-16.5a.75.75 0 0 1 .921-.527ZM16.72 6.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06L21.44 12l-4.72-4.72a.75.75 0 0 1 0-1.06Zm-9.44 0a.75.75 0 0 1 0 1.06L2.56 12l4.72 4.72a.75.75 0 0 1-1.06 1.06L.97 12.53a.75.75 0 0 1 0-1.06l5.25-5.25a.75.75 0 0 1 1.06 0Z',
+    // Bell icon (Heroicons)
+    iconPath: 'M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0',
   },
   {
     title: 'SAFETY',
     subtitle: '',
     description: 'Every tool is verified and trusted.<br/>Built-in security and privacy protection. Use AI tools with confidence.',
-    iconPath: 'M11.25 5.337c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.036 1.007-1.875 2.25-1.875S15 2.34 15 3.375c0 .369-.128.713-.349 1.003-.215.283-.401.604-.401.959 0 .332.278.598.61.578 1.91-.114 3.79-.342 5.632-.676a.75.75 0 0 1 .878.645 49.17 49.17 0 0 1 .376 5.452.657.657 0 0 1-.66.664c-.354 0-.675-.186-.958-.401a1.647 1.647 0 0 0-1.003-.349c-1.035 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401.31 0 .557.262.534.571a48.774 48.774 0 0 1-.595 4.845.75.75 0 0 1-.61.61c-1.82.317-3.673.533-5.555.642a.58.58 0 0 1-.611-.581c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.035-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959a.641.641 0 0 1-.658.643 49.118 49.118 0 0 1-4.708-.36.75.75 0 0 1-.645-.878c.293-1.614.504-3.257.629-4.924A.53.53 0 0 0 5.337 15c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.036 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.369 0 .713.128 1.003.349.283.215.604.401.959.401a.656.656 0 0 0 .659-.663 47.703 47.703 0 0 0-.31-4.82.75.75 0 0 1 .83-.832c1.343.155 2.703.254 4.077.294a.64.64 0 0 0 .657-.642Z',
+    // Shield check icon (Heroicons)
+    iconPath: 'M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z',
   },
 ]
 
 export function AboutProduct() {
+
   return (
     <div className="relative min-h-screen w-full bg-transparent">
       {/* Section content */}
@@ -76,7 +109,7 @@ export function AboutProduct() {
         </div>
 
         {/* Cards - attached to bottom lines with spacing */}
-        <div className="w-full flex justify-center items-start -mt-[150px] relative z-20">
+        <div className="w-full flex justify-center items-start -mt-[150px] relative z-20 mb-32">
           <div className="flex gap-8 items-start">
             {CARD_DATA.map((card) => (
               <GlowCard
@@ -87,6 +120,200 @@ export function AboutProduct() {
                 iconPath={card.iconPath}
               />
             ))}
+          </div>
+        </div>
+
+        {/* 2x2 Grid Table */}
+        <div className="max-w-4xl mx-auto relative rounded-lg mt-16" style={{ background: 'transparent' }}>
+          {/* Left vertical line */}
+          <div 
+            className="absolute left-0 pointer-events-none"
+            style={{
+              width: '0.5px',
+              top: '-40px',
+              bottom: '-40px',
+              background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
+            }}
+          />
+          
+          {/* Right vertical line */}
+          <div 
+            className="absolute right-0 pointer-events-none"
+            style={{
+              width: '0.5px',
+              top: '-40px',
+              bottom: '-40px',
+              background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
+            }}
+          />
+
+          {/* Top intersection dots */}
+          <div className="absolute top-0 left-0 right-0 pointer-events-none z-10">
+            <div 
+              data-dot-id="r0-c0"
+              className="absolute left-0 -translate-x-1/2 -translate-y-1/2"
+            >
+              <div 
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: '#FEDA24',
+                  boxShadow: '0 0 10px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24',
+                }}
+              />
+            </div>
+            <div 
+              data-dot-id="r0-c1"
+              className="absolute right-0 translate-x-1/2 -translate-y-1/2"
+            >
+              <div 
+                className="w-2 h-2 rounded-full"
+                style={{
+                  background: '#FEDA24',
+                  boxShadow: '0 0 10px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24',
+                }}
+              />
+            </div>
+          </div>
+
+          {/* First Row */}
+          <div className="grid grid-cols-2 gap-0 relative">
+            {/* Top Left Cell */}
+            <div className="p-8 relative">
+              <div className="text-white">
+                <h3 
+                  className="mb-2"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 700,
+                    fontSize: '18px'
+                  }}
+                >
+                  Cell 1
+                </h3>
+                <p 
+                  className="text-white/70"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '160%'
+                  }}
+                >
+                  Content for top left cell
+                </p>
+              </div>
+            </div>
+
+            {/* Top Right Cell */}
+            <div className="p-8 relative">
+              <div className="text-white">
+                <h3 
+                  className="mb-2"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 700,
+                    fontSize: '18px'
+                  }}
+                >
+                  Cell 2
+                </h3>
+                <p 
+                  className="text-white/70"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '160%'
+                  }}
+                >
+                  Content for top right cell
+                </p>
+              </div>
+            </div>
+
+            {/* Horizontal divider */}
+            <div 
+              className="absolute bottom-0 pointer-events-none"
+              style={{ 
+                height: '0.5px',
+                left: '-200px',
+                right: '-200px',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
+              }}
+            />
+            {/* Intersection dots */}
+            <IntersectionDot position="left" dotId="r1-c0" />
+            <IntersectionDot position="right" dotId="r1-c1" />
+          </div>
+
+          {/* Second Row */}
+          <div className="grid grid-cols-2 gap-0 relative">
+            {/* Horizontal divider at bottom */}
+            <div 
+              className="absolute bottom-0 pointer-events-none"
+              style={{ 
+                height: '0.5px',
+                left: '-200px',
+                right: '-200px',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
+              }}
+            />
+            {/* Bottom intersection dots */}
+            <IntersectionDot position="left" dotId="r2-c0" />
+            <IntersectionDot position="right" dotId="r2-c1" />
+            {/* Bottom Left Cell */}
+            <div className="p-8 relative">
+              <div className="text-white">
+                <h3 
+                  className="mb-2"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 700,
+                    fontSize: '18px'
+                  }}
+                >
+                  Cell 3
+                </h3>
+                <p 
+                  className="text-white/70"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '160%'
+                  }}
+                >
+                  Content for bottom left cell
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Right Cell */}
+            <div className="p-8 relative">
+              <div className="text-white">
+                <h3 
+                  className="mb-2"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 700,
+                    fontSize: '18px'
+                  }}
+                >
+                  Cell 4
+                </h3>
+                <p 
+                  className="text-white/70"
+                  style={{ 
+                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '160%'
+                  }}
+                >
+                  Content for bottom right cell
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

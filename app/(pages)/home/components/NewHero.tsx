@@ -26,6 +26,33 @@ export function NewHero() {
     offset: ['start start', 'end start']
   })
 
+  // Track when globe should stop moving independently and scroll normally
+  const [globeShouldScroll, setGlobeShouldScroll] = useState(false)
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroRef.current) return
+      
+      const scrollY = window.scrollY
+      const heroHeight = heroRef.current.offsetHeight
+      
+      // When hero section ends (scroll reaches bottom of hero), enable normal scrolling
+      // Use a small threshold to ensure smooth transition
+      if (scrollY >= heroHeight - 50) {
+        setGlobeShouldScroll(true)
+      } else {
+        setGlobeShouldScroll(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   // Transform scroll progress to opacity and scale values
   // Everything starts animating immediately on first scroll
   // Content zooms IN first, then gets blurry, stays fixed, then fades out
@@ -169,53 +196,57 @@ export function NewHero() {
         }
       `}</style>
 
-      {/* Independent Video Globe Container - Fixed positioned, independent of scroll */}
-      {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
-      <div 
-        className="fixed left-1/2 -translate-x-1/2 pointer-events-none"
-        style={{
-          width: '420px',
-          height: '420px',
-          top: 'calc(128px + 182px - 210px)', // pt-32 + trace lines center - half globe height
-          zIndex: 50 // Higher z-index to appear above AboutProduct section
-        }}
-      >
-        {/* Video Globe */}
-        <div className="w-full h-full flex items-center justify-center relative">
-          {/* Beelia Ani 2 Video */}
-          <motion.video
-            ref={beeliaVideoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
-            style={{
-              opacity: beeliaOpacity,
-              willChange: 'opacity'
-            }}
-          >
-            <source src="/videos/Beelia ani 2.webm" type="video/webm" />
-          </motion.video>
+      <section ref={heroRef} className="h-screen bg-transparent relative overflow-visible">
+        {/* Video Globe Container - Fixed positioning, stops moving when reaching AboutProduct */}
+        {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
+        {/* Single container that changes positioning - keeps videos playing */}
+        <div 
+          className={`${globeShouldScroll ? 'absolute' : 'fixed'} left-1/2 -translate-x-1/2 pointer-events-none`}
+          style={{
+            width: '420px',
+            height: '420px',
+            ...(globeShouldScroll 
+              ? { bottom: '-520px', zIndex: 50 } // Move down further into AboutProduct section when scrolling pauses
+              : { top: 'calc(128px + 182px - 210px)', zIndex: 50 } // pt-32 + trace lines center - half globe height
+            )
+          }}
+        >
+          {/* Video Globe */}
+          <div className="w-full h-full flex items-center justify-center relative">
+            {/* Beelia Ani 2 Video */}
+            <motion.video
+              ref={beeliaVideoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
+              style={{
+                opacity: beeliaOpacity,
+                willChange: 'opacity'
+              }}
+            >
+              <source src="/videos/Beelia ani 2.webm" type="video/webm" />
+            </motion.video>
 
-          {/* Phase 2 Video */}
-          <motion.video
-            ref={phase2VideoRef}
-            loop
-            muted
-            playsInline
-            className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
-            style={{
-              opacity: phase2Opacity,
-              willChange: 'opacity'
-            }}
-          >
-            <source src="/videos/Phase 2.webm" type="video/webm" />
-          </motion.video>
+            {/* Phase 2 Video */}
+            <motion.video
+              ref={phase2VideoRef}
+              loop
+              muted
+              playsInline
+              className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
+              style={{
+                opacity: phase2Opacity,
+                willChange: 'opacity'
+              }}
+            >
+              <source src="/videos/Phase 2.webm" type="video/webm" />
+            </motion.video>
+          </div>
         </div>
-      </div>
 
-      <section ref={heroRef} className="h-screen bg-transparent relative overflow-hidden">
+        {/* Light Rays */}
         {/* Light Rays */}
         <LightRays
           raysOrigin="top-center"
