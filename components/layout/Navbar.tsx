@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import GlassSurface from '@/components/GlassSurface'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 interface NavbarProps {
   forceShow?: boolean
@@ -15,6 +16,14 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const pathname = usePathname()
   const isWaitlistPage = pathname === '/waitlist'
   const isHomePage = pathname === '/home'
+
+  // Track scroll progress for navbar fade animation
+  const { scrollYProgress } = useScroll()
+  
+  // Navbar content (logo + nav links) fades out on scroll, but waitlist button stays visible
+  // Start fading at 0%, fully faded at 30% scroll
+  const navbarContentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
+  const navbarContentY = useTransform(scrollYProgress, [0, 0.3], [0, -20])
 
   // Hide navbar on home page unless forced to show
   if (isHomePage && !forceShow) {
@@ -99,8 +108,15 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
       {/* Full width navbar */}
       <nav className="fixed top-0 left-0 right-0 z-[9999] px-8 md:px-16 lg:px-24 py-6">
         <div className="grid grid-cols-3 items-center w-full">
-          {/* Logo on the left */}
-          <div className="flex items-center justify-start">
+          {/* Logo on the left - fades out on scroll */}
+          <motion.div 
+            className="flex items-center justify-start"
+            style={{
+              opacity: navbarContentOpacity,
+              y: navbarContentY,
+              willChange: 'opacity, transform'
+            }}
+          >
             <Link href="/home" className="flex items-center gap-2">
               <Image
                 src="/icons/Beelia.svg"
@@ -111,10 +127,17 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 priority
               />
             </Link>
-          </div>
+          </motion.div>
 
-          {/* Navigation links in the center - hidden on waitlist page */}
-          <div className="flex items-center justify-center">
+          {/* Navigation links in the center - hidden on waitlist page, fades out on scroll */}
+          <motion.div 
+            className="flex items-center justify-center"
+            style={{
+              opacity: navbarContentOpacity,
+              y: navbarContentY,
+              willChange: 'opacity, transform'
+            }}
+          >
             {!isWaitlistPage && (
               <div className="hidden md:flex items-center gap-12">
                 <button
@@ -159,7 +182,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 </a>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* JOIN WAITLIST button on the right */}
           <div className="flex items-center justify-end">

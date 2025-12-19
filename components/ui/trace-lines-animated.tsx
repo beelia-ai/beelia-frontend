@@ -23,6 +23,10 @@ interface TraceLineAnimatedProps {
     beamWidth?: number
     /** Width of the path stroke */
     pathWidth?: number
+    /** Scroll progress (0-1) for retraction animation */
+    scrollProgress?: number
+    /** Whether retraction is active */
+    isRetracting?: boolean
 }
 
 // Animated beam component using framer-motion
@@ -35,6 +39,8 @@ function AnimatedPathBeam({
     duration,
     delay,
     reverse = false,
+    scrollProgress = 0,
+    isRetracting = false,
 }: Readonly<{
     pathId: string
     d: string
@@ -44,6 +50,8 @@ function AnimatedPathBeam({
     duration: number
     delay: number
     reverse?: boolean
+    scrollProgress?: number
+    isRetracting?: boolean
 }>) {
     // Parse the path to extract start and end coordinates for proper gradient animation
     // For horizontal paths like "M612.227 185.289H992.05", extract the X coordinates
@@ -96,9 +104,9 @@ function AnimatedPathBeam({
     const yPos = bounds.y || 185.289
     const gradientRef = useRef<SVGLinearGradientElement>(null)
     
-    // Animate gradient using requestAnimationFrame
+    // Animate gradient using requestAnimationFrame - only when not retracting
     useEffect(() => {
-        if (!gradientRef.current) return
+        if (!gradientRef.current || isRetracting) return
         
         let startTime: number | null = null
         let animationFrame: number
@@ -127,12 +135,14 @@ function AnimatedPathBeam({
             const currentX1 = x1Start + (x1End - x1Start) * eased
             const currentX2 = x2Start + (x2End - x2Start) * eased
             
-            if (gradientRef.current) {
+            if (gradientRef.current && !isRetracting) {
                 gradientRef.current.setAttribute('x1', currentX1.toString())
                 gradientRef.current.setAttribute('x2', currentX2.toString())
             }
             
-            animationFrame = requestAnimationFrame(animateGradient)
+            if (!isRetracting) {
+                animationFrame = requestAnimationFrame(animateGradient)
+            }
         }
         
         animationFrame = requestAnimationFrame(animateGradient)
@@ -140,7 +150,7 @@ function AnimatedPathBeam({
         return () => {
             cancelAnimationFrame(animationFrame)
         }
-    }, [duration, delay, gradientAnim])
+    }, [duration, delay, gradientAnim, isRetracting])
     
     return (
         <>
@@ -176,6 +186,12 @@ function AnimatedPathBeam({
                 fill="none"
                 filter={`url(#${glowFilterId})`}
                 strokeLinecap="round"
+                pathLength={1}
+                strokeDasharray={isRetracting ? "1" : "none"}
+                strokeDashoffset={isRetracting ? scrollProgress : 0}
+                style={{
+                    opacity: isRetracting ? 1 - scrollProgress : 1
+                }}
             />
         </>
     )
@@ -193,6 +209,8 @@ function AnimatedBorderBeam({
     duration,
     delay,
     beamColor,
+    scrollProgress = 0,
+    isRetracting = false,
 }: Readonly<{
     x: number
     y: number
@@ -204,6 +222,8 @@ function AnimatedBorderBeam({
     duration: number
     delay: number
     beamColor: string
+    scrollProgress?: number
+    isRetracting?: boolean
 }>) {
     const centerX = x + width / 2
     const centerY = y + height / 2
@@ -214,6 +234,9 @@ function AnimatedBorderBeam({
     const rightMid = { x: x + width, y: centerY }
     const bottomMid = { x: centerX, y: y + height }
     const leftMid = { x, y: centerY }
+    
+    // Calculate perimeter length for dash offset
+    const perimeter = 2 * (width + height)
     
     return (
         <>
@@ -227,12 +250,18 @@ function AnimatedBorderBeam({
                 stroke={`url(#${gradientId})`}
                 strokeWidth="1.2"
                 filter={`url(#${glowFilterId})`}
+                pathLength={1}
+                strokeDasharray={isRetracting ? "1" : "none"}
+                strokeDashoffset={isRetracting ? scrollProgress : 0}
+                style={{
+                    opacity: isRetracting ? 1 - scrollProgress : 1
+                }}
             />
             <defs>
                 <motion.linearGradient
                     id={gradientId}
                     gradientUnits="userSpaceOnUse"
-                    animate={{
+                    animate={isRetracting ? {} : {
                         x1: [
                             topMid.x, rightMid.x, bottomMid.x, leftMid.x, topMid.x
                         ],
@@ -283,6 +312,8 @@ export function TraceLinesAnimated({
     pathColor = '#444444',
     beamWidth = 2,
     pathWidth = 1,
+    scrollProgress = 0,
+    isRetracting = false,
 }: Readonly<TraceLineAnimatedProps>) {
     // Use a stable ID that's consistent between server and client
     const [stableId, setStableId] = useState('trace-lines')
@@ -345,6 +376,12 @@ export function TraceLinesAnimated({
                     stroke={pathColor}
                     strokeWidth={pathWidth}
                     fill="none"
+                    pathLength={1}
+                    strokeDasharray={isRetracting ? "1" : "none"}
+                    strokeDashoffset={isRetracting ? scrollProgress : 0}
+                    style={{
+                        opacity: isRetracting ? 1 - scrollProgress : 1
+                    }}
                 />
             ))}
 
@@ -362,6 +399,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + config.delay}
                         reverse={config.reverse}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
                 )
             })}
@@ -372,7 +411,7 @@ export function TraceLinesAnimated({
                 cy="185.286"
                 r="2"
                 fill="white"
-                animate={{
+                animate={isRetracting ? {} : {
                     r: [2, 4, 2],
                     opacity: [0.5, 1, 0.5],
                 }}
@@ -383,10 +422,27 @@ export function TraceLinesAnimated({
                 }}
                 style={{
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
+                    opacity: isRetracting ? 1 - scrollProgress : undefined,
                 }}
             />
-            <circle cx="746.999" cy="58.286" r="2" fill="white" />
-            <circle cx="792.999" cy="309.286" r="2" fill="white" />
+            <circle 
+                cx="746.999" 
+                cy="58.286" 
+                r="2" 
+                fill="white"
+                style={{
+                    opacity: isRetracting ? 1 - scrollProgress : 1
+                }}
+            />
+            <circle 
+                cx="792.999" 
+                cy="309.286" 
+                r="2" 
+                fill="white"
+                style={{
+                    opacity: isRetracting ? 1 - scrollProgress : 1
+                }}
+            />
 
             {/* Junction dots - Left side with pulsing animation */}
             <motion.circle
@@ -394,7 +450,7 @@ export function TraceLinesAnimated({
                 cy="185.286"
                 r="2"
                 fill="white"
-                animate={{
+                animate={isRetracting ? {} : {
                     r: [2, 4, 2],
                     opacity: [0.5, 1, 0.5],
                 }}
@@ -406,24 +462,107 @@ export function TraceLinesAnimated({
                 }}
                 style={{
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
+                    opacity: isRetracting ? 1 - scrollProgress : undefined,
                 }}
             />
-            <circle cx="358.052" cy="58.286" r="2" fill="white" />
-            <circle cx="312.052" cy="309.286" r="2" fill="white" />
+            <circle 
+                cx="358.052" 
+                cy="58.286" 
+                r="2" 
+                fill="white"
+                style={{
+                    opacity: isRetracting ? 1 - scrollProgress : 1
+                }}
+            />
+            <circle 
+                cx="312.052" 
+                cy="309.286" 
+                r="2" 
+                fill="white"
+                style={{
+                    opacity: isRetracting ? 1 - scrollProgress : 1
+                }}
+            />
 
             {/* Outer rounded rectangles */}
             {showOuterBoxes && (
                 <>
                     {/* Static background boxes */}
                     {/* Right side boxes */}
-                    <rect x="992.16" y="129.481" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
-                    <rect x="792.23" y="0.5" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
-                    <rect x="838.17" y="254.15" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
+                    <rect 
+                        x="992.16" 
+                        y="129.481" 
+                        width="109.32" 
+                        height="109.32" 
+                        rx="31.5" 
+                        stroke={pathColor} 
+                        fill="none"
+                        style={{
+                            opacity: isRetracting ? 1 - scrollProgress : 1
+                        }}
+                    />
+                    <rect 
+                        x="792.23" 
+                        y="0.5" 
+                        width="109.32" 
+                        height="109.32" 
+                        rx="31.5" 
+                        stroke={pathColor} 
+                        fill="none"
+                        style={{
+                            opacity: isRetracting ? 1 - scrollProgress : 1
+                        }}
+                    />
+                    <rect 
+                        x="838.17" 
+                        y="254.15" 
+                        width="109.32" 
+                        height="109.32" 
+                        rx="31.5" 
+                        stroke={pathColor} 
+                        fill="none"
+                        style={{
+                            opacity: isRetracting ? 1 - scrollProgress : 1
+                        }}
+                    />
 
                     {/* Left side boxes */}
-                    <rect x="0.18" y="129.481" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
-                    <rect x="197.278" y="0.5" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
-                    <rect x="146.17" y="252.641" width="109.32" height="109.32" rx="31.5" stroke={pathColor} fill="none" />
+                    <rect 
+                        x="0.18" 
+                        y="129.481" 
+                        width="109.32" 
+                        height="109.32" 
+                        rx="31.5" 
+                        stroke={pathColor} 
+                        fill="none"
+                        style={{
+                            opacity: isRetracting ? 1 - scrollProgress : 1
+                        }}
+                    />
+                    <rect 
+                        x="197.278" 
+                        y="0.5" 
+                        width="109.32" 
+                        height="109.32" 
+                        rx="31.5" 
+                        stroke={pathColor} 
+                        fill="none"
+                        style={{
+                            opacity: isRetracting ? 1 - scrollProgress : 1
+                        }}
+                    />
+                    <rect 
+                        x="146.17" 
+                        y="252.641" 
+                        width="109.32" 
+                        height="109.32" 
+                        rx="31.5" 
+                        stroke={pathColor} 
+                        fill="none"
+                        style={{
+                            opacity: isRetracting ? 1 - scrollProgress : 1
+                        }}
+                    />
 
                     {/* Animated border beams on boxes */}
                     {/* Right side boxes */}
@@ -438,6 +577,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + 0.2}
                         beamColor={beamColor}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
                     <AnimatedBorderBeam
                         x={792.23}
@@ -450,6 +591,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + 0.5}
                         beamColor={beamColor}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
                     <AnimatedBorderBeam
                         x={838.17}
@@ -462,6 +605,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + 0.8}
                         beamColor={beamColor}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
 
                     {/* Left side boxes */}
@@ -476,6 +621,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + 0.35}
                         beamColor={beamColor}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
                     <AnimatedBorderBeam
                         x={197.278}
@@ -488,6 +635,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + 0.65}
                         beamColor={beamColor}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
                     <AnimatedBorderBeam
                         x={146.17}
@@ -500,6 +649,8 @@ export function TraceLinesAnimated({
                         duration={duration}
                         delay={delay + 0.95}
                         beamColor={beamColor}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
                     />
                 </>
             )}

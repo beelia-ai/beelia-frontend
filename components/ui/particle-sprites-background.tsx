@@ -271,8 +271,8 @@ export function ParticleSpritesBackground({
   return (
     <div
       ref={containerRef}
-      className={cn('absolute inset-0 w-full h-full', className)}
-      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+      className={cn('inset-0 w-full h-full', className)}
+      style={{ width: '100%', height: '100%' }}
     />
   )
 }
