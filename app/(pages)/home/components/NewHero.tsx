@@ -15,7 +15,10 @@ export function NewHero() {
   const [isHovered, setIsHovered] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [showPhase2, setShowPhase2] = useState(false)
   const heroRef = useRef<HTMLElement>(null)
+  const beeliaVideoRef = useRef<HTMLVideoElement>(null)
+  const phase2VideoRef = useRef<HTMLVideoElement>(null)
 
   // Track scroll progress for this section
   const { scrollYProgress } = useScroll({
@@ -45,6 +48,60 @@ export function NewHero() {
       setIsAnimating(false)
     }
   })
+
+  // Track scroll to detect when globe reaches AboutProduct section with smooth transition
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroRef.current) return
+      
+      const scrollY = window.scrollY
+      const heroHeight = heroRef.current.offsetHeight
+      
+      // Smooth transition zone: start fading Phase 2 in at 80% of hero height
+      const transitionStart = heroHeight * 0.8
+      
+      if (scrollY >= transitionStart && !showPhase2) {
+        // Start showing Phase 2 video - preload and play
+        setShowPhase2(true)
+        if (phase2VideoRef.current) {
+          phase2VideoRef.current.load()
+          phase2VideoRef.current.play().catch(() => {})
+        }
+      }
+      
+      if (scrollY < transitionStart && showPhase2) {
+        // Switch back to Beelia Ani 2 if scrolling back up
+        setShowPhase2(false)
+        if (beeliaVideoRef.current) {
+          beeliaVideoRef.current.play().catch(() => {})
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll() // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [showPhase2])
+
+  // Calculate opacity for smooth cross-fade transition based on scroll
+  const phase2Opacity = useTransform(
+    scrollYProgress,
+    (latest) => {
+      if (!heroRef.current) return 0
+      // Start transition at 80% scroll progress, complete at 100%
+      const transitionStart = 0.8
+      if (latest < transitionStart) return 0
+      if (latest >= 1) return 1
+      // Smooth fade between transitionStart and 1
+      const progress = (latest - transitionStart) / (1 - transitionStart)
+      return Math.min(1, Math.max(0, progress))
+    }
+  )
+  
+  const beeliaOpacity = useTransform(phase2Opacity, (opacity) => 1 - opacity)
 
   useEffect(() => {
     setIsMounted(true)
@@ -124,16 +181,37 @@ export function NewHero() {
         }}
       >
         {/* Video Globe */}
-        <div className="w-full h-full flex items-center justify-center">
-          <video
+        <div className="w-full h-full flex items-center justify-center relative">
+          {/* Beelia Ani 2 Video */}
+          <motion.video
+            ref={beeliaVideoRef}
             autoPlay
             loop
             muted
             playsInline
-            className="w-[420px] h-[420px] object-contain mr-0.5"
+            className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
+            style={{
+              opacity: beeliaOpacity,
+              willChange: 'opacity'
+            }}
           >
             <source src="/videos/Beelia ani 2.webm" type="video/webm" />
-          </video>
+          </motion.video>
+
+          {/* Phase 2 Video */}
+          <motion.video
+            ref={phase2VideoRef}
+            loop
+            muted
+            playsInline
+            className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
+            style={{
+              opacity: phase2Opacity,
+              willChange: 'opacity'
+            }}
+          >
+            <source src="/videos/Phase 2.webm" type="video/webm" />
+          </motion.video>
         </div>
       </div>
 
