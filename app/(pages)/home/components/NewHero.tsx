@@ -65,6 +65,31 @@ export function NewHero() {
           filter: brightness(0) invert(0);
         }
       `}</style>
+
+      {/* Independent Video Globe Container - Fixed positioned, independent of scroll */}
+      {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
+      <div 
+        className="fixed left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+        style={{
+          width: '420px',
+          height: '420px',
+          top: 'calc(128px + 182px - 210px)' // pt-32 + trace lines center - half globe height
+        }}
+      >
+        {/* Video Globe */}
+        <div className="w-full h-full flex items-center justify-center">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-[420px] h-[420px] object-contain mr-0.5"
+          >
+            <source src="/videos/Beelia ani 2.webm" type="video/webm" />
+          </video>
+        </div>
+      </div>
+
       <section className="h-screen bg-transparent relative overflow-hidden">
         {/* Light Rays */}
         <LightRays
@@ -82,11 +107,10 @@ export function NewHero() {
           className="absolute inset-0"
         />
 
-        {/* Vertically centered content container */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
-          {/* Trace Lines + Video Globe Container */}
-          <div className="mb-8 relative w-[1102px] h-[364px]">
-            {/* Trace Lines Animated SVG - background */}
+        {/* Content container with proper spacing - flex column layout */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-32">
+          {/* Trace Lines Animated SVG - positioned at top */}
+          <div className="relative w-[1102px] h-[364px] mb-12">
             <TraceLinesAnimated
               className="absolute inset-0 w-full h-full object-contain"
               duration={4}
@@ -97,20 +121,7 @@ export function NewHero() {
               beamWidth={2}
               pathWidth={1}
             />
-
-            {/* Video Globe - centered on top of trace lines */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-[420px] h-[420px] object-contain mr-0.5"
-              >
-                <source src="/videos/Beelia ani 2.webm" type="video/webm" />
-              </video>
-            </div>
-
+            
             {/* 3D DollarBill Overlay - Right Box */}
             <div className="absolute z-20 pointer-events-none left-[990.16px] top-[129.481px] w-[109.32px] h-[109.32px]">
               <Canvas camera={{ position: [0, 0, 4.5], fov: 40 }} gl={{ alpha: true }} dpr={[1, 2]}>
@@ -122,7 +133,7 @@ export function NewHero() {
             </div>
           </div>
 
-          {/* AIFOR Image */}
+          {/* AIFOR Image - below trace lines */}
           <div className="w-[675px] h-[80px]">
             <Image
               src="/images/AIFOR.png"
