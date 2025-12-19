@@ -9,11 +9,12 @@ function IntersectionDot({
   position, 
   dotId 
 }: { 
-  position: 'left' | 'right'
+  position: 'left' | 'center' | 'right'
   dotId: string
 }) {
   const positionClasses = {
     left: 'left-0 -translate-x-1/2',
+    center: 'left-1/2 -translate-x-1/2',
     right: 'right-0 translate-x-1/2'
   }
   
@@ -136,6 +137,17 @@ export function AboutProduct() {
             }}
           />
           
+          {/* Center vertical line */}
+          <div 
+            className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+            style={{
+              width: '0.5px',
+              top: '-40px',
+              bottom: '-40px',
+              background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
+            }}
+          />
+          
           {/* Right vertical line */}
           <div 
             className="absolute right-0 pointer-events-none"
@@ -147,33 +159,6 @@ export function AboutProduct() {
             }}
           />
 
-          {/* Top intersection dots */}
-          <div className="absolute top-0 left-0 right-0 pointer-events-none z-10">
-            <div 
-              data-dot-id="r0-c0"
-              className="absolute left-0 -translate-x-1/2 -translate-y-1/2"
-            >
-              <div 
-                className="w-2 h-2 rounded-full"
-                style={{
-                  background: '#FEDA24',
-                  boxShadow: '0 0 10px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24',
-                }}
-              />
-            </div>
-            <div 
-              data-dot-id="r0-c1"
-              className="absolute right-0 translate-x-1/2 -translate-y-1/2"
-            >
-              <div 
-                className="w-2 h-2 rounded-full"
-                style={{
-                  background: '#FEDA24',
-                  boxShadow: '0 0 10px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24',
-                }}
-              />
-            </div>
-          </div>
 
           {/* First Row */}
           <div className="grid grid-cols-2 gap-0 relative">
@@ -181,26 +166,37 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-2"
+                  className="mb-4"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 700,
-                    fontSize: '18px'
+                    fontSize: '18px',
+                    color: '#FFFFFF'
                   }}
                 >
-                  Cell 1
+                  Subscribe & Track your Usage
                 </h3>
                 <p 
-                  className="text-white/70"
+                  className="mb-6 text-white/70"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px',
-                    lineHeight: '160%'
+                    lineHeight: '160%',
+                    color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
-                  Content for top left cell
+                  Monitor realtime usage of tokens used in accessing all your AI tools. You can also monitor your spends on all your subscribed AI Tools.
                 </p>
+                {/* Placeholder box */}
+                <div 
+                  className="w-full rounded-lg"
+                  style={{
+                    height: '200px',
+                    backgroundColor: 'rgba(60, 60, 60, 0.5)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}
+                />
               </div>
             </div>
 
@@ -208,26 +204,37 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-2"
+                  className="mb-4"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 700,
-                    fontSize: '18px'
+                    fontSize: '18px',
+                    color: '#FFFFFF'
                   }}
                 >
-                  Cell 2
+                  Don't miss out on trends
                 </h3>
                 <p 
-                  className="text-white/70"
+                  className="mb-6 text-white/70"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px',
-                    lineHeight: '160%'
+                    lineHeight: '160%',
+                    color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
-                  Content for top right cell
+                  Categorically view which kind of tools are trending in the market. We smartly monitor market trends on all the different platforms.
                 </p>
+                {/* Placeholder box */}
+                <div 
+                  className="w-full rounded-lg"
+                  style={{
+                    height: '200px',
+                    backgroundColor: 'rgba(60, 60, 60, 0.5)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                  }}
+                />
               </div>
             </div>
 
@@ -243,36 +250,25 @@ export function AboutProduct() {
             />
             {/* Intersection dots */}
             <IntersectionDot position="left" dotId="r1-c0" />
-            <IntersectionDot position="right" dotId="r1-c1" />
+            <IntersectionDot position="center" dotId="r1-c1" />
+            <IntersectionDot position="right" dotId="r1-c2" />
           </div>
 
           {/* Second Row */}
           <div className="grid grid-cols-2 gap-0 relative">
-            {/* Horizontal divider at bottom */}
-            <div 
-              className="absolute bottom-0 pointer-events-none"
-              style={{ 
-                height: '0.5px',
-                left: '-200px',
-                right: '-200px',
-                background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
-              }}
-            />
-            {/* Bottom intersection dots */}
-            <IntersectionDot position="left" dotId="r2-c0" />
-            <IntersectionDot position="right" dotId="r2-c1" />
             {/* Bottom Left Cell */}
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-2"
+                  className="mb-4"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 700,
-                    fontSize: '18px'
+                    fontSize: '18px',
+                    color: '#FFFFFF'
                   }}
                 >
-                  Cell 3
+                  Trusted by Beelia Community
                 </h3>
                 <p 
                   className="text-white/70"
@@ -280,10 +276,11 @@ export function AboutProduct() {
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px',
-                    lineHeight: '160%'
+                    lineHeight: '160%',
+                    color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
-                  Content for bottom left cell
+                  Our Community test & reviews all the relevant information of any AI Tool listed on our platform.
                 </p>
               </div>
             </div>
@@ -292,14 +289,15 @@ export function AboutProduct() {
             <div className="p-8 relative">
               <div className="text-white">
                 <h3 
-                  className="mb-2"
+                  className="mb-4"
                   style={{ 
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 700,
-                    fontSize: '18px'
+                    fontSize: '18px',
+                    color: '#FFFFFF'
                   }}
                 >
-                  Cell 4
+                  Pattern Analysis
                 </h3>
                 <p 
                   className="text-white/70"
@@ -307,10 +305,11 @@ export function AboutProduct() {
                     fontFamily: 'var(--font-inria-sans), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px',
-                    lineHeight: '160%'
+                    lineHeight: '160%',
+                    color: 'rgba(255, 255, 255, 0.7)'
                   }}
                 >
-                  Content for bottom right cell
+                  Identify trends and optimize token usage.
                 </p>
               </div>
             </div>
