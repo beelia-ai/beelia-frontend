@@ -1,6 +1,7 @@
 'use client'
 
 import { NewHero } from './components/NewHero'
+import { AboutProduct } from './components/AboutProduct'
 import { ParticleSpritesBackground } from '@/components/ui'
 
 export default function HomePage() {
@@ -30,6 +31,7 @@ export default function HomePage() {
       {/* Page content */}
       <div className="relative z-10">
         <NewHero />
+        <AboutProduct />
       </div>
     </div>
   )
