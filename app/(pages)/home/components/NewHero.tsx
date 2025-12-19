@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import LightRays from '@/components/LightRays'
-import { ParticleSpritesBackground } from '@/components/ui'
 import Image from 'next/image'
 import GlassSurface from '@/components/GlassSurface'
 import TraceLinesAnimated from '@/components/ui/trace-lines-animated'
@@ -18,14 +17,6 @@ export function NewHero() {
   useEffect(() => {
     setIsMounted(true)
   }, [])
-  // Glossy white and silver colors in HSL format (normalized 0-1)
-  const beeliaColors = [
-    [0, 0, 1],      // Pure white - glossy white
-    [0, 0, 0.9],    // Off-white - bright silver
-    [0, 0, 0.75],   // Silver - medium silver
-    [0, 0, 0.85],   // Light silver - bright silver
-    [0, 0, 0.95]    // Near white - glossy white
-  ]
 
   return (
     <>
@@ -74,19 +65,7 @@ export function NewHero() {
           filter: brightness(0) invert(0);
         }
       `}</style>
-      <section className="h-screen bg-black relative overflow-hidden">
-        {/* Particle Sprites Background */}
-        <ParticleSpritesBackground
-          className="absolute inset-0"
-          particleCount={150}
-          followMouse={true}
-          mouseSensitivity={0.05}
-          colors={beeliaColors}
-          cycleColors={false}
-          sizes={[5, 5, 5, 5, 5]}
-          speed={0.3}
-        />
-
+      <section className="h-screen bg-transparent relative overflow-hidden">
         {/* Light Rays */}
         <LightRays
           raysOrigin="top-center"
