@@ -23,6 +23,10 @@ interface BottomLinesAnimatedProps {
     pathWidth?: number
 }
 
+// Type definitions for gradient animations
+type VerticalGradientAnim = { y1: number[]; y2: number[]; x1: number; x2: number }
+type HorizontalGradientAnim = { x1: number[]; x2: number[]; y1: number; y2: number }
+
 // Animated beam component using framer-motion - EXACT COPY from TraceLinesAnimated
 function AnimatedPathBeam({
     pathId,
@@ -44,51 +48,110 @@ function AnimatedPathBeam({
     reverse?: boolean
 }>) {
     // Parse the path to extract start and end coordinates for proper gradient animation
-    // For horizontal paths like "M612.227 185.289H992.05", extract the X coordinates
+    // Handles both horizontal and vertical paths
     const parsePathBounds = (path: string) => {
         const numbers = path.match(/-?\d+\.?\d*/g)?.map(Number) || []
-        if (numbers.length >= 2) {
-            const xCoords = [numbers[0]]
-            // For H command, the last number is the end X
-            if (path.includes('H')) {
-                xCoords.push(numbers.at(-1)!)
-            } else if (path.includes('L')) {
-                // For L commands, extract all X coordinates (every other number starting from 0)
-                for (let i = 2; i < numbers.length; i += 2) {
-                    xCoords.push(numbers[i])
+        if (numbers.length >= 4) {
+            const startX = numbers[0]
+            const startY = numbers[1]
+            const endX = numbers.at(-2) ?? numbers[0]
+            const endY = numbers.at(-1) ?? numbers[1]
+            
+            // Check if path is vertical (same X) or horizontal (same Y)
+            const isVertical = Math.abs(endX - startX) < 0.1
+            const isHorizontal = Math.abs(endY - startY) < 0.1
+            
+            if (isVertical) {
+                // Vertical path - use Y coordinates
+                const yCoords = [startY, endY]
+                return {
+                    minX: Math.min(startX, endX),
+                    maxX: Math.max(startX, endX),
+                    minY: Math.min(...yCoords),
+                    maxY: Math.max(...yCoords),
+                    startX,
+                    startY,
+                    endX,
+                    endY,
+                    y: startY,
+                    isHorizontal: false,
+                    isVertical: true
+                }
+            } else {
+                // Horizontal or diagonal path - use X coordinates
+                const xCoords = [startX]
+                if (path.includes('H')) {
+                    xCoords.push(numbers.at(-1)!)
+                } else if (path.includes('L')) {
+                    for (let i = 2; i < numbers.length; i += 2) {
+                        xCoords.push(numbers[i])
+                    }
+                }
+                return {
+                    minX: Math.min(...xCoords),
+                    maxX: Math.max(...xCoords),
+                    startX,
+                    startY,
+                    endX,
+                    endY,
+                    y: startY,
+                    isHorizontal: path.includes('H') || isHorizontal,
+                    isVertical: false
                 }
             }
-            return {
-                minX: Math.min(...xCoords),
-                maxX: Math.max(...xCoords),
-                startX: numbers[0],
-                y: numbers[1],
-                isHorizontal: path.includes('H')
-            }
         }
-        return { minX: 0, maxX: 1000, startX: 0, y: 185, isHorizontal: false }
+        return { minX: 0, maxX: 1000, startX: 0, y: 185, isHorizontal: false, isVertical: false }
     }
 
     const bounds = parsePathBounds(d)
-    const pathLength = bounds.maxX - bounds.minX
+    
+    // Check if path is vertical (same X coordinates)
+    const numbers = d.match(/-?\d+\.?\d*/g)?.map(Number) || []
+    const isVerticalPath = bounds.isVertical ?? (numbers.length >= 4 && Math.abs(numbers[0] - (numbers.at(-2) ?? numbers[0])) < 0.1)
+    
+    // Calculate path length - use Y difference for vertical paths, X difference for horizontal/diagonal
+    const pathLength = isVerticalPath
+        ? Math.abs((bounds.maxY ?? bounds.endY ?? numbers.at(-1) ?? numbers[1]) - (bounds.startY ?? bounds.y ?? numbers[1]))
+        : bounds.maxX - bounds.minX
     const beamLength = pathLength * 0.5 // Beam is 50% of path length for long effect
 
     // Determine direction based on path start position and reverse flag
     const goingRight = bounds.startX === bounds.minX
     const actualReverse = reverse ? goingRight : !goingRight
 
-    // Calculate gradient animation coordinates - ensure proper values for horizontal lines
-    const gradientAnim = actualReverse
-        ? {
-            // Right to left animation
-            x1: [bounds.maxX + beamLength, bounds.minX - beamLength],
-            x2: [bounds.maxX + beamLength * 0.5, bounds.minX - beamLength * 1.5],
-        }
-        : {
-            // Left to right animation (default for rightHorizontal)
-            x1: [bounds.minX - beamLength, bounds.maxX + beamLength],
-            x2: [bounds.minX - beamLength * 1.5, bounds.maxX + beamLength * 0.5],
-        }
+    // Calculate gradient animation coordinates
+    // For vertical paths, animate along Y axis; for horizontal/diagonal, animate along X axis
+    const gradientAnim = isVerticalPath
+        ? actualReverse
+            ? {
+                // Bottom to top animation (vertical)
+                y1: [(bounds.maxY ?? bounds.endY ?? numbers.at(-1)!) + beamLength, (bounds.startY ?? bounds.y ?? numbers[1]) - beamLength],
+                y2: [(bounds.maxY ?? bounds.endY ?? numbers.at(-1)!) + beamLength * 0.5, (bounds.startY ?? bounds.y ?? numbers[1]) - beamLength * 1.5],
+                x1: bounds.startX,
+                x2: bounds.startX,
+            }
+            : {
+                // Top to bottom animation (vertical)
+                y1: [(bounds.startY ?? bounds.y ?? numbers[1]) - beamLength, (bounds.maxY ?? bounds.endY ?? numbers.at(-1)!) + beamLength],
+                y2: [(bounds.startY ?? bounds.y ?? numbers[1]) - beamLength * 1.5, (bounds.maxY ?? bounds.endY ?? numbers.at(-1)!) + beamLength * 0.5],
+                x1: bounds.startX,
+                x2: bounds.startX,
+            }
+        : actualReverse
+            ? {
+                // Right to left animation (horizontal/diagonal)
+                x1: [bounds.maxX + beamLength, bounds.minX - beamLength],
+                x2: [bounds.maxX + beamLength * 0.5, bounds.minX - beamLength * 1.5],
+                y1: bounds.y,
+                y2: bounds.y,
+            }
+            : {
+                // Left to right animation (horizontal/diagonal)
+                x1: [bounds.minX - beamLength, bounds.maxX + beamLength],
+                x2: [bounds.minX - beamLength * 1.5, bounds.maxX + beamLength * 0.5],
+                y1: bounds.y,
+                y2: bounds.y,
+            }
 
     // Ensure gradient coordinates are valid numbers
     const yPos = bounds.y || 185.289
@@ -117,17 +180,40 @@ function AnimatedPathBeam({
             const eased = easeInOutCubic(clampedProgress)
             
             // Calculate current gradient position
-            const x1Start = gradientAnim.x1[0]
-            const x1End = gradientAnim.x1[1]
-            const x2Start = gradientAnim.x2[0]
-            const x2End = gradientAnim.x2[1]
-            
-            const currentX1 = x1Start + (x1End - x1Start) * eased
-            const currentX2 = x2Start + (x2End - x2Start) * eased
-            
-            if (gradientRef.current) {
-                gradientRef.current.setAttribute('x1', currentX1.toString())
-                gradientRef.current.setAttribute('x2', currentX2.toString())
+            if (isVerticalPath) {
+                // Vertical path - animate Y coordinates
+                const vertAnim = gradientAnim as VerticalGradientAnim
+                const y1Start = vertAnim.y1[0]
+                const y1End = vertAnim.y1[1]
+                const y2Start = vertAnim.y2[0]
+                const y2End = vertAnim.y2[1]
+                
+                const currentY1 = y1Start + (y1End - y1Start) * eased
+                const currentY2 = y2Start + (y2End - y2Start) * eased
+                
+                if (gradientRef.current) {
+                    gradientRef.current.setAttribute('x1', vertAnim.x1.toString())
+                    gradientRef.current.setAttribute('y1', currentY1.toString())
+                    gradientRef.current.setAttribute('x2', vertAnim.x2.toString())
+                    gradientRef.current.setAttribute('y2', currentY2.toString())
+                }
+            } else {
+                // Horizontal/diagonal path - animate X coordinates
+                const horizAnim = gradientAnim as HorizontalGradientAnim
+                const x1Start = horizAnim.x1[0]
+                const x1End = horizAnim.x1[1]
+                const x2Start = horizAnim.x2[0]
+                const x2End = horizAnim.x2[1]
+                
+                const currentX1 = x1Start + (x1End - x1Start) * eased
+                const currentX2 = x2Start + (x2End - x2Start) * eased
+                
+                if (gradientRef.current) {
+                    gradientRef.current.setAttribute('x1', currentX1.toString())
+                    gradientRef.current.setAttribute('y1', horizAnim.y1.toString())
+                    gradientRef.current.setAttribute('x2', currentX2.toString())
+                    gradientRef.current.setAttribute('y2', horizAnim.y2.toString())
+                }
             }
             
             animationFrame = requestAnimationFrame(animateGradient)
@@ -138,7 +224,7 @@ function AnimatedPathBeam({
         return () => {
             cancelAnimationFrame(animationFrame)
         }
-    }, [duration, delay, gradientAnim])
+    }, [duration, delay, gradientAnim, isVerticalPath])
     
     return (
         <>
@@ -147,10 +233,10 @@ function AnimatedPathBeam({
                     ref={gradientRef}
                     id={gradientId}
                     gradientUnits="userSpaceOnUse"
-                    x1={gradientAnim.x1[0]}
-                    x2={gradientAnim.x2[0]}
-                    y1={yPos}
-                    y2={yPos}
+                    x1={isVerticalPath ? (gradientAnim as VerticalGradientAnim).x1 : (gradientAnim as HorizontalGradientAnim).x1[0]}
+                    x2={isVerticalPath ? (gradientAnim as VerticalGradientAnim).x2 : (gradientAnim as HorizontalGradientAnim).x2[0]}
+                    y1={isVerticalPath ? (gradientAnim as VerticalGradientAnim).y1[0] : (gradientAnim as HorizontalGradientAnim).y1}
+                    y2={isVerticalPath ? (gradientAnim as VerticalGradientAnim).y2[0] : (gradientAnim as HorizontalGradientAnim).y2}
                 >
                     <stop stopColor="#FEDA24" stopOpacity="0" />
                     <stop offset="2%" stopColor="#FEDA24" stopOpacity="0.2" />
