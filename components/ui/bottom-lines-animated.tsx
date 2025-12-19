@@ -267,7 +267,7 @@ export function BottomLinesAnimated({
                 )
             })}
 
-            {/* Junction dots with pulsing animation */}
+            {/* Junction dots with pulsing animation - all glow when beams hit */}
             <motion.circle
                 cx="391.756"
                 cy="158.914"
@@ -286,8 +286,44 @@ export function BottomLinesAnimated({
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
                 }}
             />
-            <circle cx="766.536" cy="207.914" r="1.96814" fill="white" />
-            <circle cx="15.5358" cy="207.914" r="1.96814" fill="white" />
+            <motion.circle
+                cx="766.536"
+                cy="207.914"
+                r="1.96814"
+                fill="white"
+                animate={{
+                    r: [1.96814, 3.5, 1.96814],
+                    opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                    duration: duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0,
+                }}
+                style={{
+                    filter: 'drop-shadow(0 0 6px #FEDA24)',
+                }}
+            />
+            <motion.circle
+                cx="15.5358"
+                cy="207.914"
+                r="1.96814"
+                fill="white"
+                animate={{
+                    r: [1.96814, 3.5, 1.96814],
+                    opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                    duration: duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0,
+                }}
+                style={{
+                    filter: 'drop-shadow(0 0 6px #FEDA24)',
+                }}
+            />
         </svg>
     )
 }
