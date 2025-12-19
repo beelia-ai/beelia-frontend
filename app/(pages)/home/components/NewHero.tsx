@@ -16,6 +16,7 @@ export function NewHero() {
   const [isMounted, setIsMounted] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showPhase2, setShowPhase2] = useState(false)
+  const [traceLinesScrollProgress, setTraceLinesScrollProgress] = useState(0)
   const heroRef = useRef<HTMLElement>(null)
   const beeliaVideoRef = useRef<HTMLVideoElement>(null)
   const phase2VideoRef = useRef<HTMLVideoElement>(null)
@@ -66,7 +67,7 @@ export function NewHero() {
   // Trace lines scale animation only - no fade out, no clip-path
   const traceLinesScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9])
 
-  // Track when animation starts to disable hover effects
+  // Track when animation starts to disable hover effects and update trace lines retraction
   useMotionValueEvent(scrollYProgress, 'change', (latest) => {
     if (latest > 0 && !isAnimating) {
       setIsAnimating(true)
@@ -74,6 +75,10 @@ export function NewHero() {
     } else if (latest === 0 && isAnimating) {
       setIsAnimating(false)
     }
+    
+    // Update trace lines retraction progress - increased strength: complete retraction at 0.3 scroll progress
+    const retractionProgress = latest <= 0.3 ? latest / 0.3 : 1
+    setTraceLinesScrollProgress(retractionProgress)
   })
 
   // Track scroll to detect when globe reaches AboutProduct section with smooth transition
@@ -282,6 +287,8 @@ export function NewHero() {
               pathColor="#444444"
               beamWidth={2}
               pathWidth={1}
+              scrollProgress={traceLinesScrollProgress}
+              isRetracting={traceLinesScrollProgress > 0}
             />
             
             {/* 3D DollarBill Overlay - Right Box */}
