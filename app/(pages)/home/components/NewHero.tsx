@@ -69,7 +69,7 @@ export function NewHero() {
       {/* Independent Video Globe Container - Fixed positioned, independent of scroll */}
       {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
       <div 
-        className="fixed left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+        className="fixed left-1/2 -translate-x-1/2 z-30 pointer-events-none"
         style={{
           width: '420px',
           height: '420px',
