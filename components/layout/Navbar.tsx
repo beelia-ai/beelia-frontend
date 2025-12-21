@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -13,6 +13,9 @@ interface NavbarProps {
 
 export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+  const scrollThresholdRef = useRef(0)
   const pathname = usePathname()
   const isWaitlistPage = pathname === '/waitlist'
   const isHomePage = pathname === '/home'
@@ -20,10 +23,33 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   // Track scroll progress for navbar fade animation
   const { scrollYProgress } = useScroll()
   
-  // Navbar content (logo + nav links) fades out on scroll, but waitlist button stays visible
-  // Start fading at 0%, fully faded at 30% scroll
-  const navbarContentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
-  const navbarContentY = useTransform(scrollYProgress, [0, 0.3], [0, -20])
+  // Track scroll direction and show/hide navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      // Scrolling down - hide navbar
+      if (currentScrollY > lastScrollY && currentScrollY > 0) {
+        setIsVisible(false)
+        scrollThresholdRef.current = currentScrollY
+      }
+      // Scrolling up - show navbar if scrolled up by 20px from threshold
+      else if (currentScrollY < lastScrollY) {
+        if (currentScrollY <= scrollThresholdRef.current - 20 || currentScrollY === 0) {
+          setIsVisible(true)
+        }
+      }
+      
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [lastScrollY])
+  
+  // Navbar content opacity based on visibility state
+  const navbarContentOpacity = isVisible ? 1 : 0
+  const navbarContentY = isVisible ? 0 : -20
 
   // Hide navbar on home page unless forced to show
   if (isHomePage && !forceShow) {
@@ -108,12 +134,18 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
       {/* Full width navbar */}
       <nav className="fixed top-0 left-0 right-0 z-[9999] px-8 md:px-16 lg:px-24 py-6">
         <div className="grid grid-cols-3 items-center w-full">
-          {/* Logo on the left - fades out on scroll */}
+          {/* Logo on the left - hides on scroll down, shows on scroll up */}
           <motion.div 
             className="flex items-center justify-start"
-            style={{
+            animate={{
               opacity: navbarContentOpacity,
               y: navbarContentY,
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut'
+            }}
+            style={{
               willChange: 'opacity, transform'
             }}
           >
@@ -129,12 +161,18 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             </Link>
           </motion.div>
 
-          {/* Navigation links in the center - hidden on waitlist page, fades out on scroll */}
+          {/* Navigation links in the center - hidden on waitlist page, hides on scroll down, shows on scroll up */}
           <motion.div 
             className="flex items-center justify-center"
-            style={{
+            animate={{
               opacity: navbarContentOpacity,
               y: navbarContentY,
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut'
+            }}
+            style={{
               willChange: 'opacity, transform'
             }}
           >

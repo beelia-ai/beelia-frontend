@@ -3,6 +3,7 @@ import { Inter, Inria_Sans, Instrument_Serif, Outfit } from "next/font/google";
 import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
+import { ScrollPositionIndicator } from "@/components/ScrollPositionIndicator";
 
 const inter = Inter({ subsets: ["latin"] });
 const inriaSans = Inria_Sans({
@@ -47,6 +48,7 @@ export default function RootLayout({
       >
         <Preloader />
         <NavbarClient />
+        <ScrollPositionIndicator />
         <div className="relative" style={{ zIndex: 1 }}>
           {children}
         </div>

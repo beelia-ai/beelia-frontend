@@ -119,14 +119,19 @@ export function HorizontalBeamAnimated({
 
         .beam-container-right-${stableId} {
           position: absolute;
-          left: ${rightStartPercent}%;
+          right: ${100 - rightEndPercent}%;
           top: ${rightYPercent}%;
-          width: ${rightWidthPercent}%;
+          width: ${
+            isRetracting
+              ? `${rightWidthPercent * (1 - scrollProgress)}%`
+              : `${rightWidthPercent}%`
+          };
           height: ${Math.min(beamWidth * 3, 90)}px;
           margin-top: -${Math.min(beamWidth * 3, 90) / 2}px;
           overflow: hidden;
           pointer-events: none;
           opacity: ${isRetracting ? 1 - scrollProgress : 1};
+          transition: width 0.1s linear;
         }
 
         .beam-container-right-${stableId} hr {
@@ -164,7 +169,11 @@ export function HorizontalBeamAnimated({
             ${beamColorRgba.low} 90%,
             ${beamColorRgba.transparent} 100%
           );
-          animation: beam-slide-right-${stableId} ${animationDuration} ease-in-out infinite;
+          animation: ${
+            isRetracting
+              ? "none"
+              : `beam-slide-right-${stableId} ${animationDuration} ease-in-out infinite`
+          };
           animation-delay: ${animationDelay};
           filter: drop-shadow(0 0 ${
             Math.min(beamWidth, 30) / 2
@@ -175,12 +184,17 @@ export function HorizontalBeamAnimated({
           position: absolute;
           left: ${leftStartPercent}%;
           top: ${leftYPercent}%;
-          width: ${leftWidthPercent}%;
+          width: ${
+            isRetracting
+              ? `${leftWidthPercent * (1 - scrollProgress)}%`
+              : `${leftWidthPercent}%`
+          };
           height: ${Math.min(beamWidth * 3, 90)}px;
           margin-top: -${Math.min(beamWidth * 3, 90) / 2}px;
           overflow: hidden;
           pointer-events: none;
           opacity: ${isRetracting ? 1 - scrollProgress : 1};
+          transition: width 0.1s linear;
         }
 
         .beam-container-left-${stableId} hr {
@@ -218,7 +232,11 @@ export function HorizontalBeamAnimated({
             ${beamColorRgba.low} 90%,
             ${beamColorRgba.transparent} 100%
           );
-          animation: beam-slide-left-${stableId} ${animationDuration} ease-in-out infinite;
+          animation: ${
+            isRetracting
+              ? "none"
+              : `beam-slide-left-${stableId} ${animationDuration} ease-in-out infinite`
+          };
           animation-delay: ${parseFloat(animationDelay) + 0.15}s;
           filter: drop-shadow(0 0 ${
             Math.min(beamWidth, 30) / 2

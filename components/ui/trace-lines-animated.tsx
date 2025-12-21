@@ -27,6 +27,10 @@ interface TraceLineAnimatedProps {
     scrollProgress?: number
     /** Whether retraction is active */
     isRetracting?: boolean
+    /** Current scroll Y position in pixels */
+    scrollY?: number
+    /** Hero section scroll progress (0-1) for dots fade animation */
+    heroScrollProgress?: number
 }
 
 // Animated beam component using framer-motion
@@ -41,6 +45,7 @@ function AnimatedPathBeam({
     reverse = false,
     scrollProgress = 0,
     isRetracting = false,
+    isLeftSide = false,
 }: Readonly<{
     pathId: string
     d: string
@@ -52,6 +57,7 @@ function AnimatedPathBeam({
     reverse?: boolean
     scrollProgress?: number
     isRetracting?: boolean
+    isLeftSide?: boolean
 }>) {
     // Parse the path to extract start and end coordinates for proper gradient animation
     // For horizontal paths like "M612.227 185.289H992.05", extract the X coordinates
@@ -186,12 +192,6 @@ function AnimatedPathBeam({
                 fill="none"
                 filter={`url(#${glowFilterId})`}
                 strokeLinecap="round"
-                pathLength={1}
-                strokeDasharray={isRetracting ? "1" : "none"}
-                strokeDashoffset={isRetracting ? scrollProgress : 0}
-                style={{
-                    opacity: isRetracting ? 1 - scrollProgress : 1
-                }}
             />
         </>
     )
@@ -314,6 +314,8 @@ export function TraceLinesAnimated({
     pathWidth = 1,
     scrollProgress = 0,
     isRetracting = false,
+    scrollY = 0,
+    heroScrollProgress = 0,
 }: Readonly<TraceLineAnimatedProps>) {
     // Use a stable ID that's consistent between server and client
     const [stableId, setStableId] = useState('trace-lines')
@@ -336,13 +338,22 @@ export function TraceLinesAnimated({
         leftBottom: 'M401.178 185.266L311.948 309.355L256.434 309.355',
     }
 
-    // Beam configurations with staggered delays (animated) - excluding horizontal lines
-    const beamConfigs = [
+    // Right side beam configurations - retract with positive scrollProgress
+    const rightBeamConfigs = [
         { key: 'rightTop', d: paths.rightTop, delay: 0.3, reverse: false },
         { key: 'rightBottom', d: paths.rightBottom, delay: 0.6, reverse: false },
+    ]
+
+    // Left side beam configurations - retract with negative scrollProgress (inverse)
+    const leftBeamConfigs = [
         { key: 'leftTop', d: paths.leftTop, delay: 0.45, reverse: true },
         { key: 'leftBottom', d: paths.leftBottom, delay: 0.75, reverse: true },
     ]
+
+    // Calculate dots opacity - fade out smoothly by y position 20 (scrollProgress 0.02)
+    // Use heroScrollProgress which tracks the hero section scroll (0-1)
+    // 0.02 scroll progress = 20px in a 1000px hero section
+    const dotsOpacity = (heroScrollProgress ?? 0) >= 0.02 ? 0 : Math.max(0, 1 - ((heroScrollProgress ?? 0) / 0.02))
 
     return (
         <svg
@@ -365,58 +376,79 @@ export function TraceLinesAnimated({
                 </filter>
             </defs>
 
-            {/* Static path lines (background) - all paths */}
-            {beamConfigs.map((config) => (
-                <path
-                    key={`static-${config.key}`}
-                    d={config.d}
-                    stroke={pathColor}
-                    strokeWidth={pathWidth}
-                    fill="none"
-                    pathLength={1}
-                    strokeDasharray={isRetracting ? "1" : "none"}
-                    strokeDashoffset={isRetracting ? scrollProgress : 0}
-                    style={{
-                        opacity: isRetracting ? 1 - scrollProgress : 1
-                    }}
-                />
-            ))}
+            {/* RIGHT SIDE - Retracts from left to right (clips from left) */}
+            <g style={{
+                clipPath: isRetracting ? `inset(0 0 0 ${scrollProgress * 100}%)` : 'none',
+                opacity: isRetracting ? 1 - scrollProgress : 1,
+            }}>
+                {rightBeamConfigs.map((config) => (
+                    <path
+                        key={`static-${config.key}`}
+                        d={config.d}
+                        stroke={pathColor}
+                        strokeWidth={pathWidth}
+                        fill="none"
+                    />
+                ))}
+                {rightBeamConfigs.map((config) => (
+                    <AnimatedPathBeam
+                        key={config.key}
+                        pathId={config.key}
+                        d={config.d}
+                        gradientId={`beam-grad-${config.key}-${stableId}`}
+                        beamWidth={beamWidth * 0.8}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + config.delay}
+                        reverse={config.reverse}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
+                    />
+                ))}
+            </g>
 
-            {/* Animated beams - top and bottom lines only (horizontal handled separately) */}
-            {beamConfigs.map((config) => (
-                <AnimatedPathBeam
-                    key={config.key}
-                    pathId={config.key}
-                    d={config.d}
-                    gradientId={`beam-grad-${config.key}-${stableId}`}
-                    beamWidth={beamWidth * 0.8}
-                    glowFilterId={glowFilterId}
-                    duration={duration}
-                    delay={delay + config.delay}
-                    reverse={config.reverse}
-                    scrollProgress={scrollProgress}
-                    isRetracting={isRetracting}
-                />
-            ))}
+            {/* LEFT SIDE - Retracts from right to left (clips from right) */}
+            <g style={{
+                clipPath: isRetracting ? `inset(0 ${scrollProgress * 100}% 0 0)` : 'none',
+                opacity: isRetracting ? 1 - scrollProgress : 1,
+            }}>
+                {leftBeamConfigs.map((config) => (
+                    <path
+                        key={`static-${config.key}`}
+                        d={config.d}
+                        stroke={pathColor}
+                        strokeWidth={pathWidth}
+                        fill="none"
+                    />
+                ))}
+                {leftBeamConfigs.map((config) => (
+                    <AnimatedPathBeam
+                        key={config.key}
+                        pathId={config.key}
+                        d={config.d}
+                        gradientId={`beam-grad-${config.key}-${stableId}`}
+                        beamWidth={beamWidth * 0.8}
+                        glowFilterId={glowFilterId}
+                        duration={duration}
+                        delay={delay + config.delay}
+                        reverse={config.reverse}
+                        scrollProgress={scrollProgress}
+                        isRetracting={isRetracting}
+                        isLeftSide={true}
+                    />
+                ))}
+            </g>
 
-            {/* Junction dots - Right side with pulsing animation */}
-            <motion.circle
+            {/* Junction dots - Right side */}
+            <circle
                 cx="703.999"
                 cy="185.286"
                 r="2"
                 fill="white"
-                animate={isRetracting ? {} : {
-                    r: [2, 4, 2],
-                    opacity: [0.5, 1, 0.5],
-                }}
-                transition={{
-                    duration: duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
                 style={{
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
-                    opacity: isRetracting ? 1 - scrollProgress : undefined,
+                    opacity: dotsOpacity,
+                    transition: 'opacity 0.3s ease-out',
                 }}
             />
             <circle 
@@ -425,7 +457,8 @@ export function TraceLinesAnimated({
                 r="2" 
                 fill="white"
                 style={{
-                    opacity: isRetracting ? 1 - scrollProgress : 1
+                    opacity: dotsOpacity,
+                    transition: 'opacity 0.3s ease-out',
                 }}
             />
             <circle 
@@ -434,29 +467,21 @@ export function TraceLinesAnimated({
                 r="2" 
                 fill="white"
                 style={{
-                    opacity: isRetracting ? 1 - scrollProgress : 1
+                    opacity: dotsOpacity,
+                    transition: 'opacity 0.3s ease-out',
                 }}
             />
 
-            {/* Junction dots - Left side with pulsing animation */}
-            <motion.circle
+            {/* Junction dots - Left side */}
+            <circle
                 cx="401.052"
                 cy="185.286"
                 r="2"
                 fill="white"
-                animate={isRetracting ? {} : {
-                    r: [2, 4, 2],
-                    opacity: [0.5, 1, 0.5],
-                }}
-                transition={{
-                    duration: duration,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.15,
-                }}
                 style={{
                     filter: 'drop-shadow(0 0 6px #FEDA24)',
-                    opacity: isRetracting ? 1 - scrollProgress : undefined,
+                    opacity: dotsOpacity,
+                    transition: 'opacity 0.3s ease-out',
                 }}
             />
             <circle 
@@ -465,7 +490,8 @@ export function TraceLinesAnimated({
                 r="2" 
                 fill="white"
                 style={{
-                    opacity: isRetracting ? 1 - scrollProgress : 1
+                    opacity: dotsOpacity,
+                    transition: 'opacity 0.3s ease-out',
                 }}
             />
             <circle 
@@ -474,7 +500,8 @@ export function TraceLinesAnimated({
                 r="2" 
                 fill="white"
                 style={{
-                    opacity: isRetracting ? 1 - scrollProgress : 1
+                    opacity: dotsOpacity,
+                    transition: 'opacity 0.3s ease-out',
                 }}
             />
 
