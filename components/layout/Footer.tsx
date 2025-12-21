@@ -68,6 +68,7 @@ export function Footer() {
               fontWeight: 800,
               fontSize: "calc((100vw - 4rem) * 0.262)",
               lineHeight: "1",
+              marginBottom: "clamp(20px, 2vw, 40px)",
             }}
           >
             BEELIA

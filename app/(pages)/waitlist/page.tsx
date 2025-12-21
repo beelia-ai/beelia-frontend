@@ -706,10 +706,56 @@ export default function WaitlistPage() {
 
   return (
     <main className="relative min-h-screen bg-black overflow-x-hidden">
-      {/* Particles Background - Fixed, covers entire page */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      {/* First Section with Grid - Behind particles */}
+      <div className="relative min-h-screen">
+        {/* Square Grid - Absolute, stays in first section only */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            opacity: 0.15,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: `60px 60px`,
+          }}
+        />
+
+        {/* Mask overlay to hide grid in content area */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            zIndex: 2,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "min(90vw, 600px)",
+            height: "min(85vh, 800px)",
+            background:
+              "linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1) 5%, rgba(0, 0, 0, 1) 95%, transparent 100%)",
+          }}
+        />
+
+        {/* Fade-off effect at bottom 10% of grid */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            zIndex: 3,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "10%",
+            background:
+              "linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)",
+          }}
+        />
+      </div>
+
+      {/* Particles Background - Fixed, above grid but below content */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 5 }}>
         <ParticleSpritesBackground
-          className="fixed inset-0 z-[3]"
+          className="fixed inset-0"
           particleCount={150}
           followMouse={true}
           mouseSensitivity={0.05}
@@ -720,43 +766,14 @@ export default function WaitlistPage() {
         />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-        {/* First Section with Grid */}
-        <div className="relative min-h-screen">
-          {/* Square Grid - Absolute, stays in first section only */}
-          <div
-            className="absolute inset-0 z-[1] pointer-events-none"
-            style={{
-              opacity: 0.15,
-              backgroundImage: `
-                linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
-              `,
-              backgroundSize: `60px 60px`,
-            }}
-          />
+      {/* Content - Above particles */}
+      <div className="absolute inset-0" style={{ zIndex: 10 }}>
+        {/* Waitlist Hero Content */}
+        <WaitlistHero />
+      </div>
 
-          {/* Mask overlay to hide grid in content area */}
-          <div
-            className="absolute z-[2] pointer-events-none"
-            style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "min(90vw, 600px)",
-              height: "min(85vh, 800px)",
-              background: "black",
-            }}
-          />
-
-          {/* Waitlist Hero Content */}
-          <div className="relative z-10">
-            <WaitlistHero />
-          </div>
-        </div>
-
-        {/* Footer - No grid here */}
+      {/* Footer - Above particles */}
+      <div className="relative" style={{ zIndex: 10 }}>
         <Footer />
       </div>
     </main>
