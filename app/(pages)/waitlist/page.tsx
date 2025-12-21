@@ -1,127 +1,127 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import dynamic from 'next/dynamic'
-import { GradientOrbs } from '@/components/ui'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { ParticleSpritesBackground } from "@/components/ui";
 
-const GlassSurface = dynamic(() => import('@/components/GlassSurface'), { 
+const GlassSurface = dynamic(() => import("@/components/GlassSurface"), {
   ssr: false,
   loading: () => (
-    <div 
+    <div
       className="flex items-center justify-center"
-      style={{ 
-        width: '100%', 
-        height: '60px', 
-        borderRadius: '50px',
-        background: 'rgba(255, 255, 255, 0.1)',
+      style={{
+        width: "100%",
+        height: "60px",
+        borderRadius: "50px",
+        background: "rgba(255, 255, 255, 0.1)",
       }}
     >
       <span className="text-white/50">Loading...</span>
     </div>
-  )
-})
+  ),
+});
 
 // Card wrapper component for consistent styling
-function CardSection({ 
-  children, 
-}: { 
-  children: React.ReactNode
-}) {
+function CardSection({ children }: { children: React.ReactNode }) {
   return (
-    <div 
-      className="relative overflow-hidden min-h-screen"
-    >
+    <div className="relative overflow-hidden min-h-screen">
       {/* Content */}
-      <div className="relative z-0">
-        {children}
-      </div>
+      <div className="relative z-0">{children}</div>
     </div>
-  )
+  );
 }
 
 // Waitlist Hero Content
 function WaitlistHero() {
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [company, setCompany] = useState('')
-  const [step, setStep] = useState<'email' | 'details' | 'complete'>('email')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isButtonHovered, setIsButtonHovered] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [step, setStep] = useState<"email" | "details" | "complete">("email");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
 
   // Step 1: Submit email
   const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    
-    setIsLoading(true)
-    
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+
     try {
-      const response = await fetch('/api/waitlist', {
-        method: 'POST',
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
-      })
-      
-      const data = await response.json()
-      
+      });
+
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to join waitlist')
+        throw new Error(data.error || "Failed to join waitlist");
       }
-      
+
       // Move to step 2 - collect more details
-      setStep('details')
+      setStep("details");
     } catch (error) {
-      console.error('Waitlist submission error:', error)
-      alert(error instanceof Error ? error.message : 'Failed to join waitlist. Please try again.')
+      console.error("Waitlist submission error:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to join waitlist. Please try again."
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   // Step 2: Submit additional details
   const handleDetailsSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    setIsLoading(true)
-    
+    e.preventDefault();
+
+    setIsLoading(true);
+
     try {
-      const response = await fetch('/api/waitlist', {
-        method: 'POST',
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          email, 
-          name, 
+        body: JSON.stringify({
+          email,
+          name,
           company,
-          action: 'update'
+          action: "update",
         }),
-      })
-      
-      const data = await response.json()
-      
+      });
+
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to update details')
+        throw new Error(data.error || "Failed to update details");
       }
-      
+
       // Move to complete state
-      setStep('complete')
+      setStep("complete");
     } catch (error) {
-      console.error('Details submission error:', error)
-      alert(error instanceof Error ? error.message : 'Failed to submit details. Please try again.')
+      console.error("Details submission error:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to submit details. Please try again."
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center">
@@ -160,97 +160,119 @@ function WaitlistHero() {
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center justify-center px-6">
-        {step === 'complete' ? (
+        {step === "complete" ? (
           /* Complete State */
           <div className="text-center max-w-lg">
-            <div 
+            <div
               className="w-16 h-16 mx-auto mb-10 rounded-full flex items-center justify-center"
-              style={{ 
-                background: 'rgba(254, 218, 36, 0.1)',
-                border: '1px solid rgba(254, 218, 36, 0.2)'
+              style={{
+                background: "rgba(254, 218, 36, 0.1)",
+                border: "1px solid rgba(254, 218, 36, 0.2)",
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FEDA24" strokeWidth="1.5">
-                <path d="M20 6L9 17l-5-5"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FEDA24"
+                strokeWidth="1.5"
+              >
+                <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
 
-            <h1 
+            <h1
               className="text-white mb-4"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: '32px',
-                letterSpacing: '-0.02em'
+                fontSize: "32px",
+                letterSpacing: "-0.02em",
               }}
             >
               You&apos;re all set!
             </h1>
 
-            <p 
+            <p
               className="text-white/40 mb-12"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
-                fontSize: '15px',
-                lineHeight: '170%'
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "15px",
+                lineHeight: "170%",
               }}
             >
-              Thanks for joining, {name || 'friend'}! <br />
+              Thanks for joining, {name || "friend"}! <br />
               We&apos;ll notify you when Beelia launches.
             </p>
 
             <Link
               href="/home"
-              className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
-                fontSize: '14px'
+              className="group inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "14px",
               }}
             >
-              Return home
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
+              Back Home
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="transition-transform duration-500 ease-in-out rotate-45 group-hover:rotate-0"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
           </div>
-        ) : step === 'details' ? (
+        ) : step === "details" ? (
           /* Step 2: Additional Details */
           <div className="w-full max-w-md text-center">
             {/* Success indicator */}
-            <div 
+            <div
               className="w-12 h-12 mx-auto mb-6 rounded-full flex items-center justify-center"
-              style={{ 
-                background: 'rgba(254, 218, 36, 0.1)',
-                border: '1px solid rgba(254, 218, 36, 0.2)'
+              style={{
+                background: "rgba(254, 218, 36, 0.1)",
+                border: "1px solid rgba(254, 218, 36, 0.2)",
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FEDA24" strokeWidth="1.5">
-                <path d="M20 6L9 17l-5-5"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FEDA24"
+                strokeWidth="1.5"
+              >
+                <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
 
             {/* Heading */}
-            <h1 
+            <h1
               className="text-white mb-3"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: 'clamp(28px, 5vw, 40px)',
-                lineHeight: '115%',
-                letterSpacing: '-0.03em'
+                fontSize: "clamp(28px, 5vw, 40px)",
+                lineHeight: "115%",
+                letterSpacing: "-0.03em",
               }}
             >
               Almost there!
             </h1>
 
             {/* Description */}
-            <p 
+            <p
               className="text-white/40 mb-8 max-w-sm mx-auto"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: '15px',
-                lineHeight: '170%'
+                fontSize: "15px",
+                lineHeight: "170%",
               }}
             >
               Tell us a bit more about yourself (optional)
@@ -265,12 +287,12 @@ function WaitlistHero() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
                   className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
-                  style={{ 
-                    fontFamily: 'var(--font-outfit), sans-serif',
-                    fontSize: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '50px',
-                    height: '60px',
+                  style={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontSize: "15px",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    borderRadius: "50px",
+                    height: "60px",
                   }}
                 />
               </div>
@@ -282,12 +304,12 @@ function WaitlistHero() {
                   onChange={(e) => setCompany(e.target.value)}
                   placeholder="Your company"
                   className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
-                  style={{ 
-                    fontFamily: 'var(--font-outfit), sans-serif',
-                    fontSize: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '50px',
-                    height: '60px',
+                  style={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontSize: "15px",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    borderRadius: "50px",
+                    height: "60px",
                   }}
                 />
               </div>
@@ -298,44 +320,59 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
-                    perspective: '1000px',
-                    transformStyle: 'preserve-3d',
+                    perspective: "1000px",
+                    transformStyle: "preserve-3d",
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: '100%' }}>
+                  <div className="glass-btn-wrapper" style={{ width: "100%" }}>
                     <GlassSurface
                       width={448}
                       height={60}
                       borderRadius={50}
                       chromaticAberration={isButtonHovered ? 0.3 : 0.15}
                       style={{
-                        width: '100%',
-                        maxWidth: '100%',
-                        transform: isButtonHovered 
-                          ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)' 
-                          : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
+                        width: "100%",
+                        maxWidth: "100%",
+                        transform: isButtonHovered
+                          ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                          : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
                         boxShadow: isButtonHovered
-                          ? '0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)'
-                          : '0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)',
-                        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                          ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                          : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
                       <div className="w-full flex items-center justify-center gap-3 relative z-10">
                         {isLoading ? (
                           <span className="flex items-center gap-2 text-white">
-                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none"/>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            <svg
+                              className="animate-spin w-5 h-5"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                fill="none"
+                              />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              />
                             </svg>
-                            <span 
+                            <span
                               style={{
-                                fontFamily: 'var(--font-outfit), sans-serif',
-                                fontSize: '18px',
-                                lineHeight: '100%',
-                                letterSpacing: '0.06em',
-                                textTransform: 'uppercase',
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "18px",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                                textTransform: "uppercase",
                               }}
                             >
                               Submitting...
@@ -343,13 +380,13 @@ function WaitlistHero() {
                           </span>
                         ) : (
                           <>
-                            <span 
+                            <span
                               className="text-white uppercase"
                               style={{
-                                fontFamily: 'var(--font-outfit), sans-serif',
-                                fontSize: '18px',
-                                lineHeight: '100%',
-                                letterSpacing: '0.06em',
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "18px",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
                               }}
                             >
                               Submit
@@ -373,17 +410,17 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full py-4 rounded-full flex items-center justify-center gap-3 transition-all duration-300"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
                   }}
                 >
-                  <span 
+                  <span
                     className="text-white uppercase"
                     style={{
-                      fontFamily: 'var(--font-outfit), sans-serif',
-                      fontSize: '18px',
-                      lineHeight: '100%',
-                      letterSpacing: '0.06em',
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "18px",
+                      lineHeight: "100%",
+                      letterSpacing: "0.06em",
                     }}
                   >
                     Submit
@@ -394,14 +431,14 @@ function WaitlistHero() {
 
             {/* Skip link */}
             <button
-              onClick={() => setStep('complete')}
+              onClick={() => setStep("complete")}
               className="mt-6 text-white/30 hover:text-white/50 transition-colors duration-300"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
-                fontSize: '13px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "13px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
               }}
             >
               Skip for now
@@ -411,31 +448,40 @@ function WaitlistHero() {
           /* Step 1: Email Form */
           <div className="w-full max-w-md text-center">
             {/* Heading */}
-            <h1 
-              className="text-white mb-5"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
+            <h1
+              className="text-white mb-2"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: 'clamp(36px, 6vw, 52px)',
-                lineHeight: '115%',
-                letterSpacing: '-0.03em'
+                fontSize: "clamp(36px, 6vw, 52px)",
+                lineHeight: "115%",
+                letterSpacing: "-0.03em",
               }}
             >
-              Get early access to{' '}
-              <span style={{ color: '#FEDA24' }}>Beelia</span>
+              Get{" "}
+              <span
+                className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent"
+                style={{
+                  fontFamily: "var(--font-instrument-serif), serif",
+                  fontStyle: "italic",
+                }}
+              >
+                Early Access
+              </span>
             </h1>
 
             {/* Description */}
-            <p 
+            <p
               className="text-white/40 mb-12 max-w-sm mx-auto"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: '15px',
-                lineHeight: '170%'
+                fontSize: "15px",
+                lineHeight: "170%",
               }}
             >
-              The App Store for AI. Join the waitlist to be first in line when we launch.
+              The App Store for AI. Join the waitlist to be first in line when
+              we launch.
             </p>
 
             {/* Form */}
@@ -448,12 +494,12 @@ function WaitlistHero() {
                   placeholder="Enter your email"
                   required
                   className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
-                  style={{ 
-                    fontFamily: 'var(--font-outfit), sans-serif',
-                    fontSize: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '50px',
-                    height: '60px',
+                  style={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontSize: "15px",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    borderRadius: "50px",
+                    height: "60px",
                   }}
                 />
               </div>
@@ -464,44 +510,59 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
-                    perspective: '1000px',
-                    transformStyle: 'preserve-3d',
+                    perspective: "1000px",
+                    transformStyle: "preserve-3d",
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: '100%' }}>
+                  <div className="glass-btn-wrapper" style={{ width: "100%" }}>
                     <GlassSurface
                       width={448}
                       height={60}
                       borderRadius={50}
                       chromaticAberration={isButtonHovered ? 0.3 : 0.15}
                       style={{
-                        width: '100%',
-                        maxWidth: '100%',
-                        transform: isButtonHovered 
-                          ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)' 
-                          : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
+                        width: "100%",
+                        maxWidth: "100%",
+                        transform: isButtonHovered
+                          ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                          : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
                         boxShadow: isButtonHovered
-                          ? '0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)'
-                          : '0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)',
-                        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                          ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                          : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
                       <div className="w-full flex items-center justify-center gap-3 relative z-10">
                         {isLoading ? (
                           <span className="flex items-center gap-2 text-white">
-                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none"/>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            <svg
+                              className="animate-spin w-5 h-5"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                fill="none"
+                              />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              />
                             </svg>
-                            <span 
+                            <span
                               style={{
-                                fontFamily: 'var(--font-outfit), sans-serif',
-                                fontSize: '18px',
-                                lineHeight: '100%',
-                                letterSpacing: '0.06em',
-                                textTransform: 'uppercase',
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "18px",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                                textTransform: "uppercase",
                               }}
                             >
                               Joining...
@@ -509,13 +570,13 @@ function WaitlistHero() {
                           </span>
                         ) : (
                           <>
-                            <span 
+                            <span
                               className="text-white uppercase"
                               style={{
-                                fontFamily: 'var(--font-outfit), sans-serif',
-                                fontSize: '18px',
-                                lineHeight: '100%',
-                                letterSpacing: '0.06em',
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "18px",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
                               }}
                             >
                               Join Waitlist
@@ -539,17 +600,17 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full py-4 rounded-full flex items-center justify-center gap-3 transition-all duration-300"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
                   }}
                 >
-                  <span 
+                  <span
                     className="text-white uppercase"
                     style={{
-                      fontFamily: 'var(--font-outfit), sans-serif',
-                      fontSize: '18px',
-                      lineHeight: '100%',
-                      letterSpacing: '0.06em',
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "18px",
+                      lineHeight: "100%",
+                      letterSpacing: "0.06em",
                     }}
                   >
                     Join Waitlist
@@ -559,11 +620,11 @@ function WaitlistHero() {
             </form>
 
             {/* Privacy Note */}
-            <p 
+            <p
               className="text-white/25 mt-6"
-              style={{ 
-                fontFamily: 'var(--font-outfit), sans-serif',
-                fontSize: '12px'
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "12px",
               }}
             >
               No spam. Unsubscribe anytime.
@@ -573,51 +634,51 @@ function WaitlistHero() {
             <div className="mt-16 pt-8 border-t border-white/[0.06]">
               <div className="flex items-center justify-center gap-8">
                 <div className="text-center">
-                  <p 
+                  <p
                     className="text-white mb-1"
-                    style={{ 
-                      fontFamily: 'var(--font-outfit), sans-serif',
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
                       fontWeight: 500,
-                      fontSize: '20px',
-                      letterSpacing: '-0.02em'
+                      fontSize: "20px",
+                      letterSpacing: "-0.02em",
                     }}
                   >
                     500+
                   </p>
-                  <p 
+                  <p
                     className="text-white/30"
-                    style={{ 
-                      fontFamily: 'var(--font-outfit), sans-serif',
-                      fontSize: '12px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
                     }}
                   >
                     Waitlist
                   </p>
                 </div>
-                
+
                 <div className="w-px h-8 bg-white/[0.06]" />
-                
+
                 <div className="text-center">
-                  <p 
+                  <p
                     className="text-white mb-1"
-                    style={{ 
-                      fontFamily: 'var(--font-outfit), sans-serif',
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
                       fontWeight: 500,
-                      fontSize: '20px',
-                      letterSpacing: '-0.02em'
+                      fontSize: "20px",
+                      letterSpacing: "-0.02em",
                     }}
                   >
                     Q1 &apos;25
                   </p>
-                  <p 
+                  <p
                     className="text-white/30"
-                    style={{ 
-                      fontFamily: 'var(--font-outfit), sans-serif',
-                      fontSize: '12px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
                     }}
                   >
                     Launch
@@ -629,39 +690,80 @@ function WaitlistHero() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export default function WaitlistPage() {
   // Hide the global footer on this page since we have our own scroll-animated one
   useEffect(() => {
-    const globalFooter = document.querySelector('body > div > footer')
+    const globalFooter = document.querySelector("body > div > footer");
     if (globalFooter) {
-      (globalFooter as HTMLElement).style.display = 'none'
+      (globalFooter as HTMLElement).style.display = "none";
     }
     return () => {
       if (globalFooter) {
-        (globalFooter as HTMLElement).style.display = ''
+        (globalFooter as HTMLElement).style.display = "";
       }
-    }
-  }, [])
+    };
+  }, []);
+
+  // Glossy white and silver colors in HSL format (normalized 0-1)
+  const beeliaColors = [
+    [0, 0, 1], // Pure white - glossy white
+    [0, 0, 0.9], // Off-white - bright silver
+    [0, 0, 0.75], // Silver - medium silver
+    [0, 0, 0.85], // Light silver - bright silver
+    [0, 0, 0.95], // Near white - glossy white
+  ];
 
   return (
     <main className="relative min-h-screen bg-black overflow-x-hidden">
       {/* Global Background - Fixed, covers entire page */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <GradientOrbs 
-          count={20}
-          animate={true}
-          showGrid={true}
-          gridOpacity={0.06}
+        {/* Square Grid - behind particles */}
+        <div
+          className="fixed inset-0 z-[1]"
+          style={{
+            opacity: 0.15,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: `60px 60px`,
+            pointerEvents: "none",
+          }}
+        />
+
+        {/* Mask overlay to hide grid in content area */}
+        <div
+          className="fixed z-[2] pointer-events-none"
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "min(90vw, 600px)",
+            height: "min(85vh, 800px)",
+            background: "black",
+          }}
+        />
+
+        {/* Particle Sprites Background - above grid and rectangle */}
+        <ParticleSpritesBackground
+          className="fixed inset-0 z-[3]"
+          particleCount={150}
+          followMouse={true}
+          mouseSensitivity={0.05}
+          colors={beeliaColors}
+          cycleColors={false}
+          sizes={[5, 5, 5, 5, 5]}
+          speed={0.3}
         />
       </div>
-      
+
       {/* Content - Ensure it's visible above background */}
       <div className="relative z-10 min-h-screen">
         <WaitlistHero />
       </div>
     </main>
-  )
+  );
 }
