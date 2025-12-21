@@ -1,31 +1,31 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import LightRays from '@/components/LightRays'
-import { ParticleSpritesBackground } from '@/components/ui'
-import Image from 'next/image'
-import GlassSurface from '@/components/GlassSurface'
-import TraceLinesAnimated from '@/components/ui/trace-lines-animated'
-import { Canvas } from '@react-three/fiber'
-import { CoinModel } from '@/components/3d/CoinModel'
-import { Environment } from '@react-three/drei'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import LightRays from "@/components/LightRays";
+import { ParticleSpritesBackground } from "@/components/ui";
+import Image from "next/image";
+import GlassSurface from "@/components/GlassSurface";
+import TraceLinesAnimated from "@/components/ui/trace-lines-animated";
+import { Canvas } from "@react-three/fiber";
+import { CoinModel } from "@/components/3d/CoinModel";
+import { Environment } from "@react-three/drei";
 
 export function NewHero() {
-  const [isHovered, setIsHovered] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
   // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
-    [0, 0, 1],      // Pure white - glossy white
-    [0, 0, 0.9],    // Off-white - bright silver
-    [0, 0, 0.75],   // Silver - medium silver
-    [0, 0, 0.85],   // Light silver - bright silver
-    [0, 0, 0.95]    // Near white - glossy white
-  ]
+    [0, 0, 1], // Pure white - glossy white
+    [0, 0, 0.9], // Off-white - bright silver
+    [0, 0, 0.75], // Silver - medium silver
+    [0, 0, 0.85], // Light silver - bright silver
+    [0, 0, 0.95], // Near white - glossy white
+  ];
 
   return (
     <>
@@ -104,7 +104,7 @@ export function NewHero() {
         />
 
         {/* Vertically centered content container */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pt-24">
           {/* Trace Lines + Video Globe Container */}
           <div className="mb-8 relative w-[1102px] h-[364px]">
             {/* Trace Lines Animated SVG - background */}
@@ -134,7 +134,11 @@ export function NewHero() {
 
             {/* 3D DollarBill Overlay - Right Box */}
             <div className="absolute z-20 pointer-events-none left-[992.16px] top-[129.481px] w-[109.32px] h-[109.32px]">
-              <Canvas camera={{ position: [0, 0, 4.5], fov: 40 }} gl={{ alpha: true }} dpr={[1, 2]}>
+              <Canvas
+                camera={{ position: [0, 0, 4.5], fov: 40 }}
+                gl={{ alpha: true }}
+                dpr={[1, 2]}
+              >
                 <ambientLight intensity={0.8} />
                 <directionalLight position={[5, 5, 5]} intensity={1} />
                 <Environment preset="sunset" />
@@ -157,7 +161,8 @@ export function NewHero() {
 
           {/* Tagline Text - below AIFOR image */}
           <p className="mt-6 text-center uppercase text-white/80 text-[17px] leading-[32px] tracking-[0.04em] font-normal max-w-[605px] font-inria-sans">
-            A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
+            A curated AI marketplace where anyone can discover, trust, and use
+            the right tools instantly, no technical skills required
           </p>
 
           {/* Join Waitlist Button - below tagline text */}
@@ -184,8 +189,8 @@ export function NewHero() {
                     opacity={0.95}
                     className={`group-hover:scale-105 transition-all duration-500 ease-out ${
                       isHovered
-                        ? '[transform:translateZ(20px)_rotateX(-1deg)_rotateY(1deg)_scale(1.03)] [box-shadow:0_20px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.15)_inset]'
-                        : '[transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]'
+                        ? "[transform:translateZ(20px)_rotateX(-1deg)_rotateY(1deg)_scale(1.03)] [box-shadow:0_20px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.15)_inset]"
+                        : "[transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]"
                     }`}
                   >
                     <div className="w-full flex items-center justify-center gap-3 relative z-10">
@@ -197,7 +202,9 @@ export function NewHero() {
                         alt="arrow"
                         width={20}
                         height={20}
-                        className={`waitlist-btn-arrow transition-transform duration-500 ease-in-out ${isHovered ? 'rotate-45' : 'rotate-0'}`}
+                        className={`waitlist-btn-arrow transition-transform duration-500 ease-in-out ${
+                          isHovered ? "rotate-45" : "rotate-0"
+                        }`}
                       />
                     </div>
                   </GlassSurface>
@@ -208,5 +215,5 @@ export function NewHero() {
         </div>
       </section>
     </>
-  )
+  );
 }
