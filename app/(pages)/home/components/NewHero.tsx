@@ -6,6 +6,7 @@ import LightRays from '@/components/LightRays'
 import Image from 'next/image'
 import GlassSurface from '@/components/GlassSurface'
 import TraceLinesAnimated from '@/components/ui/trace-lines-animated'
+import HorizontalBeamAnimated from '@/components/ui/horizontal-beam-animated'
 import { Canvas } from '@react-three/fiber'
 import { CoinModel } from '@/components/3d/CoinModel'
 import { Environment } from '@react-three/drei'
@@ -278,8 +279,25 @@ export function NewHero() {
               willChange: 'transform'
             }}
           >
+            {/* Horizontal beams - separate component - render first so it's behind */}
+            <HorizontalBeamAnimated
+              className="absolute inset-0 w-full h-full object-contain"
+              style={{ zIndex: 0 }}
+              duration={4}
+              delay={0}
+              beamColor="#FEDA24"
+              beamColorSecondary="#FF8C32"
+              pathColor="#444444"
+              beamWidth={2}
+              pathWidth={1}
+              scrollProgress={traceLinesScrollProgress}
+              isRetracting={traceLinesScrollProgress > 0}
+            />
+            
+            {/* Top and bottom beams - render after so dots appear on top */}
             <TraceLinesAnimated
               className="absolute inset-0 w-full h-full object-contain"
+              style={{ zIndex: 1 }}
               duration={4}
               delay={0}
               beamColor="#FEDA24"

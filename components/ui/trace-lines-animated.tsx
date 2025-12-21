@@ -326,23 +326,20 @@ export function TraceLinesAnimated({
     const glowFilterId = `beam-glow-${stableId}`
 
     // Path definitions - these match the Trace_Lines.svg coordinates
+    // Note: Horizontal beams are now handled separately in HorizontalBeamAnimated component
     const paths = {
-        // Right side - beams going outward from center
-        rightHorizontal: 'M612.227 185.289H992.05',
+        // Right side - beams going outward from center (top and bottom only)
         rightTop: 'M703.874 185.265L746.294 57.7268L792.477 57.726',
         rightBottom: 'M703.873 185.266L793.103 309.355L838.5 309.355',
-        // Left side - beams going outward from center
-        leftHorizontal: 'M492.824 185.289H110.001',
+        // Left side - beams going outward from center (top and bottom only)
         leftTop: 'M401.177 185.265L358.757 57.7268L307.574 57.726',
         leftBottom: 'M401.178 185.266L311.948 309.355L256.434 309.355',
     }
 
-    // All beam configurations with staggered delays (animated) - including horizontal lines
+    // Beam configurations with staggered delays (animated) - excluding horizontal lines
     const beamConfigs = [
-        { key: 'rightHorizontal', d: paths.rightHorizontal, delay: 0, reverse: false },
         { key: 'rightTop', d: paths.rightTop, delay: 0.3, reverse: false },
         { key: 'rightBottom', d: paths.rightBottom, delay: 0.6, reverse: false },
-        { key: 'leftHorizontal', d: paths.leftHorizontal, delay: 0.15, reverse: true },
         { key: 'leftTop', d: paths.leftTop, delay: 0.45, reverse: true },
         { key: 'leftBottom', d: paths.leftBottom, delay: 0.75, reverse: true },
     ]
@@ -385,25 +382,22 @@ export function TraceLinesAnimated({
                 />
             ))}
 
-            {/* Animated beams - all lines including horizontal */}
-            {beamConfigs.map((config) => {
-                const isHorizontal = config.key.includes('Horizontal')
-                return (
-                    <AnimatedPathBeam
-                        key={config.key}
-                        pathId={config.key}
-                        d={config.d}
-                        gradientId={`beam-grad-${config.key}-${stableId}`}
-                        beamWidth={isHorizontal ? beamWidth : beamWidth * 0.8}
-                        glowFilterId={glowFilterId}
-                        duration={duration}
-                        delay={delay + config.delay}
-                        reverse={config.reverse}
-                        scrollProgress={scrollProgress}
-                        isRetracting={isRetracting}
-                    />
-                )
-            })}
+            {/* Animated beams - top and bottom lines only (horizontal handled separately) */}
+            {beamConfigs.map((config) => (
+                <AnimatedPathBeam
+                    key={config.key}
+                    pathId={config.key}
+                    d={config.d}
+                    gradientId={`beam-grad-${config.key}-${stableId}`}
+                    beamWidth={beamWidth * 0.8}
+                    glowFilterId={glowFilterId}
+                    duration={duration}
+                    delay={delay + config.delay}
+                    reverse={config.reverse}
+                    scrollProgress={scrollProgress}
+                    isRetracting={isRetracting}
+                />
+            ))}
 
             {/* Junction dots - Right side with pulsing animation */}
             <motion.circle
