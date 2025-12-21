@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { ParticleSpritesBackground } from "@/components/ui";
+import { Footer } from "@/components/layout/Footer";
 
 const GlassSurface = dynamic(() => import("@/components/GlassSurface"), {
   ssr: false,
@@ -694,19 +695,6 @@ function WaitlistHero() {
 }
 
 export default function WaitlistPage() {
-  // Hide the global footer on this page since we have our own scroll-animated one
-  useEffect(() => {
-    const globalFooter = document.querySelector("body > div > footer");
-    if (globalFooter) {
-      (globalFooter as HTMLElement).style.display = "none";
-    }
-    return () => {
-      if (globalFooter) {
-        (globalFooter as HTMLElement).style.display = "";
-      }
-    };
-  }, []);
-
   // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
     [0, 0, 1], // Pure white - glossy white
@@ -718,36 +706,8 @@ export default function WaitlistPage() {
 
   return (
     <main className="relative min-h-screen bg-black overflow-x-hidden">
-      {/* Global Background - Fixed, covers entire page */}
+      {/* Particles Background - Fixed, covers entire page */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Square Grid - behind particles */}
-        <div
-          className="fixed inset-0 z-[1]"
-          style={{
-            opacity: 0.15,
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
-            `,
-            backgroundSize: `60px 60px`,
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Mask overlay to hide grid in content area */}
-        <div
-          className="fixed z-[2] pointer-events-none"
-          style={{
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "min(90vw, 600px)",
-            height: "min(85vh, 800px)",
-            background: "black",
-          }}
-        />
-
-        {/* Particle Sprites Background - above grid and rectangle */}
         <ParticleSpritesBackground
           className="fixed inset-0 z-[3]"
           particleCount={150}
@@ -760,9 +720,44 @@ export default function WaitlistPage() {
         />
       </div>
 
-      {/* Content - Ensure it's visible above background */}
-      <div className="relative z-10 min-h-screen">
-        <WaitlistHero />
+      {/* Content */}
+      <div className="relative z-10">
+        {/* First Section with Grid */}
+        <div className="relative min-h-screen">
+          {/* Square Grid - Absolute, stays in first section only */}
+          <div
+            className="absolute inset-0 z-[1] pointer-events-none"
+            style={{
+              opacity: 0.15,
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
+              `,
+              backgroundSize: `60px 60px`,
+            }}
+          />
+
+          {/* Mask overlay to hide grid in content area */}
+          <div
+            className="absolute z-[2] pointer-events-none"
+            style={{
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "min(90vw, 600px)",
+              height: "min(85vh, 800px)",
+              background: "black",
+            }}
+          />
+
+          {/* Waitlist Hero Content */}
+          <div className="relative z-10">
+            <WaitlistHero />
+          </div>
+        </div>
+
+        {/* Footer - No grid here */}
+        <Footer />
       </div>
     </main>
   );
