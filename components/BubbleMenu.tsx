@@ -319,7 +319,7 @@ export default function BubbleMenu({
             />
           </div>
           <span
-            className="font-inria-sans font-normal uppercase text-white"
+            className="font-outfit font-normal uppercase text-white"
             style={{
               fontSize: "21px",
               lineHeight: "100%",
@@ -410,7 +410,7 @@ export default function BubbleMenu({
                       }}
                     >
                       <span
-                        className="pill-label inline-block font-inria-sans font-bold uppercase"
+                        className="pill-label inline-block font-outfit font-bold uppercase"
                         style={{
                           willChange: "transform, opacity",
                           fontSize: "clamp(2.5rem, 6.5vw, 5.5rem)",
@@ -419,7 +419,7 @@ export default function BubbleMenu({
                           fontWeight: 900,
                           position: "relative",
                           zIndex: 10,
-                          fontFamily: "var(--font-inria-sans), sans-serif",
+                          fontFamily: "var(--font-outfit), sans-serif",
                         }}
                         ref={(el) => {
                           if (el) labelRefs.current[idx] = el;

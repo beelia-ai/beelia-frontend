@@ -585,7 +585,7 @@ export function HeroBanner3D() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1 }}
               className="text-4xl lg:text-5xl xl:text-5xl font-bold text-white leading-[1.1] mb-6 whitespace-nowrap"
-              style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
             >
               The App Store <span className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent" style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for AI</span>
             </motion.h1>
@@ -596,7 +596,7 @@ export function HeroBanner3D() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.1 }}
               className="text-xl lg:text-2xl text-white/60 mb-6 -mt-2"
-              style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
             >
               for the AI Marketplace
             </motion.p>
@@ -607,7 +607,7 @@ export function HeroBanner3D() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.2 }}
               className="text-lg lg:text-xl text-white/70 leading-relaxed mb-10"
-              style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
             >
               A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
             </motion.p>
@@ -654,7 +654,7 @@ export function HeroBanner3D() {
               `}</style>
               <motion.button
                 className="learn-more-btn group px-8 py-4 font-semibold cursor-pointer"
-                style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+                style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
@@ -696,13 +696,13 @@ export function HeroBanner3D() {
                 <div key={stat.id} className="text-center">
                   <div 
                     className="text-2xl lg:text-3xl font-bold text-[#FEDA24]"
-                    style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
                   >
                     {stat.value}
                   </div>
                   <div 
                     className="text-sm text-white/50 mt-1"
-                    style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+                    style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
                   >
                     {stat.label}
                   </div>

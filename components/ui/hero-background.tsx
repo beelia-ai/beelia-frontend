@@ -65,7 +65,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
         <p 
           className="text-white uppercase text-center max-w-[700px] opacity-80"
           style={{
-            fontFamily: 'var(--font-inria-sans), sans-serif',
+            fontFamily: 'var(--font-outfit), sans-serif',
             fontWeight: 400,
             fontSize: '18px',
             lineHeight: '26px',

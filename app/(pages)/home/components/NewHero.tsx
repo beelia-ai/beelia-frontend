@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import LightRays from "@/components/LightRays";
-import Image from "next/image";
-import GlassSurface from "@/components/GlassSurface";
 import TraceLinesAnimated from "@/components/ui/trace-lines-animated";
 import HorizontalBeamAnimated from "@/components/ui/horizontal-beam-animated";
+import { HeroContent } from "./HeroContent";
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
+
+// #region agent log
+let heroMountCount = 0;
+// #endregion
 
 export function NewHero() {
   const [isHovered, setIsHovered] = useState(false);
@@ -22,6 +24,7 @@ export function NewHero() {
   const [traceLinesScrollProgress, setTraceLinesScrollProgress] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const [heroScrollProgressValue, setHeroScrollProgressValue] = useState(0);
+  const [beamOpacity, setBeamOpacity] = useState(1);
   const heroRef = useRef<HTMLElement>(null);
   const beeliaVideoRef = useRef<HTMLVideoElement>(null);
   const phase2VideoRef = useRef<HTMLVideoElement>(null);
@@ -30,6 +33,16 @@ export function NewHero() {
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
+  });
+
+  // Track absolute scroll Y position as motion value for video transition
+  const { scrollY: scrollYMotion } = useScroll();
+
+  // Globe scale animation from 1 to 1.1 based on scroll Y position (0px to 900px)
+  const globeScale = useTransform(scrollYMotion, (latest) => {
+    if (latest < 0) return 1;
+    if (latest >= 900) return 1.3;
+    return 1 + (latest / 900) * 0.3; // Linear interpolation from 1 to 1.1
   });
 
   // Track scroll Y position
@@ -42,46 +55,11 @@ export function NewHero() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Track when globe should stop moving independently and scroll normally
-  const [globeShouldScroll, setGlobeShouldScroll] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!heroRef.current) return;
-
-      const scrollY = window.scrollY;
-      const heroHeight = heroRef.current.offsetHeight;
-
-      // When hero section ends (scroll reaches bottom of hero), enable normal scrolling
-      // Use a small threshold to ensure smooth transition
-      if (scrollY >= heroHeight - 50) {
-        setGlobeShouldScroll(true);
-      } else {
-        setGlobeShouldScroll(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   // Transform scroll progress to opacity and scale values
   // Bottom section (text & button): starts small, blurs immediately, fades immediately
   // All animations complete by y position 200 (0.2 scroll progress)
-  const contentOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.2],
-    [1, 0]
-  );
-  const contentScale = useTransform(
-    scrollYProgress,
-    [0, 0.2],
-    [1, 0.8]
-  );
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const contentScale = useTransform(scrollYProgress, [0, 0.2], [0.9, 0.8]);
   // Blur starts immediately from the start
   const contentBlur = useTransform(scrollYProgress, [0, 0.2], [0, 10]);
   const contentBlurFilter = useTransform(
@@ -93,11 +71,23 @@ export function NewHero() {
   // Closing animation sped up by 200px (0.2 progress)
   const traceLinesScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.9]);
 
+  // Hide horizontal beam immediately when scrolling starts
+  const horizontalBeamOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.001],
+    [1, 0]
+  );
+
+  // Track beam opacity value
+  useMotionValueEvent(horizontalBeamOpacity, "change", (latest) => {
+    setBeamOpacity(latest);
+  });
+
   // Track when animation starts to disable hover effects and update trace lines retraction
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     // Update hero scroll progress value for dots fade animation
     setHeroScrollProgressValue(latest);
-    
+
     if (latest > 0 && !isAnimating) {
       setIsAnimating(true);
       setIsHovered(false); // Disable hover when animation starts
@@ -110,18 +100,32 @@ export function NewHero() {
     setTraceLinesScrollProgress(retractionProgress);
   });
 
-  // Track scroll to detect when globe reaches AboutProduct section with smooth transition
+  // Track scroll to detect when to start Phase 2 video playback
   useEffect(() => {
     const handleScroll = () => {
-      if (!heroRef.current) return;
-
       const scrollY = window.scrollY;
-      const heroHeight = heroRef.current.offsetHeight;
-
-      // Smooth transition zone: start fading Phase 2 in at 80% of hero height
-      const transitionStart = heroHeight * 0.8;
+      const transitionStart = 100; // Start transition at 100px
 
       if (scrollY >= transitionStart && !showPhase2) {
+        // #region agent log
+        if (scrollY >= 700 && scrollY <= 850) {
+          fetch(
+            "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                location: "NewHero.tsx:videoSwitch",
+                message: "Switching to Phase2",
+                data: { scrollY, showPhase2 },
+                timestamp: Date.now(),
+                sessionId: "debug-session",
+                hypothesisId: "G",
+              }),
+            }
+          ).catch(() => {});
+        }
+        // #endregion
         // Start showing Phase 2 video - preload and play
         setShowPhase2(true);
         if (phase2VideoRef.current) {
@@ -131,6 +135,25 @@ export function NewHero() {
       }
 
       if (scrollY < transitionStart && showPhase2) {
+        // #region agent log
+        if (scrollY >= 700 && scrollY <= 850) {
+          fetch(
+            "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                location: "NewHero.tsx:videoSwitch",
+                message: "Switching back to Beelia",
+                data: { scrollY, showPhase2 },
+                timestamp: Date.now(),
+                sessionId: "debug-session",
+                hypothesisId: "G",
+              }),
+            }
+          ).catch(() => {});
+        }
+        // #endregion
         // Switch back to Beelia Ani 2 if scrolling back up
         setShowPhase2(false);
         if (beeliaVideoRef.current) {
@@ -147,15 +170,18 @@ export function NewHero() {
     };
   }, [showPhase2]);
 
-  // Calculate opacity for smooth cross-fade transition based on scroll
-  const phase2Opacity = useTransform(scrollYProgress, (latest) => {
-    if (!heroRef.current) return 0;
-    // Start transition at 80% scroll progress, complete at 100%
-    const transitionStart = 0.8;
+  // Calculate opacity for smooth cross-fade transition based on absolute scroll Y position
+  // Transition starts at 100px and completes at 600px
+  const phase2Opacity = useTransform(scrollYMotion, (latest) => {
+    const transitionStart = 100;
+    const transitionEnd = 600;
+
     if (latest < transitionStart) return 0;
-    if (latest >= 1) return 1;
-    // Smooth fade between transitionStart and 1
-    const progress = (latest - transitionStart) / (1 - transitionStart);
+    if (latest >= transitionEnd) return 1;
+
+    // Smooth fade between transitionStart and transitionEnd
+    const progress =
+      (latest - transitionStart) / (transitionEnd - transitionStart);
     return Math.min(1, Math.max(0, progress));
   });
 
@@ -163,87 +189,60 @@ export function NewHero() {
 
   useEffect(() => {
     setIsMounted(true);
+    // #region agent log
+    heroMountCount++;
+    fetch("http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        location: "NewHero.tsx:mount",
+        message: "NewHero mounted",
+        data: { mountCount: heroMountCount, scrollY: window.scrollY },
+        timestamp: Date.now(),
+        sessionId: "debug-session",
+        hypothesisId: "F",
+      }),
+    }).catch(() => {});
+    return () => {
+      fetch(
+        "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            location: "NewHero.tsx:unmount",
+            message: "NewHero unmounting",
+            data: { mountCount: heroMountCount, scrollY: window.scrollY },
+            timestamp: Date.now(),
+            sessionId: "debug-session",
+            hypothesisId: "F",
+          }),
+        }
+      ).catch(() => {});
+    };
+    // #endregion
   }, []);
 
   return (
     <>
-      {/* Hover fill styles for waitlist button */}
-      <style>{`
-        .waitlist-btn-wrapper {
-          position: relative;
-          overflow: hidden;
-          border-radius: 50px;
-        }
-        .waitlist-btn-wrapper::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(135deg, #FF8C32 0%, #FEDA24 50%, #FF8C32 100%);
-          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: translateX(-100%);
-          z-index: 1;
-          border-radius: 50px;
-          pointer-events: none;
-          box-shadow: 0 0 20px rgba(254, 218, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-        .waitlist-btn-wrapper:hover::after {
-          transform: translateX(0);
-        }
-        .waitlist-btn-wrapper.no-hover::after {
-          transform: translateX(-100%) !important;
-        }
-        .waitlist-btn-wrapper.no-hover:hover::after {
-          transform: translateX(-100%) !important;
-        }
-        .waitlist-btn-wrapper > * {
-          position: relative;
-          z-index: 2;
-        }
-        .waitlist-btn-text {
-          color: #FFFFFF;
-          transition: color 0.3s ease;
-        }
-        .waitlist-btn-wrapper:hover .waitlist-btn-text {
-          color: #000000;
-          font-weight: 600;
-        }
-        .waitlist-btn-wrapper.no-hover:hover .waitlist-btn-text {
-          color: #FFFFFF !important;
-          font-weight: normal !important;
-        }
-        .waitlist-btn-arrow {
-          filter: brightness(0) invert(1);
-          transition: filter 0.3s ease, transform 0.5s ease-in-out;
-        }
-        .waitlist-btn-wrapper:hover .waitlist-btn-arrow {
-          filter: brightness(0) invert(0);
-        }
-        .waitlist-btn-wrapper.no-hover:hover .waitlist-btn-arrow {
-          filter: brightness(0) invert(1) !important;
-          transform: rotate(0deg) !important;
-        }
-      `}</style>
-
       <section
+        id="hero-section"
         ref={heroRef}
         className="h-screen bg-transparent relative overflow-visible"
       >
-        {/* Video Globe Container - Fixed positioning, stops moving when reaching AboutProduct */}
+        {/* Video Globe Container - Fixed positioning, always maintains distance from top */}
         {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
-        {/* Single container that changes positioning - keeps videos playing */}
-        <div
-          className={`${
-            globeShouldScroll ? "absolute" : "fixed"
-          } left-1/2 -translate-x-1/2 pointer-events-none`}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
           style={{
             width: "420px",
             height: "420px",
-            ...(globeShouldScroll
-              ? { bottom: "-520px", zIndex: 50 } // Move down further into AboutProduct section when scrolling pauses
-              : { top: "calc(128px + 182px - 210px)", zIndex: 50 }), // pt-32 + trace lines center - half globe height
+            top: "calc(128px + 182px - 210px)", // pt-32 + trace lines center - half globe height
+            zIndex: 50,
+            x: "-50%",
+            scale: globeScale,
+            transformOrigin: "center center",
+            willChange: "transform",
           }}
         >
           {/* Video Globe */}
@@ -279,7 +278,7 @@ export function NewHero() {
               <source src="/videos/Phase 2.webm" type="video/webm" />
             </motion.video>
           </div>
-        </div>
+        </motion.div>
 
         {/* Light Rays */}
         {/* Light Rays */}
@@ -306,6 +305,7 @@ export function NewHero() {
             style={{
               scale: traceLinesScale,
               willChange: "transform",
+              marginTop: "-5px",
             }}
           >
             {/* Horizontal beams - separate component - render first so it's behind */}
@@ -321,6 +321,7 @@ export function NewHero() {
               pathWidth={1}
               scrollProgress={traceLinesScrollProgress}
               isRetracting={traceLinesScrollProgress > 0}
+              beamOpacity={beamOpacity}
             />
 
             {/* Top and bottom beams - render after so dots appear on top */}
@@ -352,79 +353,12 @@ export function NewHero() {
               willChange: "opacity, transform, filter",
             }}
           >
-            {/* AIFOR Image - below trace lines */}
-            <div className="w-[675px] h-[80px]">
-              <Image
-                src="/images/AIFOR.png"
-                alt="AI For Everyone, by Everyone"
-                width={675}
-                height={80}
-                className="w-full h-full object-contain"
-                priority
-              />
-            </div>
-
-            {/* Tagline Text - below AIFOR image */}
-            <p className="mt-6 text-center uppercase text-white/80 text-[17px] leading-[32px] tracking-[0.04em] font-normal max-w-[605px] font-inria-sans">
-              A curated AI marketplace where anyone can discover, trust, and use
-              the right tools instantly, no technical skills required
-            </p>
-
-            {/* Join Waitlist Button - below tagline text */}
-            <div className="mt-8">
-              <Link
-                href="/waitlist"
-                className={`group block [perspective:1000px] [transform-style:preserve-3d] ${
-                  isAnimating ? "pointer-events-none" : "cursor-pointer"
-                }`}
-                onMouseEnter={() => !isAnimating && setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <div
-                  className={`waitlist-btn-wrapper ${
-                    isAnimating ? "no-hover" : ""
-                  }`}
-                >
-                  {isMounted ? (
-                    <GlassSurface
-                      width={270}
-                      height={80}
-                      borderRadius={50}
-                      chromaticAberration={0.15}
-                      redOffset={0}
-                      greenOffset={10}
-                      blueOffset={20}
-                      distortionScale={-180}
-                      blur={16}
-                      brightness={60}
-                      opacity={0.95}
-                      className={`${
-                        isAnimating ? "" : "group-hover:scale-105"
-                      } transition-all duration-500 ease-out ${
-                        isHovered && !isAnimating
-                          ? "[transform:translateZ(20px)_rotateX(-1deg)_rotateY(1deg)_scale(1.03)] [box-shadow:0_20px_40px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.15)_inset]"
-                          : "[transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]"
-                      }`}
-                    >
-                      <div className="w-full flex items-center justify-center gap-3 relative z-10">
-                        <span className="waitlist-btn-text uppercase text-[20px] font-extrabold leading-[100%] tracking-[0.06em] font-inria-sans">
-                          join waitlist
-                        </span>
-                        <Image
-                          src="/icons/Vector.svg"
-                          alt="arrow"
-                          width={20}
-                          height={20}
-                          className={`waitlist-btn-arrow transition-transform duration-500 ease-in-out ${
-                            isHovered ? "rotate-45" : "rotate-0"
-                          }`}
-                        />
-                      </div>
-                    </GlassSurface>
-                  ) : null}
-                </div>
-              </Link>
-            </div>
+            <HeroContent
+              isAnimating={isAnimating}
+              isHovered={isHovered}
+              setIsHovered={setIsHovered}
+              isMounted={isMounted}
+            />
           </motion.div>
         </div>
       </section>

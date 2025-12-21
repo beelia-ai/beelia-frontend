@@ -75,7 +75,7 @@ export function Footer() {
             </svg>
             <span 
               className="text-sm tracking-wider"
-              style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}
+              style={{ fontFamily: 'var(--font-outfit), sans-serif' }}
             >
               scroll to the top
             </span>
@@ -100,7 +100,7 @@ export function Footer() {
           <h2 
             className="text-white max-w-xl mb-6"
             style={{ 
-              fontFamily: 'var(--font-inria-sans), sans-serif',
+              fontFamily: 'var(--font-outfit), sans-serif',
               fontWeight: 700,
               fontSize: '42px',
               lineHeight: '122%',
@@ -114,7 +114,7 @@ export function Footer() {
           <p 
             className="text-white max-w-xl"
             style={{ 
-              fontFamily: 'var(--font-inria-sans), sans-serif',
+              fontFamily: 'var(--font-outfit), sans-serif',
               fontWeight: 400,
               fontSize: '23.1px',
               lineHeight: '130%',
@@ -141,7 +141,7 @@ export function Footer() {
               />
               <p 
                 style={{ 
-                  fontFamily: 'var(--font-inria-sans), sans-serif',
+                  fontFamily: 'var(--font-outfit), sans-serif',
                   fontWeight: 700,
                   fontSize: '16.8px',
                   lineHeight: '100%',
@@ -160,7 +160,7 @@ export function Footer() {
               <div className="flex flex-col gap-4">
                 <h3 
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif', 
+                    fontFamily: 'var(--font-outfit), sans-serif', 
                     fontWeight: 700,
                     fontSize: '18.9px',
                     lineHeight: '25.2px',
@@ -177,7 +177,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="hover:text-white transition-colors duration-300"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif', 
+                      fontFamily: 'var(--font-outfit), sans-serif', 
                       fontWeight: 400,
                       fontSize: '15.75px',
                       lineHeight: '120%',
@@ -194,7 +194,7 @@ export function Footer() {
                     rel="noopener noreferrer"
                     className="hover:text-white transition-colors duration-300"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif', 
+                      fontFamily: 'var(--font-outfit), sans-serif', 
                       fontWeight: 400,
                       fontSize: '15.75px',
                       lineHeight: '120%',
@@ -212,7 +212,7 @@ export function Footer() {
               <div className="flex flex-col gap-4">
                 <h3 
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif', 
+                    fontFamily: 'var(--font-outfit), sans-serif', 
                     fontWeight: 700,
                     fontSize: '18.9px',
                     lineHeight: '25.2px',
@@ -227,7 +227,7 @@ export function Footer() {
                     href="/privacy-policy" 
                     className="hover:text-white transition-colors duration-300"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif', 
+                      fontFamily: 'var(--font-outfit), sans-serif', 
                       fontWeight: 400,
                       fontSize: '15.75px',
                       lineHeight: '120%',
@@ -242,7 +242,7 @@ export function Footer() {
                     href="/terms-and-conditions" 
                     className="hover:text-white transition-colors duration-300"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif', 
+                      fontFamily: 'var(--font-outfit), sans-serif', 
                       fontWeight: 400,
                       fontSize: '15.75px',
                       lineHeight: '120%',
@@ -265,7 +265,7 @@ export function Footer() {
           <div className="flex justify-center">
             <p 
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '15.75px',
                 lineHeight: '130%',

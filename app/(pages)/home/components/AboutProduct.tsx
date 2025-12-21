@@ -1,109 +1,240 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { BottomLinesAnimated } from '@/components/ui/bottom-lines-animated'
-import { GlowCard } from '@/components/ui/glow-card'
-import { Outfit } from 'next/font/google'
-
-const outfit = Outfit({
-  weight: ["600"],
-  subsets: ["latin"],
-  variable: "--font-outfit",
-})
-
-// Intersection dot component - always glowing
-function IntersectionDot({ 
-  position, 
-  dotId 
-}: { 
-  position: 'left' | 'center' | 'right'
-  dotId: string
-}) {
-  const positionClasses = {
-    left: 'left-0 -translate-x-1/2',
-    center: 'left-1/2 -translate-x-1/2',
-    right: 'right-0 translate-x-1/2'
-  }
-  
-  return (
-    <div 
-      data-dot-id={dotId}
-      className={`absolute bottom-0 translate-y-1/2 z-10 transition-all duration-200 ${positionClasses[position]}`}
-    >
-      <div 
-        className="w-2 h-2 rounded-full transition-all duration-200"
-        style={{
-          background: '#FEDA24',
-          boxShadow: '0 0 10px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24',
-        }}
-      />
-    </div>
-  )
-}
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+} from "framer-motion";
+import { BottomLinesAnimated } from "@/components/ui/bottom-lines-animated";
+import { GlowCard } from "@/components/ui/glow-card";
+import { FeaturesGrid } from "./FeaturesGrid";
 
 const CARD_DATA = [
   {
-    title: 'DISCOVER',
-    subtitle: '',
-    description: 'Browse thousands of curated AI tools instantly. Find exactly what you need without the technical complexity.',
+    title: "DISCOVER",
+    subtitle: "",
+    description:
+      "Browse thousands of curated AI tools instantly. Find exactly what you need without the technical complexity.",
     // Magnifying glass icon (Heroicons)
-    iconPath: 'M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z',
+    iconPath:
+      "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z",
   },
   {
-    title: 'SUBSCRIBE',
-    subtitle: '',
-    description: 'One-click access to premium AI tools.<br/>No setup, no configuration. Start using tools instantly.',
+    title: "SUBSCRIBE",
+    subtitle: "",
+    description:
+      "One-click access to premium AI tools.<br/>No setup, no configuration. Start using tools instantly.",
     // Bell icon (Heroicons)
-    iconPath: 'M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0',
+    iconPath:
+      "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0",
   },
   {
-    title: 'SAFETY',
-    subtitle: '',
-    description: 'Every tool is verified and trusted.<br/>Built-in security and privacy protection. Use AI tools with confidence.',
+    title: "SAFETY",
+    subtitle: "",
+    description:
+      "Every tool is verified and trusted.<br/>Built-in security and privacy protection. Use AI tools with confidence.",
     // Shield check icon (Heroicons)
-    iconPath: 'M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z',
+    iconPath:
+      "M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z",
   },
-]
+];
 
 export function AboutProduct() {
+  // Track absolute scroll Y position for scale animation
+  const { scrollY: scrollYMotion } = useScroll();
+
+  // Track scroll Y position for vertical beam opening animation
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial value
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scale animation from 0 to 1 based on scroll Y position (500px to 900px)
+  // Exit animation: scale from 1 to 0 starting at 1400px (1400px to 1800px)
+  const scale = useTransform(scrollYMotion, (latest) => {
+    // Exit phase: scale down from 1 to 0 (1400px to 1800px)
+    if (latest >= 1400 && latest <= 1800) {
+      return 1 - (latest - 1400) / 400; // 1 to 0 over 400px
+    }
+    if (latest > 1800) return 0; // Fully hidden after 1800px
+
+    // Entry phase: scale up from 0 to 1 (500px to 900px)
+    if (latest < 500) return 0;
+    if (latest >= 900) return 1;
+    return (latest - 500) / 400; // Linear interpolation (900 - 500 = 400)
+  });
+
+  // Blur animation: instant blur at 500y, stays at max until 600y, then unblur from 600y to 700y
+  // Exit animation: blur from 0 to 10px starting at 1400px (1400px to 1500px)
+  const blur = useTransform(scrollYMotion, (latest) => {
+    // Exit phase: blur increases from 0 to 10px (1400px to 1500px)
+    if (latest >= 1400 && latest <= 1500) {
+      const progress = (latest - 1400) / 100;
+      return progress * 10; // 0 to 10px
+    }
+    if (latest > 1500) return 10; // Stay blurred after 1500px
+
+    // Entry phase: blur decreases from 10px to 0 (500px to 700px)
+    if (latest < 500) return 0;
+    if (latest >= 500 && latest <= 600) {
+      // Instant blur at 500px, stay at max (10px) throughout this range
+      return 10;
+    }
+    if (latest > 600 && latest < 700) {
+      // Blur decreases from 10px to 0
+      const progress = (latest - 600) / 100;
+      return 10 - progress * 10; // 10px to 0
+    }
+    return 0; // No blur between 700px and 1400px
+  });
+
+  const blurFilter = useTransform(blur, (blurValue) => `blur(${blurValue}px)`);
+
+  // Boxes fade-in animation from Y=1100px to Y=1200px
+  // Exit animation: opacity from 1 to 0 starting at 1700px (1700px to 1800px)
+  const boxesOpacity = useTransform(scrollYMotion, (latest) => {
+    // Exit phase: opacity decreases from 1 to 0 (1700px to 1800px)
+    if (latest >= 1700 && latest <= 1800) {
+      return 1 - (latest - 1700) / 100; // 1 to 0 over 100px
+    }
+    if (latest > 1800) return 0; // Fully hidden after 1800px
+
+    // Entry phase: opacity increases from 0 to 1 (1100px to 1200px)
+    if (latest < 1100) return 0;
+    if (latest >= 1200) return 1;
+    return (latest - 1100) / 100; // Fade in from 0 to 1 between 1100px and 1200px
+  });
+
+  // Opening progress for vertical beam:
+  // - Before Y=900px: lines are hidden (progress = 0)
+  // - From Y=900px to Y=1100px: lines grow from 0 to 1 (same speed as before: 200px range)
+  // - After Y=1100px: lines are fully visible (progress = 1)
+  // Exit animation: progress from 1 to 0 starting at 1500px (1500px to 1700px)
+  const openingProgress = useTransform(scrollYMotion, (latest) => {
+    // Exit phase: progress decreases from 1 to 0 (1500px to 1700px)
+    if (latest >= 1500 && latest <= 1700) {
+      return 1 - (latest - 1500) / 200; // 1 to 0 over 200px
+    }
+    if (latest > 1700) return 0; // Fully hidden after 1700px
+
+    // Entry phase: progress increases from 0 to 1 (900px to 1100px)
+    if (latest < 900) return 0; // Hidden before 900px
+    if (latest >= 1100) return 1; // Fully visible after 1100px
+    return (latest - 900) / 200; // Grow from 0 to 1 between 900px and 1100px (200px range, same speed)
+  });
+
+  // Get opening progress value for passing to component
+  const [openingProgressValue, setOpeningProgressValue] = useState(0);
+  // Opening animation is active when scrollY is >= 900px
+  const isOpening = scrollY >= 900;
+
+  useMotionValueEvent(openingProgress, "change", (latest) => {
+    setOpeningProgressValue(latest);
+  });
+
+  // #region agent log
+  useMotionValueEvent(scrollYMotion, "change", (latest) => {
+    if (latest >= 700 && latest <= 850) {
+      fetch(
+        "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            location: "AboutProduct.tsx:scrollYMotion",
+            message: "Scroll in target range",
+            data: {
+              scrollY: latest,
+              scale: latest >= 700 ? 1 : (latest - 600) / 100,
+            },
+            timestamp: Date.now(),
+            sessionId: "debug-session",
+            hypothesisId: "C",
+          }),
+        }
+      ).catch(() => {});
+    }
+  });
+  // #endregion
 
   return (
-    <div className="relative min-h-screen w-full bg-transparent">
+    <div
+      className="relative w-full bg-transparent"
+      style={{ minHeight: "1600px" }}
+    >
       {/* Section content */}
       <div className="relative z-10 flex flex-col items-center justify-start pt-32">
-        {/* OneStop Image - positioned at top where globe stops */}
-        <div className="w-full flex justify-center mb-6">
-          <Image
-            src="/images/Onestop.png"
-            alt="OneStop"
-            width={1000}
-            height={300}
-            className="w-auto h-auto object-contain"
-            priority
-          />
-        </div>
-
-        {/* Description text under OneStop Image */}
-        <p
-          className="text-center mb-12"
+        {/* OneStop Image and Text Container - maintains same distance from top as globe */}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
           style={{
-            width: '457.771484375px',
-            height: '44px',
-            fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-            fontWeight: 400,
-            fontStyle: 'normal',
-            fontSize: '16px',
-            lineHeight: '140%',
-            letterSpacing: '2%',
-            textAlign: 'center',
-            color: '#FFFFFF'
+            top: "calc(128px + 182px - 210px)",
+            zIndex: 50,
+            x: "-50%",
+            scale,
+            filter: blurFilter,
+            transformOrigin: "center center",
+            willChange: "transform, filter",
           }}
         >
-          —giving people a seamless way to find the right tools and start using them instantly, no setup, no friction.
-        </p>
+          <div className="flex flex-col items-center">
+            {/* OneStop Image */}
+            <div className="flex justify-center mb-6">
+              <Image
+                src="/images/Onestop.png"
+                alt="OneStop"
+                width={1000}
+                height={300}
+                className="w-auto h-auto object-contain"
+                priority
+              />
+            </div>
 
-        {/* Bottom Lines SVG - under the globe with animated beams */}
-        <div className="w-full flex justify-center -mt-7">
+            {/* Description text under OneStop Image */}
+            <p
+              className="text-center mb-12"
+              style={{
+                width: "457.771484375px",
+                height: "44px",
+                fontFamily: "var(--font-outfit), Outfit, sans-serif",
+                fontWeight: 400,
+                fontStyle: "normal",
+                fontSize: "16px",
+                lineHeight: "140%",
+                letterSpacing: "2%",
+                textAlign: "center",
+                color: "#FFFFFF",
+              }}
+            >
+              —giving people a seamless way to find the right tools and start
+              using them instantly, no setup, no friction.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Spacer to maintain layout flow (Onestop wrapper is fixed/absolute) */}
+        <div className="w-full" style={{ height: "416px" }} />
+
+        {/* Bottom Lines SVG - fixed positioned directly below the globe */}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
+          style={{
+            top: "520px", // Globe bottom: 100px (globe top) + 420px (globe height)
+            marginTop: "-265px", // Offset to align line start with globe bottom
+            zIndex: 49,
+            x: "-50%",
+            willChange: "transform",
+          }}
+        >
           <BottomLinesAnimated
             duration={4}
             delay={0}
@@ -112,258 +243,66 @@ export function AboutProduct() {
             pathColor="#444444"
             beamWidth={2}
             pathWidth={1}
+            scrollProgress={openingProgressValue}
+            isOpening={isOpening}
+            scrollY={scrollY}
             className="w-auto h-auto"
           />
-        </div>
+        </motion.div>
 
-        {/* Cards - attached to bottom lines with spacing */}
-        <div className="w-full flex justify-center items-start -mt-[150px] relative z-20 mb-32">
-          <div className="flex gap-8 items-start">
-            {CARD_DATA.map((card) => (
-              <GlowCard
-                key={card.title}
-                title={card.title}
-                subtitle={card.subtitle}
-                description={card.description}
-                iconPath={card.iconPath}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* 2x2 Grid Table */}
-        <div className="max-w-4xl mx-auto relative rounded-lg mt-16" style={{ background: 'transparent' }}>
-          {/* Left vertical line */}
-          <div 
-            className="absolute left-0 pointer-events-none"
+        {/* Boxes - fixed positioned below each stroke with fade-in animation */}
+        {/* SVG: 783px wide, strokes end at Y=240 in SVG coordinates */}
+        {/* Stroke X positions: left=15.055, center=391.754, right=767.027 */}
+        {/* SVG center = 783/2 = 391.5px */}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
+          style={{
+            top: "482px", // SVG container top (255px) + stroke end Y (240px) - 13px offset
+            zIndex: 48,
+            x: "-50%",
+            opacity: boxesOpacity,
+            willChange: "opacity",
+            width: "783px", // Match SVG width
+          }}
+        >
+          {/* Left box - below left stroke end (X=15.055 in SVG) */}
+          <motion.div
+            className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
             style={{
-              width: '0.5px',
-              top: '-40px',
-              bottom: '-40px',
-              background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
+              left: "15.055px",
+              marginLeft: "-50px", // Center box on stroke
             }}
           />
-          
-          {/* Center vertical line */}
-          <div 
-            className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+          {/* Center box - below center stroke end (X=391.754 in SVG) */}
+          <motion.div
+            className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
             style={{
-              width: '0.5px',
-              top: '-40px',
-              bottom: '-40px',
-              background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
+              left: "391.754px",
+              marginLeft: "-50px", // Center box on stroke
             }}
           />
-          
-          {/* Right vertical line */}
-          <div 
-            className="absolute right-0 pointer-events-none"
+          {/* Right box - below right stroke end (X=767.027 in SVG) */}
+          <motion.div
+            className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
             style={{
-              width: '0.5px',
-              top: '-40px',
-              bottom: '-40px',
-              background: 'linear-gradient(180deg, transparent 0%, rgba(254, 218, 36, 0.4) 15%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 85%, transparent 100%)',
+              left: "767.027px",
+              marginLeft: "-50px", // Center box on stroke
             }}
           />
+        </motion.div>
 
-
-          {/* First Row */}
-          <div className="grid grid-cols-2 gap-0 relative">
-            {/* Top Left Cell */}
-            <div className="p-8 relative">
-              <div className="text-white">
-                <h3 
-                  className="mb-4 whitespace-nowrap"
-                  style={{ 
-                    width: '305px',
-                    height: '29px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 600,
-                    fontStyle: 'normal',
-                    fontSize: '24px',
-                    lineHeight: '122%',
-                    letterSpacing: '-2%',
-                    textAlign: 'left',
-                    color: '#FFFFFF'
-                  }}
-                >
-                  Subscribe & Track your Usage
-                </h3>
-                <p 
-                  className="mb-6 text-white/70"
-                  style={{ 
-                    width: '400px',
-                    height: '66px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 400,
-                    fontStyle: 'normal',
-                    fontSize: '16px',
-                    lineHeight: '140%',
-                    letterSpacing: '2%',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}
-                >
-                  Monitor realtime usage of tokens used in accessing all your AI tools. You can also monitor your spends on all your subscribed AI Tools.
-                </p>
-                {/* Placeholder box */}
-                <div 
-                  className="w-full rounded-lg"
-                  style={{
-                    height: '200px',
-                    backgroundColor: 'rgba(60, 60, 60, 0.5)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Top Right Cell */}
-            <div className="p-8 relative">
-              <div className="text-white">
-                <h3 
-                  className="mb-4 whitespace-nowrap"
-                  style={{ 
-                    width: '305px',
-                    height: '29px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 600,
-                    fontStyle: 'normal',
-                    fontSize: '24px',
-                    lineHeight: '122%',
-                    letterSpacing: '-2%',
-                    textAlign: 'left',
-                    color: '#FFFFFF'
-                  }}
-                >
-                  Don't miss out on trends
-                </h3>
-                <p 
-                  className="mb-6 text-white/70"
-                  style={{ 
-                    width: '400px',
-                    height: '66px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 400,
-                    fontStyle: 'normal',
-                    fontSize: '16px',
-                    lineHeight: '140%',
-                    letterSpacing: '2%',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}
-                >
-                  Categorically view which kind of tools are trending in the market. We smartly monitor market trends on all the different platforms.
-                </p>
-                {/* Placeholder box */}
-                <div 
-                  className="w-full rounded-lg"
-                  style={{
-                    height: '200px',
-                    backgroundColor: 'rgba(60, 60, 60, 0.5)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Horizontal divider */}
-            <div 
-              className="absolute bottom-0 pointer-events-none"
-              style={{ 
-                height: '0.5px',
-                left: '-200px',
-                right: '-200px',
-                background: 'linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)',
-              }}
-            />
-            {/* Intersection dots */}
-            <IntersectionDot position="left" dotId="r1-c0" />
-            <IntersectionDot position="center" dotId="r1-c1" />
-            <IntersectionDot position="right" dotId="r1-c2" />
-          </div>
-
-          {/* Second Row */}
-          <div className="grid grid-cols-2 gap-0 relative">
-            {/* Bottom Left Cell */}
-            <div className="p-8 relative">
-              <div className="text-white">
-                <h3 
-                  className="mb-4 whitespace-nowrap"
-                  style={{ 
-                    width: '305px',
-                    height: '29px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 600,
-                    fontStyle: 'normal',
-                    fontSize: '24px',
-                    lineHeight: '122%',
-                    letterSpacing: '-2%',
-                    textAlign: 'left',
-                    color: '#FFFFFF'
-                  }}
-                >
-                  Trusted by Beelia Community
-                </h3>
-                <p 
-                  className="text-white/70"
-                  style={{ 
-                    width: '400px',
-                    height: '66px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 400,
-                    fontStyle: 'normal',
-                    fontSize: '16px',
-                    lineHeight: '140%',
-                    letterSpacing: '2%',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}
-                >
-                  Our Community test & reviews all the relevant information of any AI Tool listed on our platform.
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Right Cell */}
-            <div className="p-8 relative">
-              <div className="text-white">
-                <h3 
-                  className="mb-4 whitespace-nowrap"
-                  style={{ 
-                    width: '305px',
-                    height: '29px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 600,
-                    fontStyle: 'normal',
-                    fontSize: '24px',
-                    lineHeight: '122%',
-                    letterSpacing: '-2%',
-                    textAlign: 'left',
-                    color: '#FFFFFF'
-                  }}
-                >
-                  Pattern Analysis
-                </h3>
-                <p 
-                  className="text-white/70"
-                  style={{ 
-                    width: '400px',
-                    height: '66px',
-                    fontFamily: 'var(--font-outfit), Outfit, sans-serif',
-                    fontWeight: 400,
-                    fontStyle: 'normal',
-                    fontSize: '16px',
-                    lineHeight: '140%',
-                    letterSpacing: '2%',
-                    color: 'rgba(255, 255, 255, 0.7)'
-                  }}
-                >
-                  Identify trends and optimize token usage.
-                </p>
-              </div>
-            </div>
-          </div>
+        {/* Features Grid Section - positioned below the fixed elements */}
+        {/* Position FeaturesGrid to appear around 800px scroll (600px before exit animations start) */}
+        <div
+          className="relative w-full"
+          style={{
+            marginTop: "1000px",
+            paddingBottom: "100px",
+          }}
+        >
+          <FeaturesGrid />
         </div>
       </div>
     </div>
-  )
+  );
 }
-

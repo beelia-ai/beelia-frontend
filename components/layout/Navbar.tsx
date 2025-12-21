@@ -28,14 +28,30 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
     const handleScroll = () => {
       const currentScrollY = window.scrollY
       
+      // #region agent log
+      if (currentScrollY >= 700 && currentScrollY <= 850) {
+        fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Navbar.tsx:handleScroll',message:'Scroll in target range',data:{currentScrollY,lastScrollY,isVisible,threshold:scrollThresholdRef.current},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+      }
+      // #endregion
+      
       // Scrolling down - hide navbar
       if (currentScrollY > lastScrollY && currentScrollY > 0) {
+        // #region agent log
+        if (currentScrollY >= 700 && currentScrollY <= 850) {
+          fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Navbar.tsx:handleScroll',message:'Setting isVisible=false',data:{currentScrollY,wasVisible:isVisible},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+        }
+        // #endregion
         setIsVisible(false)
         scrollThresholdRef.current = currentScrollY
       }
       // Scrolling up - show navbar if scrolled up by 20px from threshold
       else if (currentScrollY < lastScrollY) {
         if (currentScrollY <= scrollThresholdRef.current - 20 || currentScrollY === 0) {
+          // #region agent log
+          if (currentScrollY >= 700 && currentScrollY <= 850) {
+            fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'Navbar.tsx:handleScroll',message:'Setting isVisible=true',data:{currentScrollY,wasVisible:isVisible},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'A'})}).catch(()=>{});
+          }
+          // #endregion
           setIsVisible(true)
         }
       }
@@ -151,7 +167,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           >
             <Link href="/home" className="flex items-center gap-2">
               <Image
-                src="/icons/Beelia.svg"
+                src="/icons/beelia-logo.png"
                 alt="Beelia Logo"
                 width={150}
                 height={40}
@@ -182,7 +198,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   onClick={() => {}}
                   className="nav-link cursor-pointer"
                   style={{
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontSize: '16px',
                     fontWeight: 400,
                     background: 'none',
@@ -195,7 +211,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   onClick={() => scrollToSection('about-company')}
                   className="nav-link cursor-pointer"
                   style={{
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontSize: '16px',
                     fontWeight: 400,
                     background: 'none',
@@ -208,7 +224,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
                   className="nav-link cursor-pointer"
                   style={{
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontSize: '16px',
                     fontWeight: 400,
                     background: 'none',
@@ -264,7 +280,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     <span 
                       className="waitlist-btn-text uppercase"
                       style={{
-                        fontFamily: 'var(--font-inria-sans), sans-serif',
+                        fontFamily: 'var(--font-outfit), sans-serif',
                         fontSize: '14px',
                         lineHeight: '100%',
                         letterSpacing: '0.06em',

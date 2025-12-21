@@ -24,6 +24,8 @@ export interface HorizontalBeamAnimatedProps {
   scrollProgress?: number;
   /** Whether retraction is active */
   isRetracting?: boolean;
+  /** Opacity of the beam (0-1), defaults to 1 */
+  beamOpacity?: number;
 }
 
 export function HorizontalBeamAnimated({
@@ -38,6 +40,7 @@ export function HorizontalBeamAnimated({
   pathWidth = 1,
   scrollProgress = 0,
   isRetracting = false,
+  beamOpacity = 1,
 }: Readonly<HorizontalBeamAnimatedProps>) {
   const stableId = useId().replace(/:/g, "-");
 
@@ -59,17 +62,17 @@ export function HorizontalBeamAnimated({
 
   // Parse paths to get coordinates
   const rightHorizontal = {
-    startX: 612.227,
+    startX: 610.227,
     endX: 992.05,
     y: 185.289,
-    length: 992.05 - 612.227,
+    length: 992.05 - 610.227,
   };
 
   const leftHorizontal = {
     startX: 110.001,
-    endX: 492.824,
+    endX: 494.824,
     y: 185.289,
-    length: 492.824 - 110.001,
+    length: 494.824 - 110.001,
   };
 
   // Convert SVG coordinates to percentage for CSS positioning
@@ -130,8 +133,8 @@ export function HorizontalBeamAnimated({
           margin-top: -${Math.min(beamWidth * 3, 90) / 2}px;
           overflow: hidden;
           pointer-events: none;
+          transition: width 0.1s linear, opacity 0.1s linear;
           opacity: ${isRetracting ? 1 - scrollProgress : 1};
-          transition: width 0.1s linear;
         }
 
         .beam-container-right-${stableId} hr {
@@ -178,6 +181,7 @@ export function HorizontalBeamAnimated({
           filter: drop-shadow(0 0 ${
             Math.min(beamWidth, 30) / 2
           }px ${beamColor}) blur(0.5px);
+          opacity: ${beamOpacity};
         }
 
         .beam-container-left-${stableId} {
@@ -193,8 +197,8 @@ export function HorizontalBeamAnimated({
           margin-top: -${Math.min(beamWidth * 3, 90) / 2}px;
           overflow: hidden;
           pointer-events: none;
+          transition: width 0.1s linear, opacity 0.1s linear;
           opacity: ${isRetracting ? 1 - scrollProgress : 1};
-          transition: width 0.1s linear;
         }
 
         .beam-container-left-${stableId} hr {
@@ -241,6 +245,7 @@ export function HorizontalBeamAnimated({
           filter: drop-shadow(0 0 ${
             Math.min(beamWidth, 30) / 2
           }px ${beamColor}) blur(0.5px);
+          opacity: ${beamOpacity};
         }
 
         ${

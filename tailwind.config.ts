@@ -19,8 +19,8 @@ const config: Config = {
   	},
   	extend: {
   		fontFamily: {
-  			'inria-sans': [
-  				'var(--font-inria-sans)',
+  			'outfit': [
+  				'var(--font-outfit)',
   				'sans-serif'
   			],
   			'instrument-serif': [

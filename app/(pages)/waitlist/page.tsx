@@ -178,7 +178,7 @@ function WaitlistHero() {
             <h1 
               className="text-white mb-4"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '32px',
                 letterSpacing: '-0.02em'
@@ -190,7 +190,7 @@ function WaitlistHero() {
             <p 
               className="text-white/40 mb-12"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontSize: '15px',
                 lineHeight: '170%'
               }}
@@ -203,7 +203,7 @@ function WaitlistHero() {
               href="/home"
               className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontSize: '14px'
               }}
             >
@@ -233,7 +233,7 @@ function WaitlistHero() {
             <h1 
               className="text-white mb-3"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: 'clamp(28px, 5vw, 40px)',
                 lineHeight: '115%',
@@ -247,7 +247,7 @@ function WaitlistHero() {
             <p 
               className="text-white/40 mb-8 max-w-sm mx-auto"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '15px',
                 lineHeight: '170%'
@@ -266,7 +266,7 @@ function WaitlistHero() {
                   placeholder="Your name"
                   className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontSize: '15px',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '50px',
@@ -283,7 +283,7 @@ function WaitlistHero() {
                   placeholder="Your company"
                   className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontSize: '15px',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '50px',
@@ -331,7 +331,7 @@ function WaitlistHero() {
                             </svg>
                             <span 
                               style={{
-                                fontFamily: 'var(--font-inria-sans), sans-serif',
+                                fontFamily: 'var(--font-outfit), sans-serif',
                                 fontSize: '18px',
                                 lineHeight: '100%',
                                 letterSpacing: '0.06em',
@@ -346,7 +346,7 @@ function WaitlistHero() {
                             <span 
                               className="text-white uppercase"
                               style={{
-                                fontFamily: 'var(--font-inria-sans), sans-serif',
+                                fontFamily: 'var(--font-outfit), sans-serif',
                                 fontSize: '18px',
                                 lineHeight: '100%',
                                 letterSpacing: '0.06em',
@@ -380,7 +380,7 @@ function WaitlistHero() {
                   <span 
                     className="text-white uppercase"
                     style={{
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontFamily: 'var(--font-outfit), sans-serif',
                       fontSize: '18px',
                       lineHeight: '100%',
                       letterSpacing: '0.06em',
@@ -397,7 +397,7 @@ function WaitlistHero() {
               onClick={() => setStep('complete')}
               className="mt-6 text-white/30 hover:text-white/50 transition-colors duration-300"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontSize: '13px',
                 background: 'none',
                 border: 'none',
@@ -414,7 +414,7 @@ function WaitlistHero() {
             <h1 
               className="text-white mb-5"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: 'clamp(36px, 6vw, 52px)',
                 lineHeight: '115%',
@@ -429,7 +429,7 @@ function WaitlistHero() {
             <p 
               className="text-white/40 mb-12 max-w-sm mx-auto"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '15px',
                 lineHeight: '170%'
@@ -449,7 +449,7 @@ function WaitlistHero() {
                   required
                   className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontSize: '15px',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     borderRadius: '50px',
@@ -497,7 +497,7 @@ function WaitlistHero() {
                             </svg>
                             <span 
                               style={{
-                                fontFamily: 'var(--font-inria-sans), sans-serif',
+                                fontFamily: 'var(--font-outfit), sans-serif',
                                 fontSize: '18px',
                                 lineHeight: '100%',
                                 letterSpacing: '0.06em',
@@ -512,7 +512,7 @@ function WaitlistHero() {
                             <span 
                               className="text-white uppercase"
                               style={{
-                                fontFamily: 'var(--font-inria-sans), sans-serif',
+                                fontFamily: 'var(--font-outfit), sans-serif',
                                 fontSize: '18px',
                                 lineHeight: '100%',
                                 letterSpacing: '0.06em',
@@ -546,7 +546,7 @@ function WaitlistHero() {
                   <span 
                     className="text-white uppercase"
                     style={{
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontFamily: 'var(--font-outfit), sans-serif',
                       fontSize: '18px',
                       lineHeight: '100%',
                       letterSpacing: '0.06em',
@@ -562,7 +562,7 @@ function WaitlistHero() {
             <p 
               className="text-white/25 mt-6"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontSize: '12px'
               }}
             >
@@ -576,7 +576,7 @@ function WaitlistHero() {
                   <p 
                     className="text-white mb-1"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontFamily: 'var(--font-outfit), sans-serif',
                       fontWeight: 500,
                       fontSize: '20px',
                       letterSpacing: '-0.02em'
@@ -587,7 +587,7 @@ function WaitlistHero() {
                   <p 
                     className="text-white/30"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontFamily: 'var(--font-outfit), sans-serif',
                       fontSize: '12px',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em'
@@ -603,7 +603,7 @@ function WaitlistHero() {
                   <p 
                     className="text-white mb-1"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontFamily: 'var(--font-outfit), sans-serif',
                       fontWeight: 500,
                       fontSize: '20px',
                       letterSpacing: '-0.02em'
@@ -614,7 +614,7 @@ function WaitlistHero() {
                   <p 
                     className="text-white/30"
                     style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                      fontFamily: 'var(--font-outfit), sans-serif',
                       fontSize: '12px',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em'

@@ -648,7 +648,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -658,7 +658,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -670,7 +670,7 @@ export function AboutCompany() {
             <p 
               className="text-white/70"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '14px',
                 lineHeight: '160%'
@@ -685,7 +685,7 @@ export function AboutCompany() {
             <p 
               className="text-white"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '16px',
                 lineHeight: '170%'
@@ -752,7 +752,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -762,7 +762,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -789,7 +789,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -799,7 +799,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -867,7 +867,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -877,7 +877,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -904,7 +904,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -914,7 +914,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
