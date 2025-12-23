@@ -28,6 +28,7 @@ export function NewHero() {
   const heroRef = useRef<HTMLElement>(null);
   const beeliaVideoRef = useRef<HTMLVideoElement>(null);
   const phase2VideoRef = useRef<HTMLVideoElement>(null);
+  const globeStopThresholdRef = useRef(Infinity);
 
   // Track scroll progress for this section
   const { scrollYProgress } = useScroll({
@@ -38,11 +39,52 @@ export function NewHero() {
   // Track absolute scroll Y position as motion value for video transition
   const { scrollY: scrollYMotion } = useScroll();
 
+  // Calculate when globe should stop being fixed (right above footer)
+  useEffect(() => {
+    const calculateThreshold = () => {
+      const footer = document.getElementById("footer");
+      if (!footer) return;
+
+      const footerRect = footer.getBoundingClientRect();
+      const footerTop = footerRect.top + window.scrollY;
+      const viewportHeight = window.innerHeight;
+
+      // Globe is fixed at ~100px from top, height 420px (scaled up to 1.3x = 546px)
+      // We want globe to stop when its bottom would hit above the footer
+      // Globe visual bottom = 100px + (420px * 1.3) / 2 + (420px * 1.3) / 2 ≈ 100px + 273px = 373px from top
+      // Add margin for the footer content area
+      const globeBottomFromTop = 100 + 120 * 1.3;
+      const marginAboveFooter = 100; // Stop 100px above footer
+
+      // Threshold is when footer top enters the viewport at globeBottomFromTop + margin
+      const threshold =
+        footerTop - viewportHeight + globeBottomFromTop + marginAboveFooter;
+      globeStopThresholdRef.current = threshold;
+    };
+
+    calculateThreshold();
+    window.addEventListener("resize", calculateThreshold);
+    // Recalculate after layout settles
+    const timeout = setTimeout(calculateThreshold, 500);
+
+    return () => {
+      window.removeEventListener("resize", calculateThreshold);
+      clearTimeout(timeout);
+    };
+  }, []);
+
   // Globe scale animation from 1 to 1.1 based on scroll Y position (0px to 900px)
   const globeScale = useTransform(scrollYMotion, (latest) => {
     if (latest < 0) return 1;
     if (latest >= 900) return 1.3;
     return 1 + (latest / 900) * 0.3; // Linear interpolation from 1 to 1.1
+  });
+
+  // Globe Y offset - moves up with scroll after threshold is reached
+  const globeY = useTransform(scrollYMotion, (latest) => {
+    if (latest < globeStopThresholdRef.current) return 0;
+    // After threshold, move globe up with scroll (makes it scroll with page)
+    return -(latest - globeStopThresholdRef.current);
   });
 
   // Track scroll Y position
@@ -232,6 +274,7 @@ export function NewHero() {
       >
         {/* Video Globe Container - Fixed positioning, always maintains distance from top */}
         {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
+        {/* Stops being fixed and scrolls with page when reaching above footer */}
         <motion.div
           className="fixed left-1/2 pointer-events-none"
           style={{
@@ -240,6 +283,7 @@ export function NewHero() {
             top: "calc(128px + 182px - 210px)", // pt-32 + trace lines center - half globe height
             zIndex: 50,
             x: "-50%",
+            y: globeY,
             scale: globeScale,
             transformOrigin: "center center",
             willChange: "transform",

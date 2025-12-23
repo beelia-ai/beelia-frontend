@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { FooterLink } from "./FooterLink";
 
 export function Footer() {
   return (
@@ -29,7 +30,7 @@ export function Footer() {
         className="relative w-full min-h-screen overflow-hidden"
       >
         {/* Noise Names Image - Overlay right above blackhole */}
-        <div className="absolute bottom-0 left-0 right-0 w-full z-20 pointer-events-none opacity-30">
+        {/* <div className="absolute bottom-0 left-0 right-0 w-full z-20 pointer-events-none opacity-30">
           <Image
             src="/images/noise-overlay-image.png"
             alt="Noise names overlay"
@@ -39,18 +40,25 @@ export function Footer() {
             style={{ objectPosition: "bottom" }}
             priority
           />
-        </div>
+        </div> */}
 
-        {/* Blackhole Image - Absolute positioned at bottom, full width */}
-        <div className="absolute bottom-0 left-0 right-0 w-full z-10">
-          <Image
-            src="/images/footer-blackhole-image.png"
-            alt="Footer blackhole"
-            width={1920}
-            height={400}
+        {/* Blackhole Video - Absolute positioned at bottom, full width */}
+        <div
+          className="absolute left-0 right-0 w-full z-10"
+          style={{
+            bottom: "-240px",
+            transform: "rotate(-8deg) scale(1)",
+            transformOrigin: "center center",
+          }}
+        >
+          <video
+            src="/videos/black-hole.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full h-auto object-cover"
             style={{ objectPosition: "bottom" }}
-            priority
           />
         </div>
 
@@ -146,57 +154,18 @@ export function Footer() {
                   Connect
                 </h3>
                 <div className="flex flex-col items-end gap-4">
-                  <a
-                    href="https://instagram.com/beelia.ai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer-link text-right hover:text-white/80 transition-all duration-300"
-                    style={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontWeight: 400,
-                      fontSize: "clamp(14px, 1.8vw, 15.75px)",
-                      lineHeight: "120%",
-                      letterSpacing: "-0.02em",
-                      textTransform: "uppercase",
-                      color: "#FFFFFF",
-                    }}
-                  >
+                  <FooterLink href="https://instagram.com/beelia.ai" external>
                     Instagram
-                  </a>
-                  <a
+                  </FooterLink>
+                  <FooterLink
                     href="https://linkedin.com/company/beelia"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer-link text-right hover:text-white/80 transition-all duration-300"
-                    style={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontWeight: 400,
-                      fontSize: "clamp(14px, 1.8vw, 15.75px)",
-                      lineHeight: "120%",
-                      letterSpacing: "-0.02em",
-                      textTransform: "uppercase",
-                      color: "#FFFFFF",
-                    }}
+                    external
                   >
                     LinkedIn
-                  </a>
-                  <a
-                    href="https://twitter.com/beelia"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer-link text-right hover:text-white/80 transition-all duration-300"
-                    style={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontWeight: 400,
-                      fontSize: "clamp(14px, 1.8vw, 15.75px)",
-                      lineHeight: "120%",
-                      letterSpacing: "-0.02em",
-                      textTransform: "uppercase",
-                      color: "#FFFFFF",
-                    }}
-                  >
+                  </FooterLink>
+                  <FooterLink href="https://twitter.com/beelia" external>
                     Twitter
-                  </a>
+                  </FooterLink>
                 </div>
               </div>
 
@@ -216,36 +185,8 @@ export function Footer() {
                   Legal
                 </h3>
                 <div className="flex flex-col items-end gap-4">
-                  <a
-                    href="/privacy-policy"
-                    className="footer-link text-right hover:text-white/80 transition-all duration-300"
-                    style={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontWeight: 400,
-                      fontSize: "clamp(14px, 1.8vw, 15.75px)",
-                      lineHeight: "120%",
-                      letterSpacing: "-0.02em",
-                      textTransform: "uppercase",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Policies
-                  </a>
-                  <a
-                    href="/terms-and-conditions"
-                    className="footer-link text-right hover:text-white/80 transition-all duration-300"
-                    style={{
-                      fontFamily: "var(--font-outfit), sans-serif",
-                      fontWeight: 400,
-                      fontSize: "clamp(14px, 1.8vw, 15.75px)",
-                      lineHeight: "120%",
-                      letterSpacing: "-0.02em",
-                      textTransform: "uppercase",
-                      color: "#FFFFFF",
-                    }}
-                  >
-                    Terms
-                  </a>
+                  <FooterLink href="/privacy-policy">Policies</FooterLink>
+                  <FooterLink href="/terms-and-conditions">Terms</FooterLink>
                 </div>
               </div>
             </div>
