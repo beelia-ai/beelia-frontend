@@ -352,6 +352,171 @@ export function NewHero() {
               marginTop: "-5px",
             }}
           >
+            {/* Videos in all 6 boxes */}
+            {/* Left side boxes */}
+            {/* Left top box */}
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              style={{
+                left: "197.278px",
+                top: "0.5px",
+                width: "109.32px",
+                height: "109.32px",
+                zIndex: 10,
+                willChange: "transform",
+              }}
+              animate={{
+                y: [-3, 3],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              <source src="/videos/magnify.webm" type="video/webm" />
+            </motion.video>
+            {/* Left center box */}
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              style={{
+                left: "0.18px",
+                top: "129.481px",
+                width: "109.32px",
+                height: "109.32px",
+                zIndex: 10,
+                willChange: "transform",
+              }}
+              animate={{
+                y: [-3, 3],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              <source src="/videos/shield.webm" type="video/webm" />
+            </motion.video>
+            {/* Left bottom box */}
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              style={{
+                left: "146.17px",
+                top: "252.641px",
+                width: "109.32px",
+                height: "109.32px",
+                zIndex: 10,
+                willChange: "transform",
+              }}
+              animate={{
+                y: [-3, 3],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              <source src="/videos/bell.webm" type="video/webm" />
+            </motion.video>
+            {/* Right side boxes */}
+            {/* Right top box */}
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              style={{
+                left: "792.23px",
+                top: "0.5px",
+                width: "109.32px",
+                height: "109.32px",
+                zIndex: 10,
+                willChange: "transform",
+              }}
+              animate={{
+                y: [-3, 3],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              <source src="/videos/upload.webm" type="video/webm" />
+            </motion.video>
+            {/* Right center box */}
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              style={{
+                left: "992.16px",
+                top: "129.481px",
+                width: "109.32px",
+                height: "109.32px",
+                zIndex: 10,
+                willChange: "transform",
+              }}
+              animate={{
+                y: [-3, 3],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              <source src="/videos/dollar.webm" type="video/webm" />
+            </motion.video>
+            {/* Right bottom box */}
+            <motion.video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              style={{
+                left: "838.17px",
+                top: "254.15px",
+                width: "109.32px",
+                height: "109.32px",
+                zIndex: 10,
+                willChange: "transform",
+              }}
+              animate={{
+                y: [-3, 3],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+            >
+              <source src="/videos/graph.webm" type="video/webm" />
+            </motion.video>
             {/* Horizontal beams - separate component - render first so it's behind */}
             <HorizontalBeamAnimated
               className="absolute inset-0 w-full h-full object-contain"
@@ -361,8 +526,8 @@ export function NewHero() {
               beamColor="#FEDA24"
               beamColorSecondary="#FF8C32"
               pathColor="#444444"
-              beamWidth={2}
-              pathWidth={1}
+              beamWidth={0.8}
+              pathWidth={0.8}
               scrollProgress={traceLinesScrollProgress}
               isRetracting={traceLinesScrollProgress > 0}
               beamOpacity={beamOpacity}
@@ -377,8 +542,8 @@ export function NewHero() {
               beamColor="#FEDA24"
               beamColorSecondary="#FF8C32"
               pathColor="#444444"
-              beamWidth={2}
-              pathWidth={1}
+              beamWidth={0.8}
+              pathWidth={0.8}
               scrollProgress={traceLinesScrollProgress}
               isRetracting={traceLinesScrollProgress > 0}
               scrollY={scrollY}
