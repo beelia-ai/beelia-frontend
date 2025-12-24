@@ -100,28 +100,43 @@ export function MagnifyBox({
             if (preserveOriginalMaterials) {
               // Keep original materials from GLB, just clone to avoid modifying originals
               if (originalMaterial) {
-                mesh.material = originalMaterial.clone()
+                if (Array.isArray(originalMaterial)) {
+                  mesh.material = originalMaterial.map(mat => mat.clone())
+                } else {
+                  mesh.material = originalMaterial.clone()
+                }
               }
             } else {
               // Apply Beelia theme - check if GLB has materials and edit them
-              if (originalMaterial && originalMaterial instanceof THREE.Material) {
-                // Clone the material to avoid modifying the original
-                const material = originalMaterial.clone()
+              if (originalMaterial) {
+                // Handle both single materials and material arrays
+                const materials = Array.isArray(originalMaterial) 
+                  ? originalMaterial 
+                  : [originalMaterial]
                 
-                // Edit material properties if it's a MeshStandardMaterial or MeshPhysicalMaterial
-                if (material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshPhysicalMaterial) {
-                  // Override with Beelia theme colors while preserving other properties
-                  material.color.setHex(0xFEDA24) // Beelia golden yellow
-                  material.metalness = 0.7
-                  material.roughness = 0.3
-                  material.emissive.setHex(0x000000)
-                  material.emissiveIntensity = 0
-                } else if (material instanceof THREE.MeshBasicMaterial) {
-                  // For basic materials, just change color
-                  material.color.setHex(0xFEDA24)
-                }
+                const clonedMaterials = materials.map((mat) => {
+                  // Clone the material to avoid modifying the original
+                  const material = mat.clone()
+                  
+                  // Edit material properties if it's a MeshStandardMaterial or MeshPhysicalMaterial
+                  if (material instanceof THREE.MeshStandardMaterial || material instanceof THREE.MeshPhysicalMaterial) {
+                    // Override with Beelia theme colors while preserving other properties
+                    material.color.setHex(0xFEDA24) // Beelia golden yellow
+                    material.metalness = 0.7
+                    material.roughness = 0.3
+                    material.emissive.setHex(0x000000)
+                    material.emissiveIntensity = 0
+                  } else if (material instanceof THREE.MeshBasicMaterial) {
+                    // For basic materials, just change color
+                    material.color.setHex(0xFEDA24)
+                  }
+                  
+                  return material
+                })
                 
-                mesh.material = material
+                mesh.material = Array.isArray(originalMaterial) 
+                  ? clonedMaterials 
+                  : clonedMaterials[0]
               } else {
                 // No material in GLB, create new one
                 const material = new THREE.MeshStandardMaterial({
