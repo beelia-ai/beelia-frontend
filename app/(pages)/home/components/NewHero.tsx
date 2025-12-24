@@ -12,10 +12,6 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 
-// #region agent log
-let heroMountCount = 0;
-// #endregion
-
 export function NewHero() {
   const [isHovered, setIsHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -149,25 +145,6 @@ export function NewHero() {
       const transitionStart = 100; // Start transition at 100px
 
       if (scrollY >= transitionStart && !showPhase2) {
-        // #region agent log
-        if (scrollY >= 700 && scrollY <= 850) {
-          fetch(
-            "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                location: "NewHero.tsx:videoSwitch",
-                message: "Switching to Phase2",
-                data: { scrollY, showPhase2 },
-                timestamp: Date.now(),
-                sessionId: "debug-session",
-                hypothesisId: "G",
-              }),
-            }
-          ).catch(() => {});
-        }
-        // #endregion
         // Start showing Phase 2 video - preload and play
         setShowPhase2(true);
         if (phase2VideoRef.current) {
@@ -177,25 +154,6 @@ export function NewHero() {
       }
 
       if (scrollY < transitionStart && showPhase2) {
-        // #region agent log
-        if (scrollY >= 700 && scrollY <= 850) {
-          fetch(
-            "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                location: "NewHero.tsx:videoSwitch",
-                message: "Switching back to Beelia",
-                data: { scrollY, showPhase2 },
-                timestamp: Date.now(),
-                sessionId: "debug-session",
-                hypothesisId: "G",
-              }),
-            }
-          ).catch(() => {});
-        }
-        // #endregion
         // Switch back to Beelia Ani 2 if scrolling back up
         setShowPhase2(false);
         if (beeliaVideoRef.current) {
@@ -231,38 +189,6 @@ export function NewHero() {
 
   useEffect(() => {
     setIsMounted(true);
-    // #region agent log
-    heroMountCount++;
-    fetch("http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        location: "NewHero.tsx:mount",
-        message: "NewHero mounted",
-        data: { mountCount: heroMountCount, scrollY: window.scrollY },
-        timestamp: Date.now(),
-        sessionId: "debug-session",
-        hypothesisId: "F",
-      }),
-    }).catch(() => {});
-    return () => {
-      fetch(
-        "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            location: "NewHero.tsx:unmount",
-            message: "NewHero unmounting",
-            data: { mountCount: heroMountCount, scrollY: window.scrollY },
-            timestamp: Date.now(),
-            sessionId: "debug-session",
-            hypothesisId: "F",
-          }),
-        }
-      ).catch(() => {});
-    };
-    // #endregion
   }, []);
 
   return (
@@ -281,7 +207,7 @@ export function NewHero() {
             width: "420px",
             height: "420px",
             top: "calc(128px + 182px - 210px)", // pt-32 + trace lines center - half globe height
-            zIndex: 50,
+            zIndex: 51, // Higher than AboutProduct's fixed OneStop (z-50) to prevent z-fighting flicker
             x: "-50%",
             y: globeY,
             scale: globeScale,
@@ -331,14 +257,14 @@ export function NewHero() {
           raysColor="#F5A83B"
           raysSpeed={0.6}
           lightSpread={0.7}
-          rayLength={1.6}
+          rayLength={2.2}
           fadeDistance={1}
           saturation={1}
           followMouse={true}
           mouseInfluence={0.1}
           noiseAmount={0}
           distortion={0}
-          className="absolute inset-0"
+          className="absolute -top-48 inset-x-0 bottom-0"
         />
 
         {/* Content container with proper spacing - flex column layout */}

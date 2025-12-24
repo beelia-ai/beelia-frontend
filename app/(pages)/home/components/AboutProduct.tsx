@@ -156,31 +156,6 @@ export function AboutProduct() {
     setOpeningProgressValue(latest);
   });
 
-  // #region agent log
-  useMotionValueEvent(scrollYMotion, "change", (latest) => {
-    if (latest >= 700 && latest <= 850) {
-      fetch(
-        "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            location: "AboutProduct.tsx:scrollYMotion",
-            message: "Scroll in target range",
-            data: {
-              scrollY: latest,
-              scale: latest >= 700 ? 1 : (latest - 600) / 100,
-            },
-            timestamp: Date.now(),
-            sessionId: "debug-session",
-            hypothesisId: "C",
-          }),
-        }
-      ).catch(() => {});
-    }
-  });
-  // #endregion
-
   return (
     <div
       className="relative w-full bg-transparent"

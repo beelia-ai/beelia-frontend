@@ -198,7 +198,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
       `}</style>
 
       {/* Full width navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-[9999] px-8 md:px-16 lg:px-24 py-6">
+      <nav className="fixed top-0 left-0 right-0 z-[9999] px-8 md:px-8 lg:px-16 py-6">
         <div className="grid grid-cols-3 items-center w-full">
           {/* Logo on the left - hides on scroll down, shows on scroll up */}
           <motion.div
