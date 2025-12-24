@@ -58,7 +58,7 @@ export function AboutProduct() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scale animation from 0 to 1 based on scroll Y position (500px to 900px)
+  // Scale animation from 0.5 to 1 based on scroll Y position (500px to 900px)
   // Exit animation: scale from 1 to 0 starting at 1400px (1400px to 1800px)
   const scale = useTransform(scrollYMotion, (latest) => {
     // Exit phase: scale down from 1 to 0 (1400px to 1800px)
@@ -67,10 +67,25 @@ export function AboutProduct() {
     }
     if (latest > 1800) return 0; // Fully hidden after 1800px
 
-    // Entry phase: scale up from 0 to 1 (500px to 900px)
+    // Entry phase: scale up from 0.5 to 1 (500px to 900px)
+    if (latest < 500) return 0.5;
+    if (latest >= 900) return 1;
+    return 0.5 + ((latest - 500) / 400) * 0.5; // Linear interpolation from 0.5 to 1 (900 - 500 = 400)
+  });
+
+  // Opacity animation from 0 to 1 based on scroll Y position (500px to 900px)
+  // Exit animation: opacity from 1 to 0 starting at 1400px (1400px to 1800px)
+  const opacity = useTransform(scrollYMotion, (latest) => {
+    // Exit phase: opacity decreases from 1 to 0 (1400px to 1800px)
+    if (latest >= 1400 && latest <= 1800) {
+      return 1 - (latest - 1400) / 400; // 1 to 0 over 400px
+    }
+    if (latest > 1800) return 0; // Fully hidden after 1800px
+
+    // Entry phase: opacity increases from 0 to 1 (500px to 900px)
     if (latest < 500) return 0;
     if (latest >= 900) return 1;
-    return (latest - 500) / 400; // Linear interpolation (900 - 500 = 400)
+    return (latest - 500) / 400; // Linear interpolation from 0 to 1 (900 - 500 = 400)
   });
 
   // Blur animation: instant blur at 500y, stays at max until 600y, then unblur from 600y to 700y
@@ -181,9 +196,10 @@ export function AboutProduct() {
             zIndex: 50,
             x: "-50%",
             scale,
+            opacity,
             filter: blurFilter,
             transformOrigin: "center center",
-            willChange: "transform, filter",
+            willChange: "transform, opacity, filter",
           }}
         >
           <div className="flex flex-col items-center">

@@ -367,7 +367,11 @@ export function NewHero() {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform",
+                willChange: "transform, opacity",
+                opacity:
+                  traceLinesScrollProgress > 0
+                    ? 1 - traceLinesScrollProgress
+                    : 1,
               }}
               animate={{
                 y: [-3, 3],
@@ -394,7 +398,11 @@ export function NewHero() {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform",
+                willChange: "transform, opacity",
+                opacity:
+                  traceLinesScrollProgress > 0
+                    ? 1 - traceLinesScrollProgress
+                    : 1,
               }}
               animate={{
                 y: [-3, 3],
@@ -421,7 +429,11 @@ export function NewHero() {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform",
+                willChange: "transform, opacity",
+                opacity:
+                  traceLinesScrollProgress > 0
+                    ? 1 - traceLinesScrollProgress
+                    : 1,
               }}
               animate={{
                 y: [-3, 3],
@@ -449,7 +461,11 @@ export function NewHero() {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform",
+                willChange: "transform, opacity",
+                opacity:
+                  traceLinesScrollProgress > 0
+                    ? 1 - traceLinesScrollProgress
+                    : 1,
               }}
               animate={{
                 y: [-3, 3],
@@ -476,7 +492,11 @@ export function NewHero() {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform",
+                willChange: "transform, opacity",
+                opacity:
+                  traceLinesScrollProgress > 0
+                    ? 1 - traceLinesScrollProgress
+                    : 1,
               }}
               animate={{
                 y: [-3, 3],
@@ -503,7 +523,11 @@ export function NewHero() {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform",
+                willChange: "transform, opacity",
+                opacity:
+                  traceLinesScrollProgress > 0
+                    ? 1 - traceLinesScrollProgress
+                    : 1,
               }}
               animate={{
                 y: [-3, 3],
