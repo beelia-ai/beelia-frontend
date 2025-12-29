@@ -12,6 +12,22 @@ import { BottomLinesAnimated } from "@/components/ui/bottom-lines-animated";
 import { GlowCard } from "@/components/ui/glow-card";
 import { FeaturesGrid } from "./FeaturesGrid";
 
+// Track window width for responsive scaling
+function useWindowWidth() {
+  const [windowWidth, setWindowWidth] = useState(1920);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowWidth;
+}
+
 const CARD_DATA = [
   {
     title: "DISCOVER",
@@ -43,6 +59,11 @@ const CARD_DATA = [
 ];
 
 export function AboutProduct() {
+  const windowWidth = useWindowWidth();
+  // Calculate responsive scale factor for mobile bottom lines
+  const isMobile = windowWidth < 768;
+  const bottomLinesScale = isMobile ? Math.min((windowWidth - 32) / 783, 0.4) : 1;
+  
   // Track absolute scroll Y position for scale animation
   const { scrollY: scrollYMotion } = useScroll();
 
@@ -158,16 +179,18 @@ export function AboutProduct() {
 
   return (
     <div
-      className="relative w-full bg-transparent"
+      className="relative w-full bg-transparent overflow-x-hidden"
       style={{ minHeight: "1600px" }}
     >
       {/* Section content */}
-      <div className="relative z-10 flex flex-col items-center justify-start pt-32">
+      <div className="relative z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-x-hidden w-full max-w-full">
         {/* OneStop Image and Text Container - maintains same distance from top as globe */}
         <motion.div
           className="fixed left-1/2 pointer-events-none"
           style={{
-            top: "calc(128px + 182px - 210px)",
+            top: windowWidth < 768 
+              ? "clamp(60px, 15vh, 100px)" 
+              : "calc(128px + 182px - 210px)",
             zIndex: 50,
             x: "-50%",
             scale,
@@ -175,35 +198,38 @@ export function AboutProduct() {
             filter: blurFilter,
             transformOrigin: "center center",
             willChange: "transform, opacity, filter",
+            width: windowWidth < 768 ? "90vw" : "auto",
+            maxWidth: "1000px",
           }}
         >
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center px-4 md:px-0">
             {/* OneStop Image */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4 md:mb-6 w-full">
               <Image
                 src="/images/Onestop.png"
                 alt="OneStop"
                 width={1000}
                 height={300}
-                className="w-auto h-auto object-contain"
+                className="w-full max-w-[90vw] md:max-w-none h-auto object-contain"
                 priority
               />
             </div>
 
             {/* Description text under OneStop Image */}
             <p
-              className="text-center mb-12"
+              className="text-center mb-8 md:mb-12 px-4"
               style={{
-                width: "457.771484375px",
-                height: "44px",
+                width: windowWidth < 768 ? "100%" : "457.771484375px",
+                height: windowWidth < 768 ? "auto" : "44px",
                 fontFamily: "var(--font-outfit), Outfit, sans-serif",
                 fontWeight: 400,
                 fontStyle: "normal",
-                fontSize: "16px",
+                fontSize: windowWidth < 768 ? "14px" : "16px",
                 lineHeight: "140%",
                 letterSpacing: "2%",
                 textAlign: "center",
                 color: "#FFFFFF",
+                maxWidth: windowWidth < 768 ? "90vw" : "457.771484375px",
               }}
             >
               —giving people a seamless way to find the right tools and start
@@ -213,17 +239,32 @@ export function AboutProduct() {
         </motion.div>
 
         {/* Spacer to maintain layout flow (Onestop wrapper is fixed/absolute) */}
-        <div className="w-full" style={{ height: "416px" }} />
+        <div className="w-full" style={{ height: windowWidth < 768 ? "300px" : "416px" }} />
 
         {/* Bottom Lines SVG - fixed positioned directly below the globe */}
+        {/* Responsive scaling for mobile, tablet, and desktop */}
         <motion.div
           className="fixed left-1/2 pointer-events-none"
           style={{
-            top: "520px", // Globe bottom: 100px (globe top) + 420px (globe height)
-            marginTop: "-265px", // Offset to align line start with globe bottom
+            top: isMobile 
+              ? "clamp(280px, 40vh, 400px)" 
+              : windowWidth < 1024 
+                ? "clamp(400px, 50vh, 520px)" 
+                : "520px",
+            marginTop: isMobile 
+              ? "-120px" 
+              : windowWidth < 1024 
+                ? "-200px" 
+                : "-265px",
             zIndex: 49,
             x: "-50%",
             willChange: "transform",
+            transform: isMobile 
+              ? `scale(${bottomLinesScale})` 
+              : windowWidth < 1024 
+                ? "scale(0.8)" 
+                : "scale(1)",
+            transformOrigin: "center center",
           }}
         >
           <BottomLinesAnimated
@@ -245,39 +286,60 @@ export function AboutProduct() {
         {/* SVG: 783px wide, strokes end at Y=240 in SVG coordinates */}
         {/* Stroke X positions: left=15.055, center=391.754, right=767.027 */}
         {/* SVG center = 783/2 = 391.5px */}
+        {/* Responsive scaling for mobile, tablet, and desktop */}
+        {/* Position boxes container exactly like bottom lines container for alignment */}
         <motion.div
           className="fixed left-1/2 pointer-events-none"
           style={{
-            top: "482px", // SVG container top (255px) + stroke end Y (240px) - 13px offset
+            top: isMobile 
+              ? "clamp(280px, 40vh, 400px)" 
+              : windowWidth < 1024 
+                ? "clamp(400px, 50vh, 520px)" 
+                : "520px",
+            marginTop: isMobile 
+              ? "-120px" 
+              : windowWidth < 1024 
+                ? "-200px" 
+                : "-265px",
             zIndex: 48,
             x: "-50%",
             opacity: boxesOpacity,
             willChange: "opacity",
-            width: "783px", // Match SVG width
+            width: "783px",
+            height: "390px", // Match SVG height
+            transform: isMobile 
+              ? `scale(${bottomLinesScale})` 
+              : windowWidth < 1024 
+                ? "scale(0.8)" 
+                : "scale(1)",
+            transformOrigin: "center center",
           }}
         >
-          {/* Left box - below left stroke end (X=15.055 in SVG) */}
+          {/* Left box - below left stroke end (X=15.055 in SVG, Y=240) */}
           <motion.div
-            className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
+            className={`absolute rounded-lg border border-white/20 bg-black/20 ${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'}`}
             style={{
               left: "15.055px",
-              marginLeft: "-50px", // Center box on stroke
+              top: "240px", // Position at stroke end Y coordinate
+              transform: "translateX(-50%)", // Center box on stroke
             }}
           />
-          {/* Center box - below center stroke end (X=391.754 in SVG) */}
+          {/* Center box - below center stroke end (X=391.754 in SVG, Y=240) */}
           <motion.div
-            className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
+            className={`absolute rounded-lg border border-white/20 bg-black/20 ${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'}`}
             style={{
               left: "391.754px",
-              marginLeft: "-50px", // Center box on stroke
+              top: "240px", // Position at stroke end Y coordinate
+              transform: "translateX(-50%)", // Center box on stroke
             }}
           />
-          {/* Right box - below right stroke end (X=767.027 in SVG) */}
+          {/* Right box - below right stroke end (X=767.027 in SVG, Y=240) */}
           <motion.div
-            className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
+            className={`absolute rounded-lg border border-white/20 bg-black/20 ${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'}`}
             style={{
               left: "767.027px",
-              marginLeft: "-50px", // Center box on stroke
+              top: "240px", // Position at stroke end Y coordinate
+              transform: "translateX(-50%)", // Center box on stroke
             }}
           />
         </motion.div>

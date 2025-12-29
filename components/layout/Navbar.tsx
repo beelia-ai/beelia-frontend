@@ -15,10 +15,21 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const scrollThresholdRef = useRef(0);
   const pathname = usePathname();
   const isWaitlistPage = pathname === "/waitlist";
   const isHomePage = pathname === "/home";
+
+  // Track window size for responsive button sizing
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Track scroll progress for navbar fade animation
   const { scrollYProgress } = useScroll();
@@ -144,7 +155,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           top: 0;
           left: 0;
           width: 100%;
-          height: 65px;
+          height: 100%;
           background: linear-gradient(135deg, #FEDA24 0%, #EF941F 50%, #FEDA24 100%);
           transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
           transform: translateX(-100%);
@@ -198,11 +209,11 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
       `}</style>
 
       {/* Full width navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-[9999] px-8 md:px-8 lg:px-16 py-6">
-        <div className="grid grid-cols-3 items-center w-full">
+      <nav className="fixed top-0 left-0 right-0 z-[9999] px-4 sm:px-6 md:px-8 lg:px-16 py-3 md:py-6">
+        <div className="flex items-center justify-between w-full relative">
           {/* Logo on the left - hides on scroll down, shows on scroll up */}
           <motion.div
-            className="flex items-center justify-start"
+            className="flex items-center justify-start flex-shrink-0 z-10"
             animate={{
               opacity: navbarContentOpacity,
               y: navbarContentY,
@@ -221,15 +232,15 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 alt="Beelia Logo"
                 width={150}
                 height={40}
-                className="h-10 w-auto"
+                className="h-6 sm:h-7 md:h-10 w-auto"
                 priority
               />
             </Link>
           </motion.div>
 
-          {/* Navigation links in the center - hidden on waitlist page, hides on scroll down, shows on scroll up */}
+          {/* Navigation links in the center - visible on all screen sizes */}
           <motion.div
-            className="flex items-center justify-center"
+            className="flex items-center justify-center absolute inset-0 pointer-events-none"
             animate={{
               opacity: navbarContentOpacity,
               y: navbarContentY,
@@ -243,13 +254,13 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             }}
           >
             {!isWaitlistPage && (
-              <div className="hidden md:flex items-center gap-12">
+              <div className={`flex items-center pointer-events-auto ${isMobile ? 'gap-3 sm:gap-4' : 'gap-8 lg:gap-12'}`}>
                 <button
                   onClick={() => {}}
                   className="nav-link cursor-pointer"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: "16px",
+                    fontSize: isMobile ? "12px" : "16px",
                     fontWeight: 400,
                     background: "none",
                     border: "none",
@@ -262,7 +273,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   className="nav-link cursor-pointer"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: "16px",
+                    fontSize: isMobile ? "12px" : "16px",
                     fontWeight: 400,
                     background: "none",
                     border: "none",
@@ -275,7 +286,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   className="nav-link cursor-pointer"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: "16px",
+                    fontSize: isMobile ? "12px" : "16px",
                     fontWeight: 400,
                     background: "none",
                     border: "none",
@@ -289,7 +300,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           </motion.div>
 
           {/* JOIN WAITLIST button on the right */}
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end flex-shrink-0 z-10">
             <Link
               href={isWaitlistPage ? "/home" : "/waitlist"}
               className="group cursor-pointer block"
@@ -302,8 +313,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             >
               <div className="waitlist-btn-wrapper">
                 <GlassSurface
-                  width={200}
-                  height={55}
+                  width={isMobile ? 90 : 200}
+                  height={isMobile ? 28 : 55}
                   borderRadius={50}
                   chromaticAberration={isHovered ? 0.4 : 0.25}
                   className="group-hover:scale-105"
@@ -317,23 +328,23 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
                 >
-                  <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                  <div className="w-full flex items-center justify-center gap-1 sm:gap-2 md:gap-3 relative z-10 px-1 sm:px-2 md:px-0">
                     {isWaitlistPage && (
                       <Image
                         src="/icons/Vector.svg"
                         alt="arrow"
                         width={16}
                         height={16}
-                        className="waitlist-btn-arrow transition-transform duration-500 ease-in-out rotate-[270deg] group-hover:rotate-[225deg]"
+                        className="waitlist-btn-arrow transition-transform duration-500 ease-in-out rotate-[270deg] group-hover:rotate-[225deg] w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4"
                       />
                     )}
                     <span
                       className="waitlist-btn-text uppercase"
                       style={{
                         fontFamily: "var(--font-outfit), sans-serif",
-                        fontSize: "14px",
+                        fontSize: isMobile ? "7px" : "14px",
                         lineHeight: "100%",
-                        letterSpacing: "0.06em",
+                        letterSpacing: isMobile ? "0.04em" : "0.06em",
                       }}
                     >
                       {isWaitlistPage ? "back home" : "join waitlist"}
@@ -344,7 +355,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         alt="arrow"
                         width={16}
                         height={16}
-                        className="waitlist-btn-arrow transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                        className="waitlist-btn-arrow transition-transform duration-500 ease-in-out group-hover:rotate-45 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4"
                       />
                     )}
                   </div>

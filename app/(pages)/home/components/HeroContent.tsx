@@ -80,19 +80,19 @@ export function HeroContent({
       `}</style>
 
       {/* AIFOR Image - below trace lines */}
-      <div className="w-[675px] h-[80px]">
+      <div className="w-full max-w-[90vw] md:w-[675px] h-auto px-4 md:px-0">
         <Image
           src="/images/AIFOR.png"
           alt="AI For Everyone, by Everyone"
           width={675}
           height={80}
-          className="w-full h-full object-contain"
+          className="w-full h-auto object-contain"
           priority
         />
       </div>
 
       {/* Tagline Text - below AIFOR image */}
-      <p className="mt-4 text-center uppercase text-white/60 text-[17px] leading-[32px] tracking-[0.04em] font-normal max-w-[680px] font-outfit">
+      <p className="mt-4 text-center uppercase text-white/60 text-sm md:text-[17px] leading-[140%] md:leading-[32px] tracking-[0.04em] font-normal max-w-[90vw] md:max-w-[680px] px-4 md:px-0 font-outfit">
         A curated AI marketplace where anyone can discover, trust, and use the
         right tools instantly, no technical skills required
       </p>
@@ -112,8 +112,8 @@ export function HeroContent({
           >
             {isMounted ? (
               <GlassSurface
-                width={270}
-                height={80}
+                width={typeof window !== 'undefined' && window.innerWidth < 768 ? 200 : 270}
+                height={typeof window !== 'undefined' && window.innerWidth < 768 ? 60 : 80}
                 borderRadius={50}
                 chromaticAberration={0.15}
                 redOffset={0}
@@ -132,7 +132,7 @@ export function HeroContent({
                 }`}
               >
                 <div className="w-full flex items-center justify-center gap-3 relative z-10">
-                  <span className="waitlist-btn-text uppercase text-[20px] font-medium leading-[100%] tracking-[0.06em] font-outfit">
+                  <span className="waitlist-btn-text uppercase text-sm md:text-[20px] font-medium leading-[100%] tracking-[0.06em] font-outfit">
                     join waitlist
                   </span>
                   <Image

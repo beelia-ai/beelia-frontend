@@ -43,9 +43,16 @@ function WaitlistHero() {
   const [isLoading, setIsLoading] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [buttonHeight, setButtonHeight] = useState(60);
 
   useEffect(() => {
     setIsMounted(true);
+    const updateHeight = () => {
+      setButtonHeight(window.innerWidth < 640 ? 50 : 60);
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
   }, []);
 
   // Step 1: Submit email
@@ -160,7 +167,7 @@ function WaitlistHero() {
       `}</style>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6">
         {step === "complete" ? (
           /* Complete State */
           <div className="text-center max-w-lg">
@@ -287,13 +294,10 @@ function WaitlistHero() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
+                  className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: "15px",
                     border: "1px solid rgba(255, 255, 255, 0.08)",
-                    borderRadius: "50px",
-                    height: "60px",
                   }}
                 />
               </div>
@@ -304,13 +308,10 @@ function WaitlistHero() {
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   placeholder="Your company"
-                  className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
+                  className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: "15px",
                     border: "1px solid rgba(255, 255, 255, 0.08)",
-                    borderRadius: "50px",
-                    height: "60px",
                   }}
                 />
               </div>
@@ -329,13 +330,11 @@ function WaitlistHero() {
                 >
                   <div className="glass-btn-wrapper" style={{ width: "100%" }}>
                     <GlassSurface
-                      width={448}
-                      height={60}
+                      width="100%"
+                      height={buttonHeight}
                       borderRadius={50}
                       chromaticAberration={isButtonHovered ? 0.3 : 0.15}
                       style={{
-                        width: "100%",
-                        maxWidth: "100%",
                         transform: isButtonHovered
                           ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
                           : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
@@ -345,11 +344,11 @@ function WaitlistHero() {
                         transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
-                      <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                      <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
                         {isLoading ? (
                           <span className="flex items-center gap-2 text-white">
                             <svg
-                              className="animate-spin w-5 h-5"
+                              className="animate-spin w-4 h-4 sm:w-5 sm:h-5"
                               viewBox="0 0 24 24"
                             >
                               <circle
@@ -370,7 +369,7 @@ function WaitlistHero() {
                             <span
                               style={{
                                 fontFamily: "var(--font-outfit), sans-serif",
-                                fontSize: "18px",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
                                 lineHeight: "100%",
                                 letterSpacing: "0.06em",
                                 textTransform: "uppercase",
@@ -385,7 +384,7 @@ function WaitlistHero() {
                               className="text-white uppercase"
                               style={{
                                 fontFamily: "var(--font-outfit), sans-serif",
-                                fontSize: "18px",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
                                 lineHeight: "100%",
                                 letterSpacing: "0.06em",
                               }}
@@ -397,7 +396,7 @@ function WaitlistHero() {
                               alt="arrow"
                               width={18}
                               height={18}
-                              className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                              className="w-4 h-4 sm:w-[18px] sm:h-[18px] transition-transform duration-500 ease-in-out group-hover:rotate-45"
                             />
                           </>
                         )}
@@ -409,17 +408,18 @@ function WaitlistHero() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 rounded-full flex items-center justify-center gap-3 transition-all duration-300"
+                  className="w-full py-3 sm:py-4 rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300"
                   style={{
                     background: "rgba(255, 255, 255, 0.1)",
                     border: "1px solid rgba(255, 255, 255, 0.1)",
+                    height: "clamp(50px, 12vw, 60px)",
                   }}
                 >
                   <span
                     className="text-white uppercase"
                     style={{
                       fontFamily: "var(--font-outfit), sans-serif",
-                      fontSize: "18px",
+                      fontSize: "clamp(14px, 3.5vw, 18px)",
                       lineHeight: "100%",
                       letterSpacing: "0.06em",
                     }}
@@ -494,13 +494,10 @@ function WaitlistHero() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
+                  className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: "15px",
                     border: "1px solid rgba(255, 255, 255, 0.08)",
-                    borderRadius: "50px",
-                    height: "60px",
                   }}
                 />
               </div>
@@ -519,13 +516,11 @@ function WaitlistHero() {
                 >
                   <div className="glass-btn-wrapper" style={{ width: "100%" }}>
                     <GlassSurface
-                      width={448}
-                      height={60}
+                      width="100%"
+                      height={buttonHeight}
                       borderRadius={50}
                       chromaticAberration={isButtonHovered ? 0.3 : 0.15}
                       style={{
-                        width: "100%",
-                        maxWidth: "100%",
                         transform: isButtonHovered
                           ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
                           : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
@@ -535,11 +530,11 @@ function WaitlistHero() {
                         transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
-                      <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                      <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
                         {isLoading ? (
                           <span className="flex items-center gap-2 text-white">
                             <svg
-                              className="animate-spin w-5 h-5"
+                              className="animate-spin w-4 h-4 sm:w-5 sm:h-5"
                               viewBox="0 0 24 24"
                             >
                               <circle
@@ -560,7 +555,7 @@ function WaitlistHero() {
                             <span
                               style={{
                                 fontFamily: "var(--font-outfit), sans-serif",
-                                fontSize: "18px",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
                                 lineHeight: "100%",
                                 letterSpacing: "0.06em",
                                 textTransform: "uppercase",
@@ -575,7 +570,7 @@ function WaitlistHero() {
                               className="text-white uppercase"
                               style={{
                                 fontFamily: "var(--font-outfit), sans-serif",
-                                fontSize: "18px",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
                                 lineHeight: "100%",
                                 letterSpacing: "0.06em",
                               }}
@@ -587,7 +582,7 @@ function WaitlistHero() {
                               alt="arrow"
                               width={18}
                               height={18}
-                              className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                              className="w-4 h-4 sm:w-[18px] sm:h-[18px] transition-transform duration-500 ease-in-out group-hover:rotate-45"
                             />
                           </>
                         )}
@@ -599,17 +594,18 @@ function WaitlistHero() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 rounded-full flex items-center justify-center gap-3 transition-all duration-300"
+                  className="w-full py-3 sm:py-4 rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300"
                   style={{
                     background: "rgba(255, 255, 255, 0.1)",
                     border: "1px solid rgba(255, 255, 255, 0.1)",
+                    height: "clamp(50px, 12vw, 60px)",
                   }}
                 >
                   <span
                     className="text-white uppercase"
                     style={{
                       fontFamily: "var(--font-outfit), sans-serif",
-                      fontSize: "18px",
+                      fontSize: "clamp(14px, 3.5vw, 18px)",
                       lineHeight: "100%",
                       letterSpacing: "0.06em",
                     }}
