@@ -207,7 +207,7 @@ export function NewHero() {
   const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.32) : 1;
   
   // Globe responsive sizing - smaller for mobile
-  const globeSize = isMobile ? 100 : 420;
+  const globeSize = isMobile ? 140 : 420;
   
   // Globe top position calculation
   // Desktop: calc(128px + 182px - 210px) = 100px
@@ -216,7 +216,7 @@ export function NewHero() {
   // When scaled, visual center = 182 * mobileScale from container top
   // Container padding: pt-20 (80px) on mobile, pt-32 (128px) on desktop
   const traceLinesCenterY = 182; // Center of 364px SVG
-  const mobilePaddingTop = 80; // pt-20 on mobile
+  const mobilePaddingTop = 200; // pt-20 on mobile
   const globeTop = isMobile 
     ? `${mobilePaddingTop + (traceLinesCenterY * mobileScale) - (globeSize / 2)}px`
     : "calc(128px + 182px - 210px)";
@@ -254,7 +254,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`${isMobile ? 'w-[100px] h-[100px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
+              className={`${isMobile ? 'w-[140px] h-[140px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
               style={{
                 opacity: beeliaOpacity,
                 willChange: "opacity",
@@ -269,7 +269,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`${isMobile ? 'w-[100px] h-[100px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
+              className={`${isMobile ? 'w-[140px] h-[140px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
               style={{
                 opacity: phase2Opacity,
                 willChange: "opacity",
