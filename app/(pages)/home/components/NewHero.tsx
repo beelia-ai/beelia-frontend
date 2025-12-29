@@ -21,6 +21,7 @@ export function NewHero() {
   const [scrollY, setScrollY] = useState(0);
   const [heroScrollProgressValue, setHeroScrollProgressValue] = useState(0);
   const [beamOpacity, setBeamOpacity] = useState(1);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1920);
   const heroRef = useRef<HTMLElement>(null);
   const beeliaVideoRef = useRef<HTMLVideoElement>(null);
   const phase2VideoRef = useRef<HTMLVideoElement>(null);
@@ -187,9 +188,37 @@ export function NewHero() {
 
   const beeliaOpacity = useTransform(phase2Opacity, (opacity) => 1 - opacity);
 
+  // Track window width for responsive scaling
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Calculate responsive scale factor for mobile
+  const isMobile = windowWidth < 768;
+  const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.4) : 1;
+  
+  // Globe responsive sizing
+  const globeSize = isMobile ? 150 : 420;
+  
+  // Globe top position calculation
+  // Desktop: calc(128px + 182px - 210px) = 100px
+  // Mobile: needs to align with scaled trace lines center
+  // Trace lines SVG center is at 182px from top of container (364px / 2)
+  // When container is scaled, the center visually scales but position stays relative
+  const traceLinesCenterY = 182; // Center of 364px SVG (always 182px from container top)
+  const mobilePaddingTop = 80; // pt-20 on mobile
+  const globeTop = isMobile 
+    ? `${mobilePaddingTop + traceLinesCenterY - (globeSize / 2)}px`
+    : "calc(128px + 182px - 210px)";
 
   return (
     <>
@@ -204,9 +233,9 @@ export function NewHero() {
         <motion.div
           className="fixed left-1/2 pointer-events-none"
           style={{
-            width: "420px",
-            height: "420px",
-            top: "calc(128px + 182px - 210px)", // pt-32 + trace lines center - half globe height
+            width: `${globeSize}px`,
+            height: `${globeSize}px`,
+            top: globeTop,
             zIndex: 51, // Higher than AboutProduct's fixed OneStop (z-50) to prevent z-fighting flicker
             x: "-50%",
             y: globeY,
@@ -224,7 +253,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
+              className={`${isMobile ? 'w-[150px] h-[150px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
               style={{
                 opacity: beeliaOpacity,
                 willChange: "opacity",
@@ -239,7 +268,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="w-[420px] h-[420px] object-contain mr-0.5 absolute"
+              className={`${isMobile ? 'w-[150px] h-[150px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
               style={{
                 opacity: phase2Opacity,
                 willChange: "opacity",
@@ -268,14 +297,15 @@ export function NewHero() {
         />
 
         {/* Content container with proper spacing - flex column layout */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-32">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-hidden">
           {/* Trace Lines Animated SVG - positioned at top with scroll animation */}
           <motion.div
             className="relative w-[1102px] h-[364px] mb-12"
             style={{
-              scale: traceLinesScale,
+              scale: isMobile ? mobileScale : traceLinesScale,
               willChange: "transform",
               marginTop: "-5px",
+              transformOrigin: "center center",
             }}
           >
             {/* Videos in all 6 boxes */}
@@ -286,7 +316,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "197.278px",
                 top: "0.5px",
@@ -317,7 +347,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "0.18px",
                 top: "129.481px",
@@ -348,7 +378,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "146.17px",
                 top: "252.641px",
@@ -380,7 +410,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "792.23px",
                 top: "0.5px",
@@ -411,7 +441,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "992.16px",
                 top: "129.481px",
@@ -442,7 +472,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className="absolute object-cover rounded-[31.5px] pointer-events-none"
+              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "838.17px",
                 top: "254.15px",
