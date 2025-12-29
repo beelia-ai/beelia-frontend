@@ -60,6 +60,10 @@ const CARD_DATA = [
 
 export function AboutProduct() {
   const windowWidth = useWindowWidth();
+  // Calculate responsive scale factor for mobile bottom lines
+  const isMobile = windowWidth < 768;
+  const bottomLinesScale = isMobile ? Math.min((windowWidth - 32) / 783, 0.4) : 1;
+  
   // Track absolute scroll Y position for scale animation
   const { scrollY: scrollYMotion } = useScroll();
 
@@ -238,81 +242,107 @@ export function AboutProduct() {
         <div className="w-full" style={{ height: windowWidth < 768 ? "300px" : "416px" }} />
 
         {/* Bottom Lines SVG - fixed positioned directly below the globe */}
-        {/* Hidden on mobile, scaled on tablet */}
-        {windowWidth >= 768 && (
-          <motion.div
-            className="fixed left-1/2 pointer-events-none"
-            style={{
-              top: windowWidth < 1024 ? "clamp(400px, 50vh, 520px)" : "520px",
-              marginTop: windowWidth < 1024 ? "-200px" : "-265px",
-              zIndex: 49,
-              x: "-50%",
-              willChange: "transform",
-              transform: windowWidth >= 768 && windowWidth < 1024 ? "scale(0.8)" : "scale(1)",
-              transformOrigin: "center center",
-            }}
-          >
-            <BottomLinesAnimated
-              duration={4}
-              delay={0}
-              beamColor="#FEDA24"
-              beamColorSecondary="#FF8C32"
-              pathColor="#444444"
-              beamWidth={2}
-              pathWidth={1}
-              scrollProgress={openingProgressValue}
-              isOpening={isOpening}
-              scrollY={scrollY}
-              className="w-auto h-auto"
-            />
-          </motion.div>
-        )}
+        {/* Responsive scaling for mobile, tablet, and desktop */}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
+          style={{
+            top: isMobile 
+              ? "clamp(280px, 40vh, 400px)" 
+              : windowWidth < 1024 
+                ? "clamp(400px, 50vh, 520px)" 
+                : "520px",
+            marginTop: isMobile 
+              ? "-120px" 
+              : windowWidth < 1024 
+                ? "-200px" 
+                : "-265px",
+            zIndex: 49,
+            x: "-50%",
+            willChange: "transform",
+            transform: isMobile 
+              ? `scale(${bottomLinesScale})` 
+              : windowWidth < 1024 
+                ? "scale(0.8)" 
+                : "scale(1)",
+            transformOrigin: "center center",
+          }}
+        >
+          <BottomLinesAnimated
+            duration={4}
+            delay={0}
+            beamColor="#FEDA24"
+            beamColorSecondary="#FF8C32"
+            pathColor="#444444"
+            beamWidth={2}
+            pathWidth={1}
+            scrollProgress={openingProgressValue}
+            isOpening={isOpening}
+            scrollY={scrollY}
+            className="w-auto h-auto"
+          />
+        </motion.div>
 
         {/* Boxes - fixed positioned below each stroke with fade-in animation */}
         {/* SVG: 783px wide, strokes end at Y=240 in SVG coordinates */}
         {/* Stroke X positions: left=15.055, center=391.754, right=767.027 */}
         {/* SVG center = 783/2 = 391.5px */}
-        {/* Hidden on mobile */}
-        {windowWidth >= 768 && (
+        {/* Responsive scaling for mobile, tablet, and desktop */}
+        {/* Position boxes container exactly like bottom lines container for alignment */}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
+          style={{
+            top: isMobile 
+              ? "clamp(280px, 40vh, 400px)" 
+              : windowWidth < 1024 
+                ? "clamp(400px, 50vh, 520px)" 
+                : "520px",
+            marginTop: isMobile 
+              ? "-120px" 
+              : windowWidth < 1024 
+                ? "-200px" 
+                : "-265px",
+            zIndex: 48,
+            x: "-50%",
+            opacity: boxesOpacity,
+            willChange: "opacity",
+            width: "783px",
+            height: "390px", // Match SVG height
+            transform: isMobile 
+              ? `scale(${bottomLinesScale})` 
+              : windowWidth < 1024 
+                ? "scale(0.8)" 
+                : "scale(1)",
+            transformOrigin: "center center",
+          }}
+        >
+          {/* Left box - below left stroke end (X=15.055 in SVG, Y=240) */}
           <motion.div
-            className="fixed left-1/2 pointer-events-none"
+            className={`absolute rounded-lg border border-white/20 bg-black/20 ${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'}`}
             style={{
-              top: windowWidth < 1024 ? "clamp(380px, 48vh, 482px)" : "482px",
-              zIndex: 48,
-              x: "-50%",
-              opacity: boxesOpacity,
-              willChange: "opacity",
-              width: windowWidth < 1024 ? "625px" : "783px", // Scale down on tablet
-              transform: windowWidth >= 768 && windowWidth < 1024 ? "scale(0.8)" : "scale(1)",
-              transformOrigin: "center center",
+              left: "15.055px",
+              top: "240px", // Position at stroke end Y coordinate
+              transform: "translateX(-50%)", // Center box on stroke
             }}
-          >
-            {/* Left box - below left stroke end (X=15.055 in SVG) */}
-            <motion.div
-              className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
-              style={{
-                left: windowWidth < 1024 ? "12px" : "15.055px",
-                marginLeft: "-50px", // Center box on stroke
-              }}
-            />
-            {/* Center box - below center stroke end (X=391.754 in SVG) */}
-            <motion.div
-              className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
-              style={{
-                left: windowWidth < 1024 ? "312px" : "391.754px",
-                marginLeft: "-50px", // Center box on stroke
-              }}
-            />
-            {/* Right box - below right stroke end (X=767.027 in SVG) */}
-            <motion.div
-              className="absolute w-[100px] h-[100px] rounded-lg border border-white/20 bg-black/20"
-              style={{
-                left: windowWidth < 1024 ? "613px" : "767.027px",
-                marginLeft: "-50px", // Center box on stroke
-              }}
-            />
-          </motion.div>
-        )}
+          />
+          {/* Center box - below center stroke end (X=391.754 in SVG, Y=240) */}
+          <motion.div
+            className={`absolute rounded-lg border border-white/20 bg-black/20 ${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'}`}
+            style={{
+              left: "391.754px",
+              top: "240px", // Position at stroke end Y coordinate
+              transform: "translateX(-50%)", // Center box on stroke
+            }}
+          />
+          {/* Right box - below right stroke end (X=767.027 in SVG, Y=240) */}
+          <motion.div
+            className={`absolute rounded-lg border border-white/20 bg-black/20 ${isMobile ? 'w-[60px] h-[60px]' : 'w-[100px] h-[100px]'}`}
+            style={{
+              left: "767.027px",
+              top: "240px", // Position at stroke end Y coordinate
+              transform: "translateX(-50%)", // Center box on stroke
+            }}
+          />
+        </motion.div>
 
         {/* Features Grid Section - positioned below the fixed elements */}
         {/* Position FeaturesGrid to appear around 800px scroll (600px before exit animations start) */}

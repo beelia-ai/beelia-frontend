@@ -1,9 +1,27 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { FooterLink } from "./FooterLink";
 
+// Track window width for responsive scaling
+function useWindowWidth() {
+  const [windowWidth, setWindowWidth] = useState(1920);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowWidth;
+}
+
 export function Footer() {
+  const windowWidth = useWindowWidth();
+  const isMobile = windowWidth < 768;
   return (
     <>
       {/* Animated underline styles */}
@@ -46,8 +64,10 @@ export function Footer() {
         <div
           className="absolute left-0 right-0 w-full z-10"
           style={{
-            bottom: "-240px",
-            transform: "rotate(-8deg) scale(1)",
+            bottom: isMobile ? "160px" : "-240px",
+            transform: isMobile 
+              ? "rotate(-8deg) scale(1.2)" 
+              : "rotate(-8deg) scale(1)",
             transformOrigin: "center center",
           }}
         >
@@ -65,7 +85,7 @@ export function Footer() {
         {/* Content - BEELIA and sections in same flex column */}
         <div
           className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 md:px-16 lg:px-24 py-8 md:py-12"
-          style={{ paddingBottom: "300px" }}
+          style={{ paddingBottom: isMobile ? "200px" : "300px" }}
         >
           {/* Large BEELIA Text - Width matches content container */}
           <h1
