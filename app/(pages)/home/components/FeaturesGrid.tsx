@@ -41,17 +41,18 @@ function FeatureCard({
   showPlaceholder?: boolean;
 }) {
   return (
-    <div className="p-8 relative">
+    <div className="p-4 sm:p-6 md:p-8 relative">
       <div className="text-white">
         <h3
-          className="mb-1 whitespace-nowrap"
+          className="mb-1 md:whitespace-nowrap"
           style={{
-            width: "305px",
-            height: "29px",
+            width: "100%",
+            maxWidth: "305px",
+            minHeight: "29px",
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
             fontWeight: 600,
             fontStyle: "normal",
-            fontSize: "24px",
+            fontSize: "clamp(20px, 4vw, 24px)",
             lineHeight: "122%",
             letterSpacing: "-2%",
             textAlign: "left",
@@ -61,14 +62,15 @@ function FeatureCard({
           {title}
         </h3>
         <p
-          className={showPlaceholder ? "mb-6 text-white/50" : "text-white/50"}
+          className={showPlaceholder ? "mb-4 md:mb-6 text-white/50" : "text-white/50"}
           style={{
-            width: "400px",
-            height: "66px",
+            width: "100%",
+            maxWidth: "400px",
+            minHeight: "auto",
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
             fontWeight: 400,
             fontStyle: "normal",
-            fontSize: "16px",
+            fontSize: "clamp(14px, 3vw, 16px)",
             lineHeight: "140%",
             letterSpacing: "2%",
             color: "rgba(255, 255, 255, 0.5)",
@@ -80,7 +82,7 @@ function FeatureCard({
           <div
             className="w-full rounded-lg"
             style={{
-              height: "200px",
+              height: "clamp(150px, 30vw, 200px)",
               backgroundColor: "rgba(60, 60, 60, 0.5)",
               border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
@@ -94,12 +96,12 @@ function FeatureCard({
 export function FeaturesGrid() {
   return (
     <div
-      className="max-w-4xl mx-auto relative rounded-lg"
+      className="max-w-4xl mx-auto relative rounded-lg px-4 md:px-0"
       style={{ background: "transparent" }}
     >
-      {/* Left vertical line */}
+      {/* Left vertical line - hidden on mobile */}
       <div
-        className="absolute left-0 pointer-events-none"
+        className="hidden md:block absolute left-0 pointer-events-none"
         style={{
           width: "0.5px",
           top: "-40px",
@@ -109,9 +111,9 @@ export function FeaturesGrid() {
         }}
       />
 
-      {/* Center vertical line */}
+      {/* Center vertical line - hidden on mobile */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+        className="hidden md:block absolute left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
           width: "0.5px",
           top: "-40px",
@@ -121,9 +123,9 @@ export function FeaturesGrid() {
         }}
       />
 
-      {/* Right vertical line */}
+      {/* Right vertical line - hidden on mobile */}
       <div
-        className="absolute right-0 pointer-events-none"
+        className="hidden md:block absolute right-0 pointer-events-none"
         style={{
           width: "0.5px",
           top: "-40px",
@@ -134,7 +136,7 @@ export function FeaturesGrid() {
       />
 
       {/* First Row */}
-      <div className="grid grid-cols-2 gap-0 relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
         <FeatureCard
           title="Subscribe & Track your Usage"
           description="Monitor realtime usage of tokens used in accessing all your AI tools. You can also monitor your spends on all your subscribed AI Tools."
@@ -146,9 +148,9 @@ export function FeaturesGrid() {
           showPlaceholder
         />
 
-        {/* Horizontal divider */}
+        {/* Horizontal divider - adjusted for mobile */}
         <div
-          className="absolute bottom-0 pointer-events-none"
+          className="absolute bottom-0 pointer-events-none hidden md:block"
           style={{
             height: "0.5px",
             left: "-200px",
@@ -157,14 +159,16 @@ export function FeaturesGrid() {
               "linear-gradient(90deg, transparent 0%, rgba(254, 218, 36, 0.4) 10%, rgba(239, 148, 31, 0.4) 50%, rgba(254, 218, 36, 0.4) 90%, transparent 100%)",
           }}
         />
-        {/* Intersection dots */}
-        <IntersectionDot position="left" dotId="r1-c0" />
-        <IntersectionDot position="center" dotId="r1-c1" />
-        <IntersectionDot position="right" dotId="r1-c2" />
+        {/* Intersection dots - hidden on mobile */}
+        <div className="hidden md:block">
+          <IntersectionDot position="left" dotId="r1-c0" />
+          <IntersectionDot position="center" dotId="r1-c1" />
+          <IntersectionDot position="right" dotId="r1-c2" />
+        </div>
       </div>
 
       {/* Second Row */}
-      <div className="grid grid-cols-2 gap-0 relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
         <FeatureCard
           title="Trusted by Beelia Community"
           description="Our Community test & reviews all the relevant information of any AI Tool listed on our platform."

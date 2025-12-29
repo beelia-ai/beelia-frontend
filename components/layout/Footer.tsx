@@ -64,17 +64,17 @@ export function Footer() {
 
         {/* Content - BEELIA and sections in same flex column */}
         <div
-          className="relative z-10 flex flex-col min-h-screen px-8 md:px-16 lg:px-24 py-12"
+          className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 md:px-16 lg:px-24 py-8 md:py-12"
           style={{ paddingBottom: "300px" }}
         >
           {/* Large BEELIA Text - Width matches content container */}
           <h1
-            className="w-full font-bold select-none pointer-events-none -ml-4 md:-ml-2 lg:-ml-7"
+            className="w-full font-bold select-none pointer-events-none -ml-2 sm:-ml-3 md:-ml-2 lg:-ml-7"
             style={{
               fontFamily: "var(--font-outfit), sans-serif",
               color: "rgba(255,255,255, 0.07)",
               fontWeight: 800,
-              fontSize: "calc((100vw - 4rem) * 0.262)",
+              fontSize: "calc((100vw - 2rem) * 0.262)",
               lineHeight: "1",
               marginBottom: "clamp(20px, 2vw, 40px)",
             }}
@@ -85,17 +85,17 @@ export function Footer() {
           {/* Main Content Area - Top Aligned with Links */}
           <div
             className="flex flex-col md:flex-row justify-between items-start gap-8 md:gap-16"
-            style={{ padding: "0 18px 0 12px" }}
+            style={{ padding: "0 4px 0 4px" }}
           >
             {/* Left Side - The App Store for AI Section */}
             <div className="flex flex-col">
               {/* Headline */}
               <h2
-                className="text-white max-w-l mb-6"
+                className="text-white max-w-l mb-4 md:mb-6"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 700,
-                  fontSize: "clamp(32px, 4vw, 42px)",
+                  fontSize: "clamp(28px, 6vw, 42px)",
                   lineHeight: "122%",
                   letterSpacing: "-0.02em",
                 }}
@@ -105,7 +105,7 @@ export function Footer() {
 
               {/* Description */}
               <p
-                className="text-white mb-8"
+                className="text-white mb-6 md:mb-8"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 400,
@@ -113,7 +113,7 @@ export function Footer() {
                   lineHeight: "130%",
                   letterSpacing: "0",
                   opacity: 0.5,
-                  maxWidth: "450px",
+                  maxWidth: "100%",
                 }}
               >
                 Giving people a seamless way to find the right tools and start
@@ -137,11 +137,11 @@ export function Footer() {
             </div>
 
             {/* Right Side - Links */}
-            <div className="flex flex-col md:flex-row gap-16 md:gap-32">
+            <div className="flex flex-col sm:flex-row md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-32 w-full md:w-auto">
               {/* Connect Column */}
-              <div className="flex flex-col items-end gap-6">
+              <div className="flex flex-col items-start sm:items-end gap-4 md:gap-6">
                 <h3
-                  className="text-right"
+                  className="text-left sm:text-right"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 700,
@@ -153,7 +153,7 @@ export function Footer() {
                 >
                   Connect
                 </h3>
-                <div className="flex flex-col items-end gap-4">
+                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
                   <FooterLink href="https://instagram.com/beelia.ai" external>
                     Instagram
                   </FooterLink>
@@ -170,9 +170,9 @@ export function Footer() {
               </div>
 
               {/* Legal Column */}
-              <div className="flex flex-col items-end gap-6">
+              <div className="flex flex-col items-start sm:items-end gap-4 md:gap-6">
                 <h3
-                  className="text-right"
+                  className="text-left sm:text-right"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 700,
@@ -184,7 +184,7 @@ export function Footer() {
                 >
                   Legal
                 </h3>
-                <div className="flex flex-col items-end gap-4">
+                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
                   <FooterLink href="/privacy-policy">Policies</FooterLink>
                   <FooterLink href="/terms-and-conditions">Terms</FooterLink>
                 </div>

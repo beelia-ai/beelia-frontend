@@ -36,15 +36,15 @@ export default function RootLayout({
   readonly children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <body
-        className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} bg-black`}
+        className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} bg-black overflow-x-hidden`}
         suppressHydrationWarning
       >
         <Preloader />
         <NavbarClient />
         <ScrollPositionIndicator />
-        <div className="relative" style={{ zIndex: 1 }}>
+        <div className="relative overflow-x-hidden" style={{ zIndex: 1 }}>
           {children}
         </div>
       </body>

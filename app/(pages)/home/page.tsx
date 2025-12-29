@@ -16,7 +16,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full bg-transparent">
+    <div className="relative min-h-screen w-full bg-transparent overflow-x-hidden">
       {/* Particle Sprites Background - covers entire page */}
       <ParticleSpritesBackground
         className="fixed inset-0 z-0"
@@ -30,7 +30,7 @@ export default function HomePage() {
       />
 
       {/* Page content */}
-      <div className="relative z-10">
+      <div className="relative z-10 overflow-x-hidden">
         <NewHero />
         <AboutProduct />
         <Footer />
