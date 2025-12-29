@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 // Intersection dot component - always glowing
 function IntersectionDot({
   position,
@@ -35,10 +37,12 @@ function FeatureCard({
   title,
   description,
   showPlaceholder = false,
+  imageSrc,
 }: {
   title: string;
   description: string;
   showPlaceholder?: boolean;
+  imageSrc?: string;
 }) {
   return (
     <div className="p-4 sm:p-6 md:p-8 relative">
@@ -67,6 +71,11 @@ function FeatureCard({
             width: "100%",
             maxWidth: "400px",
             minHeight: "auto",
+          className={showPlaceholder || imageSrc ? "mb-6 text-white/50" : "text-white/50"}
+          style={{
+            width: "400px",
+            height: "auto",
+            minHeight: "66px",
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
             fontWeight: 400,
             fontStyle: "normal",
@@ -87,6 +96,17 @@ function FeatureCard({
               border: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           />
+        )}
+        {imageSrc && (
+          <div className="w-full rounded-lg overflow-hidden mt-4">
+            <Image
+              src={imageSrc}
+              alt={title}
+              width={400}
+              height={200}
+              className="w-full h-auto object-contain rounded-lg"
+            />
+          </div>
         )}
       </div>
     </div>
@@ -138,14 +158,14 @@ export function FeaturesGrid() {
       {/* First Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
         <FeatureCard
-          title="Subscribe & Track your Usage"
-          description="Monitor realtime usage of tokens used in accessing all your AI tools. You can also monitor your spends on all your subscribed AI Tools."
-          showPlaceholder
+          title="Unified Billing"
+          description="Manage all your AI subscriptions from a single dashboard. View invoices, track renewals, cancel anytime, and keep all receipts organized in one place."
+          imageSrc="/images/unified-billing.png"
         />
         <FeatureCard
-          title="Don't miss out on trends"
-          description="Categorically view which kind of tools are trending in the market. We smartly monitor market trends on all the different platforms."
-          showPlaceholder
+          title="Centralized Access"
+          description="Get clear activation steps and direct access links for every subscribed AI tool. Everything you need to get started, stored in one place, no lost emails, no confusion."
+          imageSrc="/images/centralized-access.png"
         />
 
         {/* Horizontal divider - adjusted for mobile */}
@@ -170,12 +190,12 @@ export function FeaturesGrid() {
       {/* Second Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
         <FeatureCard
-          title="Trusted by Beelia Community"
-          description="Our Community test & reviews all the relevant information of any AI Tool listed on our platform."
+          title="AI is where apps were in 2008"
+          description="Before the App Store, software was fragmented, hard to trust, and painful to manage. AI tools today are in that same phase. Beelia is built to bring structure, clarity, and simplicity to the next generation of software."
         />
         <FeatureCard
-          title="Pattern Analysis"
-          description="Identify trends and optimize token usage."
+          title="One place for the AI you actually use"
+          description="As AI becomes part of everyday work, managing it shouldn't feel experimental. Beelia is building the home where your AI tools live, today and as the ecosystem evolves."
         />
       </div>
     </div>
