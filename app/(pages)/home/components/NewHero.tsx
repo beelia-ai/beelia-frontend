@@ -204,20 +204,21 @@ export function NewHero() {
 
   // Calculate responsive scale factor for mobile
   const isMobile = windowWidth < 768;
-  const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.4) : 1;
+  const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.32) : 1;
   
-  // Globe responsive sizing
-  const globeSize = isMobile ? 150 : 420;
+  // Globe responsive sizing - smaller for mobile
+  const globeSize = isMobile ? 100 : 420;
   
   // Globe top position calculation
   // Desktop: calc(128px + 182px - 210px) = 100px
-  // Mobile: needs to align with scaled trace lines center
+  // Mobile: needs to align with scaled trace lines visual center
   // Trace lines SVG center is at 182px from top of container (364px / 2)
-  // When container is scaled, the center visually scales but position stays relative
-  const traceLinesCenterY = 182; // Center of 364px SVG (always 182px from container top)
+  // When scaled, visual center = 182 * mobileScale from container top
+  // Container padding: pt-20 (80px) on mobile, pt-32 (128px) on desktop
+  const traceLinesCenterY = 182; // Center of 364px SVG
   const mobilePaddingTop = 80; // pt-20 on mobile
   const globeTop = isMobile 
-    ? `${mobilePaddingTop + traceLinesCenterY - (globeSize / 2)}px`
+    ? `${mobilePaddingTop + (traceLinesCenterY * mobileScale) - (globeSize / 2)}px`
     : "calc(128px + 182px - 210px)";
 
   return (
@@ -253,7 +254,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`${isMobile ? 'w-[150px] h-[150px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
+              className={`${isMobile ? 'w-[100px] h-[100px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
               style={{
                 opacity: beeliaOpacity,
                 willChange: "opacity",
@@ -268,7 +269,7 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`${isMobile ? 'w-[150px] h-[150px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
+              className={`${isMobile ? 'w-[100px] h-[100px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
               style={{
                 opacity: phase2Opacity,
                 willChange: "opacity",
