@@ -48,7 +48,7 @@ function FeatureCard({
     <div className="p-4 sm:p-6 md:p-8 relative">
       <div className="text-white">
         <h3
-          className="mb-1 md:whitespace-nowrap"
+          className="md:whitespace-nowrap"
           style={{
             width: "100%",
             maxWidth: "305px",
@@ -61,50 +61,52 @@ function FeatureCard({
             letterSpacing: "-2%",
             textAlign: "left",
             color: "#FFFFFF",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            marginBottom: "8px",
           }}
         >
           {title}
         </h3>
         <p
-          className={showPlaceholder ? "mb-4 md:mb-6 text-white/50" : "text-white/50"}
-          style={{
-            width: "100%",
-            maxWidth: "400px",
-            minHeight: "auto",
           className={showPlaceholder || imageSrc ? "mb-6 text-white/50" : "text-white/50"}
           style={{
             width: "400px",
             height: "auto",
             minHeight: "66px",
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
-            fontWeight: 400,
+            fontWeight: 300,
             fontStyle: "normal",
-            fontSize: "clamp(14px, 3vw, 16px)",
+            fontSize: "clamp(13px, 3vw, 15px)",
             lineHeight: "140%",
             letterSpacing: "2%",
             color: "rgba(255, 255, 255, 0.5)",
+            paddingLeft: "10px",
+            paddingRight: "10px",
           }}
         >
           {description}
         </p>
         {showPlaceholder && (
           <div
-            className="w-full rounded-lg"
+            className="w-full overflow-hidden"
             style={{
               height: "clamp(150px, 30vw, 200px)",
               backgroundColor: "rgba(60, 60, 60, 0.5)",
               border: "1px solid rgba(255, 255, 255, 0.1)",
+              borderRadius: "32px",
             }}
           />
         )}
         {imageSrc && (
-          <div className="w-full rounded-lg overflow-hidden mt-4">
+          <div className="w-full overflow-hidden mt-4" style={{ borderRadius: "32px" }}>
             <Image
               src={imageSrc}
               alt={title}
               width={400}
               height={200}
-              className="w-full h-auto object-contain rounded-lg"
+              className="w-full h-auto object-contain"
+              style={{ borderRadius: "32px" }}
             />
           </div>
         )}

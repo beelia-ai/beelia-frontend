@@ -342,11 +342,13 @@ export function BottomLinesAnimated({
 
     // Path definitions from Bottom_Lines.svg - beams flowing DOWN from center
     // Note: Center vertical line is now handled by VerticalBeamAnimated component
+    // Stroke endpoints aligned to Y=227 to connect to center-top of video boxes
+    // All paths start at center X=391.754 to align with center vertical beam
     const paths = {
         // Right diagonal - flows down and right
-        rightDiagonal: 'M391.776 159.205L767.027 208.263L767.027 240.555',
+        rightDiagonal: 'M391.754 159L767.027 208.263L767.027 227',
         // Left diagonal - flows down and left
-        leftDiagonal: 'M390.306 158.789L15.055 207.847L15.055 240.277',
+        leftDiagonal: 'M391.754 159L15.055 207.847L15.055 227',
     }
 
     // Beam configurations - exclude centerVertical as it's handled separately
@@ -461,10 +463,10 @@ export function BottomLinesAnimated({
                     )
                 })}
 
-                {/* Junction dots - opacity controlled by scroll progress */}
+                {/* Junction dots - aligned with stroke bend points */}
                 <circle
-                    cx="391.756"
-                    cy="158.914"
+                    cx="391.754"
+                    cy="159"
                     r="2"
                     fill="white"
                     style={{
@@ -474,8 +476,8 @@ export function BottomLinesAnimated({
                     }}
                 />
                 <circle
-                    cx="766.536"
-                    cy="207.914"
+                    cx="767.027"
+                    cy="208.263"
                     r="2"
                     fill="white"
                     style={{
@@ -485,8 +487,8 @@ export function BottomLinesAnimated({
                     }}
                 />
                 <circle
-                    cx="15.5358"
-                    cy="207.914"
+                    cx="15.055"
+                    cy="207.847"
                     r="2"
                     fill="white"
                     style={{

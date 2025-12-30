@@ -58,12 +58,13 @@ export function VerticalBeamAnimated({
   };
 
   // Parse center vertical line coordinates from Bottom_Lines.svg
-  // Path: M391.754 122.126L391.754 240.33
+  // Path: M391.754 122.126L391.754 227
+  // Stroke endpoint aligned to Y=227 to connect to center-top of video box
   const centerVertical = {
     x: 391.754,
     startY: 122.126,
-    endY: 240.33,
-    length: 240.33 - 122.126,
+    endY: 227,
+    length: 227 - 122.126,
   };
 
   // Convert SVG coordinates to percentage for CSS positioning
