@@ -39,7 +39,7 @@ function WaitlistHero() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [platformLink, setPlatformLink] = useState("");
-  const [userType, setUserType] = useState<"user" | "creator" | null>(null);
+  const [userType, setUserType] = useState<"user" | "creator">("user");
   const [step, setStep] = useState<"email" | "details" | "complete">("email");
   const [isLoading, setIsLoading] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -107,7 +107,7 @@ function WaitlistHero() {
       const payload: Record<string, string> = {
         email,
         name,
-        userType: userType || "",
+        userType: userType,
         action: "update",
       };
 
