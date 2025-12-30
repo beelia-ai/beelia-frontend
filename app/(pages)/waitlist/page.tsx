@@ -38,7 +38,8 @@ function CardSection({ children }: { children: React.ReactNode }) {
 function WaitlistHero() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
+  const [platformLink, setPlatformLink] = useState("");
+  const [userType, setUserType] = useState<"user" | "creator" | null>(null);
   const [step, setStep] = useState<"email" | "details" | "complete">("email");
   const [isLoading, setIsLoading] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -77,7 +78,7 @@ function WaitlistHero() {
         throw new Error(data.error || "Failed to join waitlist");
       }
 
-      // Move to step 2 - collect more details
+      // Move to step 2 - details form with user type selection
       setStep("details");
     } catch (error) {
       console.error("Waitlist submission error:", error);
@@ -91,6 +92,11 @@ function WaitlistHero() {
     }
   };
 
+  // Step 2: Handle user type selection (just updates state, doesn't change step)
+  const handleUserTypeSelect = (type: "user" | "creator") => {
+    setUserType(type);
+  };
+
   // Step 2: Submit additional details
   const handleDetailsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,17 +104,24 @@ function WaitlistHero() {
     setIsLoading(true);
 
     try {
+      const payload: Record<string, string> = {
+        email,
+        name,
+        userType: userType || "",
+        action: "update",
+      };
+
+      // Add creator-specific field
+      if (userType === "creator") {
+        payload.platformLink = platformLink;
+      }
+
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          name,
-          company,
-          action: "update",
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -140,6 +153,8 @@ function WaitlistHero() {
           overflow: hidden;
           border-radius: 50px;
           display: block;
+          width: 100% !important;
+          max-width: 100% !important;
         }
         .glass-btn-wrapper::after {
           content: '';
@@ -163,11 +178,21 @@ function WaitlistHero() {
         .glass-btn-wrapper > * {
           position: relative;
           z-index: 2;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        form.space-y-4 {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        form.space-y-4 button {
+          width: 100% !important;
+          max-width: 100% !important;
         }
       `}</style>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center px-4 sm:px-6">
         {step === "complete" ? (
           /* Complete State */
           <div className="text-center max-w-lg">
@@ -237,7 +262,7 @@ function WaitlistHero() {
             </Link>
           </div>
         ) : step === "details" ? (
-          /* Step 2: Additional Details */
+          /* Step 2: Details Form with User Type Selection */
           <div className="w-full max-w-md text-center">
             {/* Success indicator */}
             <div
@@ -286,9 +311,162 @@ function WaitlistHero() {
               Tell us a bit more about yourself (optional)
             </p>
 
+            {/* User Type Toggle Pills */}
+            <div className="w-full mb-6">
+              <div className="flex gap-3">
+                {isMounted ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("user")}
+                      className={`flex-1 group cursor-pointer transition-all duration-300 ${
+                        userType === "user" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        perspective: "1000px",
+                        transformStyle: "preserve-3d",
+                      }}
+                      onMouseEnter={() => setIsButtonHovered(true)}
+                      onMouseLeave={() => setIsButtonHovered(false)}
+                    >
+                      <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                        <GlassSurface
+                          width="100%"
+                          height={buttonHeight}
+                          borderRadius={50}
+                          chromaticAberration={userType === "user" && isButtonHovered ? 0.3 : 0.15}
+                          style={{
+                            transform: userType === "user" && isButtonHovered
+                              ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                              : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                            boxShadow: userType === "user" && isButtonHovered
+                              ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                              : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            border: userType === "user" ? "1px solid rgba(254, 218, 36, 0.5)" : "none",
+                          }}
+                        >
+                          <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
+                            <span
+                              className="text-white uppercase"
+                              style={{
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                              }}
+                            >
+                              User
+                            </span>
+                          </div>
+                        </GlassSurface>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("creator")}
+                      className={`flex-1 group cursor-pointer transition-all duration-300 ${
+                        userType === "creator" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        perspective: "1000px",
+                        transformStyle: "preserve-3d",
+                      }}
+                      onMouseEnter={() => setIsButtonHovered(true)}
+                      onMouseLeave={() => setIsButtonHovered(false)}
+                    >
+                      <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                        <GlassSurface
+                          width="100%"
+                          height={buttonHeight}
+                          borderRadius={50}
+                          chromaticAberration={userType === "creator" && isButtonHovered ? 0.3 : 0.15}
+                          style={{
+                            transform: userType === "creator" && isButtonHovered
+                              ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                              : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                            boxShadow: userType === "creator" && isButtonHovered
+                              ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                              : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            border: userType === "creator" ? "1px solid rgba(254, 218, 36, 0.5)" : "none",
+                          }}
+                        >
+                          <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
+                            <span
+                              className="text-white uppercase"
+                              style={{
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                              }}
+                            >
+                              Creator
+                            </span>
+                          </div>
+                        </GlassSurface>
+                      </div>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("user")}
+                      className={`flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 ${
+                        userType === "user" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        background: "rgba(255, 255, 255, 0.1)",
+                        border: userType === "user" ? "1px solid rgba(254, 218, 36, 0.5)" : "1px solid rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <span
+                        className="text-white uppercase"
+                        style={{
+                          fontFamily: "var(--font-outfit), sans-serif",
+                          fontSize: "clamp(14px, 3.5vw, 18px)",
+                          lineHeight: "100%",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        User
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("creator")}
+                      className={`flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 ${
+                        userType === "creator" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        background: "rgba(255, 255, 255, 0.1)",
+                        border: userType === "creator" ? "1px solid rgba(254, 218, 36, 0.5)" : "1px solid rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <span
+                        className="text-white uppercase"
+                        style={{
+                          fontFamily: "var(--font-outfit), sans-serif",
+                          fontSize: "clamp(14px, 3.5vw, 18px)",
+                          lineHeight: "100%",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        Creator
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
             {/* Form */}
-            <form onSubmit={handleDetailsSubmit} className="space-y-4">
-              <div className="relative">
+            <form onSubmit={handleDetailsSubmit} className="w-full space-y-4">
+              <div className="relative w-full">
                 <input
                   type="text"
                   value={name}
@@ -296,25 +474,29 @@ function WaitlistHero() {
                   placeholder="Your name"
                   className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
+                    width: "100%",
                     fontFamily: "var(--font-outfit), sans-serif",
                     border: "1px solid rgba(255, 255, 255, 0.08)",
                   }}
                 />
               </div>
 
-              <div className="relative">
-                <input
-                  type="text"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  placeholder="Your company"
-                  className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
-                  style={{
-                    fontFamily: "var(--font-outfit), sans-serif",
-                    border: "1px solid rgba(255, 255, 255, 0.08)",
-                  }}
-                />
-              </div>
+              {userType === "creator" && (
+                <div className="relative w-full">
+                  <input
+                    type="url"
+                    value={platformLink}
+                    onChange={(e) => setPlatformLink(e.target.value)}
+                    placeholder="Link to your platform"
+                    className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
+                    style={{
+                      width: "100%",
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                    }}
+                  />
+                </div>
+              )}
 
               {isMounted ? (
                 <button
@@ -322,13 +504,14 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
+                    width: "100%",
                     perspective: "1000px",
                     transformStyle: "preserve-3d",
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: "100%" }}>
+                  <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
                     <GlassSurface
                       width="100%"
                       height={buttonHeight}
@@ -486,8 +669,8 @@ function WaitlistHero() {
             </p>
 
             {/* Form */}
-            <form onSubmit={handleEmailSubmit} className="space-y-4">
-              <div className="relative">
+            <form onSubmit={handleEmailSubmit} className="w-full space-y-4">
+              <div className="relative w-full">
                 <input
                   type="email"
                   value={email}
@@ -496,6 +679,7 @@ function WaitlistHero() {
                   required
                   className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
+                    width: "100%",
                     fontFamily: "var(--font-outfit), sans-serif",
                     border: "1px solid rgba(255, 255, 255, 0.08)",
                   }}
@@ -508,13 +692,14 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
+                    width: "100%",
                     perspective: "1000px",
                     transformStyle: "preserve-3d",
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: "100%" }}>
+                  <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
                     <GlassSurface
                       width="100%"
                       height={buttonHeight}
