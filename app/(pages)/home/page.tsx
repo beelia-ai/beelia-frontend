@@ -2,6 +2,7 @@
 
 import { NewHero } from "./components/NewHero";
 import { AboutProduct } from "./components/AboutProduct";
+import { FAQ } from "./components/FAQ";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
 
@@ -33,6 +34,7 @@ export default function HomePage() {
       <div className="relative z-10 overflow-x-hidden">
         <NewHero />
         <AboutProduct />
+        <FAQ />
         <Footer />
       </div>
     </div>

@@ -16,10 +16,9 @@ export function IntersectionDot({ position }: IntersectionDotProps) {
       <div
         className="rounded-full"
         style={{
-          width: "4px",
-          height: "4px",
-          background: "#FEDA24",
-          boxShadow: "0 0 5px #FEDA24, 0 0 20px #FEDA24, 0 0 30px #FEDA24",
+          width: "6px",
+          height: "6px",
+          background: "#FFF",
         }}
       />
     </div>

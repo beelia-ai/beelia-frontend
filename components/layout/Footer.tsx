@@ -141,14 +141,18 @@ export function Footer() {
 
               {/* Powered By */}
               <p
-                className="text-white uppercase"
+                className="uppercase"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 600,
                   fontSize: "clamp(12px, 1.5vw, 16px)",
                   lineHeight: "100%",
                   letterSpacing: "0.05em",
-                  opacity: 0.9,
+                  background:
+                    "linear-gradient(90deg, #F80 0%, #F5A83B 25.48%, #F57238 92.31%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
                 }}
               >
                 POWERED BY—CESNO

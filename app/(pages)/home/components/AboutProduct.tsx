@@ -812,7 +812,7 @@ export function AboutProduct() {
         </motion.div>
 
         {/* Spacer for third section - creates space for scroll to reach 3000px */}
-        <div className="w-full" style={{ height: "1500px" }} />
+        <div className="w-full" style={{ height: "40px" }} />
       </div>
     </div>
   );
