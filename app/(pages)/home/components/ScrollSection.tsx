@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, createContext, useContext, useMemo, useState, useEffect } from 'react'
+import { ReactNode, createContext, useContext, useMemo, useState, useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
 
 // Context to share scroll progress
@@ -92,6 +92,54 @@ function HeroSection({ children, className }: { children: ReactNode, className: 
   )
 }
 
+// About Section - Sticky with exit effects when scrolling to footer
+function AboutSection({ 
+  children, 
+  className, 
+  height 
+}: { 
+  children: ReactNode
+  className: string
+  height: string
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  })
+  
+  // Scale down and fade when scrolling past
+  const scale = useTransform(scrollYProgress, [0.7, 1], [1, 0.95])
+  const opacity = useTransform(scrollYProgress, [0.8, 1], [1, 0])
+  const y = useTransform(scrollYProgress, [0.7, 1], ['0%', '-5%'])
+  const blur = useTransform(scrollYProgress, [0.85, 1], [0, 4])
+  const filter = useTransform(blur, (v) => `blur(${v}px)`)
+  
+  return (
+    <section
+      ref={ref}
+      className={`relative ${className}`}
+      style={{ 
+        zIndex: 11,
+        minHeight: height === 'auto' ? 'auto' : height,
+      }}
+    >
+      <motion.div
+        style={{
+          scale,
+          opacity,
+          y,
+          filter,
+          transformOrigin: 'center top',
+          willChange: 'transform, opacity, filter',
+        }}
+      >
+        {children}
+      </motion.div>
+    </section>
+  )
+}
+
 // Regular Section - Just scrolls naturally with the page
 function RegularSection({ 
   children, 
@@ -134,6 +182,11 @@ export function ScrollSection({
   // Hero (index 0) - fixed with effects
   if (index === 0) {
     return <HeroSection className={className}>{children}</HeroSection>
+  }
+  
+  // About section (index 1) - has exit effects
+  if (index === 1) {
+    return <AboutSection className={className} height={height}>{children}</AboutSection>
   }
   
   // All other sections - just scroll naturally

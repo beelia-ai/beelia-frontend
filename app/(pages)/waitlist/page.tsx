@@ -1,139 +1,148 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import dynamic from 'next/dynamic'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { ScrollSection, ScrollContainer } from '../home/components/ScrollSection'
-import { Footer } from '@/components/layout/Footer'
-import { GradientOrbs } from '@/components/ui'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import { ParticleSpritesBackground } from "@/components/ui";
+import { Footer } from "@/components/layout/Footer";
 
-const GlassSurface = dynamic(() => import('@/components/GlassSurface'), { 
+const GlassSurface = dynamic(() => import("@/components/GlassSurface"), {
   ssr: false,
   loading: () => (
-    <div 
+    <div
       className="flex items-center justify-center"
-      style={{ 
-        width: '100%', 
-        height: '60px', 
-        borderRadius: '50px',
-        background: 'rgba(255, 255, 255, 0.1)',
+      style={{
+        width: "100%",
+        height: "60px",
+        borderRadius: "50px",
+        background: "rgba(255, 255, 255, 0.1)",
       }}
     >
       <span className="text-white/50">Loading...</span>
     </div>
-  )
-})
-
-// Scroll indicator component that hides on scroll
-function ScrollIndicator() {
-  const { scrollY } = useScroll()
-  const opacity = useTransform(scrollY, [0, 100], [0.5, 0])
-  
-  return (
-    <motion.div 
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
-      style={{ opacity }}
-    >
-      <div className="flex flex-col items-center gap-2 animate-bounce">
-        <span className="text-white/50 text-xs tracking-widest uppercase">Scroll</span>
-        <svg 
-          width="24" 
-          height="24" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="1.5"
-          className="text-white/50"
-        >
-          <path d="M12 5v14M5 12l7 7 7-7"/>
-        </svg>
-      </div>
-    </motion.div>
-  )
-}
+  ),
+});
 
 // Card wrapper component for consistent styling
-function CardSection({ 
-  children, 
-  showGlow = true,
-}: { 
-  children: React.ReactNode
-  showGlow?: boolean
-}) {
+function CardSection({ children }: { children: React.ReactNode }) {
   return (
-    <div 
-      className="relative rounded-t-[48px] overflow-hidden min-h-screen"
-    >
-      {/* Card top edge glow */}
-      {showGlow && (
-        <div 
-          className="absolute top-0 left-0 right-0 h-[2px] rounded-t-[48px] z-20"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(254,218,36,0.4) 15%, rgba(254,218,36,0.8) 50%, rgba(254,218,36,0.4) 85%, transparent 100%)',
-            boxShadow: '0 0 30px rgba(254,218,36,0.4), 0 0 60px rgba(254,218,36,0.15)',
-          }}
-        />
-      )}
-      
-      {/* Subtle inner glow at top */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-40 rounded-t-[48px] pointer-events-none z-10"
-        style={{
-          background: 'linear-gradient(180deg, rgba(254,218,36,0.03) 0%, transparent 100%)',
-        }}
-      />
-      
+    <div className="relative overflow-hidden min-h-screen">
       {/* Content */}
-      <div className="relative z-0">
-        {children}
-      </div>
+      <div className="relative z-0">{children}</div>
     </div>
-  )
+  );
 }
 
 // Waitlist Hero Content
 function WaitlistHero() {
-  const [email, setEmail] = useState('')
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isButtonHovered, setIsButtonHovered] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [platformLink, setPlatformLink] = useState("");
+  const [userType, setUserType] = useState<"user" | "creator">("user");
+  const [step, setStep] = useState<"email" | "details" | "complete">("email");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [buttonHeight, setButtonHeight] = useState(60);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+    const updateHeight = () => {
+      setButtonHeight(window.innerWidth < 640 ? 50 : 60);
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    
-    setIsLoading(true)
-    
+  // Step 1: Submit email
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setIsLoading(true);
+
     try {
-      const response = await fetch('/api/waitlist', {
-        method: 'POST',
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
-      })
-      
-      const data = await response.json()
-      
+      });
+
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to join waitlist')
+        throw new Error(data.error || "Failed to join waitlist");
       }
-      
-      setIsSubmitted(true)
+
+      // Move to step 2 - details form with user type selection
+      setStep("details");
     } catch (error) {
-      console.error('Waitlist submission error:', error)
-      alert(error instanceof Error ? error.message : 'Failed to join waitlist. Please try again.')
+      console.error("Waitlist submission error:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to join waitlist. Please try again."
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+
+  // Step 2: Handle user type selection (just updates state, doesn't change step)
+  const handleUserTypeSelect = (type: "user" | "creator") => {
+    setUserType(type);
+  };
+
+  // Step 2: Submit additional details
+  const handleDetailsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setIsLoading(true);
+
+    try {
+      const payload: Record<string, string> = {
+        email,
+        name,
+        userType: userType,
+        action: "update",
+      };
+
+      // Add creator-specific field
+      if (userType === "creator") {
+        payload.platformLink = platformLink;
+      }
+
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update details");
+      }
+
+      // Move to complete state
+      setStep("complete");
+    } catch (error) {
+      console.error("Details submission error:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to submit details. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center">
@@ -144,6 +153,8 @@ function WaitlistHero() {
           overflow: hidden;
           border-radius: 50px;
           display: block;
+          width: 100% !important;
+          max-width: 100% !important;
         }
         .glass-btn-wrapper::after {
           content: '';
@@ -167,114 +178,325 @@ function WaitlistHero() {
         .glass-btn-wrapper > * {
           position: relative;
           z-index: 2;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        form.space-y-4 {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        form.space-y-4 button {
+          width: 100% !important;
+          max-width: 100% !important;
         }
       `}</style>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-6">
-        {isSubmitted ? (
-          /* Success State */
+      <div className="relative z-10 w-full flex flex-col items-center justify-center px-4 sm:px-6">
+        {step === "complete" ? (
+          /* Complete State */
           <div className="text-center max-w-lg">
-            <div 
+            <div
               className="w-16 h-16 mx-auto mb-10 rounded-full flex items-center justify-center"
-              style={{ 
-                background: 'rgba(254, 218, 36, 0.1)',
-                border: '1px solid rgba(254, 218, 36, 0.2)'
+              style={{
+                background: "rgba(254, 218, 36, 0.1)",
+                border: "1px solid rgba(254, 218, 36, 0.2)",
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FEDA24" strokeWidth="1.5">
-                <path d="M20 6L9 17l-5-5"/>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FEDA24"
+                strokeWidth="1.5"
+              >
+                <path d="M20 6L9 17l-5-5" />
               </svg>
             </div>
 
-            <h1 
+            <h1
               className="text-white mb-4"
-              style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: '32px',
-                letterSpacing: '-0.02em'
+                fontSize: "32px",
+                letterSpacing: "-0.02em",
               }}
             >
-              You&apos;re on the list
+              You&apos;re all set!
             </h1>
 
-            <p 
+            <p
               className="text-white/40 mb-12"
-              style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontSize: '15px',
-                lineHeight: '170%'
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "15px",
+                lineHeight: "170%",
               }}
             >
-              We&apos;ll notify you when Beelia launches. <br />
-              Check your inbox for a confirmation email.
+              Thanks for joining, {name || "friend"}! <br />
+              We&apos;ll notify you when Beelia launches.
             </p>
 
             <Link
               href="/home"
-              className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
-              style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontSize: '14px'
+              className="group inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "14px",
               }}
             >
-              Return home
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
+              Back Home
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="transition-transform duration-500 ease-in-out rotate-45 group-hover:rotate-0"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
           </div>
-        ) : (
-          /* Form State */
+        ) : step === "details" ? (
+          /* Step 2: Details Form with User Type Selection */
           <div className="w-full max-w-md text-center">
-            {/* Heading */}
-            <h1 
-              className="text-white mb-5"
-              style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontWeight: 400,
-                fontSize: 'clamp(36px, 6vw, 52px)',
-                lineHeight: '115%',
-                letterSpacing: '-0.03em'
+            {/* Success indicator */}
+            <div
+              className="w-12 h-12 mx-auto mb-6 rounded-full flex items-center justify-center"
+              style={{
+                background: "rgba(254, 218, 36, 0.1)",
+                border: "1px solid rgba(254, 218, 36, 0.2)",
               }}
             >
-              Get early access to{' '}
-              <span style={{ color: '#FEDA24' }}>Beelia</span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FEDA24"
+                strokeWidth="1.5"
+              >
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </div>
+
+            {/* Heading */}
+            <h1
+              className="text-white mb-3"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontWeight: 400,
+                fontSize: "clamp(28px, 5vw, 40px)",
+                lineHeight: "115%",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Almost there!
             </h1>
 
             {/* Description */}
-            <p 
-              className="text-white/40 mb-12 max-w-sm mx-auto"
-              style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+            <p
+              className="text-white/40 mb-8 max-w-sm mx-auto"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 400,
-                fontSize: '15px',
-                lineHeight: '170%'
+                fontSize: "15px",
+                lineHeight: "170%",
               }}
             >
-              The App Store for AI. Join the waitlist to be first in line when we launch.
+              Tell us a bit more about yourself (optional)
             </p>
 
+            {/* User Type Toggle Pills */}
+            <div className="w-full mb-6">
+              <div className="flex gap-3">
+                {isMounted ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("user")}
+                      className={`flex-1 group cursor-pointer transition-all duration-300 ${
+                        userType === "user" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        perspective: "1000px",
+                        transformStyle: "preserve-3d",
+                      }}
+                      onMouseEnter={() => setIsButtonHovered(true)}
+                      onMouseLeave={() => setIsButtonHovered(false)}
+                    >
+                      <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                        <GlassSurface
+                          width="100%"
+                          height={buttonHeight}
+                          borderRadius={50}
+                          chromaticAberration={userType === "user" && isButtonHovered ? 0.3 : 0.15}
+                          style={{
+                            transform: userType === "user" && isButtonHovered
+                              ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                              : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                            boxShadow: userType === "user" && isButtonHovered
+                              ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                              : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            border: userType === "user" ? "1px solid rgba(254, 218, 36, 0.5)" : "none",
+                          }}
+                        >
+                          <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
+                            <span
+                              className="text-white uppercase"
+                              style={{
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                              }}
+                            >
+                              User
+                            </span>
+                          </div>
+                        </GlassSurface>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("creator")}
+                      className={`flex-1 group cursor-pointer transition-all duration-300 ${
+                        userType === "creator" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        perspective: "1000px",
+                        transformStyle: "preserve-3d",
+                      }}
+                      onMouseEnter={() => setIsButtonHovered(true)}
+                      onMouseLeave={() => setIsButtonHovered(false)}
+                    >
+                      <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                        <GlassSurface
+                          width="100%"
+                          height={buttonHeight}
+                          borderRadius={50}
+                          chromaticAberration={userType === "creator" && isButtonHovered ? 0.3 : 0.15}
+                          style={{
+                            transform: userType === "creator" && isButtonHovered
+                              ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                              : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                            boxShadow: userType === "creator" && isButtonHovered
+                              ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                              : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            border: userType === "creator" ? "1px solid rgba(254, 218, 36, 0.5)" : "none",
+                          }}
+                        >
+                          <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
+                            <span
+                              className="text-white uppercase"
+                              style={{
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                              }}
+                            >
+                              Creator
+                            </span>
+                          </div>
+                        </GlassSurface>
+                      </div>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("user")}
+                      className={`flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 ${
+                        userType === "user" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        background: "rgba(255, 255, 255, 0.1)",
+                        border: userType === "user" ? "1px solid rgba(254, 218, 36, 0.5)" : "1px solid rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <span
+                        className="text-white uppercase"
+                        style={{
+                          fontFamily: "var(--font-outfit), sans-serif",
+                          fontSize: "clamp(14px, 3.5vw, 18px)",
+                          lineHeight: "100%",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        User
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleUserTypeSelect("creator")}
+                      className={`flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 ${
+                        userType === "creator" ? "opacity-100" : "opacity-50"
+                      }`}
+                      style={{
+                        background: "rgba(255, 255, 255, 0.1)",
+                        border: userType === "creator" ? "1px solid rgba(254, 218, 36, 0.5)" : "1px solid rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <span
+                        className="text-white uppercase"
+                        style={{
+                          fontFamily: "var(--font-outfit), sans-serif",
+                          fontSize: "clamp(14px, 3.5vw, 18px)",
+                          lineHeight: "100%",
+                          letterSpacing: "0.06em",
+                        }}
+                      >
+                        Creator
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="relative">
+            <form onSubmit={handleDetailsSubmit} className="w-full space-y-4">
+              <div className="relative w-full">
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  className="w-full px-6 py-4 bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05]"
-                  style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
-                    fontSize: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '50px',
-                    height: '60px',
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
+                  style={{
+                    width: "100%",
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
                   }}
                 />
               </div>
+
+              {userType === "creator" && (
+                <div className="relative w-full">
+                  <input
+                    type="url"
+                    value={platformLink}
+                    onChange={(e) => setPlatformLink(e.target.value)}
+                    placeholder="Link to your platform"
+                    className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
+                    style={{
+                      width: "100%",
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      border: "1px solid rgba(255, 255, 255, 0.08)",
+                    }}
+                  />
+                </div>
+              )}
 
               {isMounted ? (
                 <button
@@ -282,68 +504,82 @@ function WaitlistHero() {
                   disabled={isLoading}
                   className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                   style={{
-                    perspective: '1000px',
-                    transformStyle: 'preserve-3d',
+                    width: "100%",
+                    perspective: "1000px",
+                    transformStyle: "preserve-3d",
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: '100%' }}>
+                  <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
                     <GlassSurface
-                      width={448}
-                      height={60}
+                      width="100%"
+                      height={buttonHeight}
                       borderRadius={50}
                       chromaticAberration={isButtonHovered ? 0.3 : 0.15}
                       style={{
-                        width: '100%',
-                        maxWidth: '100%',
-                        transform: isButtonHovered 
-                          ? 'translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)' 
-                          : 'translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)',
+                        transform: isButtonHovered
+                          ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                          : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
                         boxShadow: isButtonHovered
-                          ? '0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)'
-                          : '0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)',
-                        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                          ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                          : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
-                      <div className="w-full flex items-center justify-center gap-3 relative z-10">
+                      <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
                         {isLoading ? (
                           <span className="flex items-center gap-2 text-white">
-                            <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none"/>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            <svg
+                              className="animate-spin w-4 h-4 sm:w-5 sm:h-5"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                fill="none"
+                              />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              />
                             </svg>
-                            <span 
+                            <span
                               style={{
-                                fontFamily: 'var(--font-inria-sans), sans-serif',
-                                fontSize: '18px',
-                                lineHeight: '100%',
-                                letterSpacing: '0.06em',
-                                textTransform: 'uppercase',
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                                textTransform: "uppercase",
                               }}
                             >
-                              Joining...
+                              Submitting...
                             </span>
                           </span>
                         ) : (
                           <>
-                            <span 
+                            <span
                               className="text-white uppercase"
                               style={{
-                                fontFamily: 'var(--font-inria-sans), sans-serif',
-                                fontSize: '18px',
-                                lineHeight: '100%',
-                                letterSpacing: '0.06em',
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
                               }}
                             >
-                              Join Waitlist
+                              Submit
                             </span>
                             <Image
                               src="/icons/Vector.svg"
                               alt="arrow"
                               width={18}
                               height={18}
-                              className="transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                              className="w-4 h-4 sm:w-[18px] sm:h-[18px] transition-transform duration-500 ease-in-out group-hover:rotate-45"
                             />
                           </>
                         )}
@@ -355,19 +591,208 @@ function WaitlistHero() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-4 rounded-full flex items-center justify-center gap-3 transition-all duration-300"
+                  className="w-full py-3 sm:py-4 rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    height: "clamp(50px, 12vw, 60px)",
                   }}
                 >
-                  <span 
+                  <span
                     className="text-white uppercase"
                     style={{
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '18px',
-                      lineHeight: '100%',
-                      letterSpacing: '0.06em',
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "clamp(14px, 3.5vw, 18px)",
+                      lineHeight: "100%",
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    Submit
+                  </span>
+                </button>
+              )}
+            </form>
+
+            {/* Skip link */}
+            <button
+              onClick={() => setStep("complete")}
+              className="mt-6 text-white/30 hover:text-white/50 transition-colors duration-300"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "13px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Skip for now
+            </button>
+          </div>
+        ) : (
+          /* Step 1: Email Form */
+          <div className="w-full max-w-md text-center">
+            {/* Heading */}
+            <h1
+              className="text-white mb-2"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontWeight: 400,
+                fontSize: "clamp(36px, 6vw, 52px)",
+                lineHeight: "115%",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Get{" "}
+              <span
+                className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent"
+                style={{
+                  fontFamily: "var(--font-instrument-serif), serif",
+                  fontStyle: "italic",
+                }}
+              >
+                Early Access
+              </span>
+            </h1>
+
+            {/* Description */}
+            <p
+              className="text-white/40 mb-12 max-w-sm mx-auto"
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontWeight: 400,
+                fontSize: "15px",
+                lineHeight: "170%",
+              }}
+            >
+              The App Store for AI. Join the waitlist to be first in line when
+              we launch.
+            </p>
+
+            {/* Form */}
+            <form onSubmit={handleEmailSubmit} className="w-full space-y-4">
+              <div className="relative w-full">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
+                  style={{
+                    width: "100%",
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                  }}
+                />
+              </div>
+
+              {isMounted ? (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full group cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  style={{
+                    width: "100%",
+                    perspective: "1000px",
+                    transformStyle: "preserve-3d",
+                  }}
+                  onMouseEnter={() => setIsButtonHovered(true)}
+                  onMouseLeave={() => setIsButtonHovered(false)}
+                >
+                  <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                    <GlassSurface
+                      width="100%"
+                      height={buttonHeight}
+                      borderRadius={50}
+                      chromaticAberration={isButtonHovered ? 0.3 : 0.15}
+                      style={{
+                        transform: isButtonHovered
+                          ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                          : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                        boxShadow: isButtonHovered
+                          ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                          : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                      }}
+                    >
+                      <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
+                        {isLoading ? (
+                          <span className="flex items-center gap-2 text-white">
+                            <svg
+                              className="animate-spin w-4 h-4 sm:w-5 sm:h-5"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                fill="none"
+                              />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              />
+                            </svg>
+                            <span
+                              style={{
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              Joining...
+                            </span>
+                          </span>
+                        ) : (
+                          <>
+                            <span
+                              className="text-white uppercase"
+                              style={{
+                                fontFamily: "var(--font-outfit), sans-serif",
+                                fontSize: "clamp(14px, 3.5vw, 18px)",
+                                lineHeight: "100%",
+                                letterSpacing: "0.06em",
+                              }}
+                            >
+                              Join Waitlist
+                            </span>
+                            <Image
+                              src="/icons/Vector.svg"
+                              alt="arrow"
+                              width={18}
+                              height={18}
+                              className="w-4 h-4 sm:w-[18px] sm:h-[18px] transition-transform duration-500 ease-in-out group-hover:rotate-45"
+                            />
+                          </>
+                        )}
+                      </div>
+                    </GlassSurface>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3 sm:py-4 rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    height: "clamp(50px, 12vw, 60px)",
+                  }}
+                >
+                  <span
+                    className="text-white uppercase"
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "clamp(14px, 3.5vw, 18px)",
+                      lineHeight: "100%",
+                      letterSpacing: "0.06em",
                     }}
                   >
                     Join Waitlist
@@ -377,11 +802,11 @@ function WaitlistHero() {
             </form>
 
             {/* Privacy Note */}
-            <p 
+            <p
               className="text-white/25 mt-6"
-              style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
-                fontSize: '12px'
+              style={{
+                fontFamily: "var(--font-outfit), sans-serif",
+                fontSize: "12px",
               }}
             >
               No spam. Unsubscribe anytime.
@@ -391,51 +816,51 @@ function WaitlistHero() {
             <div className="mt-16 pt-8 border-t border-white/[0.06]">
               <div className="flex items-center justify-center gap-8">
                 <div className="text-center">
-                  <p 
+                  <p
                     className="text-white mb-1"
-                    style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
                       fontWeight: 500,
-                      fontSize: '20px',
-                      letterSpacing: '-0.02em'
+                      fontSize: "20px",
+                      letterSpacing: "-0.02em",
                     }}
                   >
                     500+
                   </p>
-                  <p 
+                  <p
                     className="text-white/30"
-                    style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '12px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
                     }}
                   >
                     Waitlist
                   </p>
                 </div>
-                
+
                 <div className="w-px h-8 bg-white/[0.06]" />
-                
+
                 <div className="text-center">
-                  <p 
+                  <p
                     className="text-white mb-1"
-                    style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
                       fontWeight: 500,
-                      fontSize: '20px',
-                      letterSpacing: '-0.02em'
+                      fontSize: "20px",
+                      letterSpacing: "-0.02em",
                     }}
                   >
                     Q1 &apos;25
                   </p>
-                  <p 
+                  <p
                     className="text-white/30"
-                    style={{ 
-                      fontFamily: 'var(--font-inria-sans), sans-serif',
-                      fontSize: '12px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em'
+                    style={{
+                      fontFamily: "var(--font-outfit), sans-serif",
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
                     }}
                   >
                     Launch
@@ -447,54 +872,91 @@ function WaitlistHero() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 export default function WaitlistPage() {
-  // Hide the global footer on this page since we have our own scroll-animated one
-  useEffect(() => {
-    const globalFooter = document.querySelector('body > div > footer')
-    if (globalFooter) {
-      (globalFooter as HTMLElement).style.display = 'none'
-    }
-    return () => {
-      if (globalFooter) {
-        (globalFooter as HTMLElement).style.display = ''
-      }
-    }
-  }, [])
+  // Glossy white and silver colors in HSL format (normalized 0-1)
+  const beeliaColors = [
+    [0, 0, 1], // Pure white - glossy white
+    [0, 0, 0.9], // Off-white - bright silver
+    [0, 0, 0.75], // Silver - medium silver
+    [0, 0, 0.85], // Light silver - bright silver
+    [0, 0, 0.95], // Near white - glossy white
+  ];
 
   return (
-    <main className="relative min-h-screen bg-black overflow-hidden">
-      {/* Global Background - Fixed, covers entire page */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <GradientOrbs 
-          count={20}
-          animate={true}
-          showGrid={true}
-          gridOpacity={0.06}
+    <main className="relative min-h-screen bg-black overflow-x-hidden">
+      {/* First Section with Grid - Behind particles */}
+      <div className="relative min-h-screen">
+        {/* Square Grid - Absolute, stays in first section only */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            zIndex: 1,
+            opacity: 0.15,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)
+            `,
+            backgroundSize: `60px 60px`,
+          }}
+        />
+
+        {/* Mask overlay to hide grid in content area */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            zIndex: 2,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "min(90vw, 600px)",
+            height: "min(85vh, 800px)",
+            background:
+              "linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 1) 5%, rgba(0, 0, 0, 1) 95%, transparent 100%)",
+          }}
+        />
+
+        {/* Fade-off effect at bottom 10% of grid */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            zIndex: 3,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "10%",
+            background:
+              "linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)",
+          }}
         />
       </div>
-      
-      {/* Scroll Sections */}
-      <div className="relative z-10">
-        <ScrollContainer>
-          {/* Waitlist Hero Section */}
-          <ScrollSection index={0}>
-            <WaitlistHero />
-          </ScrollSection>
-          
-          {/* Footer Section */}
-          <ScrollSection index={1}>
-            <CardSection>
-              <Footer />
-            </CardSection>
-          </ScrollSection>
-        </ScrollContainer>
+
+      {/* Particles Background - Fixed, above grid but below content */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 5 }}>
+        <ParticleSpritesBackground
+          className="fixed inset-0"
+          particleCount={150}
+          followMouse={true}
+          mouseSensitivity={0.05}
+          colors={beeliaColors}
+          cycleColors={false}
+          sizes={[5, 5, 5, 5, 5]}
+          speed={0.3}
+        />
       </div>
-      
-      {/* Scroll indicator - hides on scroll */}
-      <ScrollIndicator />
+
+      {/* Content - Above particles */}
+      <div className="absolute inset-0" style={{ zIndex: 10 }}>
+        {/* Waitlist Hero Content */}
+        <WaitlistHero />
+      </div>
+
+      {/* Footer - Above particles */}
+      <div className="relative" style={{ zIndex: 10 }}>
+        <Footer />
+      </div>
     </main>
-  )
+  );
 }

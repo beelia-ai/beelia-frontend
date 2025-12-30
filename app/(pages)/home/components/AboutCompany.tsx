@@ -250,7 +250,27 @@ function TableBeam({
     const x = startX + (endX - startX) * beam.progress
     const y = startY + (endY - startY) * beam.progress
     
-    return { x, y, direction: beam.direction }
+    // Calculate opacity based on position - fade out near edges
+    let opacity = 1
+    const fadeMargin = 12 // percentage from edge to start fading
+    
+    if (beam.direction === 'horizontal') {
+      // Horizontal beams fade at left/right edges
+      if (x < fadeMargin) {
+        opacity = Math.min(opacity, x / fadeMargin)
+      } else if (x > 100 - fadeMargin) {
+        opacity = Math.min(opacity, (100 - x) / fadeMargin)
+      }
+    } else {
+      // Vertical beams fade at top/bottom edges
+      if (y < fadeMargin) {
+        opacity = Math.min(opacity, y / fadeMargin)
+      } else if (y > 100 - fadeMargin) {
+        opacity = Math.min(opacity, (100 - y) / fadeMargin)
+      }
+    }
+    
+    return { x, y, direction: beam.direction, opacity: Math.max(0, opacity) }
   }
   
   const beamPos = getBeamPosition()
@@ -265,17 +285,19 @@ function TableBeam({
             left: `${beamPos.x}%`,
             top: `${beamPos.y}%`,
             transform: 'translate(-50%, -50%)',
+            opacity: beamPos.opacity,
+            transition: 'opacity 0.1s ease-out',
           }}
         >
           {/* Slim line beam */}
           <div
             style={{
-              width: beamPos.direction === 'horizontal' ? '200px' : '3px',
-              height: beamPos.direction === 'horizontal' ? '3px' : '200px',
+              width: beamPos.direction === 'horizontal' ? '350px' : '1.5px',
+              height: beamPos.direction === 'horizontal' ? '1.5px' : '350px',
               background: beamPos.direction === 'horizontal'
-                ? 'linear-gradient(90deg, transparent 0%, #FEDA24 20%, #ffffff 50%, #FEDA24 80%, transparent 100%)'
-                : 'linear-gradient(180deg, transparent 0%, #FEDA24 20%, #ffffff 50%, #FEDA24 80%, transparent 100%)',
-              borderRadius: '2px',
+                ? 'linear-gradient(90deg, transparent 0%, #FEDA24 15%, #ffffff 50%, #FEDA24 85%, transparent 100%)'
+                : 'linear-gradient(180deg, transparent 0%, #FEDA24 15%, #ffffff 50%, #FEDA24 85%, transparent 100%)',
+              borderRadius: '1px',
             }}
           />
         </div>
@@ -442,12 +464,11 @@ export function AboutCompany() {
   }, [])
   
   return (
-    <section className="relative w-full min-h-screen pt-20 pb-24 px-8 md:px-16 lg:px-24 overflow-visible">
+    <section className="relative w-full h-screen flex flex-col items-center justify-center px-8 md:px-16 lg:px-24 overflow-visible">
       
-      {/* Video Section */}
+      {/* Video Section - Commented out
       <div className="flex justify-center mb-16">
         <div className="relative w-full max-w-4xl">
-          {/* A short-intro text - positioned adjacent to video */}
           <div 
             className="absolute flex items-center gap-2"
             style={{ 
@@ -471,14 +492,12 @@ export function AboutCompany() {
             />
           </div>
 
-          {/* Video Container */}
           <div 
             className="relative w-full aspect-video rounded-2xl overflow-hidden"
             style={{ 
               background: 'linear-gradient(135deg, rgba(50, 50, 50, 0.8) 0%, rgba(30, 30, 30, 0.9) 100%)'
             }}
           >
-            {/* Video Element - Blurred when paused */}
             <video 
               ref={videoRef}
               className={`w-full h-full object-cover transition-all duration-500 ${
@@ -495,16 +514,13 @@ export function AboutCompany() {
               Your browser does not support the video tag.
             </video>
             
-            {/* Preview Overlay with Play Button */}
             {!isVideoPlaying && (
               <div 
                 className="absolute inset-0 z-10 cursor-pointer"
                 onClick={handlePlayVideo}
               >
-                {/* Additional dark overlay for better contrast */}
                 <div className="absolute inset-0 bg-black/15" />
                 
-                {/* Glass border effect */}
                 <div 
                   className="absolute inset-0 rounded-2xl"
                   style={{
@@ -514,12 +530,10 @@ export function AboutCompany() {
                   }}
                 />
                 
-                {/* Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div 
                     className="relative group w-20 h-20"
                   >
-                    {/* Outer glow ring */}
                     <div 
                       className="absolute inset-0 rounded-full transition-all duration-300 group-hover:scale-[1.3]"
                       style={{
@@ -537,7 +551,6 @@ export function AboutCompany() {
                       }}
                     />
                     
-                    {/* Glass button background */}
                     <div 
                       className="absolute inset-0 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 group-hover:scale-110"
                       style={{
@@ -553,7 +566,6 @@ export function AboutCompany() {
                           boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4), inset 0 0 30px rgba(255, 255, 255, 0.15)',
                         }}
                       />
-                      {/* Play Icon */}
                       <svg 
                         width="32" 
                         height="32" 
@@ -578,6 +590,7 @@ export function AboutCompany() {
           </div>
         </div>
       </div>
+      */}
 
       {/* Team Section */}
       <div ref={tableRef} className="max-w-6xl mx-auto relative rounded-lg" style={{ background: 'transparent' }}>
@@ -635,7 +648,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -645,7 +658,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -657,7 +670,7 @@ export function AboutCompany() {
             <p 
               className="text-white/70"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '14px',
                 lineHeight: '160%'
@@ -672,7 +685,7 @@ export function AboutCompany() {
             <p 
               className="text-white"
               style={{ 
-                fontFamily: 'var(--font-inria-sans), sans-serif',
+                fontFamily: 'var(--font-outfit), sans-serif',
                 fontWeight: 400,
                 fontSize: '16px',
                 lineHeight: '170%'
@@ -739,7 +752,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -749,7 +762,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -776,7 +789,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -786,7 +799,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -854,7 +867,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -864,7 +877,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}
@@ -891,7 +904,7 @@ export function AboutCompany() {
                 <h3 
                   className="text-white mb-1"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 700,
                     fontSize: '18px'
                   }}
@@ -901,7 +914,7 @@ export function AboutCompany() {
                 <p 
                   className="text-[#FEDA24]"
                   style={{ 
-                    fontFamily: 'var(--font-inria-sans), sans-serif',
+                    fontFamily: 'var(--font-outfit), sans-serif',
                     fontWeight: 400,
                     fontSize: '14px'
                   }}

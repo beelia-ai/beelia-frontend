@@ -43,18 +43,33 @@ export interface GlassSurfaceProps {
 }
 
 const useDarkMode = () => {
-  const [isDark, setIsDark] = useState(false);
+  // Use lazy initializer to get correct value on first render (avoids flash)
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') return true; // Default to dark for SSR
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'GlassSurface.tsx:useDarkMode',message:'Dark mode initial check',data:{matches:mediaQuery.matches,scrollY:window.scrollY},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'B'})}).catch(()=>{});
+    // #endregion
+    // Only update if different from initial (handles SSR hydration)
+    if (mediaQuery.matches !== isDark) {
+      setIsDark(mediaQuery.matches);
+    }
 
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    const handler = (e: MediaQueryListEvent) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'GlassSurface.tsx:useDarkMode',message:'Dark mode changed',data:{newValue:e.matches,scrollY:window.scrollY},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+      setIsDark(e.matches);
+    };
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
+  }, [isDark]);
 
   return isDark;
 };
@@ -184,6 +199,9 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     if (!containerRef.current) return;
 
     const resizeObserver = new ResizeObserver(() => {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'GlassSurface.tsx:ResizeObserver',message:'ResizeObserver triggered',data:{scrollY:window.scrollY},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
       setTimeout(updateDisplacementMap, 0);
     });
 
@@ -230,6 +248,12 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
 
     const svgSupported = supportsSVGFilters();
     const backdropFilterSupported = supportsBackdropFilter();
+    
+    // #region agent log
+    if (typeof window !== 'undefined' && window.scrollY >= 700 && window.scrollY <= 850) {
+      fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'GlassSurface.tsx:getContainerStyles',message:'Container styles computed',data:{svgSupported,backdropFilterSupported,isDarkMode,scrollY:window.scrollY},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'E'})}).catch(()=>{});
+    }
+    // #endregion
 
     if (svgSupported) {
       return {

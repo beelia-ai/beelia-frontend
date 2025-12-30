@@ -19,20 +19,20 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
       <div className="absolute inset-0" style={{ zIndex: 1 }}>
         <LiquidEther
           colors={['#FFD700', '#FFE55C', '#FFD700']}
-          mouseForce={12}
+          mouseForce={15}
           cursorSize={120}
           isViscous={false}
           viscous={30}
-          iterationsViscous={6}
-          iterationsPoisson={6}
-          resolution={0.2}
+          iterationsViscous={10}
+          iterationsPoisson={10}
+          resolution={0.4}
           isBounce={false}
           autoDemo={true}
-          autoSpeed={0.25}
-          autoIntensity={1.2}
+          autoSpeed={0.4}
+          autoIntensity={1.5}
           takeoverDuration={0.4}
-          autoResumeDelay={500}
-          autoRampDuration={0.4}
+          autoResumeDelay={800}
+          autoRampDuration={0.6}
         />
       </div>
       
@@ -65,7 +65,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
         <p 
           className="text-white uppercase text-center max-w-[700px] opacity-80"
           style={{
-            fontFamily: 'var(--font-inria-sans), sans-serif',
+            fontFamily: 'var(--font-outfit), sans-serif',
             fontWeight: 400,
             fontSize: '18px',
             lineHeight: '26px',
@@ -76,7 +76,7 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
             opacity: 0.8
           }}
         >
-          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required
+          A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required.
         </p>
         
         {/* Beelia Logo */}
@@ -91,25 +91,16 @@ export function HeroBackground({ className, style }: HeroBackgroundProps) {
           style={{ aspectRatio: '1302/363' }}
         />
         
-        {/* Tagline Text */}
-        <p 
-          className="text-white text-center opacity-90 whitespace-nowrap"
-          style={{
-            fontFamily: 'var(--font-inria-sans), var(--font-instrument-serif), sans-serif',
-            fontWeight: 400,
-            fontSize: '44px',
-            lineHeight: '100%',
-            letterSpacing: '0%',
-            textAlign: 'center',
-            color: '#FFFFFF',
-            opacity: 0.9,
-            whiteSpace: 'nowrap'
-          }}
-        >
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>The AI Marketplace </span>
-          <span style={{ fontFamily: 'var(--font-instrument-serif), serif', fontStyle: 'italic' }}>for Everyone, </span>
-          <span style={{ fontFamily: 'var(--font-inria-sans), sans-serif' }}>By Everyone</span>
-        </p>
+        {/* Header Bottom Image */}
+        <Image
+          src="/images/Header bottom.png"
+          alt="AI for Everyone, by Everyone"
+          width={800}
+          height={100}
+          className="relative w-auto h-auto max-w-full"
+          style={{ opacity: 0.9 }}
+          priority
+        />
       </div>
     </div>
   );

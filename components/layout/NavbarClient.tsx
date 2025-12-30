@@ -7,6 +7,6 @@ const Navbar = dynamic(() => import('./Navbar').then(mod => mod.Navbar), {
 })
 
 export default function NavbarClient() {
-  return <Navbar />
+  return <Navbar forceShow={true} />
 }
 

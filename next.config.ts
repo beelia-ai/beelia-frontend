@@ -13,9 +13,25 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000'],
+      allowedOrigins: ['localhost:4000'],
     },
   },
+  // Disable caching in development
+  ...(process.env.NODE_ENV === 'development' && {
+    headers: async () => {
+      return [
+        {
+          source: '/:path*',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+            },
+          ],
+        },
+      ];
+    },
+  }),
   // Optimize bundle size
   webpack: (config, { isServer }) => {
     if (!isServer) {

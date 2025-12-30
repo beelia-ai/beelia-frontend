@@ -1,22 +1,34 @@
 import type { Metadata } from "next";
-import { Inter, Inria_Sans, Instrument_Serif } from "next/font/google";
-import NavbarClient from "@/components/layout/NavbarClient";
-import { Footer } from "@/components/layout/Footer";
-import { PreloadLogo } from "@/components/PreloadLogo";
-import { GlobalBackground } from "@/components/GlobalBackground";
+import { Inter, Instrument_Serif, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import { Preloader } from "@/components/Preloader";
+import NavbarClient from "@/components/layout/NavbarClient";
+import { ScrollPositionIndicator } from "@/components/ScrollPositionIndicator";
 
 const inter = Inter({ subsets: ["latin"] });
-const inriaSans = Inria_Sans({
-  weight: ["400"],
-  subsets: ["latin"],
-  variable: "--font-inria-sans",
-});
 const instrumentSerif = Instrument_Serif({
   weight: ["400"],
   style: ["italic"],
   subsets: ["latin"],
   variable: "--font-instrument-serif",
+});
+const outfit = Outfit({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-outfit",
+});
+
+const editorsNoteItalic = localFont({
+  src: "./fonts/EditorsNote-Italic.otf",
+  variable: "--font-editors-note-italic",
+  display: "swap",
+});
+
+const editorsNoteMediumItalic = localFont({
+  src: "./fonts/EditorsNote-MediumItalic.otf",
+  variable: "--font-editors-note-medium-italic",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,17 +49,16 @@ export default function RootLayout({
   readonly children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <body
-        className={`${inter.className} ${inriaSans.variable} ${instrumentSerif.variable} bg-black`}
+        className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} ${editorsNoteItalic.variable} ${editorsNoteMediumItalic.variable} bg-black overflow-x-hidden`}
         suppressHydrationWarning
       >
-        <GlobalBackground />
-        <PreloadLogo />
+        <Preloader />
         <NavbarClient />
-        <div className="relative" style={{ zIndex: 1 }}>
+        <ScrollPositionIndicator />
+        <div className="relative overflow-x-hidden" style={{ zIndex: 1 }}>
           {children}
-          <Footer />
         </div>
       </body>
     </html>
