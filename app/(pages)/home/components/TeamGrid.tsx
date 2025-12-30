@@ -4,6 +4,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ProfileCard } from "./ProfileCard";
 import { QuoteCard } from "./QuoteCard";
 import { HorizontalDivider } from "./HorizontalDivider";
+import { VerticalDivider } from "./VerticalDivider";
+import { IntersectionDot } from "./IntersectionDot";
 import { teamGridData } from "./teamGridData";
 
 interface TeamGridProps {
@@ -24,6 +26,11 @@ export function TeamGrid({
   marginTop = "800px",
 }: TeamGridProps) {
   const { scrollY: scrollYMotion } = useScroll();
+
+  // Find the last profile row index
+  const lastProfileRowIndex = teamGridData.reduce((lastIndex, row, index) => {
+    return row.cards.length > 0 ? index : lastIndex;
+  }, -1);
 
   // Rectangle opacity animation
   const rectangleOpacity = useTransform(scrollYMotion, (latest) => {
@@ -48,7 +55,7 @@ export function TeamGrid({
       }}
     >
       <motion.div
-        className="rounded-lg flex flex-col"
+        className="rounded-lg flex flex-col relative"
         style={{
           width: `${width}px`,
           height: `${height}px`,
@@ -57,13 +64,49 @@ export function TeamGrid({
           willChange: "opacity, transform",
         }}
       >
+        {/* Leftmost Vertical Divider */}
+        <div
+          className="absolute left-0"
+          style={{
+            top: "-40px",
+            zIndex: 1,
+          }}
+        >
+          <VerticalDivider containerHeight={height} />
+        </div>
+
+        {/* Center Vertical Divider */}
+        <div
+          className="absolute left-1/2"
+          style={{
+            top: "-40px",
+            transform: "translateX(-50%)",
+            zIndex: 1,
+          }}
+        >
+          <VerticalDivider containerHeight={height} />
+        </div>
+
+        {/* Rightmost Vertical Divider */}
+        <div
+          className="absolute right-0"
+          style={{
+            top: "-40px",
+            zIndex: 1,
+          }}
+        >
+          <VerticalDivider containerHeight={height} />
+        </div>
+
         {teamGridData.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex flex-col">
+          <div key={rowIndex} className="flex flex-col relative">
             {/* Profile Row - only render if there are cards */}
             {row.cards.length > 0 && (
               <>
                 <div
-                  className={rowIndex === 0 ? "flex flex-wrap" : "grid grid-cols-2"}
+                  className={
+                    rowIndex === 0 ? "flex flex-wrap" : "grid grid-cols-2"
+                  }
                   style={{
                     height: "fit-content",
                   }}
@@ -82,19 +125,35 @@ export function TeamGrid({
                     </div>
                   ))}
                 </div>
-                {/* Horizontal Divider after Profile Row */}
-                <HorizontalDivider containerWidth={width} />
+                {/* Dots at bottom of Profile Row - only if not the last profile row */}
+                {rowIndex !== lastProfileRowIndex && (
+                  <div className="relative w-full" style={{ height: "0px" }}>
+                    <IntersectionDot position="left" />
+                    <IntersectionDot position="center" />
+                    <IntersectionDot position="right" />
+                  </div>
+                )}
+                {/* Horizontal Divider after Profile Row - only if not the last row */}
+                {rowIndex < teamGridData.length - 1 && (
+                  <HorizontalDivider containerWidth={width} />
+                )}
               </>
             )}
-            
+
             {/* Divider Row - only show if not the last row */}
             {rowIndex < teamGridData.length - 1 && (
               <>
                 <div
+                  className="relative"
                   style={{
-                    height: "30px",
+                    height: "52px",
                   }}
-                />
+                >
+                  {/* Dots at bottom of Divider Row */}
+                  <IntersectionDot position="left" />
+                  <IntersectionDot position="center" />
+                  <IntersectionDot position="right" />
+                </div>
                 {/* Horizontal Divider after Divider Row */}
                 <HorizontalDivider containerWidth={width} />
               </>
@@ -105,4 +164,3 @@ export function TeamGrid({
     </motion.div>
   );
 }
-

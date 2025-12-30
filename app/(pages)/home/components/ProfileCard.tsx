@@ -7,11 +7,22 @@ interface ProfileCardProps {
   description: string;
 }
 
-export function ProfileCard({ name, role, image, description }: ProfileCardProps) {
+export function ProfileCard({
+  name,
+  role,
+  image,
+  description,
+}: ProfileCardProps) {
   return (
-    <div className="w-full flex items-start gap-4 p-6" style={{ height: "fit-content" }}>
+    <div
+      className="w-full flex items-start gap-4"
+      style={{ height: "fit-content", padding: "40px 40px" }}
+    >
       {/* Profile Image */}
-      <div className="w-16 h-16 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0">
+      <div
+        className="w-16 h-16 bg-gray-700 overflow-hidden flex-shrink-0"
+        style={{ borderRadius: "16px" }}
+      >
         <Image
           src={image}
           alt={name}
@@ -23,11 +34,11 @@ export function ProfileCard({ name, role, image, description }: ProfileCardProps
       {/* Profile Info */}
       <div className="flex flex-col flex-1">
         <h3
-          className="text-white mb-1"
+          className="text-white"
           style={{
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
-            fontWeight: 700,
-            fontSize: "18px",
+            fontWeight: 600,
+            fontSize: "22px",
           }}
         >
           {name}
@@ -37,7 +48,7 @@ export function ProfileCard({ name, role, image, description }: ProfileCardProps
           style={{
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
             fontWeight: 400,
-            fontSize: "14px",
+            fontSize: "18px",
           }}
         >
           {role}
@@ -46,9 +57,10 @@ export function ProfileCard({ name, role, image, description }: ProfileCardProps
           className="text-white"
           style={{
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
-            fontWeight: 400,
-            fontSize: "14px",
+            fontWeight: 300,
+            fontSize: "16px",
             lineHeight: "160%",
+            opacity: 0.7,
           }}
         >
           {description}
@@ -57,4 +69,3 @@ export function ProfileCard({ name, role, image, description }: ProfileCardProps
     </div>
   );
 }
-

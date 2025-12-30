@@ -258,6 +258,14 @@ export function AboutProduct() {
     (blurValue) => `blur(${blurValue}px)`
   );
 
+  // Third section Y offset - scrolls with page after 3450px (same as globe)
+  const thirdSectionY = useTransform(scrollYMotion, (latest) => {
+    const threshold = 3450;
+    if (latest < threshold) return 0;
+    // After threshold, move up with scroll (makes it scroll with page)
+    return -(latest - threshold);
+  });
+
   return (
     <div
       className="relative w-full bg-transparent overflow-x-hidden"
@@ -721,7 +729,7 @@ export function AboutProduct() {
         {/* Team Grid - appears at 3400px scroll */}
         <TeamGrid
           scrollStart={3400}
-          scrollEnd={3800}
+          scrollEnd={3500}
           width={1000}
           height={1000}
           opacity={1}
@@ -738,6 +746,7 @@ export function AboutProduct() {
                 : "calc(128px + 182px - 210px)",
             zIndex: 50,
             x: "-50%",
+            y: thirdSectionY,
             scale: thirdSectionScale,
             opacity: thirdSectionOpacity,
             filter: thirdSectionBlurFilter,

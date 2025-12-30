@@ -10,6 +10,8 @@ import {
   useScroll,
   useTransform,
   useMotionValueEvent,
+  useMotionValue,
+  animate,
 } from "framer-motion";
 
 export function NewHero() {
@@ -21,13 +23,21 @@ export function NewHero() {
   const [scrollY, setScrollY] = useState(0);
   const [heroScrollProgressValue, setHeroScrollProgressValue] = useState(0);
   const [beamOpacity, setBeamOpacity] = useState(1);
+  const [hidePastVideo, setHidePastVideo] = useState(false);
+  const [showFutureTransition, setShowFutureTransition] = useState(false);
+  const [showFutureMain, setShowFutureMain] = useState(false);
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1920
   );
   const heroRef = useRef<HTMLElement>(null);
   const beeliaVideoRef = useRef<HTMLVideoElement>(null);
   const phase2VideoRef = useRef<HTMLVideoElement>(null);
+  const futureTransitionVideoRef = useRef<HTMLVideoElement>(null);
+  const futureMainVideoRef = useRef<HTMLVideoElement>(null);
   const globeStopThresholdRef = useRef(Infinity);
+  const [futureTransitionDuration, setFutureTransitionDuration] = useState<
+    number | null
+  >(null);
 
   // Track scroll progress for this section
   const { scrollYProgress } = useScroll({
@@ -80,9 +90,9 @@ export function NewHero() {
   });
 
   // Globe Y offset - moves up with scroll after threshold is reached
-  // Keep globe fixed until third section ends (header at 3000px + rectangle ends at ~4400px)
-  // Rectangle appears at 3400px and is 1000px tall, so section ends around 4500px
-  const thirdSectionThreshold = 4500;
+  // Keep globe fixed until third section ends
+  // Globe becomes scrollable around 3450px scroll position
+  const thirdSectionThreshold = 3450;
   const globeY = useTransform(scrollYMotion, (latest) => {
     // Keep globe fixed until third section threshold OR footer threshold (whichever comes first)
     const threshold = Math.min(
@@ -153,7 +163,7 @@ export function NewHero() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const transitionStart = 100; // Start transition at 100px
+      const transitionStart = 200; // Start transition at 200px
 
       if (scrollY >= transitionStart && !showPhase2) {
         // Start showing Phase 2 video - preload and play
@@ -165,7 +175,7 @@ export function NewHero() {
       }
 
       if (scrollY < transitionStart && showPhase2) {
-        // Switch back to Beelia Ani 2 if scrolling back up
+        // Switch back to past video if scrolling back up
         setShowPhase2(false);
         if (beeliaVideoRef.current) {
           beeliaVideoRef.current.play().catch(() => {});
@@ -182,10 +192,11 @@ export function NewHero() {
   }, [showPhase2]);
 
   // Calculate opacity for smooth cross-fade transition based on absolute scroll Y position
-  // Transition starts at 100px and completes at 600px
+  // Transition starts at 200px and completes at 600px (400px duration)
+  // past.webm fades out while present.webm fades in simultaneously
   const phase2Opacity = useTransform(scrollYMotion, (latest) => {
-    const transitionStart = 100;
-    const transitionEnd = 600;
+    const transitionStart = 200;
+    const transitionEnd = 600; // 400px duration for fade transition
 
     if (latest < transitionStart) return 0;
     if (latest >= transitionEnd) return 1;
@@ -197,6 +208,202 @@ export function NewHero() {
   });
 
   const beeliaOpacity = useTransform(phase2Opacity, (opacity) => 1 - opacity);
+
+  // Track when present video has fully taken over to hide past video
+  useMotionValueEvent(phase2Opacity, "change", (latest) => {
+    if (latest >= 1 && !hidePastVideo) {
+      setHidePastVideo(true);
+    } else if (latest < 1 && hidePastVideo) {
+      setHidePastVideo(false);
+    }
+  });
+
+  // Calculate opacity for future-transition video transition at 2700px
+  // Transition duration: 1 second fade-out & fade-in (approximately 100px scroll range)
+  const futureTransitionOpacity = useTransform(scrollYMotion, (latest) => {
+    const transitionStart = 2700;
+    const transitionEnd = 2800; // 100px range for ~1 second transition
+
+    if (latest < transitionStart) return 0;
+    if (latest >= transitionEnd) return 1;
+
+    // Smooth fade between transitionStart and transitionEnd
+    const progress =
+      (latest - transitionStart) / (transitionEnd - transitionStart);
+    return Math.min(1, Math.max(0, progress));
+  });
+
+  // Opacity for future-transition video fade-out (based on video time, not scroll)
+  // Fades out 1 second before video ends
+  const futureTransitionVideoOpacity = useMotionValue(1);
+
+  // Opacity for future-main video fade-in (based on video time, not scroll)
+  // Fades in as future-transition fades out
+  const futureMainVideoOpacity = useMotionValue(0);
+
+  // Combined opacity for future-transition: scroll-based fade-in AND time-based fade-out
+  const futureTransitionCombinedOpacity = useMotionValue(0);
+
+  // Update combined opacity when either value changes
+  useMotionValueEvent(futureTransitionOpacity, "change", (scrollOpacity) => {
+    const timeOpacity = futureTransitionVideoOpacity.get();
+    futureTransitionCombinedOpacity.set(scrollOpacity * timeOpacity);
+  });
+
+  useMotionValueEvent(futureTransitionVideoOpacity, "change", (timeOpacity) => {
+    const scrollOpacity = futureTransitionOpacity.get();
+    futureTransitionCombinedOpacity.set(scrollOpacity * timeOpacity);
+  });
+
+  // Initialize combined opacity when future-transition becomes visible
+  useMotionValueEvent(futureTransitionOpacity, "change", (scrollOpacity) => {
+    if (scrollOpacity >= 1 && futureTransitionCombinedOpacity.get() === 0) {
+      futureTransitionCombinedOpacity.set(1);
+    }
+  });
+
+  // Combined opacity for present video: fades in from 200px-600px, visible until 2700px, then fades out
+  // Present video fades in simultaneously as past.webm fades out (200px-600px)
+  // Then stays fully visible until future-transition starts (2700px)
+  const presentVideoOpacity = useTransform(scrollYMotion, (latest) => {
+    const fadeInStart = 200; // Start fading in here (same as past.webm fade out)
+    const fadeInEnd = 600; // Fully visible after this
+    const futureTransitionStart = 2700; // Start fading out here
+    const futureTransitionEnd = 2800; // Fully faded out here
+
+    // During fade-in phase (200px-600px), use phase2Opacity
+    if (latest >= fadeInStart && latest < fadeInEnd) {
+      const progress = (latest - fadeInStart) / (fadeInEnd - fadeInStart);
+      return Math.min(1, Math.max(0, progress));
+    }
+
+    // Before fade-in starts, opacity is 0
+    if (latest < fadeInStart) return 0;
+
+    // Between fade-in complete and future transition start, fully visible
+    if (latest >= fadeInEnd && latest < futureTransitionStart) return 1;
+
+    // During future transition, fade out
+    if (latest >= futureTransitionStart && latest < futureTransitionEnd) {
+      const progress =
+        (latest - futureTransitionStart) /
+        (futureTransitionEnd - futureTransitionStart);
+      return 1 - progress;
+    }
+
+    // After future transition completes, fully hidden
+    return 0;
+  });
+
+  // Track future-transition video duration when it loads
+  useEffect(() => {
+    const video = futureTransitionVideoRef.current;
+    if (!video) return;
+
+    const handleLoadedMetadata = () => {
+      setFutureTransitionDuration(video.duration);
+    };
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    // If video is already loaded, get duration immediately
+    if (video.readyState >= 1) {
+      setFutureTransitionDuration(video.duration);
+    }
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [showFutureTransition]);
+
+  // Track future-transition video playback to fade out 1 second before it ends
+  useEffect(() => {
+    if (!showFutureTransition || !futureTransitionDuration) return;
+
+    const video = futureTransitionVideoRef.current;
+    if (!video) return;
+
+    let fadeStarted = false;
+
+    const checkVideoTime = () => {
+      // Once future-main has taken over, stop monitoring future-transition
+      // future-main will loop infinitely on its own
+      if (showFutureMain) return;
+
+      const fadeStartTime = futureTransitionDuration - 1; // 1 second before end
+
+      if (video.currentTime >= fadeStartTime && !fadeStarted) {
+        fadeStarted = true;
+        setShowFutureMain(true);
+
+        // Start fade animations: future-transition fades out, future-main fades in
+        animate(futureTransitionVideoOpacity, 0, {
+          duration: 1,
+          ease: "linear",
+        });
+        animate(futureMainVideoOpacity, 1, { duration: 1, ease: "linear" });
+
+        if (futureMainVideoRef.current) {
+          futureMainVideoRef.current.load();
+          futureMainVideoRef.current.play().catch(() => {});
+        }
+
+        // Pause future-transition video once future-main takes over
+        // future-main will loop infinitely, future-transition stays hidden
+        if (video) {
+          video.pause();
+        }
+      }
+    };
+
+    const interval = setInterval(checkVideoTime, 50); // Check every 50ms for smoother tracking
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [
+    showFutureTransition,
+    futureTransitionDuration,
+    futureTransitionVideoOpacity,
+    futureMainVideoOpacity,
+    showFutureMain,
+  ]);
+
+  // Track when future-transition video should start playing
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const transitionStart = 2700;
+
+      if (scrollY >= transitionStart && !showFutureTransition) {
+        // Start showing future-transition video - preload and play
+        setShowFutureTransition(true);
+        if (futureTransitionVideoRef.current) {
+          futureTransitionVideoRef.current.load();
+          futureTransitionVideoRef.current.play().catch(() => {});
+        }
+      }
+
+      if (scrollY < transitionStart && showFutureTransition) {
+        // Switch back to present video if scrolling back up
+        setShowFutureTransition(false);
+        setShowFutureMain(false);
+        futureTransitionVideoOpacity.set(1);
+        futureMainVideoOpacity.set(0);
+        futureTransitionCombinedOpacity.set(0);
+        if (phase2VideoRef.current) {
+          phase2VideoRef.current.play().catch(() => {});
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [showFutureTransition]);
 
   // Track window width for responsive scaling
   useEffect(() => {
@@ -257,25 +464,27 @@ export function NewHero() {
         >
           {/* Video Globe */}
           <div className="w-full h-full flex items-center justify-center relative">
-            {/* Beelia Ani 2 Video */}
-            <motion.video
-              ref={beeliaVideoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className={`${
-                isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
-              } object-contain mr-0.5 absolute`}
-              style={{
-                opacity: beeliaOpacity,
-                willChange: "opacity",
-              }}
-            >
-              <source src="/videos/Beelia ani 2.webm" type="video/webm" />
-            </motion.video>
+            {/* Past Video */}
+            {!hidePastVideo && (
+              <motion.video
+                ref={beeliaVideoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={`${
+                  isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+                } object-contain mr-0.5 absolute`}
+                style={{
+                  opacity: beeliaOpacity,
+                  willChange: "opacity",
+                }}
+              >
+                <source src="/videos/past.webm" type="video/webm" />
+              </motion.video>
+            )}
 
-            {/* Phase 2 Video */}
+            {/* Present Video - Phase 2 */}
             <motion.video
               ref={phase2VideoRef}
               loop
@@ -285,12 +494,49 @@ export function NewHero() {
                 isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
               } object-contain mr-0.5 absolute`}
               style={{
-                opacity: phase2Opacity,
+                opacity: presentVideoOpacity,
                 willChange: "opacity",
               }}
             >
-              <source src="/videos/Phase 2.webm" type="video/webm" />
+              <source src="/videos/present.webm" type="video/webm" />
             </motion.video>
+
+            {/* Future Transition Video */}
+            <motion.video
+              ref={futureTransitionVideoRef}
+              loop
+              muted
+              playsInline
+              className={`${
+                isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+              } object-contain mr-0.5 absolute`}
+              style={{
+                opacity: futureTransitionCombinedOpacity,
+                willChange: "opacity",
+              }}
+            >
+              <source src="/videos/future-transition.webm" type="video/webm" />
+            </motion.video>
+
+            {/* Future Main Video */}
+            {showFutureMain && (
+              <motion.video
+                ref={futureMainVideoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={`${
+                  isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+                } object-contain mr-0.5 absolute`}
+                style={{
+                  opacity: futureMainVideoOpacity,
+                  willChange: "opacity",
+                }}
+              >
+                <source src="/videos/future-main.webm" type="video/webm" />
+              </motion.video>
+            )}
           </div>
         </motion.div>
 
