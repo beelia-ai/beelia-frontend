@@ -79,26 +79,35 @@ export function HeroContent({
         }
       `}</style>
 
-      {/* AIFOR Image - below trace lines */}
-      <div className="w-full max-w-[90vw] md:w-[675px] h-auto px-4 md:px-0">
-        <Image
-          src="/images/AIFOR.png"
-          alt="AI For Everyone, by Everyone"
-          width={675}
-          height={80}
-          className="w-full h-auto object-contain"
-          priority
-        />
+      {/* AIFOR Text - below trace lines */}
+      <div className="w-full flex justify-center px-2 md:px-0">
+        <h1 className="text-center font-editors-note-italic text-3xl md:text-6xl lg:text-7xl leading-tight whitespace-nowrap">
+          <span className="text-white">AI</span>{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
+            for Everyone,
+          </span>{" "}
+          <span className="text-white">by Everyone</span>
+        </h1>
       </div>
 
-      {/* Tagline Text - below AIFOR image */}
-      <p className="mt-4 text-center uppercase text-white/60 text-sm md:text-[17px] leading-[140%] md:leading-[32px] tracking-[0.04em] font-normal max-w-[90vw] md:max-w-[680px] px-4 md:px-0 font-outfit">
+      {/* Tagline Text - below AIFOR text */}
+      <p
+        className="mt-4 text-center text-white/60"
+        style={{
+          fontFamily: "var(--font-outfit), sans-serif",
+          opacity: 0.7,
+          fontWeight: 300,
+          fontSize: "clamp(14px, 1.8vw, 22px)",
+          maxWidth: "680px",
+          marginTop: "20px",
+        }}
+      >
         A curated AI marketplace where anyone can discover, trust, and use the
         right tools instantly, no technical skills required
       </p>
 
       {/* Join Waitlist Button - below tagline text */}
-      <div className="mt-8">
+      <div className="mt-6">
         <Link
           href="/waitlist"
           className={`group block [perspective:1000px] [transform-style:preserve-3d] ${
@@ -112,8 +121,16 @@ export function HeroContent({
           >
             {isMounted ? (
               <GlassSurface
-                width={typeof window !== 'undefined' && window.innerWidth < 768 ? 200 : 270}
-                height={typeof window !== 'undefined' && window.innerWidth < 768 ? 60 : 80}
+                width={
+                  typeof window !== "undefined" && window.innerWidth < 768
+                    ? 200
+                    : 270
+                }
+                height={
+                  typeof window !== "undefined" && window.innerWidth < 768
+                    ? 60
+                    : 80
+                }
                 borderRadius={50}
                 chromaticAberration={0.15}
                 redOffset={0}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import {
   motion,
   useScroll,
@@ -252,16 +251,34 @@ export function AboutProduct() {
           }}
         >
           <div className="flex flex-col items-center px-4 md:px-0">
-            {/* OneStop Image */}
-            <div className="flex justify-center mb-4 md:mb-6 w-full">
-              <Image
-                src="/images/Onestop.png"
-                alt="OneStop"
-                width={1000}
-                height={300}
-                className="w-full max-w-[90vw] md:max-w-none h-auto object-contain"
-                priority
-              />
+            {/* OneStop Text */}
+            <div
+              className="flex justify-center w-full"
+              style={{ marginBottom: "10px" }}
+            >
+              <h2 className="text-center whitespace-nowrap">
+                <span
+                  className="font-editors-note-italic text-2xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FEDA24]"
+                  style={{
+                    fontSize: "clamp(24px, 3vw, 48px)",
+                  }}
+                >
+                  true&nbsp;
+                </span>
+                <span
+                  className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
+                  style={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontWeight: 600,
+                    fontSize: "clamp(24px, 2.7vw, 48px)",
+                    lineHeight: "100%",
+                    letterSpacing: "0.05em",
+                    opacity: 0.9,
+                  }}
+                >
+                  ONE-STOP-SHOP
+                </span>
+              </h2>
             </div>
 
             {/* Description text under OneStop Image */}
@@ -271,7 +288,7 @@ export function AboutProduct() {
                 width: windowWidth < 768 ? "100%" : "457.771484375px",
                 height: windowWidth < 768 ? "auto" : "44px",
                 fontFamily: "var(--font-outfit), Outfit, sans-serif",
-                fontWeight: 400,
+                fontWeight: 300,
                 fontStyle: "normal",
                 fontSize: windowWidth < 768 ? "14px" : "16px",
                 lineHeight: "140%",
@@ -279,6 +296,7 @@ export function AboutProduct() {
                 textAlign: "center",
                 color: "#FFFFFF",
                 maxWidth: windowWidth < 768 ? "90vw" : "457.771484375px",
+                opacity: 0.7,
               }}
             >
               —giving people a seamless way to find the right tools and start

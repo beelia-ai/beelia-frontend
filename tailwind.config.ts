@@ -26,6 +26,14 @@ const config: Config = {
   			'instrument-serif': [
   				'var(--font-instrument-serif)',
   				'serif'
+  			],
+  			'editors-note-italic': [
+  				'var(--font-editors-note-italic)',
+  				'serif'
+  			],
+  			'editors-note-medium-italic': [
+  				'var(--font-editors-note-medium-italic)',
+  				'serif'
   			]
   		},
   		colors: {

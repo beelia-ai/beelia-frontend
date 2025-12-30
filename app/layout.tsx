@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Instrument_Serif, Outfit } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
@@ -16,6 +17,18 @@ const outfit = Outfit({
   weight: ["400"],
   subsets: ["latin"],
   variable: "--font-outfit",
+});
+
+const editorsNoteItalic = localFont({
+  src: "./fonts/EditorsNote-Italic.otf",
+  variable: "--font-editors-note-italic",
+  display: "swap",
+});
+
+const editorsNoteMediumItalic = localFont({
+  src: "./fonts/EditorsNote-MediumItalic.otf",
+  variable: "--font-editors-note-medium-italic",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -38,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
       <body
-        className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} bg-black overflow-x-hidden`}
+        className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} ${editorsNoteItalic.variable} ${editorsNoteMediumItalic.variable} bg-black overflow-x-hidden`}
         suppressHydrationWarning
       >
         <Preloader />

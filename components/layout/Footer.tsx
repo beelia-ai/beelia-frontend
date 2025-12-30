@@ -65,8 +65,8 @@ export function Footer() {
           className="absolute left-0 right-0 w-full z-10"
           style={{
             bottom: isMobile ? "160px" : "-240px",
-            transform: isMobile 
-              ? "rotate(-8deg) scale(1.2)" 
+            transform: isMobile
+              ? "rotate(-8deg) scale(1.2)"
               : "rotate(-8deg) scale(1)",
             transformOrigin: "center center",
           }}
@@ -125,15 +125,14 @@ export function Footer() {
 
               {/* Description */}
               <p
-                className="text-white mb-6 md:mb-8"
+                className="text-white mb-6 md:mb-8 max-w-full md:max-w-[500px]"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
-                  fontWeight: 400,
+                  fontWeight: 300,
                   fontSize: "clamp(14px, 2vw, 16px)",
                   lineHeight: "130%",
                   letterSpacing: "0",
                   opacity: 0.5,
-                  maxWidth: "100%",
                 }}
               >
                 Giving people a seamless way to find the right tools and start
@@ -145,11 +144,11 @@ export function Footer() {
                 className="text-white uppercase"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
-                  fontWeight: 100,
+                  fontWeight: 600,
                   fontSize: "clamp(12px, 1.5vw, 16px)",
                   lineHeight: "100%",
                   letterSpacing: "0.05em",
-                  opacity: 0.5,
+                  opacity: 0.9,
                 }}
               >
                 POWERED BY—CESNO
@@ -164,11 +163,12 @@ export function Footer() {
                   className="text-left sm:text-right"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontWeight: 700,
+                    fontWeight: 400,
                     fontSize: "clamp(16px, 2vw, 18.9px)",
                     lineHeight: "25.2px",
                     letterSpacing: "-0.02em",
                     color: "#FFFFFF",
+                    opacity: 0.5,
                   }}
                 >
                   Connect
@@ -195,11 +195,12 @@ export function Footer() {
                   className="text-left sm:text-right"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontWeight: 700,
+                    fontWeight: 400,
                     fontSize: "clamp(16px, 2vw, 18.9px)",
                     lineHeight: "25.2px",
                     letterSpacing: "-0.02em",
                     color: "#FFFFFF",
+                    opacity: 0.5,
                   }}
                 >
                   Legal
