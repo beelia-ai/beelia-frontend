@@ -8,6 +8,7 @@ import {
   useMotionValueEvent,
 } from "framer-motion";
 import { FeaturesGrid } from "./FeaturesGrid";
+import { TeamGrid } from "./TeamGrid";
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -224,13 +225,47 @@ export function AboutProduct() {
     setOpeningProgressValue(latest);
   });
 
+  // Third section animations - appear at 3000px scroll
+  const thirdSectionScale = useTransform(scrollYMotion, (latest) => {
+    if (latest >= 3000 && latest <= 3400) {
+      return 0.5 + ((latest - 3000) / 400) * 0.5; // Scale from 0.5 to 1
+    }
+    if (latest < 3000) return 0.5;
+    if (latest >= 3400) return 1;
+    return 1;
+  });
+
+  const thirdSectionOpacity = useTransform(scrollYMotion, (latest) => {
+    if (latest < 3000) return 0;
+    if (latest >= 3400) return 1;
+    return (latest - 3000) / 400; // Opacity from 0 to 1
+  });
+
+  const thirdSectionBlur = useTransform(scrollYMotion, (latest) => {
+    if (latest < 3000) return 0;
+    if (latest >= 3000 && latest <= 3100) {
+      return 10; // Instant blur at 3000px
+    }
+    if (latest > 3100 && latest < 3200) {
+      const progress = (latest - 3100) / 100;
+      return 10 - progress * 10; // Blur decreases from 10px to 0
+    }
+    return 0; // No blur after 3200px
+  });
+
+  const thirdSectionBlurFilter = useTransform(
+    thirdSectionBlur,
+    (blurValue) => `blur(${blurValue}px)`
+  );
+
   return (
     <div
       className="relative w-full bg-transparent overflow-x-hidden"
-      style={{ minHeight: "1600px" }}
+      style={{ minHeight: "4000px" }}
     >
       {/* Section content */}
       <div className="relative z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-x-hidden w-full max-w-full">
+        {/* Second Section Header */}
         {/* OneStop Image and Text Container - maintains same distance from top as globe */}
         <motion.div
           className="fixed left-1/2 pointer-events-none"
@@ -682,6 +717,93 @@ export function AboutProduct() {
         >
           <FeaturesGrid />
         </div>
+
+        {/* Team Grid - appears at 3400px scroll */}
+        <TeamGrid
+          scrollStart={3400}
+          scrollEnd={3800}
+          width={1000}
+          height={1000}
+          opacity={1}
+          marginTop="800px"
+        />
+
+        {/* Third Section Header - appears at 3000px scroll */}
+        <motion.div
+          className="fixed left-1/2 pointer-events-none"
+          style={{
+            top:
+              windowWidth < 768
+                ? "clamp(60px, 15vh, 100px)"
+                : "calc(128px + 182px - 210px)",
+            zIndex: 50,
+            x: "-50%",
+            scale: thirdSectionScale,
+            opacity: thirdSectionOpacity,
+            filter: thirdSectionBlurFilter,
+            transformOrigin: "center center",
+            willChange: "transform, opacity, filter",
+            width: windowWidth < 768 ? "90vw" : "auto",
+            maxWidth: "1000px",
+          }}
+        >
+          <div className="flex flex-col items-center px-4 md:px-0">
+            {/* Team FROM THE FUTURE Text */}
+            <div
+              className="flex justify-center w-full"
+              style={{ marginBottom: "10px" }}
+            >
+              <h2 className="text-center whitespace-nowrap">
+                <span
+                  className="font-editors-note-italic text-2xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FEDA24]"
+                  style={{
+                    fontSize: "clamp(24px, 3vw, 48px)",
+                  }}
+                >
+                  team&nbsp;
+                </span>
+                <span
+                  className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
+                  style={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontWeight: 600,
+                    fontSize: "clamp(24px, 2.7vw, 48px)",
+                    lineHeight: "100%",
+                    letterSpacing: "0.05em",
+                    opacity: 0.9,
+                  }}
+                >
+                  FROM THE FUTURE
+                </span>
+              </h2>
+            </div>
+
+            {/* Description text under Team FROM THE FUTURE */}
+            <p
+              className="text-center mb-8 md:mb-12 px-4"
+              style={{
+                width: windowWidth < 768 ? "100%" : "600px",
+                height: windowWidth < 768 ? "auto" : "44px",
+                fontFamily: "var(--font-outfit), Outfit, sans-serif",
+                fontWeight: 300,
+                fontStyle: "normal",
+                fontSize: windowWidth < 768 ? "14px" : "16px",
+                lineHeight: "140%",
+                letterSpacing: "2%",
+                textAlign: "center",
+                color: "#FFFFFF",
+                maxWidth: windowWidth < 768 ? "90vw" : "600px",
+                opacity: 0.7,
+              }}
+            >
+              —powerhouse of talent and dedication, we tackle challenges head-on
+              and celebrate our collective achievements
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Spacer for third section - creates space for scroll to reach 3000px */}
+        <div className="w-full" style={{ height: "1500px" }} />
       </div>
     </div>
   );

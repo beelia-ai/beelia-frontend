@@ -21,7 +21,9 @@ export function NewHero() {
   const [scrollY, setScrollY] = useState(0);
   const [heroScrollProgressValue, setHeroScrollProgressValue] = useState(0);
   const [beamOpacity, setBeamOpacity] = useState(1);
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1920);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1920
+  );
   const heroRef = useRef<HTMLElement>(null);
   const beeliaVideoRef = useRef<HTMLVideoElement>(null);
   const phase2VideoRef = useRef<HTMLVideoElement>(null);
@@ -78,10 +80,18 @@ export function NewHero() {
   });
 
   // Globe Y offset - moves up with scroll after threshold is reached
+  // Keep globe fixed until third section ends (header at 3000px + rectangle ends at ~4400px)
+  // Rectangle appears at 3400px and is 1000px tall, so section ends around 4500px
+  const thirdSectionThreshold = 4500;
   const globeY = useTransform(scrollYMotion, (latest) => {
-    if (latest < globeStopThresholdRef.current) return 0;
+    // Keep globe fixed until third section threshold OR footer threshold (whichever comes first)
+    const threshold = Math.min(
+      thirdSectionThreshold,
+      globeStopThresholdRef.current
+    );
+    if (latest < threshold) return 0;
     // After threshold, move globe up with scroll (makes it scroll with page)
-    return -(latest - globeStopThresholdRef.current);
+    return -(latest - threshold);
   });
 
   // Track scroll Y position
@@ -205,10 +215,10 @@ export function NewHero() {
   // Calculate responsive scale factor for mobile
   const isMobile = windowWidth < 768;
   const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.32) : 1;
-  
+
   // Globe responsive sizing - smaller for mobile
   const globeSize = isMobile ? 140 : 420;
-  
+
   // Globe top position calculation
   // Desktop: calc(128px + 182px - 210px) = 100px
   // Mobile: needs to align with scaled trace lines visual center
@@ -217,8 +227,8 @@ export function NewHero() {
   // Container padding: pt-20 (80px) on mobile, pt-32 (128px) on desktop
   const traceLinesCenterY = 182; // Center of 364px SVG
   const mobilePaddingTop = 200; // pt-20 on mobile
-  const globeTop = isMobile 
-    ? `${mobilePaddingTop + (traceLinesCenterY * mobileScale) - (globeSize / 2)}px`
+  const globeTop = isMobile
+    ? `${mobilePaddingTop + traceLinesCenterY * mobileScale - globeSize / 2}px`
     : "calc(128px + 182px - 210px)";
 
   return (
@@ -254,7 +264,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`${isMobile ? 'w-[140px] h-[140px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
+              className={`${
+                isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+              } object-contain mr-0.5 absolute`}
               style={{
                 opacity: beeliaOpacity,
                 willChange: "opacity",
@@ -269,7 +281,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`${isMobile ? 'w-[140px] h-[140px]' : 'w-[420px] h-[420px]'} object-contain mr-0.5 absolute`}
+              className={`${
+                isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+              } object-contain mr-0.5 absolute`}
               style={{
                 opacity: phase2Opacity,
                 willChange: "opacity",
@@ -317,7 +331,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
+              className={`absolute ${
+                isMobile ? "object-contain" : "object-cover"
+              } rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "197.278px",
                 top: "0.5px",
@@ -348,7 +364,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
+              className={`absolute ${
+                isMobile ? "object-contain" : "object-cover"
+              } rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "0.18px",
                 top: "129.481px",
@@ -379,7 +397,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
+              className={`absolute ${
+                isMobile ? "object-contain" : "object-cover"
+              } rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "146.17px",
                 top: "252.641px",
@@ -411,7 +431,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
+              className={`absolute ${
+                isMobile ? "object-contain" : "object-cover"
+              } rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "792.23px",
                 top: "0.5px",
@@ -442,7 +464,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
+              className={`absolute ${
+                isMobile ? "object-contain" : "object-cover"
+              } rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "992.16px",
                 top: "129.481px",
@@ -473,7 +497,9 @@ export function NewHero() {
               loop
               muted
               playsInline
-              className={`absolute ${isMobile ? 'object-contain' : 'object-cover'} rounded-[31.5px] pointer-events-none`}
+              className={`absolute ${
+                isMobile ? "object-contain" : "object-cover"
+              } rounded-[31.5px] pointer-events-none`}
               style={{
                 left: "838.17px",
                 top: "254.15px",
