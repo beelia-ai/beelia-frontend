@@ -19,7 +19,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const scrollThresholdRef = useRef(0);
   const pathname = usePathname();
   const isWaitlistPage = pathname === "/waitlist";
-  const isHomePage = pathname === "/home";
+  const isUsersPage = pathname === "/users";
 
   // Track window size for responsive button sizing
   useEffect(() => {
@@ -128,8 +128,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const navbarContentOpacity = isVisible ? 1 : 0;
   const navbarContentY = isVisible ? 0 : -20;
 
-  // Hide navbar on home page unless forced to show
-  if (isHomePage && !forceShow) {
+  // Hide navbar on users page unless forced to show
+  if (isUsersPage && !forceShow) {
     return null;
   }
 
@@ -203,7 +203,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           background: white;
           transition: width 0.3s ease;
         }
-        .nav-link:hover::after {
+        .nav-link:hover::after,
+        .nav-link.active::after {
           width: 100%;
         }
       `}</style>
@@ -226,7 +227,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
               willChange: "opacity, transform",
             }}
           >
-            <Link href="/home" className="flex items-center gap-2">
+            <Link href="/users" className="flex items-center gap-2">
               <Image
                 src="/icons/beelia-logo.png"
                 alt="Beelia Logo"
@@ -259,19 +260,23 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   isMobile ? "gap-3 sm:gap-4" : "gap-8 lg:gap-12"
                 }`}
               >
-                <button
-                  onClick={() => {}}
-                  className="nav-link cursor-pointer"
+                <Link
+                  href="/users"
+                  className={`nav-link cursor-pointer ${
+                    isUsersPage ? "active" : ""
+                  }`}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontSize: isMobile ? "12px" : "16px",
-                    fontWeight: 400,
+                    fontWeight: isUsersPage ? 600 : 400,
                     background: "none",
                     border: "none",
+                    textDecoration: "none",
+                    color: isUsersPage ? "#FFFFFF" : "rgba(255, 255, 255, 0.7)",
                   }}
                 >
                   Users
-                </button>
+                </Link>
                 <button
                   onClick={() => scrollToSection("about-company")}
                   className="nav-link cursor-pointer"
@@ -306,7 +311,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           {/* JOIN WAITLIST button on the right */}
           <div className="flex items-center justify-end flex-shrink-0 z-10">
             <Link
-              href={isWaitlistPage ? "/home" : "/waitlist"}
+              href={isWaitlistPage ? "/users" : "/waitlist"}
               className="group cursor-pointer block"
               style={{
                 perspective: "1000px",
@@ -351,7 +356,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         letterSpacing: isMobile ? "0.04em" : "0.06em",
                       }}
                     >
-                      {isWaitlistPage ? "back home" : "join waitlist"}
+                      {isWaitlistPage ? "back to users" : "join waitlist"}
                     </span>
                     {!isWaitlistPage && (
                       <Image

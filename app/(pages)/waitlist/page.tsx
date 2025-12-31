@@ -240,7 +240,7 @@ function WaitlistHero() {
             </p>
 
             <Link
-              href="/home"
+              href="/users"
               className="group inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
               style={{
                 fontFamily: "var(--font-outfit), sans-serif",
