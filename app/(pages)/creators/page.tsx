@@ -23,13 +23,13 @@ export default function CreatorsPage() {
       title: "Payments handled for you",
       description:
         "Beelia handles subscriptions, billing, and payments automatically, so you can focus on improving your AI while we take care of the money flow.",
-      imageSrc: "/images/unified-billing.png", // You can replace this with a creator-specific image
+      imageSrc: "/images/payments.png",
     },
     {
       title: "Your creator dashboard",
       description:
         "Manage your listings, pricing, and subscriptions from one place. Update your tool, track active users, and control your monetization without extra infrastructure.",
-      imageSrc: "/images/centralized-access.png", // You can replace this with a creator-specific image
+      imageSrc: "/images/creator-dashboard.png",
     },
     {
       title: "Selling AI shouldn’t require a startup",

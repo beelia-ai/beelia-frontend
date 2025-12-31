@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { NewHero } from "./components/NewHero";
 import { AboutProduct } from "./components/AboutProduct";
 import { FAQ } from "./components/FAQ";
@@ -7,6 +8,18 @@ import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
 
 export default function HomePage() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
     [0, 0, 1], // Pure white - glossy white
@@ -18,10 +31,10 @@ export default function HomePage() {
 
   return (
     <div className="relative w-full bg-transparent">
-      {/* Particle Sprites Background - covers entire page */}
+      {/* Particle Sprites Background - reduced particles on mobile */}
       <ParticleSpritesBackground
         className="fixed inset-0 z-0"
-        particleCount={150}
+        particleCount={isMobile ? 75 : 150}
         followMouse={true}
         mouseSensitivity={0.05}
         colors={beeliaColors}

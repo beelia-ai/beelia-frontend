@@ -90,6 +90,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Enable smooth scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  html {
+    /* Ensure html allows vertical scrolling */
+    overflow-y: auto;
+    /* Enable smooth scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
   }
 }
 

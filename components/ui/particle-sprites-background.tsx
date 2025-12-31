@@ -176,10 +176,20 @@ export function ParticleSpritesBackground({
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
+
+      // Update touch-action based on screen size
+      if (followMouse) {
+        const isMobile = window.innerWidth < 768
+        document.body.style.touchAction = isMobile ? '' : 'none'
+      }
     }
 
     if (followMouse) {
-      document.body.style.touchAction = 'none'
+      // Only disable touch-action on desktop, allow scrolling on mobile
+      const isMobile = window.innerWidth < 768
+      if (!isMobile) {
+        document.body.style.touchAction = 'none'
+      }
       document.body.addEventListener('pointermove', handlePointerMove)
     }
 
@@ -251,6 +261,8 @@ export function ParticleSpritesBackground({
 
       if (followMouse) {
         document.body.removeEventListener('pointermove', handlePointerMove)
+        // Reset touch-action on cleanup
+        document.body.style.touchAction = ''
       }
 
       window.removeEventListener('resize', handleResize)

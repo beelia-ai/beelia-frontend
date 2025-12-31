@@ -729,15 +729,24 @@ export function AboutProduct({
                       className="w-full object-cover"
                       style={{
                         width: "90%",
-                        maxWidth: "140px",
-                        height:
-                          box.title === "SAFETY"
-                            ? isMobile
-                              ? "76px"
-                              : "96px"
+                        maxWidth:
+                          box.title === "DISCOVER"
+                            ? "140px"
                             : isMobile
-                            ? "80px"
-                            : "100px",
+                            ? "112px"
+                            : "112px",
+                        height:
+                          box.title === "DISCOVER"
+                            ? isMobile
+                              ? "80px"
+                              : "100px"
+                            : box.title === "SAFETY"
+                            ? isMobile
+                              ? "61px"
+                              : "77px"
+                            : isMobile
+                            ? "64px"
+                            : "80px",
                         maxHeight: "200px",
                       }}
                     />

@@ -42,9 +42,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const [hidePastVideo, setHidePastVideo] = useState(false);
   const [showFutureTransition, setShowFutureTransition] = useState(false);
   const [showFutureMain, setShowFutureMain] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1920
-  );
+  const [windowWidth, setWindowWidth] = useState(1920);
   const [isIOSDevice, setIsIOSDevice] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const beeliaVideoRef = useRef<HTMLVideoElement>(null);
@@ -54,6 +52,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const globeStopThresholdRef = useRef(Infinity);
   // Refs for box videos to enable pausing when not visible
   const boxVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  // Refs for mobile circular videos
+  const mobileVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   // Track if hero section is visible for video optimization
   const [isHeroVisible, setIsHeroVisible] = useState(true);
   const [futureTransitionDuration, setFutureTransitionDuration] = useState<
@@ -442,6 +442,30 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     setIsIOSDevice(isIOS());
   }, []);
 
+  // Ensure mobile videos play when mounted
+  useEffect(() => {
+    if (windowWidth >= 768) return;
+
+    const playMobileVideos = () => {
+      const videos = mobileVideoRefs.current.filter(
+        Boolean
+      ) as HTMLVideoElement[];
+      videos.forEach((video) => {
+        if (video.paused) {
+          video.play().catch(() => {});
+        }
+      });
+    };
+
+    // Try to play immediately
+    playMobileVideos();
+
+    // Also try after a short delay to ensure they're ready
+    const timeout = setTimeout(playMobileVideos, 500);
+
+    return () => clearTimeout(timeout);
+  }, [windowWidth, isMounted]);
+
   // Intersection Observer to pause ALL videos when hero is not visible
   // This is the KEY performance optimization - videos only play when user can see them
   useEffect(() => {
@@ -460,9 +484,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           futureMainVideoRef.current,
         ];
         const boxVideos = boxVideoRefs.current.filter(Boolean);
-        const allVideos = [...globeVideos, ...boxVideos].filter(
-          Boolean
-        ) as HTMLVideoElement[];
+        const mobileVideos = mobileVideoRefs.current.filter(Boolean);
+        const allVideos = [
+          ...globeVideos,
+          ...boxVideos,
+          ...mobileVideos,
+        ].filter(Boolean) as HTMLVideoElement[];
 
         allVideos.forEach((video) => {
           if (isVisible) {
@@ -511,19 +538,28 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.32) : 1;
 
   // Globe responsive sizing - smaller for mobile
-  const globeSize = isMobile ? 140 : 420;
+  const globeSize = isMobile ? 280 : 420;
 
   // Globe top position calculation
   // Desktop: calc(128px + 182px - 210px) = 100px
-  // Mobile: needs to align with scaled trace lines visual center
-  // Trace lines SVG center is at 182px from top of container (364px / 2)
-  // When scaled, visual center = 182 * mobileScale from container top
-  // Container padding: pt-20 (80px) on mobile, pt-32 (128px) on desktop
-  const traceLinesCenterY = 182; // Center of 364px SVG
-  const mobilePaddingTop = 200; // pt-20 on mobile
+  // Mobile: reduced spacing from top (simplified since trace lines are hidden)
   const globeTop = isMobile
-    ? `${mobilePaddingTop + traceLinesCenterY * mobileScale - globeSize / 2}px`
+    ? "80px" // Moved higher
     : "calc(128px + 182px - 210px)";
+
+  // Circular arrangement for mobile videos
+  // 6 videos positioned equidistantly around the globe
+  const videoRadius = isMobile ? 115 : 0; // Distance from globe center (closer)
+  const videoSize = isMobile ? 81 : 0; // Size of each video on mobile (0.9x of 90px)
+  const videoAngles = [0, 60, 120, 180, 240, 300]; // Degrees for 6 videos
+  const mobileVideos = [
+    { src: "/videos/magnify.webm", stackedSrc: "/videos/magnify-stacked.mp4" },
+    { src: "/videos/shield.webm", stackedSrc: "/videos/shield-stacked.mp4" },
+    { src: "/videos/bell.webm", stackedSrc: "/videos/bell-stacked.mp4" },
+    { src: "/videos/upload.webm", stackedSrc: "/videos/upload-stacked.mp4" },
+    { src: "/videos/dollar.webm", stackedSrc: "/videos/dollar-stacked.mp4" },
+    { src: "/videos/graph.webm", stackedSrc: "/videos/graph-stacked.mp4" },
+  ];
 
   return (
     <>
@@ -531,6 +567,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         id="hero-section"
         ref={heroRef}
         className="h-screen bg-transparent relative overflow-visible"
+        style={{ touchAction: "pan-y" }}
       >
         {/* Video Globe Container - RESTORED with lazy loading */}
         <motion.div
@@ -550,11 +587,11 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           {/* Video Globe */}
           <div className="w-full h-full flex items-center justify-center relative">
             {/* Past Video */}
-            {!hidePastVideo && (
-              isIOSDevice ? (
+            {!hidePastVideo &&
+              (isIOSDevice ? (
                 <motion.div
                   className={`${
-                    isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+                    isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
                   } mr-0.5 absolute`}
                   style={{
                     opacity: beeliaOpacity,
@@ -579,7 +616,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   playsInline
                   preload="none"
                   className={`${
-                    isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+                    isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
                   } object-contain mr-0.5 absolute`}
                   style={{
                     opacity: beeliaOpacity,
@@ -588,14 +625,13 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <source src="/videos/past.webm" type="video/webm" />
                 </motion.video>
-              )
-            )}
+              ))}
 
             {/* Present Video - Phase 2 */}
             {isIOSDevice ? (
               <motion.div
                 className={`${
-                  isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+                  isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
                 } mr-0.5 absolute`}
                 style={{
                   opacity: presentVideoOpacity,
@@ -619,7 +655,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 playsInline
                 preload="none"
                 className={`${
-                  isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
+                  isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
                 } object-contain mr-0.5 absolute`}
                 style={{
                   opacity: presentVideoOpacity,
@@ -634,7 +670,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             {isIOSDevice ? (
               <motion.div
                 className={`${
-                  isMobile ? "w-[140px] h-[140px]" : "w-[400px] h-[400px]"
+                  isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
                 } absolute`}
                 style={{
                   opacity: futureTransitionCombinedOpacity,
@@ -659,7 +695,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 playsInline
                 preload="none"
                 className={`${
-                  isMobile ? "w-[140px] h-[140px]" : "w-[400px] h-[400px]"
+                  isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
                 } object-contain absolute`}
                 style={{
                   opacity: futureTransitionCombinedOpacity,
@@ -667,16 +703,19 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   marginLeft: "4px",
                 }}
               >
-                <source src="/videos/future-transition.webm" type="video/webm" />
+                <source
+                  src="/videos/future-transition.webm"
+                  type="video/webm"
+                />
               </motion.video>
             )}
 
             {/* Future Main Video */}
-            {showFutureMain && (
-              isIOSDevice ? (
+            {showFutureMain &&
+              (isIOSDevice ? (
                 <motion.div
                   className={`${
-                    isMobile ? "w-[140px] h-[140px]" : "w-[400px] h-[400px]"
+                    isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
                   } absolute`}
                   style={{
                     opacity: futureMainVideoOpacity,
@@ -702,7 +741,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   playsInline
                   preload="none"
                   className={`${
-                    isMobile ? "w-[140px] h-[140px]" : "w-[400px] h-[400px]"
+                    isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
                   } object-contain absolute`}
                   style={{
                     opacity: futureMainVideoOpacity,
@@ -712,42 +751,116 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <source src="/videos/future-main.webm" type="video/webm" />
                 </motion.video>
-              )
-            )}
+              ))}
           </div>
         </motion.div>
 
-        {/* Light Rays - RESTORED */}
-        <LightRays
-          raysOrigin="top-center"
-          raysColor="#F5A83B"
-          raysSpeed={0.6}
-          lightSpread={0.7}
-          rayLength={2.2}
-          fadeDistance={1}
-          saturation={1}
-          followMouse={true}
-          mouseInfluence={0.1}
-          noiseAmount={0}
-          distortion={0}
-          className="absolute -top-48 inset-x-0 bottom-0"
-        />
-
-        {/* Content container with proper spacing - flex column layout */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-hidden">
-          {/* Trace Lines Animated SVG - positioned at top with scroll animation */}
+        {/* Mobile: Circular video arrangement around globe */}
+        {isMobile && (
           <motion.div
-            className="relative w-[1102px] h-[364px] mb-12"
+            className="fixed left-1/2 pointer-events-none"
             style={{
-              scale: isMobile ? mobileScale : traceLinesScale,
-              willChange: "transform",
-              marginTop: "-5px",
-              transformOrigin: "center center",
+              top: `calc(${globeTop} + ${globeSize / 2}px)`,
+              zIndex: 50,
+              x: "-50%",
+              y: "-50%",
+              width: `${globeSize + videoRadius * 2}px`,
+              height: `${globeSize + videoRadius * 2}px`,
+              opacity:
+                traceLinesScrollProgress > 0 ? 1 - traceLinesScrollProgress : 1,
             }}
           >
-            {/* BOX VIDEOS - RESTORED with optimizations: preload="none", no infinite framer-motion animations */}
-            {/* Using CSS animation instead of framer-motion for better GPU performance */}
-            <style>{`
+            {mobileVideos.map((video, index) => {
+              const angle = (videoAngles[index] * Math.PI) / 180;
+              const x = Math.cos(angle) * videoRadius;
+              const y = Math.sin(angle) * videoRadius;
+
+              return isIOSDevice ? (
+                <div
+                  key={index}
+                  className="absolute rounded-[18px] overflow-hidden"
+                  style={{
+                    width: `${videoSize}px`,
+                    height: `${videoSize}px`,
+                    left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
+                    top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc={video.src}
+                    stackedAlphaSrc={video.stackedSrc}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  key={index}
+                  ref={(el) => {
+                    mobileVideoRefs.current[index] = el;
+                  }}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="absolute rounded-[18px] object-cover"
+                  style={{
+                    width: `${videoSize}px`,
+                    height: `${videoSize}px`,
+                    left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
+                    top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
+                  }}
+                  onLoadedData={(e) => {
+                    const vid = e.currentTarget;
+                    if (vid.paused) {
+                      vid.play().catch(() => {});
+                    }
+                  }}
+                >
+                  <source src={video.src} type="video/webm" />
+                </video>
+              );
+            })}
+          </motion.div>
+        )}
+
+        {/* Light Rays - RESTORED - Desktop only */}
+        {!isMobile && (
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#F5A83B"
+            raysSpeed={0.6}
+            lightSpread={0.7}
+            rayLength={2.2}
+            fadeDistance={1}
+            saturation={1}
+            followMouse={true}
+            mouseInfluence={0.1}
+            noiseAmount={0}
+            distortion={0}
+            className="absolute -top-48 inset-x-0 bottom-0"
+          />
+        )}
+
+        {/* Content container with proper spacing - flex column layout */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-visible">
+          {/* Trace Lines Animated SVG - positioned at top with scroll animation - Desktop only */}
+          {!isMobile && (
+            <motion.div
+              className="relative w-[1102px] h-[364px] mb-12"
+              style={{
+                scale: traceLinesScale,
+                willChange: "transform",
+                marginTop: "-5px",
+                transformOrigin: "center center",
+              }}
+            >
+              {/* BOX VIDEOS - RESTORED with optimizations: preload="none", no infinite framer-motion animations */}
+              {/* Using CSS animation instead of framer-motion for better GPU performance */}
+              <style>{`
               @keyframes float-box-video {
                 0%, 100% { transform: translateY(-3px); }
                 50% { transform: translateY(3px); }
@@ -756,383 +869,387 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 animation: float-box-video 2s ease-in-out infinite;
               }
             `}</style>
-            {/* Left top box */}
-            {isIOSDevice ? (
-              <div
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "197.278px",
-                  top: "0.5px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                }}
-              >
-                <WebGLVideo
-                  webmSrc="/videos/magnify.webm"
-                  stackedAlphaSrc="/videos/magnify-stacked.mp4"
-                  className="w-full h-full rounded-[31.5px]"
+              {/* Left top box */}
+              {isIOSDevice ? (
+                <div
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "197.278px",
+                    top: "0.5px",
+                    width: "109.32px",
+                    height: "109.32px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc="/videos/magnify.webm"
+                    stackedAlphaSrc="/videos/magnify-stacked.mp4"
+                    className="w-full h-full rounded-[31.5px]"
+                    autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => {
+                    boxVideoRefs.current[0] = el;
+                  }}
                   autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
                   loop
                   muted
-                />
-              </div>
-            ) : (
-              <video
-                ref={(el) => {
-                  boxVideoRefs.current[0] = el;
-                }}
-                autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                loop
-                muted
-                playsInline
-                preload="none"
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "197.278px",
-                  top: "0.5px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                }}
-              >
-                <source src="/videos/magnify.webm" type="video/webm" />
-              </video>
-            )}
-            {/* Left center box */}
-            {isIOSDevice ? (
-              <div
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "0.18px",
-                  top: "129.481px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.3s",
-                }}
-              >
-                <WebGLVideo
-                  webmSrc="/videos/shield.webm"
-                  stackedAlphaSrc="/videos/shield-stacked.mp4"
-                  className="w-full h-full rounded-[31.5px]"
+                  playsInline
+                  preload="none"
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "197.278px",
+                    top: "0.5px",
+                    width: "109.32px",
+                    height: "109.32px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                  }}
+                >
+                  <source src="/videos/magnify.webm" type="video/webm" />
+                </video>
+              )}
+              {/* Left center box */}
+              {isIOSDevice ? (
+                <div
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "11.11px",
+                    top: "140.411px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.3s",
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc="/videos/shield.webm"
+                    stackedAlphaSrc="/videos/shield-stacked.mp4"
+                    className="w-full h-full rounded-[31.5px]"
+                    autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => {
+                    boxVideoRefs.current[1] = el;
+                  }}
                   autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
                   loop
                   muted
-                />
-              </div>
-            ) : (
-              <video
-                ref={(el) => {
-                  boxVideoRefs.current[1] = el;
-                }}
-                autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                loop
-                muted
-                playsInline
-                preload="none"
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "0.18px",
-                  top: "129.481px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.3s",
-                }}
-              >
-                <source src="/videos/shield.webm" type="video/webm" />
-              </video>
-            )}
-            {/* Left bottom box */}
-            {isIOSDevice ? (
-              <div
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "146.17px",
-                  top: "252.641px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.6s",
-                }}
-              >
-                <WebGLVideo
-                  webmSrc="/videos/bell.webm"
-                  stackedAlphaSrc="/videos/bell-stacked.mp4"
-                  className="w-full h-full rounded-[31.5px]"
+                  playsInline
+                  preload="none"
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "11.11px",
+                    top: "140.411px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.3s",
+                  }}
+                >
+                  <source src="/videos/shield.webm" type="video/webm" />
+                </video>
+              )}
+              {/* Left bottom box */}
+              {isIOSDevice ? (
+                <div
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "157.10px",
+                    top: "263.571px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.6s",
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc="/videos/bell.webm"
+                    stackedAlphaSrc="/videos/bell-stacked.mp4"
+                    className="w-full h-full rounded-[31.5px]"
+                    autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => {
+                    boxVideoRefs.current[2] = el;
+                  }}
                   autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
                   loop
                   muted
-                />
-              </div>
-            ) : (
-              <video
-                ref={(el) => {
-                  boxVideoRefs.current[2] = el;
-                }}
-                autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                loop
-                muted
-                playsInline
-                preload="none"
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "146.17px",
-                  top: "252.641px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.6s",
-                }}
-              >
-                <source src="/videos/bell.webm" type="video/webm" />
-              </video>
-            )}
-            {/* Right top box */}
-            {isIOSDevice ? (
-              <div
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "792.23px",
-                  top: "0.5px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.15s",
-                }}
-              >
-                <WebGLVideo
-                  webmSrc="/videos/upload.webm"
-                  stackedAlphaSrc="/videos/upload-stacked.mp4"
-                  className="w-full h-full rounded-[31.5px]"
+                  playsInline
+                  preload="none"
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "157.10px",
+                    top: "263.571px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.6s",
+                  }}
+                >
+                  <source src="/videos/bell.webm" type="video/webm" />
+                </video>
+              )}
+              {/* Right top box */}
+              {isIOSDevice ? (
+                <div
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "803.16px",
+                    top: "11.43px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.15s",
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc="/videos/upload.webm"
+                    stackedAlphaSrc="/videos/upload-stacked.mp4"
+                    className="w-full h-full rounded-[31.5px]"
+                    autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => {
+                    boxVideoRefs.current[3] = el;
+                  }}
                   autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
                   loop
                   muted
-                />
-              </div>
-            ) : (
-              <video
-                ref={(el) => {
-                  boxVideoRefs.current[3] = el;
-                }}
-                autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                loop
-                muted
-                playsInline
-                preload="none"
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "792.23px",
-                  top: "0.5px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.15s",
-                }}
-              >
-                <source src="/videos/upload.webm" type="video/webm" />
-              </video>
-            )}
-            {/* Right center box */}
-            {isIOSDevice ? (
-              <div
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "992.16px",
-                  top: "129.481px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.45s",
-                }}
-              >
-                <WebGLVideo
-                  webmSrc="/videos/dollar.webm"
-                  stackedAlphaSrc="/videos/dollar-stacked.mp4"
-                  className="w-full h-full rounded-[31.5px]"
+                  playsInline
+                  preload="none"
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "803.16px",
+                    top: "11.43px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.15s",
+                  }}
+                >
+                  <source src="/videos/upload.webm" type="video/webm" />
+                </video>
+              )}
+              {/* Right center box */}
+              {isIOSDevice ? (
+                <div
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "1003.09px",
+                    top: "140.411px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.45s",
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc="/videos/dollar.webm"
+                    stackedAlphaSrc="/videos/dollar-stacked.mp4"
+                    className="w-full h-full rounded-[31.5px]"
+                    autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => {
+                    boxVideoRefs.current[4] = el;
+                  }}
                   autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
                   loop
                   muted
-                />
-              </div>
-            ) : (
-              <video
-                ref={(el) => {
-                  boxVideoRefs.current[4] = el;
-                }}
-                autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                loop
-                muted
-                playsInline
-                preload="none"
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "992.16px",
-                  top: "129.481px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.45s",
-                }}
-              >
-                <source src="/videos/dollar.webm" type="video/webm" />
-              </video>
-            )}
-            {/* Right bottom box */}
-            {isIOSDevice ? (
-              <div
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "838.17px",
-                  top: "254.15px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.75s",
-                }}
-              >
-                <WebGLVideo
-                  webmSrc="/videos/graph.webm"
-                  stackedAlphaSrc="/videos/graph-stacked.mp4"
-                  className="w-full h-full rounded-[31.5px]"
+                  playsInline
+                  preload="none"
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "1003.09px",
+                    top: "140.411px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.45s",
+                  }}
+                >
+                  <source src="/videos/dollar.webm" type="video/webm" />
+                </video>
+              )}
+              {/* Right bottom box */}
+              {isIOSDevice ? (
+                <div
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "849.10px",
+                    top: "265.08px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.75s",
+                  }}
+                >
+                  <WebGLVideo
+                    webmSrc="/videos/graph.webm"
+                    stackedAlphaSrc="/videos/graph-stacked.mp4"
+                    className="w-full h-full rounded-[31.5px]"
+                    autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
+                    loop
+                    muted
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => {
+                    boxVideoRefs.current[5] = el;
+                  }}
                   autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
                   loop
                   muted
-                />
-              </div>
-            ) : (
-              <video
-                ref={(el) => {
-                  boxVideoRefs.current[5] = el;
-                }}
-                autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                loop
-                muted
-                playsInline
-                preload="none"
-                className={`absolute box-video-float ${
-                  isMobile ? "object-contain" : "object-cover"
-                } rounded-[31.5px] pointer-events-none`}
-                style={{
-                  left: "838.17px",
-                  top: "254.15px",
-                  width: "109.32px",
-                  height: "109.32px",
-                  zIndex: 10,
-                  opacity:
-                    traceLinesScrollProgress > 0
-                      ? 1 - traceLinesScrollProgress
-                      : 1,
-                  animationDelay: "0.75s",
-                }}
-              >
-                <source src="/videos/graph.webm" type="video/webm" />
-              </video>
-            )}
+                  playsInline
+                  preload="none"
+                  className={`absolute box-video-float ${
+                    isMobile ? "object-contain" : "object-cover"
+                  } rounded-[31.5px] pointer-events-none`}
+                  style={{
+                    left: "849.10px",
+                    top: "265.08px",
+                    width: "87.46px",
+                    height: "87.46px",
+                    zIndex: 10,
+                    opacity:
+                      traceLinesScrollProgress > 0
+                        ? 1 - traceLinesScrollProgress
+                        : 1,
+                    animationDelay: "0.75s",
+                  }}
+                >
+                  <source src="/videos/graph.webm" type="video/webm" />
+                </video>
+              )}
 
-            {/* TRACE LINES - RESTORED */}
-            <HorizontalBeamAnimated
-              className="absolute inset-0 w-full h-full object-contain"
-              style={{ zIndex: 0 }}
-              duration={4}
-              delay={0}
-              beamColor="#FEDA24"
-              beamColorSecondary="#FF8C32"
-              pathColor="#444444"
-              beamWidth={0.8}
-              pathWidth={0.8}
-              scrollProgress={traceLinesScrollProgress}
-              isRetracting={traceLinesScrollProgress > 0}
-              beamOpacity={beamOpacity}
-            />
+              {/* TRACE LINES - RESTORED */}
+              <HorizontalBeamAnimated
+                className="absolute inset-0 w-full h-full object-contain"
+                style={{ zIndex: 0 }}
+                duration={4}
+                delay={0}
+                beamColor="#FEDA24"
+                beamColorSecondary="#FF8C32"
+                pathColor="#444444"
+                beamWidth={0.8}
+                pathWidth={0.8}
+                scrollProgress={traceLinesScrollProgress}
+                isRetracting={traceLinesScrollProgress > 0}
+                beamOpacity={beamOpacity}
+              />
 
-            <TraceLinesAnimated
-              className="absolute inset-0 w-full h-full object-contain"
-              style={{ zIndex: 1 }}
-              duration={4}
-              delay={0}
-              beamColor="#FEDA24"
-              beamColorSecondary="#FF8C32"
-              pathColor="#444444"
-              beamWidth={0.8}
-              pathWidth={0.8}
-              scrollProgress={traceLinesScrollProgress}
-              isRetracting={traceLinesScrollProgress > 0}
-              scrollY={scrollY}
-              heroScrollProgress={heroScrollProgressValue}
-            />
-          </motion.div>
+              <TraceLinesAnimated
+                className="absolute inset-0 w-full h-full object-contain"
+                style={{ zIndex: 1 }}
+                duration={4}
+                delay={0}
+                beamColor="#FEDA24"
+                beamColorSecondary="#FF8C32"
+                pathColor="#444444"
+                beamWidth={0.8}
+                pathWidth={0.8}
+                scrollProgress={traceLinesScrollProgress}
+                isRetracting={traceLinesScrollProgress > 0}
+                scrollY={scrollY}
+                heroScrollProgress={heroScrollProgressValue}
+              />
+            </motion.div>
+          )}
+
+          {/* Mobile spacer to maintain content position (replaces trace lines height) */}
+          <div className="h-[450px] md:h-0" />
 
           {/* Content wrapper with scroll animations */}
           <motion.div
-            className="flex flex-col items-center"
+            className="flex flex-col items-center w-full mt-16 md:mt-0"
             style={{
               opacity: contentOpacity,
               scale: contentScale,
