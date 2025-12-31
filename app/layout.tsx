@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
-import { ScrollPositionIndicator } from "@/components/ScrollPositionIndicator";
+import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 
 const inter = Inter({ subsets: ["latin"] });
 const instrumentSerif = Instrument_Serif({
@@ -56,7 +56,7 @@ export default function RootLayout({
       >
         <Preloader />
         <NavbarClient />
-        <ScrollPositionIndicator />
+        <PerformanceMonitor />
         <div className="relative" style={{ zIndex: 1 }}>
           {children}
         </div>
