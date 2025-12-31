@@ -186,7 +186,7 @@ export function ParticleSpritesBackground({
     window.addEventListener('resize', handleResize)
 
     // Animation loop with frame rate limiting to reduce CPU/GPU usage
-    const targetFPS = 30 // Cap at 30 FPS for background effect - sufficient for smooth visuals
+    const targetFPS = 60 // Cap at 60 FPS for background effect - sufficient for smooth visuals
     const frameInterval = 1000 / targetFPS
     let lastFrameTime = 0
 

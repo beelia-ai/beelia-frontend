@@ -115,7 +115,7 @@ export function HeroContent({
       </p>
 
       {/* Join Waitlist Button - below tagline text */}
-      <div className="mt-6">
+      <div className="mt-6 md:mt-6 fixed md:relative bottom-[20px] md:bottom-auto left-1/2 md:left-auto -translate-x-1/2 md:translate-x-0 z-50 md:z-auto">
         <Link
           href="/waitlist"
           className={`group block [perspective:1000px] [transform-style:preserve-3d] ${

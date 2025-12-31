@@ -127,22 +127,44 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
         .nav-link::after {
           content: '';
           position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 1.4px;
           background: white;
-          transition: width 0.3s ease;
+          transition: all 0.3s ease;
         }
-        .nav-link:hover::after,
-        .nav-link.active::after {
-          width: 100%;
+        /* Horizontal underline for desktop */
+        @media (min-width: 768px) {
+          .nav-link::after {
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1.4px;
+          }
+          .nav-link:hover::after,
+          .nav-link.active::after {
+            width: 100%;
+          }
+        }
+        /* Vertical indicator for mobile */
+        @media (max-width: 767px) {
+          .nav-link::after {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.4px;
+            height: 0;
+          }
+          .nav-link:hover::after,
+          .nav-link.active::after {
+            height: 100%;
+          }
         }
       `}</style>
 
       {/* Full width navbar */}
       <nav className="fixed top-0 left-0 right-0 z-[9999] px-4 sm:px-6 md:px-8 lg:px-16 py-3 md:py-6">
-        <div className="flex items-center justify-between w-full relative">
+        <div
+          className="flex items-center justify-between w-full relative"
+          style={{ padding: "6px 12px" }}
+        >
           {/* Logo on the left - hides on scroll down, shows on scroll up */}
           <motion.div
             className="flex items-center justify-start flex-shrink-0 z-10"
@@ -170,9 +192,13 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             </Link>
           </motion.div>
 
-          {/* Navigation links in the center - visible on all screen sizes */}
+          {/* Navigation links - centered on desktop, top-right column on mobile */}
           <motion.div
-            className="flex items-center justify-center absolute inset-0 pointer-events-none"
+            className={`absolute pointer-events-none ${
+              isMobile
+                ? "top-0 right-0 flex items-start justify-end"
+                : "inset-0 flex items-center justify-center"
+            }`}
             animate={{
               opacity: navbarContentOpacity,
               y: navbarContentY,
@@ -187,8 +213,10 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           >
             {!isWaitlistPage && (
               <div
-                className={`flex items-center pointer-events-auto ${
-                  isMobile ? "gap-3 sm:gap-4" : "gap-8 lg:gap-12"
+                className={`pointer-events-auto ${
+                  isMobile
+                    ? "flex flex-col items-end gap-2 sm:gap-3"
+                    : "flex items-center gap-8 lg:gap-12"
                 }`}
               >
                 <Link
@@ -198,7 +226,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   }`}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: isMobile ? "12px" : "16px",
+                    fontSize: isMobile ? "16px" : "16px",
                     fontWeight: isUsersPage ? 600 : 400,
                     background: "none",
                     border: "none",
@@ -215,7 +243,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   }`}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: isMobile ? "12px" : "16px",
+                    fontSize: isMobile ? "16px" : "16px",
                     fontWeight: isCreatorsPage ? 600 : 400,
                     background: "none",
                     border: "none",
@@ -232,7 +260,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   className="nav-link cursor-pointer"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: isMobile ? "12px" : "16px",
+                    fontSize: isMobile ? "16px" : "16px",
                     fontWeight: 400,
                     background: "none",
                     border: "none",
@@ -246,7 +274,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           </motion.div>
 
           {/* JOIN WAITLIST button on the right */}
-          <div className="flex items-center justify-end flex-shrink-0 z-10">
+          <div className="hidden md:flex items-center justify-end flex-shrink-0 z-10">
             <Link
               href={isWaitlistPage ? "/users" : "/waitlist"}
               className="group cursor-pointer block"

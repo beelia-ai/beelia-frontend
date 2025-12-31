@@ -3,7 +3,17 @@
 import { useEffect, useState } from "react";
 import { FooterLink } from "./FooterLink";
 import { LegalModal } from "./LegalModal";
+import { WebGLVideo } from "@/components/ui";
 import legalContent from "./legal-content.json";
+
+// iOS detection helper
+function isIOS(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -24,10 +34,15 @@ function useWindowWidth() {
 export function Footer() {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
+  const [isIOSDevice, setIsIOSDevice] = useState(false);
 
   // Load content from JSON file
   const termsContent = legalContent.terms.content;
   const privacyContent = legalContent.policies.content;
+
+  useEffect(() => {
+    setIsIOSDevice(isIOS());
+  }, []);
 
   return (
     <>
@@ -78,15 +93,27 @@ export function Footer() {
             transformOrigin: "center center",
           }}
         >
-          <video
-            src="/videos/black-hole.webm"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-auto object-cover"
-            style={{ objectPosition: "bottom" }}
-          />
+          {isIOSDevice ? (
+            <WebGLVideo
+              webmSrc="/videos/black-hole.webm"
+              stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+              className="w-full h-auto object-cover"
+              style={{ objectPosition: "bottom" }}
+              autoPlay
+              loop
+              muted
+            />
+          ) : (
+            <video
+              src="/videos/black-hole.webm"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-auto object-cover"
+              style={{ objectPosition: "bottom" }}
+            />
+          )}
         </div>
 
         {/* Content - BEELIA and sections in same flex column */}

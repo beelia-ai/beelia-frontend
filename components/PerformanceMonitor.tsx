@@ -17,6 +17,7 @@ interface PerformanceMetrics {
 }
 
 export function PerformanceMonitor() {
+  const [isLocalhost, setIsLocalhost] = useState(false);
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     fps: 0,
     memory: null,
@@ -26,7 +27,12 @@ export function PerformanceMonitor() {
     cpuEstimate: 0,
     scrollPosition: { x: 0, y: 0 },
   });
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Check if we're on localhost
+  useEffect(() => {
+    setIsLocalhost(window.location.hostname === "localhost");
+  }, []);
 
   const frameCountRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
@@ -74,6 +80,9 @@ export function PerformanceMonitor() {
   }, []);
 
   useEffect(() => {
+    // Only run performance monitoring on localhost
+    if (!isLocalhost) return;
+
     // Get GPU info once
     const gpuRenderer = getGPUInfo();
     setMetrics((prev) => ({ ...prev, gpuRenderer }));
@@ -134,10 +143,13 @@ export function PerformanceMonitor() {
         cancelAnimationFrame(rafIdRef.current);
       }
     };
-  }, [getGPUInfo, getMemoryInfo]);
+  }, [isLocalhost, getGPUInfo, getMemoryInfo]);
 
   // Track scroll position
   useEffect(() => {
+    // Only run performance monitoring on localhost
+    if (!isLocalhost) return;
+
     const updateScrollPosition = () => {
       setMetrics((prev) => ({
         ...prev,
@@ -158,7 +170,7 @@ export function PerformanceMonitor() {
     return () => {
       window.removeEventListener("scroll", updateScrollPosition);
     };
-  }, []);
+  }, [isLocalhost]);
 
   const formatBytes = (bytes: number) => {
     const mb = bytes / (1024 * 1024);
@@ -176,6 +188,11 @@ export function PerformanceMonitor() {
     if (estimate <= 70) return "#fbbf24"; // yellow
     return "#ef4444"; // red
   };
+
+  // Don't render if not on localhost
+  if (!isLocalhost) {
+    return null;
+  }
 
   return (
     <div
