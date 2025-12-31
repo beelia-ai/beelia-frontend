@@ -7,7 +7,7 @@ import {
   useTransform,
   useMotionValueEvent,
 } from "framer-motion";
-import { FeaturesGrid } from "./FeaturesGrid";
+import { FeaturesGrid, FeatureData } from "./FeaturesGrid";
 import { TeamGrid } from "./TeamGrid";
 
 // Track window width for responsive scaling
@@ -26,7 +26,8 @@ function useWindowWidth() {
   return windowWidth;
 }
 
-const CARD_DATA = [
+// Default card data for users
+const DEFAULT_CARD_DATA = [
   {
     title: "DISCOVER",
     subtitle: "",
@@ -56,12 +57,31 @@ const CARD_DATA = [
   },
 ];
 
-// Box data for section 2 video boxes
-const BOX_DATA = [
+// Default box data for users
+const DEFAULT_BOX_DATA = [
   { video: "/videos/magnify.webm", title: "DISCOVER", x: 15.055 },
   { video: "/videos/shield.webm", title: "SAFETY", x: 391.754 },
   { video: "/videos/bell.webm", title: "SUBSCRIBE", x: 767.027 },
 ];
+
+interface BoxData {
+  video: string;
+  title: string;
+  x: number;
+}
+
+interface CardData {
+  title: string;
+  subtitle: string;
+  description: string;
+  iconPath: string;
+}
+
+interface AboutProductProps {
+  boxData?: BoxData[];
+  cardData?: CardData[];
+  features?: FeatureData[];
+}
 
 // Pre-calculated stroke geometry to avoid hydration mismatch
 const STROKE_GEOMETRY = {
@@ -83,7 +103,11 @@ const STROKE_GEOMETRY = {
   },
 };
 
-export function AboutProduct() {
+export function AboutProduct({
+  boxData = DEFAULT_BOX_DATA,
+  cardData = DEFAULT_CARD_DATA,
+  features,
+}: AboutProductProps = {}) {
   const windowWidth = useWindowWidth();
   // Calculate responsive scale factor for mobile bottom lines
   const isMobile = windowWidth < 768;
@@ -648,9 +672,9 @@ export function AboutProduct() {
           }}
         >
           {/* Video boxes - positioned below each stroke end */}
-          {BOX_DATA.map((box, index) => {
+          {boxData.map((box, index) => {
             // Find matching card data for description
-            const cardData = CARD_DATA.find((card) => card.title === box.title);
+            const matchingCardData = cardData.find((card) => card.title === box.title);
             const isHovered = hoveredBox === box.title;
 
             return (
@@ -740,7 +764,7 @@ export function AboutProduct() {
                   </motion.span>
 
                   {/* Description text - appears from bottom on hover */}
-                  {cardData && (
+                  {matchingCardData && (
                     <motion.div
                       className="absolute w-full px-3"
                       style={{
@@ -769,7 +793,7 @@ export function AboutProduct() {
                           color: "rgba(255, 255, 255, 0.7)",
                         }}
                         dangerouslySetInnerHTML={{
-                          __html: cardData.description,
+                          __html: matchingCardData.description,
                         }}
                       />
                     </motion.div>
@@ -789,7 +813,7 @@ export function AboutProduct() {
             paddingBottom: "100px",
           }}
         >
-          <FeaturesGrid />
+          <FeaturesGrid features={features} />
         </div>
 
         {/* Team Grid - appears at 3400px scroll */}

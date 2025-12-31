@@ -116,7 +116,47 @@ function FeatureCard({
   );
 }
 
-export function FeaturesGrid() {
+export interface FeatureData {
+  title: string;
+  description: string;
+  imageSrc?: string;
+}
+
+interface FeaturesGridProps {
+  features?: FeatureData[];
+}
+
+// Default features for users
+const DEFAULT_FEATURES: FeatureData[] = [
+  {
+    title: "Unified Billing",
+    description:
+      "Manage all your AI subscriptions from a single dashboard. View invoices, track renewals, cancel anytime, and keep all receipts organized in one place.",
+    imageSrc: "/images/unified-billing.png",
+  },
+  {
+    title: "Centralized Access",
+    description:
+      "Get clear activation steps and direct access links for every subscribed AI tool. Everything you need to get started, stored in one place, no lost emails, no confusion.",
+    imageSrc: "/images/centralized-access.png",
+  },
+  {
+    title: "AI is where apps were in 2008",
+    description:
+      "Before the App Store, software was fragmented, hard to trust, and painful to manage. AI tools today are in that same phase. Beelia is built to bring structure, clarity, and simplicity to the next generation of software.",
+  },
+  {
+    title: "One place for the AI you actually use",
+    description:
+      "As AI becomes part of everyday work, managing it shouldn't feel experimental. Beelia is building the home where your AI tools live, today and as the ecosystem evolves.",
+  },
+];
+
+export function FeaturesGrid({ features = DEFAULT_FEATURES }: FeaturesGridProps = {}) {
+  // Split features into two rows: first 2 with images, last 2 without
+  const firstRowFeatures = features.slice(0, 2);
+  const secondRowFeatures = features.slice(2, 4);
+
   return (
     <div
       className="max-w-4xl mx-auto relative rounded-lg px-4 md:px-0 overflow-hidden"
@@ -160,16 +200,14 @@ export function FeaturesGrid() {
 
       {/* First Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
-        <FeatureCard
-          title="Unified Billing"
-          description="Manage all your AI subscriptions from a single dashboard. View invoices, track renewals, cancel anytime, and keep all receipts organized in one place."
-          imageSrc="/images/unified-billing.png"
-        />
-        <FeatureCard
-          title="Centralized Access"
-          description="Get clear activation steps and direct access links for every subscribed AI tool. Everything you need to get started, stored in one place, no lost emails, no confusion."
-          imageSrc="/images/centralized-access.png"
-        />
+        {firstRowFeatures.map((feature, index) => (
+          <FeatureCard
+            key={index}
+            title={feature.title}
+            description={feature.description}
+            imageSrc={feature.imageSrc}
+          />
+        ))}
 
         {/* Horizontal divider - adjusted for mobile */}
         <div
@@ -192,14 +230,14 @@ export function FeaturesGrid() {
 
       {/* Second Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
-        <FeatureCard
-          title="AI is where apps were in 2008"
-          description="Before the App Store, software was fragmented, hard to trust, and painful to manage. AI tools today are in that same phase. Beelia is built to bring structure, clarity, and simplicity to the next generation of software."
-        />
-        <FeatureCard
-          title="One place for the AI you actually use"
-          description="As AI becomes part of everyday work, managing it shouldn't feel experimental. Beelia is building the home where your AI tools live, today and as the ecosystem evolves."
-        />
+        {secondRowFeatures.map((feature, index) => (
+          <FeatureCard
+            key={index}
+            title={feature.title}
+            description={feature.description}
+            imageSrc={feature.imageSrc}
+          />
+        ))}
       </div>
     </div>
   );

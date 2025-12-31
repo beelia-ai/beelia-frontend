@@ -13,8 +13,14 @@ import {
   useMotionValue,
   animate,
 } from "framer-motion";
+import { ReactNode } from "react";
 
-export function NewHero() {
+interface NewHeroProps {
+  title?: ReactNode;
+  description?: string;
+}
+
+export function NewHero({ title, description }: NewHeroProps = {}) {
   const [isHovered, setIsHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -820,6 +826,8 @@ export function NewHero() {
               isHovered={isHovered}
               setIsHovered={setIsHovered}
               isMounted={isMounted}
+              title={title}
+              description={description}
             />
           </motion.div>
         </div>

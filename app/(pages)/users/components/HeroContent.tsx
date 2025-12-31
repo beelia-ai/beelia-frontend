@@ -3,12 +3,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import GlassSurface from "@/components/GlassSurface";
+import { ReactNode } from "react";
 
 interface HeroContentProps {
   isAnimating: boolean;
   isHovered: boolean;
   setIsHovered: (hovered: boolean) => void;
   isMounted: boolean;
+  title?: ReactNode;
+  description?: string;
 }
 
 export function HeroContent({
@@ -16,6 +19,16 @@ export function HeroContent({
   isHovered,
   setIsHovered,
   isMounted,
+  title = (
+    <>
+      <span className="text-white">AI</span>{" "}
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
+        for Everyone,
+      </span>{" "}
+      <span className="text-white">by Everyone</span>
+    </>
+  ),
+  description = "A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required",
 }: HeroContentProps) {
   return (
     <>
@@ -82,11 +95,7 @@ export function HeroContent({
       {/* AIFOR Text - below trace lines */}
       <div className="w-full flex justify-center px-2 md:px-0">
         <h1 className="text-center font-editors-note-italic text-3xl md:text-6xl lg:text-7xl leading-tight whitespace-nowrap">
-          <span className="text-white">AI</span>{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
-            for Everyone,
-          </span>{" "}
-          <span className="text-white">by Everyone</span>
+          {title}
         </h1>
       </div>
 
@@ -102,8 +111,7 @@ export function HeroContent({
           marginTop: "20px",
         }}
       >
-        A curated AI marketplace where anyone can discover, trust, and use the
-        right tools instantly, no technical skills required
+        {description}
       </p>
 
       {/* Join Waitlist Button - below tagline text */}

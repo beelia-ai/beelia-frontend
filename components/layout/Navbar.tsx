@@ -20,6 +20,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const pathname = usePathname();
   const isWaitlistPage = pathname === "/waitlist";
   const isUsersPage = pathname === "/users";
+  const isCreatorsPage = pathname === "/creators";
 
   // Track window size for responsive button sizing
   useEffect(() => {
@@ -128,17 +129,10 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const navbarContentOpacity = isVisible ? 1 : 0;
   const navbarContentY = isVisible ? 0 : -20;
 
-  // Hide navbar on users page unless forced to show
-  if (isUsersPage && !forceShow) {
+  // Hide navbar on users page and creators page unless forced to show
+  if ((isUsersPage || isCreatorsPage) && !forceShow) {
     return null;
   }
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   return (
     <>
@@ -277,19 +271,25 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 >
                   Users
                 </Link>
-                <button
-                  onClick={() => scrollToSection("about-company")}
-                  className="nav-link cursor-pointer"
+                <Link
+                  href="/creators"
+                  className={`nav-link cursor-pointer ${
+                    isCreatorsPage ? "active" : ""
+                  }`}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontSize: isMobile ? "12px" : "16px",
-                    fontWeight: 400,
+                    fontWeight: isCreatorsPage ? 600 : 400,
                     background: "none",
                     border: "none",
+                    textDecoration: "none",
+                    color: isCreatorsPage
+                      ? "#FFFFFF"
+                      : "rgba(255, 255, 255, 0.7)",
                   }}
                 >
                   Creators
-                </button>
+                </Link>
                 <a
                   href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
                   className="nav-link cursor-pointer"
