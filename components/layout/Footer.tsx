@@ -120,7 +120,7 @@ export function Footer() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                The App Store for AI
+                The AI Marketplace
               </h2>
 
               {/* Description */}
@@ -135,16 +135,14 @@ export function Footer() {
                   opacity: 0.5,
                 }}
               >
-                Giving people a seamless way to find the right tools and start
-                using them instantly, no setup, no friction.
+                Where AI tools meet the people who need them.
               </p>
 
               {/* Powered By */}
               <p
-                className="uppercase"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
-                  fontWeight: 600,
+                  fontWeight: 100,
                   fontSize: "clamp(12px, 1.5vw, 16px)",
                   lineHeight: "100%",
                   letterSpacing: "0.05em",
@@ -155,7 +153,7 @@ export function Footer() {
                   color: "transparent",
                 }}
               >
-                POWERED BY—CESNO
+                Powered by <b>CESNO</b>
               </p>
             </div>
 
@@ -178,16 +176,19 @@ export function Footer() {
                   Connect
                 </h3>
                 <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
-                  <FooterLink href="https://instagram.com/beelia.ai" external>
-                    Instagram
+                  <FooterLink
+                    href="https://www.tiktok.com/@beeliaai?_r=1&_t=ZN-92fzBRa4SVa"
+                    external
+                  >
+                    TikTok
                   </FooterLink>
                   <FooterLink
-                    href="https://linkedin.com/company/beelia"
+                    href="https://www.linkedin.com/company/beelia-ai/"
                     external
                   >
                     LinkedIn
                   </FooterLink>
-                  <FooterLink href="https://twitter.com/beelia" external>
+                  <FooterLink href="https://x.com/beelia_ai" external>
                     Twitter
                   </FooterLink>
                 </div>

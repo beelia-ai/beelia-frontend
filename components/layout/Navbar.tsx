@@ -254,7 +254,11 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             }}
           >
             {!isWaitlistPage && (
-              <div className={`flex items-center pointer-events-auto ${isMobile ? 'gap-3 sm:gap-4' : 'gap-8 lg:gap-12'}`}>
+              <div
+                className={`flex items-center pointer-events-auto ${
+                  isMobile ? "gap-3 sm:gap-4" : "gap-8 lg:gap-12"
+                }`}
+              >
                 <button
                   onClick={() => {}}
                   className="nav-link cursor-pointer"
@@ -293,7 +297,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     textDecoration: "none",
                   }}
                 >
-                  Investors
+                  Contact
                 </a>
               </div>
             )}

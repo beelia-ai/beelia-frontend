@@ -306,7 +306,7 @@ export function AboutProduct() {
                     fontSize: "clamp(24px, 3vw, 48px)",
                   }}
                 >
-                  true&nbsp;
+                  open&nbsp;
                 </span>
                 <span
                   className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
@@ -319,7 +319,7 @@ export function AboutProduct() {
                     opacity: 0.9,
                   }}
                 >
-                  ONE-STOP-SHOP
+                  AI Marketplace
                 </span>
               </h2>
             </div>
@@ -342,8 +342,8 @@ export function AboutProduct() {
                 opacity: 0.7,
               }}
             >
-              —giving people a seamless way to find the right tools and start
-              using them instantly, no setup, no friction.
+              —a single place to discover, trust, and access AI tools, without
+              setup, guesswork, or fragmentation
             </p>
           </div>
         </motion.div>
