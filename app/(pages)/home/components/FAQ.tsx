@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import FAQ_DATA_JSON from "./faq-data.json";
 
-type FAQCategory = "General" | "Product Features" | "Support" | "Security";
+type FAQCategory = "What is Beelia?" | "For Users" | "For Creators" | "Trust, Security & Vision";
 
 interface FAQItem {
   question: string;
@@ -15,7 +15,7 @@ const FAQ_DATA = FAQ_DATA_JSON as Record<FAQCategory, FAQItem[]>;
 
 export function FAQ() {
   const [selectedCategory, setSelectedCategory] =
-    useState<FAQCategory>("General");
+    useState<FAQCategory>("What is Beelia?");
   const [hoveredQuestion, setHoveredQuestion] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -116,20 +116,19 @@ export function FAQ() {
             <nav className="flex flex-col">
               {(
                 [
-                  "General",
-                  "Product Features",
-                  "Support",
-                  "Security",
+                  "What is Beelia?",
+                  "For Users",
+                  "For Creators",
+                  "Trust, Security & Vision",
                 ] as FAQCategory[]
               ).map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`text-left px-4 py-3transition-all duration-200 ${
-                    selectedCategory === category
+                  className={`text-left px-4 py-3transition-all duration-200 ${selectedCategory === category
                       ? "bg-white/10 text-white"
                       : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
+                    }`}
                   style={{
                     fontFamily: "var(--font-outfit), Outfit, sans-serif",
                     fontWeight: 400,
@@ -167,11 +166,10 @@ export function FAQ() {
                       <div className="relative w-10 h-10">
                         {/* Plus Sign */}
                         <div
-                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${
-                            hoveredQuestion === index
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${hoveredQuestion === index
                               ? "opacity-0 rotate-90 scale-75"
                               : "opacity-100 rotate-0 scale-100"
-                          }`}
+                            }`}
                         >
                           {/* Circular background for plus */}
                           <div
@@ -211,11 +209,10 @@ export function FAQ() {
 
                         {/* Minus Sign */}
                         <div
-                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${
-                            hoveredQuestion === index
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${hoveredQuestion === index
                               ? "opacity-100 rotate-0 scale-100"
                               : "opacity-0 -rotate-90 scale-75"
-                          }`}
+                            }`}
                         >
                           {/* Circular background for minus */}
                           <div

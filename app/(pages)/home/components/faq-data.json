@@ -1,139 +1,154 @@
 {
-  "General": [
+  "What is Beelia?": [
     {
-      "question": "Are there any hidden fees?",
-      "answer": "No, we believe in transparency. All pricing is clearly displayed upfront with no hidden fees or surprise charges."
+      "question": "What is Beelia?",
+      "answer": "Beelia is an open marketplace where people can discover, subscribe to, and use AI tools, and where creators can monetize their AI tools."
     },
     {
-      "question": "How do I get started with Beelia?",
-      "answer": "The Beelia platform is set to launch by the end of the first quarter in 2026. We're excited about this upcoming release and encourage you to stay updated! Simply click on the 'Join Waitlist' button located in the top-right corner of our website to ensure you don't miss any important announcements."
+      "question": "How is Beelia different from AI directories or lists?",
+      "answer": "Directories only link you out. Beelia lets you subscribe, manage, and use AI tools in one place with verified creators and unified billing."
     },
     {
-      "question": "What types of businesses can benefit from your services?",
-      "answer": "Beelia is designed for businesses of all sizes, from startups to enterprises, across various industries. Our platform adapts to your specific needs."
+      "question": "How is Beelia different from ChatGPT’s App Store?",
+      "answer": "ChatGPT helps you interact with AI inside chat. Beelia helps you adopt AI tools that live outside chat, with real dashboards, APIs, pricing, and ownership."
     },
     {
-      "question": "What types of payment methods do you support?",
-      "answer": "We support all major credit cards, debit cards, and digital payment methods including PayPal, Apple Pay, and Google Pay."
+      "question": "Is Beelia an app store for AI?",
+      "answer": "Yes, conceptually. We’re doing for AI tools what app stores did for mobile apps: distribution, trust, and monetization."
     },
     {
-      "question": "Is there a free trial available?",
-      "answer": "Yes, we offer a free trial period for new users to explore our platform and discover its capabilities before committing to a subscription."
+      "question": "Who is Beelia built for?",
+      "answer": "Non-technical users, businesses, creators, developers, and teams who want AI that actually works, without complexity."
     },
     {
-      "question": "Can I cancel my subscription at any time?",
-      "answer": "Absolutely. You can cancel your subscription at any time with no cancellation fees. Your access will continue until the end of your current billing period."
+      "question": "What problem does Beelia solve?",
+      "answer": "AI is powerful but fragmented, unorganized, and hard to trust. Beelia centralizes discovery, access, and monetization."
     },
     {
-      "question": "Do you offer discounts for annual subscriptions?",
-      "answer": "Yes, we offer significant discounts for annual subscriptions compared to monthly billing. Contact our sales team to learn more about our pricing options."
-    },
-    {
-      "question": "What happens to my data if I cancel?",
-      "answer": "Your data remains accessible for 30 days after cancellation. You can export all your data during this period. After 30 days, data is permanently deleted in accordance with our privacy policy."
+      "question": "Why build Beelia now?",
+      "answer": "AI adoption is exploding, but there’s no clear marketplace leader yet. Timing matters, and this is the window."
     }
   ],
-  "Product Features": [
+  "For Users": [
     {
-      "question": "What features are included in the platform?",
-      "answer": "Our platform includes AI tool discovery, one-click subscriptions, advanced search capabilities, personalized recommendations, and comprehensive safety features."
+      "question": "Why would I use Beelia instead of Google or directories?",
+      "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store."
     },
     {
-      "question": "Can I customize my dashboard?",
-      "answer": "Yes, our platform offers extensive customization options to tailor your dashboard to your specific workflow and preferences."
+      "question": "How do I use an AI tool on Beelia?",
+      "answer": "Find a tool, subscribe, and start using it instantly via dashboard access or provided instructions."
     },
     {
-      "question": "Do you offer API access?",
-      "answer": "Yes, we provide API access for enterprise customers. Contact our sales team to learn more about API integration options."
+      "question": "Do I have to switch tools if I stop using Beelia?",
+      "answer": "No. Tools are independent. Beelia never locks you in."
     },
     {
-      "question": "How often are new features added?",
-      "answer": "We continuously improve our platform with regular updates and new features. Major updates are released quarterly, with smaller enhancements throughout the year."
+      "question": "Can I manage multiple AI subscriptions in one place?",
+      "answer": "Yes. Beelia gives you a unified place to track subscriptions, access details, and renewals."
     },
     {
-      "question": "Can I integrate Beelia with other tools I'm using?",
-      "answer": "Yes, our platform supports integrations with popular business tools and services. Check our integrations page for a full list of supported connections."
+      "question": "Can I try tools before committing?",
+      "answer": "Many tools offer demos, previews, or trial access depending on the creator."
     },
     {
-      "question": "Is there a mobile app available?",
-      "answer": "Yes, we offer mobile apps for both iOS and Android devices, allowing you to access your tools and manage your subscriptions on the go."
+      "question": "How does billing work?",
+      "answer": "One account, one dashboard, one place to manage all subscriptions and receipts."
     },
     {
-      "question": "How does the AI tool discovery work?",
-      "answer": "Our AI-powered discovery engine analyzes your needs and preferences to recommend the most relevant tools. It learns from your usage patterns to provide increasingly accurate suggestions over time."
+      "question": "Can I cancel subscriptions anytime?",
+      "answer": "Yes. No lock-ins. Full control from your dashboard."
     },
     {
-      "question": "Can I create custom workflows?",
-      "answer": "Yes, our platform includes powerful workflow automation features that allow you to create custom processes and automate repetitive tasks across your subscribed tools."
+      "question": "How do I know which tools are trustworthy?",
+      "answer": "Beelia verifies both creators and tools, and uses reviews and performance signals."
+    },
+    {
+      "question": "Is my data safe?",
+      "answer": "We enforce platform-level security standards and transparency around how tools handle data."
+    },
+    {
+      "question": "How do I know which AI tool is right for me?",
+      "answer": "Tools are categorized, described clearly, and compared based on real use cases, not hype."
+    },
+    {
+      "question": "Can Beelia replace multiple AI subscriptions?",
+      "answer": "That’s the goal, one platform instead of scattered tools everywhere."
+    },
+    {
+      "question": "What problems does Beelia save me from?",
+      "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time."
     }
   ],
-  "Support": [
+  "For Creators": [
     {
-      "question": "Are there training resources available for new users?",
-      "answer": "Yes, we provide comprehensive documentation, video tutorials, webinars, and dedicated support to help you get started and make the most of our platform."
+      "question": "Who can sell AI tools on Beelia?",
+      "answer": "Anyone with a functional AI tool, from indie developers to startups or big corporations."
     },
     {
-      "question": "How can I contact support?",
-      "answer": "You can reach our support team via email, live chat, or through our support portal. We offer 24/7 support for premium customers."
+      "question": "Do I need to build a full SaaS to sell on Beelia?",
+      "answer": "No. Beelia removes the need to build billing, marketing, or distribution from scratch."
     },
     {
-      "question": "Do you offer onboarding assistance?",
-      "answer": "Yes, we provide personalized onboarding sessions to help you set up your account and understand all the features available to you."
+      "question": "How do creators make money?",
+      "answer": "Creators set prices. Beelia takes a platform commission on subscriptions."
     },
     {
-      "question": "What is your response time for support requests?",
-      "answer": "We aim to respond to all support requests within 24 hours. Premium customers receive priority support with faster response times."
+      "question": "What types of tools can be listed?",
+      "answer": "APIs, agents, dashboards, automations, models, and AI-powered workflows."
     },
     {
-      "question": "Do you offer live chat support?",
-      "answer": "Yes, we provide live chat support during business hours. Premium customers have access to 24/7 live chat support for immediate assistance."
+      "question": "How does Beelia help with discovery?",
+      "answer": "Search, categories, rankings, boosts, and featured placements drive visibility."
     },
     {
-      "question": "Is there a community forum or knowledge base?",
-      "answer": "Yes, we maintain an extensive knowledge base with articles, tutorials, and a community forum where users can share tips, ask questions, and learn from each other."
+      "question": "Can I promote my tool on Beelia?",
+      "answer": "Yes. Boosts and highlights increase exposure inside the marketplace."
     },
     {
-      "question": "Can I schedule a demo or consultation?",
-      "answer": "Absolutely! You can schedule a personalized demo or consultation with our team to see how Beelia can best serve your specific needs. Book a session through our website."
+      "question": "Do creators keep ownership of their IP?",
+      "answer": "Yes. You own your models and tools, Beelia is the distribution layer."
     },
     {
-      "question": "What languages does your support team speak?",
-      "answer": "Our support team is multilingual and can assist you in English, Spanish, French, German, and several other languages. We're continuously expanding our language support."
+      "question": "How fast can I launch a tool?",
+      "answer": "In minutes, not months."
+    },
+    {
+      "question": "Why choose Beelia over building my own site?",
+      "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments."
     }
   ],
-  "Security": [
+  "Trust, Security & Vision": [
     {
-      "question": "What measures are in place to protect customer data?",
-      "answer": "We employ industry-standard security measures including end-to-end encryption, regular security audits, compliance with GDPR and SOC 2 standards, and continuous monitoring of our systems."
+      "question": "How does Beelia ensure tool quality?",
+      "answer": "Through verification processes, clear disclosures, and ongoing review systems."
     },
     {
-      "question": "How is my payment information secured?",
-      "answer": "All payment information is processed through PCI-DSS compliant payment processors. We never store your full payment details on our servers."
+      "question": "How does Beelia handle low-quality tools?",
+      "answer": "Poor-performing tools are deprioritized or removed to protect the ecosystem."
     },
     {
-      "question": "Do you comply with data protection regulations?",
-      "answer": "Yes, we are fully compliant with GDPR, CCPA, and other major data protection regulations. Your privacy and data security are our top priorities."
+      "question": "Is Beelia a closed or open platform?",
+      "answer": "Open. Anyone can build, list, and subscribe, no gatekeeping."
     },
     {
-      "question": "Can I export my data?",
-      "answer": "Yes, you can export all your data at any time. We believe in data portability and make it easy for you to access and download your information."
+      "question": "How does Beelia compare to ChatGPT’s app ecosystem?",
+      "answer": "Beelia is open, tool-agnostic, and not limited to one AI provider or interface."
     },
     {
-      "question": "How do you handle data breaches?",
-      "answer": "In the unlikely event of a data breach, we have a comprehensive incident response plan. We will immediately notify affected users, take steps to contain the breach, and work with security experts to prevent future incidents."
+      "question": "Can Beelia remove tools from the marketplace?",
+      "answer": "Yes, if they violate trust, security, or quality standards."
     },
     {
-      "question": "Are my passwords stored securely?",
-      "answer": "We use industry-standard password hashing algorithms and never store passwords in plain text. All authentication is handled through secure, encrypted channels."
+      "question": "What’s Beelia’s long-term vision?",
+      "answer": "To become the default marketplace and infrastructure layer for AI."
     },
     {
-      "question": "Do you perform regular security audits?",
-      "answer": "Yes, we conduct regular third-party security audits and penetration testing to identify and address potential vulnerabilities. We also maintain SOC 2 Type II certification."
+      "question": "Is Beelia available globally?",
+      "answer": "Yes. Built for a global creator and user economy from day one."
     },
     {
-      "question": "What is your data retention policy?",
-      "answer": "We retain your data only as long as necessary to provide our services. You can request data deletion at any time, and we will comply within 30 days unless legal obligations require longer retention."
+      "question": "Will Beelia always stay open and neutral?",
+      "answer": "That’s core to the mission: independence from any single AI platform."
     }
   ]
 }
-
