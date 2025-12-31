@@ -81,7 +81,6 @@ function WaitlistHero() {
       // Move to step 2 - details form with user type selection
       setStep("details");
     } catch (error) {
-      console.error("Waitlist submission error:", error);
       alert(
         error instanceof Error
           ? error.message
@@ -133,7 +132,6 @@ function WaitlistHero() {
       // Move to complete state
       setStep("complete");
     } catch (error) {
-      console.error("Details submission error:", error);
       alert(
         error instanceof Error
           ? error.message

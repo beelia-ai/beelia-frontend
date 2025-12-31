@@ -135,9 +135,7 @@ export function HexagonalGridBackground({
       })
     }
 
-    loadGridBackground().catch((error) => {
-      console.error('Failed to load Grid1Background:', error)
-    })
+    loadGridBackground().catch(() => {})
 
     // Cleanup on unmount
     return () => {

@@ -40,52 +40,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // #region agent log
-      if (currentScrollY >= 700 && currentScrollY <= 850) {
-        fetch(
-          "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              location: "Navbar.tsx:handleScroll",
-              message: "Scroll in target range",
-              data: {
-                currentScrollY,
-                lastScrollY,
-                isVisible,
-                threshold: scrollThresholdRef.current,
-              },
-              timestamp: Date.now(),
-              sessionId: "debug-session",
-              hypothesisId: "A",
-            }),
-          }
-        ).catch(() => {});
-      }
-      // #endregion
-
       // Scrolling down - hide navbar
       if (currentScrollY > lastScrollY && currentScrollY > 0) {
-        // #region agent log
-        if (currentScrollY >= 700 && currentScrollY <= 850) {
-          fetch(
-            "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                location: "Navbar.tsx:handleScroll",
-                message: "Setting isVisible=false",
-                data: { currentScrollY, wasVisible: isVisible },
-                timestamp: Date.now(),
-                sessionId: "debug-session",
-                hypothesisId: "A",
-              }),
-            }
-          ).catch(() => {});
-        }
-        // #endregion
         setIsVisible(false);
         scrollThresholdRef.current = currentScrollY;
       }
@@ -95,25 +51,6 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           currentScrollY <= scrollThresholdRef.current - 20 ||
           currentScrollY === 0
         ) {
-          // #region agent log
-          if (currentScrollY >= 700 && currentScrollY <= 850) {
-            fetch(
-              "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  location: "Navbar.tsx:handleScroll",
-                  message: "Setting isVisible=true",
-                  data: { currentScrollY, wasVisible: isVisible },
-                  timestamp: Date.now(),
-                  sessionId: "debug-session",
-                  hypothesisId: "A",
-                }),
-              }
-            ).catch(() => {});
-          }
-          // #endregion
           setIsVisible(true);
         }
       }
