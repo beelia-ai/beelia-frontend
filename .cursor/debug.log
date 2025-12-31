@@ -9152,3 +9152,7 @@
 {"location":"GlassSurface.tsx:getContainerStyles","message":"Container styles computed","data":{"svgSupported":true,"backdropFilterSupported":true,"isDarkMode":true,"scrollY":717},"timestamp":1767116768547,"sessionId":"debug-session","hypothesisId":"E"}
 {"location":"GlassSurface.tsx:getContainerStyles","message":"Container styles computed","data":{"svgSupported":true,"backdropFilterSupported":true,"isDarkMode":true,"scrollY":717},"timestamp":1767116768549,"sessionId":"debug-session","hypothesisId":"E"}
 {"location":"GlassSurface.tsx:getContainerStyles","message":"Container styles computed","data":{"svgSupported":true,"backdropFilterSupported":true,"isDarkMode":true,"scrollY":717},"timestamp":1767116768549,"sessionId":"debug-session","hypothesisId":"E"}
+{"location":"GlassSurface.tsx:useDarkMode","message":"Dark mode initial check","data":{"matches":true,"scrollY":5837.5},"timestamp":1767170327594,"sessionId":"debug-session","hypothesisId":"B"}
+{"location":"GlassSurface.tsx:useDarkMode","message":"Dark mode initial check","data":{"matches":true,"scrollY":5837.5},"timestamp":1767170327596,"sessionId":"debug-session","hypothesisId":"B"}
+{"location":"GlassSurface.tsx:useDarkMode","message":"Dark mode initial check","data":{"matches":true,"scrollY":5837.5},"timestamp":1767170327620,"sessionId":"debug-session","hypothesisId":"B"}
+{"location":"GlassSurface.tsx:useDarkMode","message":"Dark mode initial check","data":{"matches":true,"scrollY":5837.5},"timestamp":1767170327621,"sessionId":"debug-session","hypothesisId":"B"}
