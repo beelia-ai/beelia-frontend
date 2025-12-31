@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { FooterLink } from "./FooterLink";
+import { LegalModal } from "./LegalModal";
+import legalContent from "./legal-content.json";
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -22,6 +24,11 @@ function useWindowWidth() {
 export function Footer() {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
+
+  // Load content from JSON file
+  const termsContent = legalContent.terms.content;
+  const privacyContent = legalContent.policies.content;
+
   return (
     <>
       {/* Animated underline styles */}
@@ -211,8 +218,17 @@ export function Footer() {
                   Legal
                 </h3>
                 <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
-                  <FooterLink href="/privacy-policy">Policies</FooterLink>
-                  <FooterLink href="/terms-and-conditions">Terms</FooterLink>
+                  {/* LegalModal components with built-in trigger and modal */}
+                  <LegalModal
+                    label="Policies"
+                    title="Policies"
+                    content={privacyContent}
+                  />
+                  <LegalModal
+                    label="Terms"
+                    title="Terms"
+                    content={termsContent}
+                  />
                 </div>
               </div>
             </div>

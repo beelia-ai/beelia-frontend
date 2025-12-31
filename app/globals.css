@@ -252,5 +252,12 @@
   .animate-oscillate-counterclockwise {
     animation: oscillate-counterclockwise 8s ease-in-out infinite;
   }
+
+  /* Hide navbar when modal is open */
+  body.modal-open nav {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
 }
 
