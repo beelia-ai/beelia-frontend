@@ -111,13 +111,28 @@ function AnimatedPathBeam({
   const gradientRef = useRef<SVGLinearGradientElement>(null);
 
   // Animate gradient using requestAnimationFrame - only when not retracting
+  // Frame rate limiting to reduce CPU/GPU usage
   useEffect(() => {
     if (!gradientRef.current || isRetracting) return;
 
     let startTime: number | null = null;
     let animationFrame: number;
+    // Frame rate limiting
+    const targetFPS = 30;
+    const frameInterval = 1000 / targetFPS;
+    let lastFrameTime = 0;
 
     const animateGradient = (timestamp: number) => {
+      // Frame rate limiting - skip frames to maintain target FPS
+      const frameElapsed = timestamp - lastFrameTime;
+      if (frameElapsed < frameInterval) {
+        if (!isRetracting) {
+          animationFrame = requestAnimationFrame(animateGradient);
+        }
+        return;
+      }
+      lastFrameTime = timestamp - (frameElapsed % frameInterval);
+
       startTime ??= timestamp;
       const elapsed = (timestamp - startTime) / 1000; // Convert to seconds
       const totalDuration = duration + 0.5; // Include repeatDelay

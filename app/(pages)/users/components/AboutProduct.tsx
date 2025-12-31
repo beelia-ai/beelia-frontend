@@ -725,6 +725,7 @@ export function AboutProduct({
                       loop
                       muted
                       playsInline
+                      preload="none"
                       className="w-full object-cover"
                       style={{
                         width: "90%",

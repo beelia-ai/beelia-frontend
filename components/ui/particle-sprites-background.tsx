@@ -185,11 +185,20 @@ export function ParticleSpritesBackground({
 
     window.addEventListener('resize', handleResize)
 
-    // Animation loop
-    const animate = () => {
+    // Animation loop with frame rate limiting to reduce CPU/GPU usage
+    const targetFPS = 30 // Cap at 30 FPS for background effect - sufficient for smooth visuals
+    const frameInterval = 1000 / targetFPS
+    let lastFrameTime = 0
+
+    const animate = (currentTime: number = 0) => {
       if (!isMounted) return
 
       animationFrameRef.current = requestAnimationFrame(animate)
+
+      // Frame rate limiting - skip frames to maintain target FPS
+      const elapsed = currentTime - lastFrameTime
+      if (elapsed < frameInterval) return
+      lastFrameTime = currentTime - (elapsed % frameInterval)
 
       const time = Date.now() * 0.00005 * speed
 

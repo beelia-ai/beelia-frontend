@@ -309,10 +309,23 @@ void main() {
         uniforms.rayDir.value = dir;
       };
 
+      // Frame rate limiting to reduce CPU/GPU usage
+      const targetFPS = 30;
+      const frameInterval = 1000 / targetFPS;
+      let lastFrameTime = 0;
+
       const loop = (t: number) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
           return;
         }
+
+        // Frame rate limiting - skip frames to maintain target FPS
+        const elapsed = t - lastFrameTime;
+        if (elapsed < frameInterval) {
+          animationIdRef.current = requestAnimationFrame(loop);
+          return;
+        }
+        lastFrameTime = t - (elapsed % frameInterval);
 
         uniforms.iTime.value = t * 0.001;
 

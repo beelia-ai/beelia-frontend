@@ -45,7 +45,7 @@ export default function CreatorsPage() {
 
   return (
     <div className="relative w-full bg-transparent">
-      {/* Particle Sprites Background - covers entire page */}
+      {/* Particle Sprites Background - RESTORED */}
       <ParticleSpritesBackground
         className="fixed inset-0 z-0"
         particleCount={150}
@@ -70,6 +70,7 @@ export default function CreatorsPage() {
           }
           description="An open marketplace where AI creators turn their tools into real products, and real revenue."
         />
+        {/* ABOUTPRODUCT - RESTORED with videos */}
         <AboutProduct
           boxData={[
             { video: "/videos/upload.webm", title: "PUBLISH", x: 15.055 },
@@ -81,7 +82,7 @@ export default function CreatorsPage() {
               title: "PUBLISH",
               subtitle: "",
               description:
-                "Verified listings help users understand what’s legit, what performs, and what’s safe, increasing confidence and conversion for your tool.",
+                "Verified listings help users understand what's legit, what performs, and what's safe, increasing confidence and conversion for your tool.",
               iconPath: "",
             },
             {

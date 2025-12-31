@@ -41,6 +41,10 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const futureTransitionVideoRef = useRef<HTMLVideoElement>(null);
   const futureMainVideoRef = useRef<HTMLVideoElement>(null);
   const globeStopThresholdRef = useRef(Infinity);
+  // Refs for box videos to enable pausing when not visible
+  const boxVideoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  // Track if hero section is visible for video optimization
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
   const [futureTransitionDuration, setFutureTransitionDuration] = useState<
     number | null
   >(null);
@@ -110,6 +114,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     return -(latest - threshold);
   });
 
+  // Track scroll Y position
   // Track scroll Y position
   useEffect(() => {
     const handleScroll = () => {
@@ -425,6 +430,70 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     setIsMounted(true);
   }, []);
 
+  // Intersection Observer to pause ALL videos when hero is not visible
+  // This is the KEY performance optimization - videos only play when user can see them
+  useEffect(() => {
+    if (!heroRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries[0]?.isIntersecting ?? false;
+        setIsHeroVisible(isVisible);
+
+        // Pause/play globe videos based on visibility
+        const globeVideos = [
+          beeliaVideoRef.current,
+          phase2VideoRef.current,
+          futureTransitionVideoRef.current,
+          futureMainVideoRef.current,
+        ];
+        const boxVideos = boxVideoRefs.current.filter(Boolean);
+        const allVideos = [...globeVideos, ...boxVideos].filter(
+          Boolean
+        ) as HTMLVideoElement[];
+
+        allVideos.forEach((video) => {
+          if (isVisible) {
+            // Only play if it should be playing (not hidden by other logic)
+            if (video.paused && video.readyState >= 2) {
+              video.play().catch(() => {});
+            }
+          } else {
+            // Pause when not visible to save CPU
+            if (!video.paused) {
+              video.pause();
+            }
+          }
+        });
+      },
+      { threshold: 0.1 } // Trigger when 10% of hero is visible
+    );
+
+    observer.observe(heroRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Pause/play box videos based on visibility (scroll progress)
+  // This significantly reduces CPU/GPU usage when videos are faded out
+  useEffect(() => {
+    const boxVideos = boxVideoRefs.current.filter(Boolean);
+    if (traceLinesScrollProgress >= 0.9) {
+      // Videos are fully faded out, pause them to save resources
+      boxVideos.forEach((video) => {
+        if (video && !video.paused) {
+          video.pause();
+        }
+      });
+    } else if (traceLinesScrollProgress < 0.9) {
+      // Videos are visible, ensure they're playing
+      boxVideos.forEach((video) => {
+        if (video && video.paused) {
+          video.play().catch(() => {});
+        }
+      });
+    }
+  }, [traceLinesScrollProgress]);
+
   // Calculate responsive scale factor for mobile
   const isMobile = windowWidth < 768;
   const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.32) : 1;
@@ -451,16 +520,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         ref={heroRef}
         className="h-screen bg-transparent relative overflow-visible"
       >
-        {/* Video Globe Container - Fixed positioning, always maintains distance from top */}
-        {/* Aligned with trace lines position: pt-32 (128px) + trace lines height/2 (182px) = ~310px from top */}
-        {/* Stops being fixed and scrolls with page when reaching above footer */}
+        {/* Video Globe Container - RESTORED with lazy loading */}
         <motion.div
           className="fixed left-1/2 pointer-events-none"
           style={{
             width: `${globeSize}px`,
             height: `${globeSize}px`,
             top: globeTop,
-            zIndex: 51, // Higher than AboutProduct's fixed OneStop (z-50) to prevent z-fighting flicker
+            zIndex: 51,
             x: "-50%",
             y: globeY,
             scale: globeScale,
@@ -474,10 +541,11 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             {!hidePastVideo && (
               <motion.video
                 ref={beeliaVideoRef}
-                autoPlay
+                autoPlay={isHeroVisible}
                 loop
                 muted
                 playsInline
+                preload="none"
                 className={`${
                   isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
                 } object-contain mr-0.5 absolute`}
@@ -496,6 +564,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               loop
               muted
               playsInline
+              preload="none"
               className={`${
                 isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
               } object-contain mr-0.5 absolute`}
@@ -513,6 +582,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               loop
               muted
               playsInline
+              preload="none"
               className={`${
                 isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
               } object-contain mr-0.5 absolute`}
@@ -532,6 +602,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 loop
                 muted
                 playsInline
+                preload="none"
                 className={`${
                   isMobile ? "w-[140px] h-[140px]" : "w-[420px] h-[420px]"
                 } object-contain mr-0.5 absolute`}
@@ -546,8 +617,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           </div>
         </motion.div>
 
-        {/* Light Rays */}
-        {/* Light Rays */}
+        {/* Light Rays - RESTORED */}
         <LightRays
           raysOrigin="top-center"
           raysColor="#F5A83B"
@@ -575,15 +645,28 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               transformOrigin: "center center",
             }}
           >
-            {/* Videos in all 6 boxes */}
-            {/* Left side boxes */}
+            {/* BOX VIDEOS - RESTORED with optimizations: preload="none", no infinite framer-motion animations */}
+            {/* Using CSS animation instead of framer-motion for better GPU performance */}
+            <style>{`
+              @keyframes float-box-video {
+                0%, 100% { transform: translateY(-3px); }
+                50% { transform: translateY(3px); }
+              }
+              .box-video-float {
+                animation: float-box-video 2s ease-in-out infinite;
+              }
+            `}</style>
             {/* Left top box */}
-            <motion.video
-              autoPlay
+            <video
+              ref={(el) => {
+                boxVideoRefs.current[0] = el;
+              }}
+              autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
               loop
               muted
               playsInline
-              className={`absolute ${
+              preload="none"
+              className={`absolute box-video-float ${
                 isMobile ? "object-contain" : "object-cover"
               } rounded-[31.5px] pointer-events-none`}
               style={{
@@ -592,31 +675,25 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform, opacity",
                 opacity:
                   traceLinesScrollProgress > 0
                     ? 1 - traceLinesScrollProgress
                     : 1,
               }}
-              animate={{
-                y: [-3, 3],
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
             >
               <source src="/videos/magnify.webm" type="video/webm" />
-            </motion.video>
+            </video>
             {/* Left center box */}
-            <motion.video
-              autoPlay
+            <video
+              ref={(el) => {
+                boxVideoRefs.current[1] = el;
+              }}
+              autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
               loop
               muted
               playsInline
-              className={`absolute ${
+              preload="none"
+              className={`absolute box-video-float ${
                 isMobile ? "object-contain" : "object-cover"
               } rounded-[31.5px] pointer-events-none`}
               style={{
@@ -625,31 +702,26 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform, opacity",
                 opacity:
                   traceLinesScrollProgress > 0
                     ? 1 - traceLinesScrollProgress
                     : 1,
-              }}
-              animate={{
-                y: [-3, 3],
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
+                animationDelay: "0.3s",
               }}
             >
               <source src="/videos/shield.webm" type="video/webm" />
-            </motion.video>
+            </video>
             {/* Left bottom box */}
-            <motion.video
-              autoPlay
+            <video
+              ref={(el) => {
+                boxVideoRefs.current[2] = el;
+              }}
+              autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
               loop
               muted
               playsInline
-              className={`absolute ${
+              preload="none"
+              className={`absolute box-video-float ${
                 isMobile ? "object-contain" : "object-cover"
               } rounded-[31.5px] pointer-events-none`}
               style={{
@@ -658,32 +730,26 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform, opacity",
                 opacity:
                   traceLinesScrollProgress > 0
                     ? 1 - traceLinesScrollProgress
                     : 1,
-              }}
-              animate={{
-                y: [-3, 3],
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
+                animationDelay: "0.6s",
               }}
             >
               <source src="/videos/bell.webm" type="video/webm" />
-            </motion.video>
-            {/* Right side boxes */}
+            </video>
             {/* Right top box */}
-            <motion.video
-              autoPlay
+            <video
+              ref={(el) => {
+                boxVideoRefs.current[3] = el;
+              }}
+              autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
               loop
               muted
               playsInline
-              className={`absolute ${
+              preload="none"
+              className={`absolute box-video-float ${
                 isMobile ? "object-contain" : "object-cover"
               } rounded-[31.5px] pointer-events-none`}
               style={{
@@ -692,31 +758,26 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform, opacity",
                 opacity:
                   traceLinesScrollProgress > 0
                     ? 1 - traceLinesScrollProgress
                     : 1,
-              }}
-              animate={{
-                y: [-3, 3],
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
+                animationDelay: "0.15s",
               }}
             >
               <source src="/videos/upload.webm" type="video/webm" />
-            </motion.video>
+            </video>
             {/* Right center box */}
-            <motion.video
-              autoPlay
+            <video
+              ref={(el) => {
+                boxVideoRefs.current[4] = el;
+              }}
+              autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
               loop
               muted
               playsInline
-              className={`absolute ${
+              preload="none"
+              className={`absolute box-video-float ${
                 isMobile ? "object-contain" : "object-cover"
               } rounded-[31.5px] pointer-events-none`}
               style={{
@@ -725,31 +786,26 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform, opacity",
                 opacity:
                   traceLinesScrollProgress > 0
                     ? 1 - traceLinesScrollProgress
                     : 1,
-              }}
-              animate={{
-                y: [-3, 3],
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
+                animationDelay: "0.45s",
               }}
             >
               <source src="/videos/dollar.webm" type="video/webm" />
-            </motion.video>
+            </video>
             {/* Right bottom box */}
-            <motion.video
-              autoPlay
+            <video
+              ref={(el) => {
+                boxVideoRefs.current[5] = el;
+              }}
+              autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
               loop
               muted
               playsInline
-              className={`absolute ${
+              preload="none"
+              className={`absolute box-video-float ${
                 isMobile ? "object-contain" : "object-cover"
               } rounded-[31.5px] pointer-events-none`}
               style={{
@@ -758,25 +814,17 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 width: "109.32px",
                 height: "109.32px",
                 zIndex: 10,
-                willChange: "transform, opacity",
                 opacity:
                   traceLinesScrollProgress > 0
                     ? 1 - traceLinesScrollProgress
                     : 1,
-              }}
-              animate={{
-                y: [-3, 3],
-              }}
-              transition={{
-                duration: 2,
-                ease: "easeInOut",
-                repeat: Infinity,
-                repeatType: "reverse",
+                animationDelay: "0.75s",
               }}
             >
               <source src="/videos/graph.webm" type="video/webm" />
-            </motion.video>
-            {/* Horizontal beams - separate component - render first so it's behind */}
+            </video>
+
+            {/* TRACE LINES - RESTORED */}
             <HorizontalBeamAnimated
               className="absolute inset-0 w-full h-full object-contain"
               style={{ zIndex: 0 }}
@@ -792,7 +840,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               beamOpacity={beamOpacity}
             />
 
-            {/* Top and bottom beams - render after so dots appear on top */}
             <TraceLinesAnimated
               className="absolute inset-0 w-full h-full object-contain"
               style={{ zIndex: 1 }}
