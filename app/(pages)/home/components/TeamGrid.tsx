@@ -105,17 +105,13 @@ export function TeamGrid({
               <>
                 <div
                   className={
-                    rowIndex === 0 ? "flex flex-wrap" : "grid grid-cols-2"
+                    rowIndex === 0 ? "flex flex-wrap items-stretch" : "grid grid-cols-2 items-stretch"
                   }
-                  style={{
-                    height: "fit-content",
-                  }}
                 >
                   {row.cards.map((card, cardIndex) => (
                     <div
                       key={cardIndex}
-                      className={rowIndex === 0 ? "w-full md:w-1/2" : "w-full"}
-                      style={{ height: "fit-content" }}
+                      className={rowIndex === 0 ? "w-full md:w-1/2 h-full" : "w-full h-full"}
                     >
                       {card.type === "profile" ? (
                         <ProfileCard {...card.data} />
