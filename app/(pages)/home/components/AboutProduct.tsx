@@ -31,7 +31,7 @@ const CARD_DATA = [
     title: "DISCOVER",
     subtitle: "",
     description:
-      "Browse thousands of curated AI tools instantly. Find exactly what you need without the technical complexity.",
+      "Find the right AI tool without searching endlessly. Tools are clearly organized and presented so users can quickly understand what each one does and whether it fits their needs.",
     // Magnifying glass icon (Heroicons)
     iconPath:
       "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z",
@@ -40,7 +40,7 @@ const CARD_DATA = [
     title: "SUBSCRIBE",
     subtitle: "",
     description:
-      "One-click access to premium AI tools.<br/>No setup, no configuration. Start using tools instantly.",
+      "Activate AI instantly. One-click subscriptions, unified billing, and immediate access — so you can start using tools the moment you subscribe.",
     // Bell icon (Heroicons)
     iconPath:
       "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0",
@@ -49,7 +49,7 @@ const CARD_DATA = [
     title: "SAFETY",
     subtitle: "",
     description:
-      "Every tool is verified and trusted.<br/>Built-in security and privacy protection. Use AI tools with confidence.",
+      "Adopt AI with confidence. Every tool and creator goes through a verification process, with clear information on access, usage, and ownership.",
     // Shield check icon (Heroicons)
     iconPath:
       "M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z",
@@ -96,6 +96,9 @@ export function AboutProduct() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Track hover state for each box
+  const [hoveredBox, setHoveredBox] = useState<string | null>(null);
 
   // Track absolute scroll Y position for scale animation
   const { scrollY: scrollYMotion } = useScroll();
@@ -268,11 +271,11 @@ export function AboutProduct() {
 
   return (
     <div
-      className="relative w-full bg-transparent overflow-x-hidden"
+      className="relative w-full bg-transparent"
       style={{ minHeight: "4000px" }}
     >
       {/* Section content */}
-      <div className="relative z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-x-hidden w-full max-w-full">
+      <div className="relative z-10 flex flex-col items-center justify-start pt-20 md:pt-32 w-full max-w-full">
         {/* Second Section Header */}
         {/* OneStop Image and Text Container - maintains same distance from top as globe */}
         <motion.div
@@ -645,73 +648,136 @@ export function AboutProduct() {
           }}
         >
           {/* Video boxes - positioned below each stroke end */}
-          {BOX_DATA.map((box, index) => (
-            <motion.div
-              key={index}
-              className="absolute flex flex-col items-center"
-              style={{
-                left: `${box.x}px`,
-                top: "227px", // Position at stroke end Y coordinate
-                transform: "translateX(-50%)", // Center box on stroke
-              }}
-            >
-              {/* Video container with text inside */}
+          {BOX_DATA.map((box, index) => {
+            // Find matching card data for description
+            const cardData = CARD_DATA.find((card) => card.title === box.title);
+            const isHovered = hoveredBox === box.title;
+
+            return (
               <motion.div
-                className="relative overflow-hidden flex flex-col"
+                key={index}
+                className="absolute flex flex-col items-center pointer-events-auto"
                 style={{
-                  width: isMobile ? "100px" : "160px",
-                  borderRadius: "28px",
-                  border: "0.743px solid #000",
-                  background: "#010101",
-                  boxShadow:
-                    "-0.743px -0.743px 0.743px 0 rgba(255, 255, 255, 0.35) inset, 0.743px 0.743px 0.743px 0 rgba(255, 255, 255, 0.61) inset",
-                  paddingBottom: "16px",
-                  paddingTop: "12px",
+                  left: `${box.x}px`,
+                  top: "227px", // Position at stroke end Y coordinate
+                  transform: "translateX(-50%)", // Center box on stroke
                 }}
+                onMouseEnter={() => setHoveredBox(box.title)}
+                onMouseLeave={() => setHoveredBox(null)}
               >
-                <div
-                  className="w-full flex items-center justify-center"
+                {/* Video container with text inside */}
+                <motion.div
+                  className="relative overflow-hidden flex flex-col cursor-pointer"
                   style={{
-                    width: "100%",
-                    height: isMobile ? "80px" : "100px",
+                    width: isMobile ? "140px" : "220px",
+                    borderRadius: "28px",
+                    border: "0.743px solid #000",
+                    background: "#010101",
+                    boxShadow:
+                      "-0.743px -0.743px 0.743px 0 rgba(255, 255, 255, 0.35) inset, 0.743px 0.743px 0.743px 0 rgba(255, 255, 255, 0.61) inset",
+                    paddingBottom: "16px",
+                    paddingTop: "12px",
+                    minHeight: isMobile ? "128px" : "148px", // Fixed height: video + title + padding
                   }}
                 >
-                  <video
-                    src={box.video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full object-cover"
+                  {/* Video container - fades out on hover */}
+                  <motion.div
+                    className="w-full flex items-center justify-center"
                     style={{
-                      width: "90%",
-                      height:
-                        box.title === "SAFETY"
-                          ? isMobile
-                            ? "76px"
-                            : "96px"
-                          : isMobile
-                          ? "80px"
-                          : "100px",
+                      width: "100%",
+                      height: isMobile ? "80px" : "100px",
                     }}
-                  />
-                </div>
-                {/* Title inside box at bottom */}
-                <span
-                  className="text-white whitespace-nowrap text-center"
-                  style={{
-                    fontFamily: "var(--font-outfit), Outfit, sans-serif",
-                    fontWeight: 700,
-                    fontSize: "28px",
-                    textTransform: "lowercase",
-                    letterSpacing: "-1.6px",
-                  }}
-                >
-                  {box.title}
-                </span>
+                    animate={{
+                      opacity: isHovered ? 0 : 1,
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <video
+                      src={box.video}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full object-cover"
+                      style={{
+                        width: "90%",
+                        maxWidth: "140px",
+                        height:
+                          box.title === "SAFETY"
+                            ? isMobile
+                              ? "76px"
+                              : "96px"
+                            : isMobile
+                            ? "80px"
+                            : "100px",
+                        maxHeight: "200px",
+                      }}
+                    />
+                  </motion.div>
+
+                  {/* Title - moves to top on hover */}
+                  <motion.span
+                    className="text-white whitespace-nowrap text-center block relative z-10"
+                    style={{
+                      fontFamily: "var(--font-outfit), Outfit, sans-serif",
+                      fontWeight: 700,
+                      fontSize: "28px",
+                      textTransform: "lowercase",
+                      letterSpacing: "-1.6px",
+                    }}
+                    animate={{
+                      y: isHovered ? -(isMobile ? 80 : 100) : 0, // Move up by video height to reach top (at paddingTop: 12px)
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    {box.title}
+                  </motion.span>
+
+                  {/* Description text - appears from bottom on hover */}
+                  {cardData && (
+                    <motion.div
+                      className="absolute w-full px-3"
+                      style={{
+                        pointerEvents: isHovered ? "auto" : "none",
+                        bottom: "16px",
+                        left: 0,
+                        right: 0,
+                      }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{
+                        opacity: isHovered ? 1 : 0,
+                        y: isHovered ? 0 : 20,
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <p
+                        className="text-white text-center"
+                        style={{
+                          fontFamily: "var(--font-outfit), Outfit, sans-serif",
+                          fontWeight: 300,
+                          fontSize: isMobile ? "10px" : "12px",
+                          lineHeight: "140%",
+                          color: "rgba(255, 255, 255, 0.7)",
+                        }}
+                        dangerouslySetInnerHTML={{
+                          __html: cardData.description,
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
 
         {/* Features Grid Section - positioned below the fixed elements */}

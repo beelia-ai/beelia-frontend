@@ -71,7 +71,8 @@ function FeatureCard({
         <p
           className={showPlaceholder || imageSrc ? "mb-6 text-white/50" : "text-white/50"}
           style={{
-            width: "400px",
+            width: "100%",
+            maxWidth: "400px",
             height: "auto",
             minHeight: "66px",
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
@@ -118,7 +119,7 @@ function FeatureCard({
 export function FeaturesGrid() {
   return (
     <div
-      className="max-w-4xl mx-auto relative rounded-lg px-4 md:px-0"
+      className="max-w-4xl mx-auto relative rounded-lg px-4 md:px-0 overflow-hidden"
       style={{ background: "transparent" }}
     >
       {/* Left vertical line - hidden on mobile */}

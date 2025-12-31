@@ -57,7 +57,7 @@ export default function RootLayout({
         <Preloader />
         <NavbarClient />
         <ScrollPositionIndicator />
-        <div className="relative overflow-x-hidden" style={{ zIndex: 1 }}>
+        <div className="relative" style={{ zIndex: 1 }}>
           {children}
         </div>
       </body>
