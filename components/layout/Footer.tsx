@@ -183,6 +183,9 @@ export function Footer() {
                   Connect
                 </h3>
                 <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
+                  <FooterLink href="https://discord.gg/EkxXyy6RAj" external>
+                    Discord
+                  </FooterLink>
                   <FooterLink
                     href="https://www.tiktok.com/@beeliaai?_r=1&_t=ZN-92fzBRa4SVa"
                     external
