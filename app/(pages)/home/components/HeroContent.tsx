@@ -273,13 +273,13 @@ export function HeroContent({
                       }}
                     >
                       <span
-                        className="mobile-waitlist-btn-text uppercase text-sm leading-[100%] tracking-[0.06em] font-outfit"
+                        className="mobile-waitlist-btn-text uppercase text-sm leading-[100%] tracking-[0.06em] font-outfit font-semibold"
                         style={{
-                          fontFamily: "var(--font-outfit), sans-serif",
+                          fontFamily: "sans-serif",
                           fontSize: "16px",
-                          fontWeight: 500,
+                          fontWeight: 800,
                           whiteSpace: "nowrap",
-                          color: "#FFFFFF",
+                          color: "#000000",
                         }}
                       >
                         join waitlist
@@ -289,8 +289,8 @@ export function HeroContent({
                         alt="arrow"
                         width={20}
                         height={20}
-                        className="mobile-waitlist-btn-arrow"
-                        style={{ filter: "brightness(0) invert(1)" }}
+                        className="mobile-waitlist-btn-arrow rotate-45"
+                        style={{ filter: "brightness(0) invert(0)" }}
                       />
                     </div>
                   </GlassSurface>
@@ -321,40 +321,23 @@ export function HeroContent({
                         left: 0;
                         width: 100%;
                         height: 100%;
-                        background: linear-gradient(135deg, #FF8C32 0%, #FEDA24 50%, #FF8C32 100%);
-                        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                        transform: translateX(-100%);
+                        background: linear-gradient(135deg, #FFB830 0%, #FFA500 50%, #FFB830 100%);
+                        transform: translateX(0);
                         z-index: 1;
                         border-radius: 50px;
                         pointer-events: none;
-                        box-shadow: 0 0 20px rgba(254, 218, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-                      }
-                      .mobile-waitlist-btn-wrapper:active::after,
-                      .mobile-waitlist-btn-wrapper:hover::after {
-                        transform: translateX(0);
+                        box-shadow: 0 0 20px rgba(255, 184, 48, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
                       }
                       .mobile-waitlist-btn-wrapper > * {
                         position: relative;
                         z-index: 2;
                       }
                       .mobile-waitlist-btn-text {
-                        color: #FFFFFF;
-                        transition: color 0.3s ease;
-                        font-weight: 500;
-                      }
-                      .mobile-waitlist-btn-wrapper:active .mobile-waitlist-btn-text,
-                      .mobile-waitlist-btn-wrapper:hover .mobile-waitlist-btn-text {
-                        color: #000000;
-                        font-weight: 600;
+                        color: #000000 !important;
+                        font-weight: 800 !important;
                       }
                       .mobile-waitlist-btn-arrow {
-                        filter: brightness(0) invert(1);
-                        transition: filter 0.3s ease, transform 0.5s ease-in-out;
-                      }
-                      .mobile-waitlist-btn-wrapper:active .mobile-waitlist-btn-arrow,
-                      .mobile-waitlist-btn-wrapper:hover .mobile-waitlist-btn-arrow {
-                        filter: brightness(0) invert(0);
-                        transform: rotate(45deg);
+                        filter: brightness(0) invert(0) !important;
                       }
                     `}</style>
                     <div

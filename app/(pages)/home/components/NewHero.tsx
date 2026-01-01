@@ -345,51 +345,20 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     if (!video) return;
 
     const handleLoadedMetadata = () => {
-      if (video.duration && isFinite(video.duration)) {
-        setFutureTransitionDuration(video.duration);
-      }
-    };
-
-    const handleLoadedData = () => {
-      if (video.duration && isFinite(video.duration)) {
-        setFutureTransitionDuration(video.duration);
-      }
-    };
-
-    const handleCanPlay = () => {
-      if (video.duration && isFinite(video.duration)) {
-        setFutureTransitionDuration(video.duration);
-      }
+      setFutureTransitionDuration(video.duration);
     };
 
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    video.addEventListener("loadeddata", handleLoadedData);
-    video.addEventListener("canplay", handleCanPlay);
 
     // If video is already loaded, get duration immediately
-    if (video.readyState >= 1 && video.duration && isFinite(video.duration)) {
+    if (video.readyState >= 1) {
       setFutureTransitionDuration(video.duration);
     }
 
-    // Also check periodically on mobile in case metadata loads late
-    const checkDuration = setInterval(() => {
-      if (
-        video.duration &&
-        isFinite(video.duration) &&
-        !futureTransitionDuration
-      ) {
-        setFutureTransitionDuration(video.duration);
-        clearInterval(checkDuration);
-      }
-    }, 100);
-
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      video.removeEventListener("loadeddata", handleLoadedData);
-      video.removeEventListener("canplay", handleCanPlay);
-      clearInterval(checkDuration);
     };
-  }, [showFutureTransition, futureTransitionDuration]);
+  }, [showFutureTransition]);
 
   // Track future-transition video playback to fade out 1 second before it ends
   useEffect(() => {
@@ -398,28 +367,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     const video = futureTransitionVideoRef.current;
     if (!video) return;
 
-    // Ensure video is playing on mobile
-    const ensureVideoPlaying = () => {
-      if (video.paused && video.readyState >= 2) {
-        video.play().catch(() => {});
-      }
-    };
-
-    // Try to play immediately
-    ensureVideoPlaying();
-
-    // Also ensure it plays after a short delay (for mobile)
-    const playTimeout = setTimeout(ensureVideoPlaying, 100);
-
     let fadeStarted = false;
 
     const checkVideoTime = () => {
       // Once future-main has taken over, stop monitoring future-transition
       // future-main will loop infinitely on its own
       if (showFutureMain) return;
-
-      // Ensure video is still playing
-      ensureVideoPlaying();
 
       const fadeStartTime = futureTransitionDuration - 1; // 1 second before end
 
@@ -451,7 +404,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
     return () => {
       clearInterval(interval);
-      clearTimeout(playTimeout);
     };
   }, [
     showFutureTransition,
@@ -471,25 +423,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         // Start showing future-transition video - preload and play
         setShowFutureTransition(true);
         if (futureTransitionVideoRef.current) {
-          const video = futureTransitionVideoRef.current;
-          video.load();
-
-          // Ensure video plays on mobile - try multiple times if needed
-          const playVideo = () => {
-            video.play().catch(() => {
-              // Retry after a short delay on mobile
-              setTimeout(() => {
-                video.play().catch(() => {});
-              }, 100);
-            });
-          };
-
-          // Wait for video to be ready before playing
-          if (video.readyState >= 2) {
-            playVideo();
-          } else {
-            video.addEventListener("canplay", playVideo, { once: true });
-          }
+          futureTransitionVideoRef.current.load();
+          futureTransitionVideoRef.current.play().catch(() => {});
         }
       }
 
@@ -512,12 +447,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [
-    showFutureTransition,
-    futureTransitionVideoOpacity,
-    futureMainVideoOpacity,
-    futureTransitionCombinedOpacity,
-  ]);
+  }, [showFutureTransition]);
 
   // Track window width for responsive scaling
   useEffect(() => {
@@ -814,15 +744,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   stackedAlphaSrc="/videos/future-transition-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
-                  loop={false}
+                  loop
                   muted
-                  videoRef={futureTransitionVideoRef}
                 />
               </motion.div>
             ) : SHOW_HERO_VIDEOS ? (
               <motion.video
                 ref={futureTransitionVideoRef}
-                loop={false}
+                loop
                 muted
                 playsInline
                 preload="none"
