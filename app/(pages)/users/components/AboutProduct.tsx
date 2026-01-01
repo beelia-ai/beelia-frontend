@@ -10,6 +10,7 @@ import {
 import { FeaturesGrid, FeatureData } from "./FeaturesGrid";
 import { TeamGrid } from "./TeamGrid";
 import { WebGLVideo } from "@/components/ui";
+import { SHOW_HERO_VIDEOS } from "@/lib/constants";
 
 // iOS detection helper
 function isIOS(): boolean {
@@ -843,63 +844,65 @@ export function AboutProduct({
                   }}
                 >
                   {/* Video container - fades out on hover */}
-                  <motion.div
-                    className="w-full flex items-center justify-center"
-                    style={{
-                      width: "100%",
-                      height: isMobile ? "100px" : "100px", // Square 1:1 aspect ratio for mobile
-                    }}
-                    animate={{
-                      opacity: isHovered ? 0 : 1,
-                    }}
-                    transition={{
-                      duration: 0.3,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    {isIOSDevice && box.stackedVideo ? (
-                      <WebGLVideo
-                        webmSrc={box.video}
-                        stackedAlphaSrc={box.stackedVideo}
-                        className="w-full h-full object-cover"
-                        style={{
-                          width: isMobile ? "100px" : "90%",
-                          height: isMobile ? "100px" : "auto",
-                          maxWidth: isMobile
-                            ? "100px"
-                            : box.title === "DISCOVER"
-                            ? "140px"
-                            : "112px",
-                          maxHeight: isMobile ? "100px" : "200px",
-                          aspectRatio: isMobile ? "1 / 1" : "auto",
-                        }}
-                        autoPlay
-                        loop
-                        muted
-                      />
-                    ) : (
-                      <video
-                        src={box.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        className="w-full h-full object-cover"
-                        style={{
-                          width: isMobile ? "100px" : "90%",
-                          height: isMobile ? "100px" : "auto",
-                          maxWidth: isMobile
-                            ? "100px"
-                            : box.title === "DISCOVER"
-                            ? "140px"
-                            : "112px",
-                          maxHeight: isMobile ? "100px" : "200px",
-                          aspectRatio: isMobile ? "1 / 1" : "auto",
-                        }}
-                      />
-                    )}
-                  </motion.div>
+                  {SHOW_HERO_VIDEOS && (
+                    <motion.div
+                      className="w-full flex items-center justify-center"
+                      style={{
+                        width: "100%",
+                        height: isMobile ? "100px" : "100px", // Square 1:1 aspect ratio for mobile
+                      }}
+                      animate={{
+                        opacity: isHovered ? 0 : 1,
+                      }}
+                      transition={{
+                        duration: 0.3,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      {isIOSDevice && box.stackedVideo ? (
+                        <WebGLVideo
+                          webmSrc={box.video}
+                          stackedAlphaSrc={box.stackedVideo}
+                          className="w-full h-full object-cover"
+                          style={{
+                            width: isMobile ? "100px" : "90%",
+                            height: isMobile ? "100px" : "auto",
+                            maxWidth: isMobile
+                              ? "100px"
+                              : box.title === "DISCOVER"
+                              ? "140px"
+                              : "112px",
+                            maxHeight: isMobile ? "100px" : "200px",
+                            aspectRatio: isMobile ? "1 / 1" : "auto",
+                          }}
+                          autoPlay
+                          loop
+                          muted
+                        />
+                      ) : (
+                        <video
+                          src={box.video}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="none"
+                          className="w-full h-full object-cover"
+                          style={{
+                            width: isMobile ? "100px" : "90%",
+                            height: isMobile ? "100px" : "auto",
+                            maxWidth: isMobile
+                              ? "100px"
+                              : box.title === "DISCOVER"
+                              ? "140px"
+                              : "112px",
+                            maxHeight: isMobile ? "100px" : "200px",
+                            aspectRatio: isMobile ? "1 / 1" : "auto",
+                          }}
+                        />
+                      )}
+                    </motion.div>
+                  )}
 
                   {/* Title - moves to top on hover */}
                   <motion.span

@@ -67,7 +67,8 @@ export function Footer() {
       `}</style>
       <footer
         id="footer"
-        className="relative w-full min-h-screen overflow-x-hidden overflow-y-visible"
+        className="relative w-full"
+        style={{ overflowX: "clip", overflowY: isMobile ? "visible" : "clip" }}
       >
         {/* Noise Names Image - Overlay right above blackhole */}
         {/* <div className="absolute bottom-0 left-0 right-0 w-full z-20 pointer-events-none opacity-30">
@@ -82,45 +83,49 @@ export function Footer() {
           />
         </div> */}
 
-        {/* Blackhole Video - Absolute positioned at bottom, full width */}
-        <div
-          className="absolute left-0 right-0 w-full z-10"
-          style={{
-            marginTop: isMobile ? "-100px" : "0px",
-            bottom: isMobile ? "50px" : "-240px",
-            transform: isMobile
-              ? "rotate(-8deg) scale(1.2)"
-              : "rotate(-8deg) scale(1)",
-            transformOrigin: "center center",
-          }}
-        >
-          {isIOSDevice ? (
-            <WebGLVideo
-              webmSrc="/videos/black-hole.webm"
-              stackedAlphaSrc="/videos/black-hole-stacked.mp4"
-              className="w-full h-auto object-cover"
-              style={{ objectPosition: "bottom" }}
-              autoPlay
-              loop
-              muted
-            />
-          ) : (
-            <video
-              src="/videos/black-hole.webm"
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-auto object-cover"
-              style={{ objectPosition: "bottom" }}
-            />
-          )}
-        </div>
+        {/* Blackhole Video - Absolute positioned at bottom for desktop */}
+        {!isMobile && (
+          <div
+            className="absolute left-0 right-0 w-full z-10"
+            style={{
+              bottom: "-240px",
+              transform: "rotate(-8deg) scale(1)",
+              transformOrigin: "center center",
+            }}
+          >
+            {isIOSDevice ? (
+              <WebGLVideo
+                webmSrc="/videos/black-hole.webm"
+                stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+                className="w-full h-auto object-cover"
+                style={{ objectPosition: "bottom" }}
+                autoPlay
+                loop
+                muted
+              />
+            ) : (
+              <video
+                src="/videos/black-hole.webm"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-auto object-cover"
+                style={{ objectPosition: "bottom" }}
+              />
+            )}
+          </div>
+        )}
 
         {/* Content - BEELIA and sections in same flex column */}
         <div
-          className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 md:px-16 lg:px-24 py-8 md:py-12"
-          style={{ paddingBottom: isMobile ? "200px" : "300px" }}
+          className="relative z-10 flex flex-col px-4 sm:px-6 md:px-16 lg:px-24 pb-8 md:pb-12"
+          style={{
+            paddingTop: isMobile
+              ? "clamp(40px, 5vw, 80px)"
+              : "clamp(60px, 6vw, 120px)",
+            paddingBottom: isMobile ? "0px" : "300px",
+          }}
         >
           {/* Large BEELIA Text - Width matches content container */}
           <h1
@@ -131,7 +136,9 @@ export function Footer() {
               fontWeight: 800,
               fontSize: "calc((100vw - 2rem) * 0.262)",
               lineHeight: "1",
+              marginTop: "0",
               marginBottom: "clamp(20px, 2vw, 40px)",
+              paddingTop: "0",
             }}
           >
             BEELIA
@@ -282,6 +289,39 @@ export function Footer() {
               </div>
             </div>
           </div>
+
+          {/* Blackhole Video - Mobile: Right below Connect & Legal links */}
+          {isMobile && (
+            <div
+              className="w-full mt-12 -mb-20"
+              style={{
+                transform: "rotate(-8deg) scale(1.3)",
+                transformOrigin: "center center",
+              }}
+            >
+              {isIOSDevice ? (
+                <WebGLVideo
+                  webmSrc="/videos/black-hole.webm"
+                  stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+                  className="w-full h-auto object-cover"
+                  style={{ objectPosition: "bottom" }}
+                  autoPlay
+                  loop
+                  muted
+                />
+              ) : (
+                <video
+                  src="/videos/black-hole.webm"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto object-cover"
+                  style={{ objectPosition: "bottom" }}
+                />
+              )}
+            </div>
+          )}
         </div>
       </footer>
     </>
