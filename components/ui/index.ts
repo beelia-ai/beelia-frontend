@@ -27,3 +27,5 @@ export type { AnimatedTraceLinesProps } from './animated-trace-lines'
 
 export { HorizontalBeamAnimated } from './horizontal-beam-animated'
 export type { HorizontalBeamAnimatedProps } from './horizontal-beam-animated'
+
+export { WebGLVideo } from './webgl-video'

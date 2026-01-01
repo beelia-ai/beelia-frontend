@@ -2,6 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { FooterLink } from "./FooterLink";
+import { LegalModal } from "./LegalModal";
+import { WebGLVideo } from "@/components/ui";
+import legalContent from "./legal-content.json";
+
+// iOS detection helper
+function isIOS(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -22,6 +34,16 @@ function useWindowWidth() {
 export function Footer() {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
+  const [isIOSDevice, setIsIOSDevice] = useState(false);
+
+  // Load content from JSON file
+  const termsContent = legalContent.terms.content;
+  const privacyContent = legalContent.policies.content;
+
+  useEffect(() => {
+    setIsIOSDevice(isIOS());
+  }, []);
+
   return (
     <>
       {/* Animated underline styles */}
@@ -45,7 +67,8 @@ export function Footer() {
       `}</style>
       <footer
         id="footer"
-        className="relative w-full min-h-screen overflow-hidden"
+        className="relative w-full"
+        style={{ overflowX: "clip", overflowY: isMobile ? "visible" : "clip" }}
       >
         {/* Noise Names Image - Overlay right above blackhole */}
         {/* <div className="absolute bottom-0 left-0 right-0 w-full z-20 pointer-events-none opacity-30">
@@ -60,32 +83,49 @@ export function Footer() {
           />
         </div> */}
 
-        {/* Blackhole Video - Absolute positioned at bottom, full width */}
-        <div
-          className="absolute left-0 right-0 w-full z-10"
-          style={{
-            bottom: isMobile ? "160px" : "-240px",
-            transform: isMobile
-              ? "rotate(-8deg) scale(1.2)"
-              : "rotate(-8deg) scale(1)",
-            transformOrigin: "center center",
-          }}
-        >
-          <video
-            src="/videos/black-hole.webm"
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-auto object-cover"
-            style={{ objectPosition: "bottom" }}
-          />
-        </div>
+        {/* Blackhole Video - Absolute positioned at bottom for desktop */}
+        {!isMobile && (
+          <div
+            className="absolute left-0 right-0 w-full z-10"
+            style={{
+              bottom: "-240px",
+              transform: "rotate(-8deg) scale(1)",
+              transformOrigin: "center center",
+            }}
+          >
+            {isIOSDevice ? (
+              <WebGLVideo
+                webmSrc="/videos/black-hole.webm"
+                stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+                className="w-full h-auto object-cover"
+                style={{ objectPosition: "bottom" }}
+                autoPlay
+                loop
+                muted
+              />
+            ) : (
+              <video
+                src="/videos/black-hole.webm"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-auto object-cover"
+                style={{ objectPosition: "bottom" }}
+              />
+            )}
+          </div>
+        )}
 
         {/* Content - BEELIA and sections in same flex column */}
         <div
-          className="relative z-10 flex flex-col min-h-screen px-4 sm:px-6 md:px-16 lg:px-24 py-8 md:py-12"
-          style={{ paddingBottom: isMobile ? "200px" : "300px" }}
+          className="relative z-10 flex flex-col px-4 sm:px-6 md:px-16 lg:px-24 pb-8 md:pb-12"
+          style={{
+            paddingTop: isMobile
+              ? "clamp(40px, 5vw, 80px)"
+              : "clamp(60px, 6vw, 120px)",
+            paddingBottom: isMobile ? "0px" : "300px",
+          }}
         >
           {/* Large BEELIA Text - Width matches content container */}
           <h1
@@ -96,7 +136,9 @@ export function Footer() {
               fontWeight: 800,
               fontSize: "calc((100vw - 2rem) * 0.262)",
               lineHeight: "1",
+              marginTop: "0",
               marginBottom: "clamp(20px, 2vw, 40px)",
+              paddingTop: "0",
             }}
           >
             BEELIA
@@ -108,19 +150,24 @@ export function Footer() {
             style={{ padding: "0 4px 0 4px" }}
           >
             {/* Left Side - The App Store for AI Section */}
-            <div className="flex flex-col">
+            <div
+              className="flex flex-col"
+              style={{
+                marginTop: isMobile ? "clamp(40px, 4vw, 80px)" : "0",
+              }}
+            >
               {/* Headline */}
               <h2
                 className="text-white max-w-l mb-4 md:mb-6"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 700,
-                  fontSize: "clamp(28px, 6vw, 42px)",
+                  fontSize: "clamp(29px, 6vw, 43px)",
                   lineHeight: "122%",
                   letterSpacing: "-0.02em",
                 }}
               >
-                The App Store for AI
+                The AI Marketplace
               </h2>
 
               {/* Description */}
@@ -129,23 +176,21 @@ export function Footer() {
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 300,
-                  fontSize: "clamp(14px, 2vw, 16px)",
+                  fontSize: "clamp(15px, 2vw, 17px)",
                   lineHeight: "130%",
                   letterSpacing: "0",
                   opacity: 0.5,
                 }}
               >
-                Giving people a seamless way to find the right tools and start
-                using them instantly, no setup, no friction.
+                Where AI tools meet the people who need them.
               </p>
 
               {/* Powered By */}
               <p
-                className="uppercase"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
-                  fontWeight: 600,
-                  fontSize: "clamp(12px, 1.5vw, 16px)",
+                  fontWeight: 100,
+                  fontSize: "clamp(13px, 1.5vw, 17px)",
                   lineHeight: "100%",
                   letterSpacing: "0.05em",
                   background:
@@ -155,12 +200,19 @@ export function Footer() {
                   color: "transparent",
                 }}
               >
-                POWERED BY—CESNO
+                Powered by <b>CESNO</b>
               </p>
             </div>
 
             {/* Right Side - Links */}
-            <div className="flex flex-col sm:flex-row md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-32 w-full md:w-auto">
+            <div
+              className="flex flex-row w-full md:w-auto"
+              style={{
+                gap: "80px",
+                marginTop: isMobile ? "clamp(40px, 4vw, 80px)" : "0",
+                flexDirection: isMobile ? "row" : "row-reverse",
+              }}
+            >
               {/* Connect Column */}
               <div className="flex flex-col items-start sm:items-end gap-4 md:gap-6">
                 <h3
@@ -168,7 +220,7 @@ export function Footer() {
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 400,
-                    fontSize: "clamp(16px, 2vw, 18.9px)",
+                    fontSize: "clamp(17px, 2vw, 19.9px)",
                     lineHeight: "25.2px",
                     letterSpacing: "-0.02em",
                     color: "#FFFFFF",
@@ -177,30 +229,39 @@ export function Footer() {
                 >
                   Connect
                 </h3>
-                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
-                  <FooterLink href="https://instagram.com/beelia.ai" external>
-                    Instagram
+                <div
+                  className="flex flex-col items-start sm:items-end"
+                  style={{ gap: "20px" }}
+                >
+                  <FooterLink href="https://discord.gg/EkxXyy6RAj" external>
+                    Discord
                   </FooterLink>
                   <FooterLink
-                    href="https://linkedin.com/company/beelia"
+                    href="https://www.tiktok.com/@beeliaai?_r=1&_t=ZN-92fzBRa4SVa"
+                    external
+                  >
+                    TikTok
+                  </FooterLink>
+                  <FooterLink
+                    href="https://www.linkedin.com/company/beelia-ai/"
                     external
                   >
                     LinkedIn
                   </FooterLink>
-                  <FooterLink href="https://twitter.com/beelia" external>
+                  <FooterLink href="https://x.com/beelia_ai" external>
                     Twitter
                   </FooterLink>
                 </div>
               </div>
 
               {/* Legal Column */}
-              <div className="flex flex-col items-start sm:items-end gap-4 md:gap-6">
+              <div className="flex flex-col items-start sm:items-end gap-3 md:gap-6">
                 <h3
                   className="text-left sm:text-right"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 400,
-                    fontSize: "clamp(16px, 2vw, 18.9px)",
+                    fontSize: "clamp(17px, 2vw, 19.9px)",
                     lineHeight: "25.2px",
                     letterSpacing: "-0.02em",
                     color: "#FFFFFF",
@@ -209,13 +270,58 @@ export function Footer() {
                 >
                   Legal
                 </h3>
-                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
-                  <FooterLink href="/privacy-policy">Policies</FooterLink>
-                  <FooterLink href="/terms-and-conditions">Terms</FooterLink>
+                <div
+                  className="flex flex-col items-start sm:items-end"
+                  style={{ gap: "14px" }}
+                >
+                  {/* LegalModal components with built-in trigger and modal */}
+                  <LegalModal
+                    label="Policies"
+                    title="Policies"
+                    content={privacyContent}
+                  />
+                  <LegalModal
+                    label="Terms"
+                    title="Terms"
+                    content={termsContent}
+                  />
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Blackhole Video - Mobile: Right below Connect & Legal links */}
+          {isMobile && (
+            <div
+              className="w-full mt-12 -mb-20"
+              style={{
+                transform: "rotate(-8deg) scale(1.3)",
+                transformOrigin: "center center",
+              }}
+            >
+              {isIOSDevice ? (
+                <WebGLVideo
+                  webmSrc="/videos/black-hole.webm"
+                  stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+                  className="w-full h-auto object-cover"
+                  style={{ objectPosition: "bottom" }}
+                  autoPlay
+                  loop
+                  muted
+                />
+              ) : (
+                <video
+                  src="/videos/black-hole.webm"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto object-cover"
+                  style={{ objectPosition: "bottom" }}
+                />
+              )}
+            </div>
+          )}
         </div>
       </footer>
     </>

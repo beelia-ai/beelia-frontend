@@ -1,0 +1,154 @@
+{
+  "What is Beelia?": [
+    {
+      "question": "What is Beelia?",
+      "answer": "Beelia is an open marketplace where people can discover, subscribe to, and use AI tools, and where creators can monetize their AI tools."
+    },
+    {
+      "question": "How is Beelia different from AI directories or lists?",
+      "answer": "Directories only link you out. Beelia lets you subscribe, manage, and use AI tools in one place with verified creators and unified billing."
+    },
+    {
+      "question": "How is Beelia different from ChatGPT’s App Store?",
+      "answer": "ChatGPT helps you interact with AI inside chat. Beelia helps you adopt AI tools that live outside chat, with real dashboards, APIs, pricing, and ownership."
+    },
+    {
+      "question": "Is Beelia an app store for AI?",
+      "answer": "Yes, conceptually. We’re doing for AI tools what app stores did for mobile apps: distribution, trust, and monetization."
+    },
+    {
+      "question": "Who is Beelia built for?",
+      "answer": "Non-technical users, businesses, creators, developers, and teams who want AI that actually works, without complexity."
+    },
+    {
+      "question": "What problem does Beelia solve?",
+      "answer": "AI is powerful but fragmented, unorganized, and hard to trust. Beelia centralizes discovery, access, and monetization."
+    },
+    {
+      "question": "Why build Beelia now?",
+      "answer": "AI adoption is exploding, but there’s no clear marketplace leader yet. Timing matters, and this is the window."
+    }
+  ],
+  "For Users": [
+    {
+      "question": "Why would I use Beelia instead of Google or directories?",
+      "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store."
+    },
+    {
+      "question": "How do I use an AI tool on Beelia?",
+      "answer": "Find a tool, subscribe, and start using it instantly via dashboard access or provided instructions."
+    },
+    {
+      "question": "Do I have to switch tools if I stop using Beelia?",
+      "answer": "No. Tools are independent. Beelia never locks you in."
+    },
+    {
+      "question": "Can I manage multiple AI subscriptions in one place?",
+      "answer": "Yes. Beelia gives you a unified place to track subscriptions, access details, and renewals."
+    },
+    {
+      "question": "Can I try tools before committing?",
+      "answer": "Many tools offer demos, previews, or trial access depending on the creator."
+    },
+    {
+      "question": "How does billing work?",
+      "answer": "One account, one dashboard, one place to manage all subscriptions and receipts."
+    },
+    {
+      "question": "Can I cancel subscriptions anytime?",
+      "answer": "Yes. No lock-ins. Full control from your dashboard."
+    },
+    {
+      "question": "How do I know which tools are trustworthy?",
+      "answer": "Beelia verifies both creators and tools, and uses reviews and performance signals."
+    },
+    {
+      "question": "Is my data safe?",
+      "answer": "We enforce platform-level security standards and transparency around how tools handle data."
+    },
+    {
+      "question": "How do I know which AI tool is right for me?",
+      "answer": "Tools are categorized, described clearly, and compared based on real use cases, not hype."
+    },
+    {
+      "question": "Can Beelia replace multiple AI subscriptions?",
+      "answer": "That’s the goal, one platform instead of scattered tools everywhere."
+    },
+    {
+      "question": "What problems does Beelia save me from?",
+      "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time."
+    }
+  ],
+  "For Creators": [
+    {
+      "question": "Who can sell AI tools on Beelia?",
+      "answer": "Anyone with a functional AI tool, from indie developers to startups or big corporations."
+    },
+    {
+      "question": "Do I need to build a full SaaS to sell on Beelia?",
+      "answer": "No. Beelia removes the need to build billing, marketing, or distribution from scratch."
+    },
+    {
+      "question": "How do creators make money?",
+      "answer": "Creators set prices. Beelia takes a platform commission on subscriptions."
+    },
+    {
+      "question": "What types of tools can be listed?",
+      "answer": "APIs, agents, dashboards, automations, models, and AI-powered workflows."
+    },
+    {
+      "question": "How does Beelia help with discovery?",
+      "answer": "Search, categories, rankings, boosts, and featured placements drive visibility."
+    },
+    {
+      "question": "Can I promote my tool on Beelia?",
+      "answer": "Yes. Boosts and highlights increase exposure inside the marketplace."
+    },
+    {
+      "question": "Do creators keep ownership of their IP?",
+      "answer": "Yes. You own your models and tools, Beelia is the distribution layer."
+    },
+    {
+      "question": "How fast can I launch a tool?",
+      "answer": "In minutes, not months."
+    },
+    {
+      "question": "Why choose Beelia over building my own site?",
+      "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments."
+    }
+  ],
+  "Trust, Security & Vision": [
+    {
+      "question": "How does Beelia ensure tool quality?",
+      "answer": "Through verification processes, clear disclosures, and ongoing review systems."
+    },
+    {
+      "question": "How does Beelia handle low-quality tools?",
+      "answer": "Poor-performing tools are deprioritized or removed to protect the ecosystem."
+    },
+    {
+      "question": "Is Beelia a closed or open platform?",
+      "answer": "Open. Anyone can build, list, and subscribe, no gatekeeping."
+    },
+    {
+      "question": "How does Beelia compare to ChatGPT’s app ecosystem?",
+      "answer": "Beelia is open, tool-agnostic, and not limited to one AI provider or interface."
+    },
+    {
+      "question": "Can Beelia remove tools from the marketplace?",
+      "answer": "Yes, if they violate trust, security, or quality standards."
+    },
+    {
+      "question": "What’s Beelia’s long-term vision?",
+      "answer": "To become the default marketplace and infrastructure layer for AI."
+    },
+    {
+      "question": "Is Beelia available globally?",
+      "answer": "Yes. Built for a global creator and user economy from day one."
+    },
+    {
+      "question": "Will Beelia always stay open and neutral?",
+      "answer": "That’s core to the mission: independence from any single AI platform."
+    }
+  ]
+}

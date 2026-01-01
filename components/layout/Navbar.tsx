@@ -19,7 +19,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const scrollThresholdRef = useRef(0);
   const pathname = usePathname();
   const isWaitlistPage = pathname === "/waitlist";
-  const isHomePage = pathname === "/home";
+  const isUsersPage = pathname === "/users";
+  const isCreatorsPage = pathname === "/creators";
 
   // Track window size for responsive button sizing
   useEffect(() => {
@@ -39,52 +40,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // #region agent log
-      if (currentScrollY >= 700 && currentScrollY <= 850) {
-        fetch(
-          "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              location: "Navbar.tsx:handleScroll",
-              message: "Scroll in target range",
-              data: {
-                currentScrollY,
-                lastScrollY,
-                isVisible,
-                threshold: scrollThresholdRef.current,
-              },
-              timestamp: Date.now(),
-              sessionId: "debug-session",
-              hypothesisId: "A",
-            }),
-          }
-        ).catch(() => {});
-      }
-      // #endregion
-
       // Scrolling down - hide navbar
       if (currentScrollY > lastScrollY && currentScrollY > 0) {
-        // #region agent log
-        if (currentScrollY >= 700 && currentScrollY <= 850) {
-          fetch(
-            "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                location: "Navbar.tsx:handleScroll",
-                message: "Setting isVisible=false",
-                data: { currentScrollY, wasVisible: isVisible },
-                timestamp: Date.now(),
-                sessionId: "debug-session",
-                hypothesisId: "A",
-              }),
-            }
-          ).catch(() => {});
-        }
-        // #endregion
         setIsVisible(false);
         scrollThresholdRef.current = currentScrollY;
       }
@@ -94,25 +51,6 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
           currentScrollY <= scrollThresholdRef.current - 20 ||
           currentScrollY === 0
         ) {
-          // #region agent log
-          if (currentScrollY >= 700 && currentScrollY <= 850) {
-            fetch(
-              "http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed",
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  location: "Navbar.tsx:handleScroll",
-                  message: "Setting isVisible=true",
-                  data: { currentScrollY, wasVisible: isVisible },
-                  timestamp: Date.now(),
-                  sessionId: "debug-session",
-                  hypothesisId: "A",
-                }),
-              }
-            ).catch(() => {});
-          }
-          // #endregion
           setIsVisible(true);
         }
       }
@@ -128,17 +66,10 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const navbarContentOpacity = isVisible ? 1 : 0;
   const navbarContentY = isVisible ? 0 : -20;
 
-  // Hide navbar on home page unless forced to show
-  if (isHomePage && !forceShow) {
+  // Hide navbar on users page and creators page unless forced to show
+  if ((isUsersPage || isCreatorsPage) && !forceShow) {
     return null;
   }
-
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   return (
     <>
@@ -196,21 +127,44 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
         .nav-link::after {
           content: '';
           position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 1.4px;
           background: white;
-          transition: width 0.3s ease;
+          transition: all 0.3s ease;
         }
-        .nav-link:hover::after {
-          width: 100%;
+        /* Horizontal underline for desktop */
+        @media (min-width: 768px) {
+          .nav-link::after {
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1.4px;
+          }
+          .nav-link:hover::after,
+          .nav-link.active::after {
+            width: 100%;
+          }
+        }
+        /* Vertical indicator for mobile */
+        @media (max-width: 767px) {
+          .nav-link::after {
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.4px;
+            height: 0;
+          }
+          .nav-link:hover::after,
+          .nav-link.active::after {
+            height: 100%;
+          }
         }
       `}</style>
 
       {/* Full width navbar */}
       <nav className="fixed top-0 left-0 right-0 z-[9999] px-4 sm:px-6 md:px-8 lg:px-16 py-3 md:py-6">
-        <div className="flex items-center justify-between w-full relative">
+        <div
+          className="flex items-center justify-between w-full relative"
+          style={{ padding: "6px 12px" }}
+        >
           {/* Logo on the left - hides on scroll down, shows on scroll up */}
           <motion.div
             className="flex items-center justify-start flex-shrink-0 z-10"
@@ -226,7 +180,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
               willChange: "opacity, transform",
             }}
           >
-            <Link href="/home" className="flex items-center gap-2">
+            <Link href="/users" className="flex items-center gap-2">
               <Image
                 src="/icons/beelia-logo.png"
                 alt="Beelia Logo"
@@ -238,9 +192,13 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             </Link>
           </motion.div>
 
-          {/* Navigation links in the center - visible on all screen sizes */}
+          {/* Navigation links - centered on desktop, top-right column on mobile */}
           <motion.div
-            className="flex items-center justify-center absolute inset-0 pointer-events-none"
+            className={`absolute pointer-events-none ${
+              isMobile
+                ? "top-0 right-0 flex items-start justify-end"
+                : "inset-0 flex items-center justify-center"
+            }`}
             animate={{
               opacity: navbarContentOpacity,
               y: navbarContentY,
@@ -254,55 +212,100 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             }}
           >
             {!isWaitlistPage && (
-              <div className={`flex items-center pointer-events-auto ${isMobile ? 'gap-3 sm:gap-4' : 'gap-8 lg:gap-12'}`}>
-                <button
-                  onClick={() => {}}
-                  className="nav-link cursor-pointer"
+              <div
+                className={`pointer-events-auto ${
+                  isMobile
+                    ? "flex flex-col items-end gap-2 sm:gap-3"
+                    : "flex items-center gap-8 lg:gap-12"
+                }`}
+                style={{
+                  zIndex: 10000,
+                  touchAction: "manipulation",
+                }}
+              >
+                <Link
+                  href="/users"
+                  className={`nav-link cursor-pointer ${
+                    isUsersPage ? "active" : ""
+                  }`}
+                  onClick={(e) => {
+                    // Ensure navigation works on mobile
+                    e.stopPropagation();
+                  }}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: isMobile ? "12px" : "16px",
-                    fontWeight: 400,
+                    fontSize: isMobile ? "16px" : "16px",
+                    fontWeight: isUsersPage ? 600 : 400,
                     background: "none",
                     border: "none",
+                    textDecoration: "none",
+                    color: isUsersPage ? "#FFFFFF" : "rgba(255, 255, 255, 0.7)",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
+                    touchAction: "manipulation",
+                    WebkitTapHighlightColor: "transparent",
+                    cursor: "pointer",
+                    display: "block",
                   }}
                 >
                   Users
-                </button>
-                <button
-                  onClick={() => scrollToSection("about-company")}
-                  className="nav-link cursor-pointer"
+                </Link>
+                <Link
+                  href="/creators"
+                  className={`nav-link cursor-pointer ${
+                    isCreatorsPage ? "active" : ""
+                  }`}
+                  onClick={(e) => {
+                    // Ensure navigation works on mobile
+                    e.stopPropagation();
+                  }}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: isMobile ? "12px" : "16px",
-                    fontWeight: 400,
+                    fontSize: isMobile ? "16px" : "16px",
+                    fontWeight: isCreatorsPage ? 600 : 400,
                     background: "none",
                     border: "none",
+                    textDecoration: "none",
+                    color: isCreatorsPage
+                      ? "#FFFFFF"
+                      : "rgba(255, 255, 255, 0.7)",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
+                    touchAction: "manipulation",
+                    WebkitTapHighlightColor: "transparent",
+                    cursor: "pointer",
+                    display: "block",
                   }}
                 >
                   Creators
-                </button>
+                </Link>
                 <a
                   href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
                   className="nav-link cursor-pointer"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
-                    fontSize: isMobile ? "12px" : "16px",
+                    fontSize: isMobile ? "16px" : "16px",
                     fontWeight: 400,
                     background: "none",
                     border: "none",
                     textDecoration: "none",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
                   }}
                 >
-                  Investors
+                  Contact
                 </a>
               </div>
             )}
           </motion.div>
 
           {/* JOIN WAITLIST button on the right */}
-          <div className="flex items-center justify-end flex-shrink-0 z-10">
+          <div className="hidden md:flex items-center justify-end flex-shrink-0 z-10">
             <Link
-              href={isWaitlistPage ? "/home" : "/waitlist"}
+              href={isWaitlistPage ? "/users" : "/waitlist"}
               className="group cursor-pointer block"
               style={{
                 perspective: "1000px",
@@ -347,7 +350,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         letterSpacing: isMobile ? "0.04em" : "0.06em",
                       }}
                     >
-                      {isWaitlistPage ? "back home" : "join waitlist"}
+                      {isWaitlistPage ? "back to users" : "join waitlist"}
                     </span>
                     {!isWaitlistPage && (
                       <Image

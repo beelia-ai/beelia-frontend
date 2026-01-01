@@ -176,20 +176,39 @@ export function ParticleSpritesBackground({
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
+
+      // Update touch-action based on screen size
+      if (followMouse) {
+        const isMobile = window.innerWidth < 768
+        document.body.style.touchAction = isMobile ? '' : 'none'
+      }
     }
 
     if (followMouse) {
-      document.body.style.touchAction = 'none'
+      // Only disable touch-action on desktop, allow scrolling on mobile
+      const isMobile = window.innerWidth < 768
+      if (!isMobile) {
+        document.body.style.touchAction = 'none'
+      }
       document.body.addEventListener('pointermove', handlePointerMove)
     }
 
     window.addEventListener('resize', handleResize)
 
-    // Animation loop
-    const animate = () => {
+    // Animation loop with frame rate limiting to reduce CPU/GPU usage
+    const targetFPS = 60 // Cap at 60 FPS for background effect - sufficient for smooth visuals
+    const frameInterval = 1000 / targetFPS
+    let lastFrameTime = 0
+
+    const animate = (currentTime: number = 0) => {
       if (!isMounted) return
 
       animationFrameRef.current = requestAnimationFrame(animate)
+
+      // Frame rate limiting - skip frames to maintain target FPS
+      const elapsed = currentTime - lastFrameTime
+      if (elapsed < frameInterval) return
+      lastFrameTime = currentTime - (elapsed % frameInterval)
 
       const time = Date.now() * 0.00005 * speed
 
@@ -242,6 +261,8 @@ export function ParticleSpritesBackground({
 
       if (followMouse) {
         document.body.removeEventListener('pointermove', handlePointerMove)
+        // Reset touch-action on cleanup
+        document.body.style.touchAction = ''
       }
 
       window.removeEventListener('resize', handleResize)

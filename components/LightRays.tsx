@@ -113,11 +113,6 @@ const LightRays: React.FC<LightRaysProps> = ({
     observerRef.current = new IntersectionObserver(
       entries => {
         const entry = entries[0];
-        // #region agent log
-        if (window.scrollY >= 700 && window.scrollY <= 850) {
-          fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LightRays.tsx:IntersectionObserver',message:'Visibility change',data:{isIntersecting:entry.isIntersecting,intersectionRatio:entry.intersectionRatio,scrollY:window.scrollY},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'I'})}).catch(()=>{});
-        }
-        // #endregion
         setIsVisible(entry.isIntersecting);
       },
       { threshold: 0.1 }
@@ -314,10 +309,23 @@ void main() {
         uniforms.rayDir.value = dir;
       };
 
+      // Frame rate limiting to reduce CPU/GPU usage
+      const targetFPS = 30;
+      const frameInterval = 1000 / targetFPS;
+      let lastFrameTime = 0;
+
       const loop = (t: number) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
           return;
         }
+
+        // Frame rate limiting - skip frames to maintain target FPS
+        const elapsed = t - lastFrameTime;
+        if (elapsed < frameInterval) {
+          animationIdRef.current = requestAnimationFrame(loop);
+          return;
+        }
+        lastFrameTime = t - (elapsed % frameInterval);
 
         uniforms.iTime.value = t * 0.001;
 
@@ -334,7 +342,6 @@ void main() {
           renderer.render({ scene: mesh });
           animationIdRef.current = requestAnimationFrame(loop);
         } catch (error) {
-          console.warn('WebGL rendering error:', error);
           return;
         }
       };
@@ -344,9 +351,6 @@ void main() {
       animationIdRef.current = requestAnimationFrame(loop);
 
       cleanupFunctionRef.current = () => {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/7c2475d1-1cfb-476d-abc6-b2f25a9952ed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LightRays.tsx:cleanup',message:'WebGL cleanup triggered',data:{scrollY:window.scrollY},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'I'})}).catch(()=>{});
-        // #endregion
         if (animationIdRef.current) {
           cancelAnimationFrame(animationIdRef.current);
           animationIdRef.current = null;
@@ -366,7 +370,7 @@ void main() {
               canvas.parentNode.removeChild(canvas);
             }
           } catch (error) {
-            console.warn('Error during WebGL cleanup:', error);
+            // Error during cleanup - ignore
           }
         }
 

@@ -29,7 +29,7 @@ export function ScrollPositionIndicator() {
     <div
       style={{
         position: "fixed",
-        top: "10px",
+        top: "50px",
         right: "10px",
         fontSize: "10px",
         zIndex: 1000000,

@@ -52,8 +52,8 @@ function WaitlistHero() {
       setButtonHeight(window.innerWidth < 640 ? 50 : 60);
     };
     updateHeight();
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
   // Step 1: Submit email
@@ -81,7 +81,6 @@ function WaitlistHero() {
       // Move to step 2 - details form with user type selection
       setStep("details");
     } catch (error) {
-      console.error("Waitlist submission error:", error);
       alert(
         error instanceof Error
           ? error.message
@@ -133,7 +132,6 @@ function WaitlistHero() {
       // Move to complete state
       setStep("complete");
     } catch (error) {
-      console.error("Details submission error:", error);
       alert(
         error instanceof Error
           ? error.message
@@ -240,7 +238,7 @@ function WaitlistHero() {
             </p>
 
             <Link
-              href="/home"
+              href="/users"
               className="group inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-300"
               style={{
                 fontFamily: "var(--font-outfit), sans-serif",
@@ -329,21 +327,31 @@ function WaitlistHero() {
                       onMouseEnter={() => setIsButtonHovered(true)}
                       onMouseLeave={() => setIsButtonHovered(false)}
                     >
-                      <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                      <div
+                        className="glass-btn-wrapper"
+                        style={{ width: "100%", display: "block" }}
+                      >
                         <GlassSurface
                           width="100%"
                           height={buttonHeight}
                           borderRadius={50}
-                          chromaticAberration={userType === "user" && isButtonHovered ? 0.3 : 0.15}
+                          chromaticAberration={
+                            userType === "user" && isButtonHovered ? 0.3 : 0.15
+                          }
                           style={{
-                            transform: userType === "user" && isButtonHovered
-                              ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
-                              : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
-                            boxShadow: userType === "user" && isButtonHovered
-                              ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
-                              : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                            transform:
+                              userType === "user" && isButtonHovered
+                                ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                                : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                            boxShadow:
+                              userType === "user" && isButtonHovered
+                                ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                                : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
                             transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                            border: userType === "user" ? "1px solid rgba(254, 218, 36, 0.5)" : "none",
+                            border:
+                              userType === "user"
+                                ? "1px solid rgba(254, 218, 36, 0.5)"
+                                : "none",
                           }}
                         >
                           <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
@@ -376,21 +384,33 @@ function WaitlistHero() {
                       onMouseEnter={() => setIsButtonHovered(true)}
                       onMouseLeave={() => setIsButtonHovered(false)}
                     >
-                      <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                      <div
+                        className="glass-btn-wrapper"
+                        style={{ width: "100%", display: "block" }}
+                      >
                         <GlassSurface
                           width="100%"
                           height={buttonHeight}
                           borderRadius={50}
-                          chromaticAberration={userType === "creator" && isButtonHovered ? 0.3 : 0.15}
+                          chromaticAberration={
+                            userType === "creator" && isButtonHovered
+                              ? 0.3
+                              : 0.15
+                          }
                           style={{
-                            transform: userType === "creator" && isButtonHovered
-                              ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
-                              : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
-                            boxShadow: userType === "creator" && isButtonHovered
-                              ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
-                              : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
+                            transform:
+                              userType === "creator" && isButtonHovered
+                                ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
+                                : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
+                            boxShadow:
+                              userType === "creator" && isButtonHovered
+                                ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
+                                : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
                             transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                            border: userType === "creator" ? "1px solid rgba(254, 218, 36, 0.5)" : "none",
+                            border:
+                              userType === "creator"
+                                ? "1px solid rgba(254, 218, 36, 0.5)"
+                                : "none",
                           }}
                         >
                           <div className="w-full flex items-center justify-center gap-2 sm:gap-3 relative z-10 px-4 sm:px-0">
@@ -420,7 +440,10 @@ function WaitlistHero() {
                       }`}
                       style={{
                         background: "rgba(255, 255, 255, 0.1)",
-                        border: userType === "user" ? "1px solid rgba(254, 218, 36, 0.5)" : "1px solid rgba(255, 255, 255, 0.1)",
+                        border:
+                          userType === "user"
+                            ? "1px solid rgba(254, 218, 36, 0.5)"
+                            : "1px solid rgba(255, 255, 255, 0.1)",
                       }}
                     >
                       <span
@@ -444,7 +467,10 @@ function WaitlistHero() {
                       }`}
                       style={{
                         background: "rgba(255, 255, 255, 0.1)",
-                        border: userType === "creator" ? "1px solid rgba(254, 218, 36, 0.5)" : "1px solid rgba(255, 255, 255, 0.1)",
+                        border:
+                          userType === "creator"
+                            ? "1px solid rgba(254, 218, 36, 0.5)"
+                            : "1px solid rgba(255, 255, 255, 0.1)",
                       }}
                     >
                       <span
@@ -511,7 +537,10 @@ function WaitlistHero() {
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                  <div
+                    className="glass-btn-wrapper"
+                    style={{ width: "100%", display: "block" }}
+                  >
                     <GlassSurface
                       width="100%"
                       height={buttonHeight}
@@ -659,13 +688,12 @@ function WaitlistHero() {
               className="text-white/40 mb-12 max-w-sm mx-auto"
               style={{
                 fontFamily: "var(--font-outfit), sans-serif",
-                fontWeight: 400,
-                fontSize: "15px",
+                fontWeight: 300,
+                fontSize: "17px",
                 lineHeight: "170%",
               }}
             >
-              The App Store for AI. Join the waitlist to be first in line when
-              we launch.
+              Being early is rare. This is one of those moments.
             </p>
 
             {/* Form */}
@@ -699,7 +727,10 @@ function WaitlistHero() {
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
                 >
-                  <div className="glass-btn-wrapper" style={{ width: "100%", display: "block" }}>
+                  <div
+                    className="glass-btn-wrapper"
+                    style={{ width: "100%", display: "block" }}
+                  >
                     <GlassSurface
                       width="100%"
                       height={buttonHeight}

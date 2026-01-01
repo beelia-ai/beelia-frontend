@@ -90,6 +90,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Enable smooth scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+  html {
+    /* Ensure html allows vertical scrolling */
+    overflow-y: auto;
+    /* Enable smooth scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
   }
 }
 
@@ -251,6 +261,13 @@
 
   .animate-oscillate-counterclockwise {
     animation: oscillate-counterclockwise 8s ease-in-out infinite;
+  }
+
+  /* Hide navbar when modal is open */
+  body.modal-open nav {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
   }
 }
 

@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
     const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
 
     if (!scriptUrl) {
-      console.error('GOOGLE_APPS_SCRIPT_URL is not set');
       return NextResponse.json(
         { error: 'Server configuration error' },
         { status: 500 }
@@ -37,15 +36,6 @@ export async function POST(request: NextRequest) {
       if (userType === 'creator' && platformLink) payload.platformLink = platformLink;
     }
 
-    console.log('Sending to Google Apps Script:', {
-      url: scriptUrl.replace(/\/[^\/]+$/, '/***'), // Hide script ID in logs
-      email: email,
-      action: action || 'create',
-      name: name || '',
-      userType: userType || '',
-      platformLink: platformLink || '',
-    });
-
     // Send data to Google Apps Script
     const response = await fetch(scriptUrl, {
       method: 'POST',
@@ -60,11 +50,6 @@ export async function POST(request: NextRequest) {
     const responseText = await response.text();
     
     if (!response.ok) {
-      console.error('Google Apps Script response error:', {
-        status: response.status,
-        statusText: response.statusText,
-        body: responseText,
-      });
       throw new Error(`Google Apps Script error: ${response.status} - ${responseText}`);
     }
 
@@ -86,7 +71,6 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Waitlist submission error:', error);
     return NextResponse.json(
       { 
         error: 'Failed to process request',

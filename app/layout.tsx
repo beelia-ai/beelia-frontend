@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
-import { ScrollPositionIndicator } from "@/components/ScrollPositionIndicator";
+import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 
 const inter = Inter({ subsets: ["latin"] });
 const instrumentSerif = Instrument_Serif({
@@ -14,7 +14,7 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
 });
 const outfit = Outfit({
-  weight: ["400"],
+  weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
   variable: "--font-outfit",
 });
@@ -56,8 +56,8 @@ export default function RootLayout({
       >
         <Preloader />
         <NavbarClient />
-        <ScrollPositionIndicator />
-        <div className="relative overflow-x-hidden" style={{ zIndex: 1 }}>
+        <PerformanceMonitor />
+        <div className="relative" style={{ zIndex: 1 }}>
           {children}
         </div>
       </body>
