@@ -218,12 +218,20 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     ? "flex flex-col items-end gap-2 sm:gap-3"
                     : "flex items-center gap-8 lg:gap-12"
                 }`}
+                style={{
+                  zIndex: 10000,
+                  touchAction: "manipulation",
+                }}
               >
                 <Link
                   href="/users"
                   className={`nav-link cursor-pointer ${
                     isUsersPage ? "active" : ""
                   }`}
+                  onClick={(e) => {
+                    // Ensure navigation works on mobile
+                    e.stopPropagation();
+                  }}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontSize: isMobile ? "16px" : "16px",
@@ -232,6 +240,13 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     border: "none",
                     textDecoration: "none",
                     color: isUsersPage ? "#FFFFFF" : "rgba(255, 255, 255, 0.7)",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
+                    touchAction: "manipulation",
+                    WebkitTapHighlightColor: "transparent",
+                    cursor: "pointer",
+                    display: "block",
                   }}
                 >
                   Users
@@ -241,6 +256,10 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                   className={`nav-link cursor-pointer ${
                     isCreatorsPage ? "active" : ""
                   }`}
+                  onClick={(e) => {
+                    // Ensure navigation works on mobile
+                    e.stopPropagation();
+                  }}
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontSize: isMobile ? "16px" : "16px",
@@ -251,6 +270,13 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     color: isCreatorsPage
                       ? "#FFFFFF"
                       : "rgba(255, 255, 255, 0.7)",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
+                    touchAction: "manipulation",
+                    WebkitTapHighlightColor: "transparent",
+                    cursor: "pointer",
+                    display: "block",
                   }}
                 >
                   Creators
@@ -265,6 +291,9 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     background: "none",
                     border: "none",
                     textDecoration: "none",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
                   }}
                 >
                   Contact

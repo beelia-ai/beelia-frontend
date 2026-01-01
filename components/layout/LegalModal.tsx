@@ -19,14 +19,14 @@ export function LegalModal({ label, title, content }: LegalModalProps) {
       document.body.style.overflow = "hidden";
       // Add class to hide navbar
       document.body.classList.add("modal-open");
-      
+
       // Handle escape key
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
           setIsExpanded(false);
         }
       };
-      
+
       document.addEventListener("keydown", handleEscape);
       return () => {
         document.body.style.overflow = "unset";
@@ -121,7 +121,11 @@ export function LegalModal({ label, title, content }: LegalModalProps) {
                 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.2,
+                  ease: [0.23, 1, 0.32, 1],
+                }}
               >
                 <div
                   dangerouslySetInnerHTML={{ __html: content }}
@@ -144,7 +148,7 @@ export function LegalModal({ label, title, content }: LegalModalProps) {
       <motion.div
         layoutId={layoutId}
         onClick={() => setIsExpanded(true)}
-        className="group cursor-pointer inline-block"
+        className="group cursor-pointer block"
         transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
       >
         <motion.span
@@ -153,7 +157,7 @@ export function LegalModal({ label, title, content }: LegalModalProps) {
           style={{
             fontFamily: "var(--font-outfit), sans-serif",
             fontWeight: 400,
-            fontSize: "0.9rem",
+            fontSize: "15px",
             lineHeight: "120%",
             letterSpacing: "-0.02em",
             textTransform: "uppercase",

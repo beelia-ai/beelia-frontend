@@ -310,8 +310,8 @@ export function ProfileCard({
 
         {/* Card Content */}
         <div
-          className="relative h-full flex items-start gap-4"
-          style={{ padding: "40px 40px", zIndex: 1 }}
+          className="relative h-full flex items-start gap-4 px-5 py-10 md:px-10 md:py-10"
+          style={{ zIndex: 1 }}
         >
           {/* Profile Image */}
           <motion.div

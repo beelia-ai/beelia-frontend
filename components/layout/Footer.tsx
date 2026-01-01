@@ -142,14 +142,19 @@ export function Footer() {
             style={{ padding: "0 4px 0 4px" }}
           >
             {/* Left Side - The App Store for AI Section */}
-            <div className="flex flex-col">
+            <div
+              className="flex flex-col"
+              style={{
+                marginTop: isMobile ? "clamp(40px, 4vw, 80px)" : "0",
+              }}
+            >
               {/* Headline */}
               <h2
                 className="text-white max-w-l mb-4 md:mb-6"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 700,
-                  fontSize: "clamp(28px, 6vw, 42px)",
+                  fontSize: "clamp(29px, 6vw, 43px)",
                   lineHeight: "122%",
                   letterSpacing: "-0.02em",
                 }}
@@ -163,7 +168,7 @@ export function Footer() {
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 300,
-                  fontSize: "clamp(14px, 2vw, 16px)",
+                  fontSize: "clamp(15px, 2vw, 17px)",
                   lineHeight: "130%",
                   letterSpacing: "0",
                   opacity: 0.5,
@@ -177,7 +182,7 @@ export function Footer() {
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 100,
-                  fontSize: "clamp(12px, 1.5vw, 16px)",
+                  fontSize: "clamp(13px, 1.5vw, 17px)",
                   lineHeight: "100%",
                   letterSpacing: "0.05em",
                   background:
@@ -192,7 +197,14 @@ export function Footer() {
             </div>
 
             {/* Right Side - Links */}
-            <div className="flex flex-col sm:flex-row md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-32 w-full md:w-auto">
+            <div
+              className="flex flex-row w-full md:w-auto"
+              style={{
+                gap: "80px",
+                marginTop: isMobile ? "clamp(40px, 4vw, 80px)" : "0",
+                flexDirection: isMobile ? "row" : "row-reverse",
+              }}
+            >
               {/* Connect Column */}
               <div className="flex flex-col items-start sm:items-end gap-4 md:gap-6">
                 <h3
@@ -200,7 +212,7 @@ export function Footer() {
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 400,
-                    fontSize: "clamp(16px, 2vw, 18.9px)",
+                    fontSize: "clamp(17px, 2vw, 19.9px)",
                     lineHeight: "25.2px",
                     letterSpacing: "-0.02em",
                     color: "#FFFFFF",
@@ -209,7 +221,10 @@ export function Footer() {
                 >
                   Connect
                 </h3>
-                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
+                <div
+                  className="flex flex-col items-start sm:items-end"
+                  style={{ gap: "20px" }}
+                >
                   <FooterLink href="https://discord.gg/EkxXyy6RAj" external>
                     Discord
                   </FooterLink>
@@ -232,13 +247,13 @@ export function Footer() {
               </div>
 
               {/* Legal Column */}
-              <div className="flex flex-col items-start sm:items-end gap-4 md:gap-6">
+              <div className="flex flex-col items-start sm:items-end gap-3 md:gap-6">
                 <h3
                   className="text-left sm:text-right"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 400,
-                    fontSize: "clamp(16px, 2vw, 18.9px)",
+                    fontSize: "clamp(17px, 2vw, 19.9px)",
                     lineHeight: "25.2px",
                     letterSpacing: "-0.02em",
                     color: "#FFFFFF",
@@ -247,7 +262,10 @@ export function Footer() {
                 >
                   Legal
                 </h3>
-                <div className="flex flex-col items-start sm:items-end gap-3 md:gap-4">
+                <div
+                  className="flex flex-col items-start sm:items-end"
+                  style={{ gap: "14px" }}
+                >
                   {/* LegalModal components with built-in trigger and modal */}
                   <LegalModal
                     label="Policies"

@@ -78,6 +78,25 @@ export function HeroContent({
         .waitlist-btn-wrapper.no-hover:hover::after {
           transform: translateX(-100%) !important;
         }
+        /* Mobile: show hovered state by default */
+        @media (max-width: 767px) {
+          .waitlist-btn-wrapper.mobile-hover::after {
+            transform: translateX(0) !important;
+          }
+          .waitlist-btn-wrapper.mobile-hover .waitlist-btn-text {
+            color: #000000 !important;
+            font-weight: 600 !important;
+          }
+          .waitlist-btn-wrapper.mobile-hover .waitlist-btn-arrow {
+            filter: brightness(0) invert(0) !important;
+          }
+        }
+        /* Ensure mobile text is bold even without mobile-hover class */
+        @media (max-width: 767px) {
+          .waitlist-btn-text {
+            font-weight: 600 !important;
+          }
+        }
         .waitlist-btn-wrapper > * {
           position: relative;
           z-index: 2;
@@ -160,7 +179,7 @@ export function HeroContent({
             <div
               className={`waitlist-btn-wrapper ${
                 isAnimating ? "no-hover" : ""
-              }`}
+              } ${isMobile && !isAnimating ? "mobile-hover" : ""}`}
             >
               {isMounted ? (
                 <GlassSurface
@@ -183,8 +202,25 @@ export function HeroContent({
                       : "[transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]"
                   }`}
                 >
-                  <div className="w-full flex items-center justify-center gap-3 relative z-10">
-                    <span className="waitlist-btn-text uppercase text-sm md:text-[20px] font-medium leading-[100%] tracking-[0.06em] font-outfit">
+                  <div
+                    className="w-full flex items-center justify-center gap-3 relative z-10"
+                    style={{
+                      padding: isMobile ? "0 20px" : "0 20px",
+                    }}
+                  >
+                    <span
+                      className={`waitlist-btn-text uppercase text-sm md:text-[20px] leading-[100%] tracking-[0.06em] font-outfit ${
+                        isMobile ? "font-semibold" : "font-medium"
+                      }`}
+                      style={{
+                        fontFamily: isMobile
+                          ? "sans-serif"
+                          : "var(--font-outfit), sans-serif",
+                        fontSize: isMobile ? "16px" : "20px",
+                        fontWeight: isMobile ? 800 : 500,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
                       join waitlist
                     </span>
                     <Image
@@ -193,7 +229,9 @@ export function HeroContent({
                       width={20}
                       height={20}
                       className={`waitlist-btn-arrow transition-transform duration-500 ease-in-out ${
-                        isHovered ? "rotate-45" : "rotate-0"
+                        isHovered || (isMobile && !isAnimating)
+                          ? "rotate-45"
+                          : "rotate-0"
                       }`}
                     />
                   </div>
@@ -205,6 +243,62 @@ export function HeroContent({
 
         // Only render mobile portal after mount to prevent hydration mismatch
         if (isMobile && mounted && isMounted) {
+          // Create dedicated mobile button
+          const mobileButton = (
+            <Link
+              href="/waitlist"
+              className="group block [perspective:1000px] [transform-style:preserve-3d] cursor-pointer"
+              style={{ pointerEvents: "auto" }}
+            >
+              <div className="mobile-waitlist-btn-wrapper">
+                {isMounted ? (
+                  <GlassSurface
+                    width={200}
+                    height={60}
+                    borderRadius={50}
+                    chromaticAberration={0.15}
+                    redOffset={0}
+                    greenOffset={10}
+                    blueOffset={20}
+                    distortionScale={-180}
+                    blur={16}
+                    brightness={60}
+                    opacity={0.95}
+                    className="transition-all duration-500 ease-out [transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]"
+                  >
+                    <div
+                      className="w-full flex items-center justify-center gap-3 relative z-10"
+                      style={{
+                        padding: "0 20px",
+                      }}
+                    >
+                      <span
+                        className="mobile-waitlist-btn-text uppercase text-sm leading-[100%] tracking-[0.06em] font-outfit font-semibold"
+                        style={{
+                          fontFamily: "sans-serif",
+                          fontSize: "16px",
+                          fontWeight: 800,
+                          whiteSpace: "nowrap",
+                          color: "#000000",
+                        }}
+                      >
+                        join waitlist
+                      </span>
+                      <Image
+                        src="/icons/Vector.svg"
+                        alt="arrow"
+                        width={20}
+                        height={20}
+                        className="mobile-waitlist-btn-arrow rotate-45"
+                        style={{ filter: "brightness(0) invert(0)" }}
+                      />
+                    </div>
+                  </GlassSurface>
+                ) : null}
+              </div>
+            </Link>
+          );
+
           // Render button in portal at body level to escape transformed parent
           return (
             <>
@@ -212,17 +306,53 @@ export function HeroContent({
               <div style={{ marginTop: "24px", height: "80px" }} />
               {typeof document !== "undefined" &&
                 createPortal(
-                  <div
-                    style={{
-                      position: "fixed",
-                      bottom: "20px",
-                      left: "50%",
-                      transform: "translateX(-50%)",
-                      zIndex: 50,
-                    }}
-                  >
-                    {buttonContent}
-                  </div>,
+                  <>
+                    {/* Include styles for portal since it's outside the main component DOM */}
+                    <style>{`
+                      .mobile-waitlist-btn-wrapper {
+                        position: relative;
+                        overflow: hidden;
+                        border-radius: 50px;
+                      }
+                      .mobile-waitlist-btn-wrapper::after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(135deg, #FF8C32 0%, #FEDA24 50%, #FF8C32 100%);
+                        transform: translateX(0);
+                        z-index: 1;
+                        border-radius: 50px;
+                        pointer-events: none;
+                        box-shadow: 0 0 20px rgba(254, 218, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                      }
+                      .mobile-waitlist-btn-wrapper > * {
+                        position: relative;
+                        z-index: 2;
+                      }
+                      .mobile-waitlist-btn-text {
+                        color: #000000 !important;
+                        font-weight: 800 !important;
+                      }
+                      .mobile-waitlist-btn-arrow {
+                        filter: brightness(0) invert(0) !important;
+                      }
+                    `}</style>
+                    <div
+                      style={{
+                        position: "fixed",
+                        bottom: "20px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 50,
+                        pointerEvents: "auto",
+                      }}
+                    >
+                      {mobileButton}
+                    </div>
+                  </>,
                   document.body
                 )}
             </>

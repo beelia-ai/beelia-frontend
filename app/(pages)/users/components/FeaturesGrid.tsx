@@ -199,7 +199,7 @@ export function FeaturesGrid({ features = DEFAULT_FEATURES }: FeaturesGridProps 
       />
 
       {/* First Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-0 gap-y-8 md:gap-y-0 relative">
         {firstRowFeatures.map((feature, index) => (
           <FeatureCard
             key={index}
@@ -229,7 +229,7 @@ export function FeaturesGrid({ features = DEFAULT_FEATURES }: FeaturesGridProps 
       </div>
 
       {/* Second Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 relative">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-0 gap-y-8 md:gap-y-0 relative mt-8 md:mt-0">
         {secondRowFeatures.map((feature, index) => (
           <FeatureCard
             key={index}

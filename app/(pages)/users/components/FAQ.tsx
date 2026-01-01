@@ -4,7 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import FAQ_DATA_JSON from "./faq-data.json";
 
-type FAQCategory = "What is Beelia?" | "For Users" | "For Creators" | "Trust, Security & Vision";
+type FAQCategory =
+  | "What is Beelia?"
+  | "For Users"
+  | "For Creators"
+  | "Trust, Security & Vision";
 
 interface FAQItem {
   question: string;
@@ -113,7 +117,7 @@ export function FAQ() {
             </div>
 
             {/* Category Navigation */}
-            <nav className="flex flex-col">
+            <nav className="flex flex-row lg:flex-col gap-2 lg:gap-0 overflow-x-auto lg:overflow-visible">
               {(
                 [
                   "What is Beelia?",
@@ -125,16 +129,22 @@ export function FAQ() {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`text-left px-4 py-3transition-all duration-200 ${selectedCategory === category
-                      ? "bg-white/10 text-white"
-                      : "text-white/70 hover:text-white hover:bg-white/5"
-                    }`}
+                  className={`text-left transition-all duration-200 whitespace-nowrap px-3 py-2 lg:px-5 lg:py-4 text-[13px] lg:text-[21px]`}
                   style={{
                     fontFamily: "var(--font-outfit), Outfit, sans-serif",
-                    fontWeight: 400,
-                    fontSize: "20px",
-                    borderRadius: "16px",
-                    padding: "16px 20px",
+                    fontWeight: selectedCategory === category ? 500 : 300,
+                    borderRadius: "24px",
+                    border:
+                      selectedCategory === category
+                        ? "1px solid #FFFFFF"
+                        : "none",
+                    backgroundColor:
+                      selectedCategory === category
+                        ? "rgba(255, 255, 255, 0.1)"
+                        : "transparent",
+                    color:
+                      selectedCategory === category ? "#FFFFFF" : "#FFFFFF",
+                    opacity: selectedCategory === category ? 1 : 0.7,
                   }}
                 >
                   {category}
@@ -166,10 +176,11 @@ export function FAQ() {
                       <div className="relative w-10 h-10">
                         {/* Plus Sign */}
                         <div
-                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${hoveredQuestion === index
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${
+                            hoveredQuestion === index
                               ? "opacity-0 rotate-90 scale-75"
                               : "opacity-100 rotate-0 scale-100"
-                            }`}
+                          }`}
                         >
                           {/* Circular background for plus */}
                           <div
@@ -209,10 +220,11 @@ export function FAQ() {
 
                         {/* Minus Sign */}
                         <div
-                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${hoveredQuestion === index
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${
+                            hoveredQuestion === index
                               ? "opacity-100 rotate-0 scale-100"
                               : "opacity-0 -rotate-90 scale-75"
-                            }`}
+                          }`}
                         >
                           {/* Circular background for minus */}
                           <div

@@ -9,6 +9,16 @@ import {
 } from "framer-motion";
 import { FeaturesGrid, FeatureData } from "./FeaturesGrid";
 import { TeamGrid } from "./TeamGrid";
+import { WebGLVideo } from "@/components/ui";
+
+// iOS detection helper
+function isIOS(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -59,15 +69,31 @@ const DEFAULT_CARD_DATA = [
 
 // Default box data for users
 const DEFAULT_BOX_DATA = [
-  { video: "/videos/magnify.webm", title: "DISCOVER", x: 15.055 },
-  { video: "/videos/shield.webm", title: "SAFETY", x: 391.754 },
-  { video: "/videos/bell.webm", title: "SUBSCRIBE", x: 767.027 },
+  {
+    video: "/videos/magnify.webm",
+    title: "DISCOVER",
+    x: 15.055,
+    stackedVideo: "/videos/magnify-stacked.mp4",
+  },
+  {
+    video: "/videos/shield.webm",
+    title: "SAFETY",
+    x: 391.754,
+    stackedVideo: "/videos/shield-stacked.mp4",
+  },
+  {
+    video: "/videos/bell.webm",
+    title: "SUBSCRIBE",
+    x: 767.027,
+    stackedVideo: "/videos/bell-stacked.mp4",
+  },
 ];
 
 interface BoxData {
   video: string;
   title: string;
   x: number;
+  stackedVideo?: string;
 }
 
 interface CardData {
@@ -85,23 +111,80 @@ interface AboutProductProps {
 
 // Pre-calculated stroke geometry to avoid hydration mismatch
 const STROKE_GEOMETRY = {
-  // Left diagonal: from center (391.754, 159) to left (15.055, 208)
-  leftDiagonal: {
-    length: Math.sqrt(Math.pow(391.754 - 15.055, 2) + Math.pow(208 - 159, 2)),
-    angle:
-      Math.round(
-        Math.atan2(208 - 159, 15.055 - 391.754) * (180 / Math.PI) * 1000
-      ) / 1000,
+  // Desktop positions
+  desktop: {
+    // Left diagonal: from center (391.754, 159) to left (15.055, 208)
+    leftDiagonal: {
+      length: Math.sqrt(Math.pow(391.754 - 15.055, 2) + Math.pow(208 - 159, 2)),
+      angle:
+        Math.round(
+          Math.atan2(208 - 159, 15.055 - 391.754) * (180 / Math.PI) * 1000
+        ) / 1000,
+    },
+    // Right diagonal: from center (391.754, 159) to right (767.027, 208)
+    rightDiagonal: {
+      length: Math.sqrt(
+        Math.pow(767.027 - 391.754, 2) + Math.pow(208 - 159, 2)
+      ),
+      angle:
+        Math.round(
+          Math.atan2(208 - 159, 767.027 - 391.754) * (180 / Math.PI) * 1000
+        ) / 1000,
+    },
+    centerX: 391.754,
+    leftX: 15.055,
+    rightX: 767.027,
   },
-  // Right diagonal: from center (391.754, 159) to right (767.027, 208)
-  rightDiagonal: {
-    length: Math.sqrt(Math.pow(767.027 - 391.754, 2) + Math.pow(208 - 159, 2)),
-    angle:
-      Math.round(
-        Math.atan2(208 - 159, 767.027 - 391.754) * (180 / Math.PI) * 1000
-      ) / 1000,
+  // Mobile positions - boxes are 120px wide with 5px gaps, centered in 783px container
+  mobile: {
+    boxWidth: 120,
+    gap: 5,
+    containerWidth: 783,
+    // Calculate positions: total width = 3*120 + 2*5 = 370px, centered = (783-370)/2 = 206.5px
+    leftX: 206.5 + 60, // 266.5px (center of left box)
+    centerX: 206.5 + 60 + 120 + 5, // 391.5px (center of center box)
+    rightX: 206.5 + 60 + 120 + 5 + 120 + 5, // 516.5px (center of right box)
+    // Left diagonal: from center to left
+    leftDiagonal: {
+      length: 0,
+      angle: 0,
+    },
+    // Right diagonal: from center to right
+    rightDiagonal: {
+      length: 0,
+      angle: 0,
+    },
   },
 };
+
+// Calculate mobile stroke geometry
+STROKE_GEOMETRY.mobile.leftDiagonal.length = Math.sqrt(
+  Math.pow(STROKE_GEOMETRY.mobile.centerX - STROKE_GEOMETRY.mobile.leftX, 2) +
+    Math.pow(208 - 159, 2)
+);
+STROKE_GEOMETRY.mobile.leftDiagonal.angle =
+  Math.round(
+    Math.atan2(
+      208 - 159,
+      STROKE_GEOMETRY.mobile.leftX - STROKE_GEOMETRY.mobile.centerX
+    ) *
+      (180 / Math.PI) *
+      1000
+  ) / 1000;
+
+STROKE_GEOMETRY.mobile.rightDiagonal.length = Math.sqrt(
+  Math.pow(STROKE_GEOMETRY.mobile.rightX - STROKE_GEOMETRY.mobile.centerX, 2) +
+    Math.pow(208 - 159, 2)
+);
+STROKE_GEOMETRY.mobile.rightDiagonal.angle =
+  Math.round(
+    Math.atan2(
+      208 - 159,
+      STROKE_GEOMETRY.mobile.rightX - STROKE_GEOMETRY.mobile.centerX
+    ) *
+      (180 / Math.PI) *
+      1000
+  ) / 1000;
 
 export function AboutProduct({
   boxData = DEFAULT_BOX_DATA,
@@ -117,8 +200,10 @@ export function AboutProduct({
 
   // Track mounted state to avoid hydration mismatch
   const [isMounted, setIsMounted] = useState(false);
+  const [isIOSDevice, setIsIOSDevice] = useState(false);
   useEffect(() => {
     setIsMounted(true);
+    setIsIOSDevice(isIOS());
   }, []);
 
   // Track hover state for each box
@@ -436,10 +521,12 @@ export function AboutProduct({
               <div
                 className="absolute overflow-hidden"
                 style={{
-                  left: "391.754px",
-                  top: "0px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.centerX}px`
+                    : `${STROKE_GEOMETRY.desktop.centerX}px`,
+                  top: "120px", // Moved down even more from top
                   width: "3px",
-                  height: `${(227 - 0) * openingProgressValue}px`,
+                  height: `${(227 - 120) * openingProgressValue}px`, // Decreased height by 120px
                   transform: "translateX(-50%)",
                 }}
               >
@@ -458,7 +545,7 @@ export function AboutProduct({
                     style={{
                       left: "50%",
                       width: "2px",
-                      height: "30%",
+                      height: "68px", // Fixed height to match original 30% of 227px (~68px)
                       transform: "translateX(-50%)",
                       background:
                         "linear-gradient(180deg, transparent 0%, rgba(254,218,36,0.2) 10%, rgba(254,218,36,0.5) 30%, #FEDA24 45%, white 50%, #FEDA24 55%, rgba(254,218,36,0.5) 70%, rgba(254,218,36,0.2) 90%, transparent 100%)",
@@ -473,14 +560,23 @@ export function AboutProduct({
               <div
                 className="absolute overflow-hidden"
                 style={{
-                  left: "391.754px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.centerX}px`
+                    : `${STROKE_GEOMETRY.desktop.centerX}px`,
                   top: "159px",
                   width: `${
-                    STROKE_GEOMETRY.leftDiagonal.length * openingProgressValue
+                    (isMobile
+                      ? STROKE_GEOMETRY.mobile.leftDiagonal.length
+                      : STROKE_GEOMETRY.desktop.leftDiagonal.length) *
+                    openingProgressValue
                   }px`,
                   height: "3px",
                   transformOrigin: "left center",
-                  transform: `rotate(${STROKE_GEOMETRY.leftDiagonal.angle}deg)`,
+                  transform: `rotate(${
+                    isMobile
+                      ? STROKE_GEOMETRY.mobile.leftDiagonal.angle
+                      : STROKE_GEOMETRY.desktop.leftDiagonal.angle
+                  }deg)`,
                 }}
               >
                 <div
@@ -516,7 +612,9 @@ export function AboutProduct({
               <div
                 className="absolute overflow-hidden"
                 style={{
-                  left: "15.055px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.leftX}px`
+                    : `${STROKE_GEOMETRY.desktop.leftX}px`,
                   top: "208px",
                   width: "3px",
                   height: `${(227 - 208) * openingProgressValue}px`,
@@ -538,14 +636,23 @@ export function AboutProduct({
               <div
                 className="absolute overflow-hidden"
                 style={{
-                  left: "391.754px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.centerX}px`
+                    : `${STROKE_GEOMETRY.desktop.centerX}px`,
                   top: "159px",
                   width: `${
-                    STROKE_GEOMETRY.rightDiagonal.length * openingProgressValue
+                    (isMobile
+                      ? STROKE_GEOMETRY.mobile.rightDiagonal.length
+                      : STROKE_GEOMETRY.desktop.rightDiagonal.length) *
+                    openingProgressValue
                   }px`,
                   height: "3px",
                   transformOrigin: "left center",
-                  transform: `rotate(${STROKE_GEOMETRY.rightDiagonal.angle}deg)`,
+                  transform: `rotate(${
+                    isMobile
+                      ? STROKE_GEOMETRY.mobile.rightDiagonal.angle
+                      : STROKE_GEOMETRY.desktop.rightDiagonal.angle
+                  }deg)`,
                 }}
               >
                 <div
@@ -581,7 +688,9 @@ export function AboutProduct({
               <div
                 className="absolute overflow-hidden"
                 style={{
-                  left: "767.027px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.rightX}px`
+                    : `${STROKE_GEOMETRY.desktop.rightX}px`,
                   top: "208px",
                   width: "3px",
                   height: `${(227 - 208) * openingProgressValue}px`,
@@ -603,7 +712,9 @@ export function AboutProduct({
               <div
                 className="absolute rounded-full"
                 style={{
-                  left: "391.754px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.centerX}px`
+                    : `${STROKE_GEOMETRY.desktop.centerX}px`,
                   top: "159px",
                   width: "4px",
                   height: "4px",
@@ -616,7 +727,9 @@ export function AboutProduct({
               <div
                 className="absolute rounded-full"
                 style={{
-                  left: "15.055px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.leftX}px`
+                    : `${STROKE_GEOMETRY.desktop.leftX}px`,
                   top: "208px",
                   width: "4px",
                   height: "4px",
@@ -629,7 +742,9 @@ export function AboutProduct({
               <div
                 className="absolute rounded-full"
                 style={{
-                  left: "767.027px",
+                  left: isMobile
+                    ? `${STROKE_GEOMETRY.mobile.rightX}px`
+                    : `${STROKE_GEOMETRY.desktop.rightX}px`,
                   top: "208px",
                   width: "4px",
                   height: "4px",
@@ -674,15 +789,38 @@ export function AboutProduct({
           {/* Video boxes - positioned below each stroke end */}
           {boxData.map((box, index) => {
             // Find matching card data for description
-            const matchingCardData = cardData.find((card) => card.title === box.title);
+            const matchingCardData = cardData.find(
+              (card) => card.title === box.title
+            );
             const isHovered = hoveredBox === box.title;
+
+            // Determine x position based on mobile/desktop
+            let boxX = box.x;
+            if (isMobile) {
+              // Map box titles to mobile positions (users page titles)
+              if (box.title === "DISCOVER" || box.title === "PUBLISH") {
+                boxX = STROKE_GEOMETRY.mobile.leftX;
+              } else if (box.title === "SAFETY" || box.title === "MONETIZE") {
+                boxX = STROKE_GEOMETRY.mobile.centerX;
+              } else if (
+                box.title === "SUBSCRIBE" ||
+                box.title === "DISTRIBUTE"
+              ) {
+                boxX = STROKE_GEOMETRY.mobile.rightX;
+              } else {
+                // Fallback: use index to determine position
+                if (index === 0) boxX = STROKE_GEOMETRY.mobile.leftX;
+                else if (index === 1) boxX = STROKE_GEOMETRY.mobile.centerX;
+                else boxX = STROKE_GEOMETRY.mobile.rightX;
+              }
+            }
 
             return (
               <motion.div
                 key={index}
                 className="absolute flex flex-col items-center pointer-events-auto"
                 style={{
-                  left: `${box.x}px`,
+                  left: `${boxX}px`,
                   top: "227px", // Position at stroke end Y coordinate
                   transform: "translateX(-50%)", // Center box on stroke
                 }}
@@ -693,14 +831,14 @@ export function AboutProduct({
                 <motion.div
                   className="relative overflow-hidden flex flex-col cursor-pointer"
                   style={{
-                    width: isMobile ? "140px" : "220px",
+                    width: isMobile ? "120px" : "220px",
                     borderRadius: "28px",
                     border: "0.743px solid #000",
                     background: "#010101",
                     boxShadow:
                       "-0.743px -0.743px 0.743px 0 rgba(255, 255, 255, 0.35) inset, 0.743px 0.743px 0.743px 0 rgba(255, 255, 255, 0.61) inset",
-                    paddingBottom: "16px",
-                    paddingTop: "12px",
+                    paddingBottom: isMobile ? "16px" : "24px", // Increased vertical padding for desktop
+                    paddingTop: isMobile ? "12px" : "20px", // Increased vertical padding for desktop
                     minHeight: isMobile ? "128px" : "148px", // Fixed height: video + title + padding
                   }}
                 >
@@ -709,7 +847,7 @@ export function AboutProduct({
                     className="w-full flex items-center justify-center"
                     style={{
                       width: "100%",
-                      height: isMobile ? "80px" : "100px",
+                      height: isMobile ? "100px" : "100px", // Square 1:1 aspect ratio for mobile
                     }}
                     animate={{
                       opacity: isHovered ? 0 : 1,
@@ -719,37 +857,48 @@ export function AboutProduct({
                       ease: "easeInOut",
                     }}
                   >
-                    <video
-                      src={box.video}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className="w-full object-cover"
-                      style={{
-                        width: "90%",
-                        maxWidth:
-                          box.title === "DISCOVER"
+                    {isIOSDevice && box.stackedVideo ? (
+                      <WebGLVideo
+                        webmSrc={box.video}
+                        stackedAlphaSrc={box.stackedVideo}
+                        className="w-full h-full object-cover"
+                        style={{
+                          width: isMobile ? "100px" : "90%",
+                          height: isMobile ? "100px" : "auto",
+                          maxWidth: isMobile
+                            ? "100px"
+                            : box.title === "DISCOVER"
                             ? "140px"
-                            : isMobile
-                            ? "112px"
                             : "112px",
-                        height:
-                          box.title === "DISCOVER"
-                            ? isMobile
-                              ? "80px"
-                              : "100px"
-                            : box.title === "SAFETY"
-                            ? isMobile
-                              ? "61px"
-                              : "77px"
-                            : isMobile
-                            ? "64px"
-                            : "80px",
-                        maxHeight: "200px",
-                      }}
-                    />
+                          maxHeight: isMobile ? "100px" : "200px",
+                          aspectRatio: isMobile ? "1 / 1" : "auto",
+                        }}
+                        autoPlay
+                        loop
+                        muted
+                      />
+                    ) : (
+                      <video
+                        src={box.video}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="none"
+                        className="w-full h-full object-cover"
+                        style={{
+                          width: isMobile ? "100px" : "90%",
+                          height: isMobile ? "100px" : "auto",
+                          maxWidth: isMobile
+                            ? "100px"
+                            : box.title === "DISCOVER"
+                            ? "140px"
+                            : "112px",
+                          maxHeight: isMobile ? "100px" : "200px",
+                          aspectRatio: isMobile ? "1 / 1" : "auto",
+                        }}
+                      />
+                    )}
                   </motion.div>
 
                   {/* Title - moves to top on hover */}
@@ -758,12 +907,12 @@ export function AboutProduct({
                     style={{
                       fontFamily: "var(--font-outfit), Outfit, sans-serif",
                       fontWeight: 700,
-                      fontSize: "28px",
+                      fontSize: isMobile ? "20px" : "30px", // Increased by 2px for desktop
                       textTransform: "lowercase",
                       letterSpacing: "-1.6px",
                     }}
                     animate={{
-                      y: isHovered ? -(isMobile ? 80 : 100) : 0, // Move up by video height to reach top (at paddingTop: 12px)
+                      y: isHovered ? -(isMobile ? 100 : 100) : 0, // Move up by video height to reach top (at paddingTop: 12px)
                     }}
                     transition={{
                       duration: 0.3,
@@ -779,7 +928,7 @@ export function AboutProduct({
                       className="absolute w-full px-3"
                       style={{
                         pointerEvents: isHovered ? "auto" : "none",
-                        bottom: "16px",
+                        bottom: isMobile ? "16px" : "24px", // Match paddingBottom for desktop
                         left: 0,
                         right: 0,
                       }}

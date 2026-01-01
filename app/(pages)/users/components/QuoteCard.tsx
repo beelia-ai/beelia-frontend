@@ -5,10 +5,9 @@ interface QuoteCardProps {
 export function QuoteCard({ quote }: QuoteCardProps) {
   return (
     <div
-      className="w-full flex items-center"
+      className="w-full flex items-center px-5 py-10 md:px-10 md:py-10"
       style={{
         height: "fit-content",
-        padding: "40px 40px",
       }}
     >
       <p

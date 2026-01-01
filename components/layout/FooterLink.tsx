@@ -30,7 +30,7 @@ export function FooterLink({
       style={{
         fontFamily: "var(--font-outfit), sans-serif",
         fontWeight: 400,
-        fontSize: "0.9rem",
+        fontSize: "15px",
         lineHeight: "120%",
         letterSpacing: "-0.02em",
         textTransform: "uppercase",

@@ -135,6 +135,39 @@ export function WebGLVideo({
   const [useStackedAlpha, setUseStackedAlpha] = useState(false);
   const [useNativeVideo, setUseNativeVideo] = useState(false);
   const [videoSrc, setVideoSrc] = useState(webmSrc);
+  const [userInteracted, setUserInteracted] = useState(false);
+
+  // Handle user interaction to enable video playback on iOS
+  useEffect(() => {
+    if (!isIOS()) return;
+
+    const handleUserInteraction = () => {
+      setUserInteracted(true);
+    };
+
+    // Listen for first user interaction
+    document.addEventListener("touchstart", handleUserInteraction, { once: true });
+    document.addEventListener("click", handleUserInteraction, { once: true });
+    document.addEventListener("scroll", handleUserInteraction, { once: true, passive: true });
+
+    return () => {
+      document.removeEventListener("touchstart", handleUserInteraction);
+      document.removeEventListener("click", handleUserInteraction);
+      document.removeEventListener("scroll", handleUserInteraction);
+    };
+  }, []);
+
+  // Play videos when user interacts (iOS requirement)
+  useEffect(() => {
+    if (!userInteracted || !isIOS()) return;
+
+    const video = videoRef.current;
+    if (video && autoPlay && video.paused && video.readyState >= 2) {
+      video.play().catch((err) => {
+        console.warn("Video play after interaction failed:", err);
+      });
+    }
+  }, [userInteracted, autoPlay]);
 
   // Determine which source and method to use
   useEffect(() => {
@@ -292,17 +325,78 @@ export function WebGLVideo({
     const handleCanPlay = () => {
       initWebGL();
       rafRef.current = requestAnimationFrame(render);
+      
+      // Explicitly play video for iOS (only if user has interacted)
+      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+        video.play().catch((err) => {
+          console.warn("Video autoplay failed:", err);
+        });
+      }
+    };
+
+    const handleLoadedData = () => {
+      // Try to play when data is loaded (iOS often needs this, but only after user interaction)
+      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+        video.play().catch((err) => {
+          console.warn("Video autoplay failed:", err);
+        });
+      }
     };
 
     video.addEventListener("canplay", handleCanPlay);
+    video.addEventListener("loadeddata", handleLoadedData);
+
+    // Try to play immediately if video is already ready
+    if (video.readyState >= 2) {
+      handleCanPlay();
+    }
 
     return () => {
       video.removeEventListener("canplay", handleCanPlay);
+      video.removeEventListener("loadeddata", handleLoadedData);
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [initWebGL, render, useNativeVideo]);
+  }, [initWebGL, render, useNativeVideo, autoPlay, userInteracted]);
+
+  // Handle video playback for native video (iOS)
+  useEffect(() => {
+    if (!useNativeVideo || !videoRef.current) return;
+
+    const video = videoRef.current;
+
+    const handleLoadedData = () => {
+      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+        video.play().catch((err) => {
+          console.warn("Video autoplay failed:", err);
+        });
+      }
+    };
+
+    const handleCanPlay = () => {
+      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+        video.play().catch((err) => {
+          console.warn("Video autoplay failed:", err);
+        });
+      }
+    };
+
+    video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("canplay", handleCanPlay);
+
+    // Try to play if already loaded (only after user interaction on iOS)
+    if (video.readyState >= 2 && autoPlay && video.paused && (userInteracted || !isIOS())) {
+      video.play().catch((err) => {
+        console.warn("Video autoplay failed:", err);
+      });
+    }
+
+    return () => {
+      video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("canplay", handleCanPlay);
+    };
+  }, [useNativeVideo, autoPlay, videoSrc, userInteracted]);
 
   // Native video fallback (for HEVC alpha or when WebGL not needed)
   if (useNativeVideo) {
@@ -316,6 +410,7 @@ export function WebGLVideo({
         loop={loop}
         muted={muted}
         playsInline={playsInline}
+        preload="auto"
       />
     );
   }
@@ -330,6 +425,7 @@ export function WebGLVideo({
         loop={loop}
         muted={muted}
         playsInline={playsInline}
+        preload="auto"
         style={{
           position: "absolute",
           opacity: 0,

@@ -466,7 +466,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     return () => clearTimeout(timeout);
   }, [windowWidth, isMounted]);
 
-  // Intersection Observer to pause ALL videos when hero is not visible
+  // Intersection Observer to pause box/mobile videos when hero is not visible
+  // Globe videos are fixed positioned and should continue playing regardless of hero visibility
   // This is the KEY performance optimization - videos only play when user can see them
   useEffect(() => {
     if (!heroRef.current) return;
@@ -476,22 +477,15 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         const isVisible = entries[0]?.isIntersecting ?? false;
         setIsHeroVisible(isVisible);
 
-        // Pause/play globe videos based on visibility
-        const globeVideos = [
-          beeliaVideoRef.current,
-          phase2VideoRef.current,
-          futureTransitionVideoRef.current,
-          futureMainVideoRef.current,
-        ];
+        // Globe videos are fixed and should always play (they're always visible on screen)
+        // Only pause/play box and mobile videos based on hero visibility
         const boxVideos = boxVideoRefs.current.filter(Boolean);
         const mobileVideos = mobileVideoRefs.current.filter(Boolean);
-        const allVideos = [
-          ...globeVideos,
-          ...boxVideos,
-          ...mobileVideos,
-        ].filter(Boolean) as HTMLVideoElement[];
+        const nonGlobeVideos = [...boxVideos, ...mobileVideos].filter(
+          Boolean
+        ) as HTMLVideoElement[];
 
-        allVideos.forEach((video) => {
+        nonGlobeVideos.forEach((video) => {
           if (isVisible) {
             // Only play if it should be playing (not hidden by other logic)
             if (video.paused && video.readyState >= 2) {
@@ -511,6 +505,50 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     observer.observe(heroRef.current);
     return () => observer.disconnect();
   }, []);
+
+  // Ensure present video plays when visible (opacity > 0)
+  useMotionValueEvent(presentVideoOpacity, "change", (opacity) => {
+    if (phase2VideoRef.current) {
+      if (opacity > 0 && phase2VideoRef.current.paused) {
+        phase2VideoRef.current.play().catch(() => {});
+      } else if (opacity === 0 && !phase2VideoRef.current.paused) {
+        phase2VideoRef.current.pause();
+      }
+    }
+  });
+
+  // Ensure past video plays when visible (opacity > 0)
+  useMotionValueEvent(beeliaOpacity, "change", (opacity) => {
+    if (beeliaVideoRef.current) {
+      if (opacity > 0 && beeliaVideoRef.current.paused) {
+        beeliaVideoRef.current.play().catch(() => {});
+      } else if (opacity === 0 && !beeliaVideoRef.current.paused) {
+        beeliaVideoRef.current.pause();
+      }
+    }
+  });
+
+  // Ensure future transition video plays when visible (opacity > 0)
+  useMotionValueEvent(futureTransitionCombinedOpacity, "change", (opacity) => {
+    if (futureTransitionVideoRef.current) {
+      if (opacity > 0 && futureTransitionVideoRef.current.paused) {
+        futureTransitionVideoRef.current.play().catch(() => {});
+      } else if (opacity === 0 && !futureTransitionVideoRef.current.paused) {
+        futureTransitionVideoRef.current.pause();
+      }
+    }
+  });
+
+  // Ensure future main video plays when visible (opacity > 0)
+  useMotionValueEvent(futureMainVideoOpacity, "change", (opacity) => {
+    if (futureMainVideoRef.current) {
+      if (opacity > 0 && futureMainVideoRef.current.paused) {
+        futureMainVideoRef.current.play().catch(() => {});
+      } else if (opacity === 0 && !futureMainVideoRef.current.paused) {
+        futureMainVideoRef.current.pause();
+      }
+    }
+  });
 
   // Pause/play box videos based on visibility (scroll progress)
   // This significantly reduces CPU/GPU usage when videos are faded out
@@ -591,7 +629,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               (isIOSDevice ? (
                 <motion.div
                   className={`${
-                    isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
+                    isMobile ? "w-[280px] h-[280px]" : "w-[444px] h-[444px]"
                   } mr-0.5 absolute`}
                   style={{
                     opacity: beeliaOpacity,
@@ -616,7 +654,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   playsInline
                   preload="none"
                   className={`${
-                    isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
+                    isMobile ? "w-[280px] h-[280px]" : "w-[444px] h-[444px]"
                   } object-contain mr-0.5 absolute`}
                   style={{
                     opacity: beeliaOpacity,

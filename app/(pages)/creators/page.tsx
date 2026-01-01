@@ -73,9 +73,9 @@ export default function CreatorsPage() {
         {/* ABOUTPRODUCT - RESTORED with videos */}
         <AboutProduct
           boxData={[
-            { video: "/videos/upload.webm", title: "PUBLISH", x: 15.055 },
-            { video: "/videos/dollar.webm", title: "MONETIZE", x: 391.754 },
-            { video: "/videos/graph.webm", title: "DISTRIBUTE", x: 767.027 },
+            { video: "/videos/upload.webm", title: "PUBLISH", x: 15.055, stackedVideo: "/videos/upload-stacked.mp4" },
+            { video: "/videos/dollar.webm", title: "MONETIZE", x: 391.754, stackedVideo: "/videos/dollar-stacked.mp4" },
+            { video: "/videos/graph.webm", title: "DISTRIBUTE", x: 767.027, stackedVideo: "/videos/graph-stacked.mp4" },
           ]}
           cardData={[
             {
