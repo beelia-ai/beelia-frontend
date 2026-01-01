@@ -336,23 +336,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     
     // Between fade-in and fade-out: fully visible
     return 1;
-
-    // Before fade-in starts, opacity is 0
-    if (latest < fadeInStart) return 0;
-
-    // Between fade-in complete and future transition start, fully visible
-    if (latest >= fadeInEnd && latest < futureTransitionStart) return 1;
-
-    // During future transition, fade out
-    if (latest >= futureTransitionStart && latest < futureTransitionEnd) {
-      const progress =
-        (latest - futureTransitionStart) /
-        (futureTransitionEnd - futureTransitionStart);
-      return 1 - progress;
-    }
-
-    // After future transition completes, fully hidden
-    return 0;
   });
 
   // Track future-transition video duration when it loads
