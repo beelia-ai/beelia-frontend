@@ -384,6 +384,26 @@ export function AboutProduct({
       className="relative w-full bg-transparent"
       style={{ minHeight: "4000px" }}
     >
+      {/* CSS to hide default video play button on mobile */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          video::-webkit-media-controls {
+            display: none !important;
+          }
+          video::-webkit-media-controls-enclosure {
+            display: none !important;
+          }
+          video::-webkit-media-controls-play-button {
+            display: none !important;
+          }
+          video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+          }
+          video::--webkit-media-controls-overlay-play-button {
+            display: none !important;
+          }
+        `
+      }} />
       {/* Section content */}
       <div className="relative z-10 flex flex-col items-center justify-start pt-20 md:pt-32 w-full max-w-full">
         {/* Second Section Header */}
@@ -870,6 +890,9 @@ export function AboutProduct({
                         muted
                         playsInline
                         preload="none"
+                        controls={false}
+                        disablePictureInPicture
+                        disableRemotePlayback
                         className="w-full h-full object-cover"
                         style={{
                           width: isMobile ? "100px" : "90%",
@@ -881,6 +904,7 @@ export function AboutProduct({
                             : "112px",
                           maxHeight: isMobile ? "100px" : "200px",
                           aspectRatio: isMobile ? "1 / 1" : "auto",
+                          pointerEvents: "none",
                         }}
                       />
                     </motion.div>

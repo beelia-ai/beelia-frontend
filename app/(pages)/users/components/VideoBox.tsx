@@ -77,6 +77,10 @@ export function VideoBox({
           muted
           playsInline
           preload="auto"
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
+          style={{ pointerEvents: "none" }}
         >
           <source src={stackedSrc} type="video/mp4" />
         </video>
@@ -95,6 +99,10 @@ export function VideoBox({
         muted
         playsInline
         preload="auto"
+        controls={false}
+        disablePictureInPicture
+        disableRemotePlayback
+        style={{ pointerEvents: "none" }}
       >
         {src.endsWith('.webm') ? (
           <>

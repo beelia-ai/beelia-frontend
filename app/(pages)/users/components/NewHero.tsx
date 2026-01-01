@@ -745,6 +745,26 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
   return (
     <>
+      {/* CSS to hide default video play button on mobile */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          video::-webkit-media-controls {
+            display: none !important;
+          }
+          video::-webkit-media-controls-enclosure {
+            display: none !important;
+          }
+          video::-webkit-media-controls-play-button {
+            display: none !important;
+          }
+          video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+          }
+          video::--webkit-media-controls-overlay-play-button {
+            display: none !important;
+          }
+        `
+      }} />
       <section
         id="hero-section"
         ref={heroRef}
@@ -971,12 +991,16 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   muted
                   playsInline
                   preload="auto"
+                  controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
                   className="absolute rounded-[18px] object-cover"
                   style={{
                     width: `${videoSize}px`,
                     height: `${videoSize}px`,
                     left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
                     top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
+                    pointerEvents: "none",
                   }}
                   onLoadedData={(e) => {
                     const vid = e.currentTarget;
