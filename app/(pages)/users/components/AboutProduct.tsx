@@ -40,7 +40,7 @@ function useWindowWidth() {
 // Default card data for users
 const DEFAULT_CARD_DATA = [
   {
-    title: "DISCOVER",
+    title: "Discover",
     subtitle: "",
     description:
       "Find the right AI tool without searching endlessly. Tools are clearly organized and presented so users can quickly understand what each one does and whether it fits their needs.",
@@ -49,16 +49,16 @@ const DEFAULT_CARD_DATA = [
       "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z",
   },
   {
-    title: "SUBSCRIBE",
+    title: "Subscribe",
     subtitle: "",
     description:
-      "Activate AI instantly. One-click subscriptions, unified billing, and immediate access — so you can start using tools the moment you subscribe.",
+      "Activate AI instantly. One-click subscriptions, unified billing, and immediate access so you can start using tools the moment you subscribe.",
     // Bell icon (Heroicons)
     iconPath:
       "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0",
   },
   {
-    title: "SAFETY",
+    title: "Safety",
     subtitle: "",
     description:
       "Adopt AI with confidence. Every tool and creator goes through a verification process, with clear information on access, usage, and ownership.",
@@ -72,19 +72,19 @@ const DEFAULT_CARD_DATA = [
 const DEFAULT_BOX_DATA = [
   {
     video: "/videos/magnify.webm",
-    title: "DISCOVER",
+    title: "Discover",
     x: 15.055,
     stackedVideo: "/videos/magnify.mp4",
   },
   {
     video: "/videos/shield.webm",
-    title: "SAFETY",
+    title: "Safety",
     x: 391.754,
     stackedVideo: "/videos/shield.mp4",
   },
   {
     video: "/videos/bell.webm",
-    title: "SUBSCRIBE",
+    title: "Subscribe",
     x: 767.027,
     stackedVideo: "/videos/bell.mp4",
   },
@@ -455,7 +455,7 @@ export function AboutProduct({
                 opacity: 0.7,
               }}
             >
-              —a single place to discover, trust, and access AI tools, without
+              A single place to discover, trust, and access AI tools, without
               setup, guesswork, or fragmentation
             </p>
           </div>
@@ -799,13 +799,13 @@ export function AboutProduct({
             let boxX = box.x;
             if (isMobile) {
               // Map box titles to mobile positions (users page titles)
-              if (box.title === "DISCOVER" || box.title === "PUBLISH") {
+              if (box.title === "Discover" || box.title === "Publish") {
                 boxX = STROKE_GEOMETRY.mobile.leftX;
-              } else if (box.title === "SAFETY" || box.title === "MONETIZE") {
+              } else if (box.title === "Safety" || box.title === "Monetize") {
                 boxX = STROKE_GEOMETRY.mobile.centerX;
               } else if (
-                box.title === "SUBSCRIBE" ||
-                box.title === "DISTRIBUTE"
+                box.title === "Subscribe" ||
+                box.title === "Distribute"
               ) {
                 boxX = STROKE_GEOMETRY.mobile.rightX;
               } else {
@@ -876,7 +876,7 @@ export function AboutProduct({
                           height: isMobile ? "100px" : "auto",
                           maxWidth: isMobile
                             ? "100px"
-                            : box.title === "DISCOVER"
+                            : box.title === "Discover"
                             ? "140px"
                             : "112px",
                           maxHeight: isMobile ? "100px" : "200px",
@@ -893,7 +893,7 @@ export function AboutProduct({
                       fontFamily: "var(--font-outfit), Outfit, sans-serif",
                       fontWeight: 700,
                       fontSize: isMobile ? "20px" : "30px", // Increased by 2px for desktop
-                      textTransform: "lowercase",
+                      textTransform: "none",
                       letterSpacing: "-1.6px",
                     }}
                     animate={{
@@ -1039,7 +1039,7 @@ export function AboutProduct({
                 opacity: 0.7,
               }}
             >
-              —powerhouse of talent and dedication, we tackle challenges head-on
+              Powerhouse of talent and dedication, we tackle challenges head-on
               and celebrate our collective achievements
             </p>
           </div>

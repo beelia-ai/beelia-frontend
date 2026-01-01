@@ -35,10 +35,6 @@
       "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store."
     },
     {
-      "question": "How do I use an AI tool on Beelia?",
-      "answer": "Find a tool, subscribe, and start using it instantly via dashboard access or provided instructions."
-    },
-    {
       "question": "Do I have to switch tools if I stop using Beelia?",
       "answer": "No. Tools are independent. Beelia never locks you in."
     },
@@ -91,10 +87,6 @@
     {
       "question": "How do creators make money?",
       "answer": "Creators set prices. Beelia takes a platform commission on subscriptions."
-    },
-    {
-      "question": "What types of tools can be listed?",
-      "answer": "APIs, agents, dashboards, automations, models, and AI-powered workflows."
     },
     {
       "question": "How does Beelia help with discovery?",
