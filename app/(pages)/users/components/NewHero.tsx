@@ -307,20 +307,35 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     }
   });
 
-  // Combined opacity for present video: fades in from 200px-600px, visible until 2700px, then fades out
+  // Combined opacity for present video: fades in from 200px-600px, visible until 2700px, then fades out smoothly
   // Present video fades in simultaneously as past.webm fades out (200px-600px)
-  // Then stays fully visible until future-transition starts (2700px)
+  // Stays fully visible until 2700px, then fades out smoothly as future-transition fades in (2700px-2800px)
   const presentVideoOpacity = useTransform(scrollYMotion, (latest) => {
     const fadeInStart = 200; // Start fading in here (same as past.webm fade out)
     const fadeInEnd = 600; // Fully visible after this
-    const futureTransitionStart = 2700; // Start fading out here
-    const futureTransitionEnd = 2800; // Fully faded out here
+    const fadeOutStart = 2700; // Start fading out when future-transition starts
+    const fadeOutEnd = 2800; // Fully faded out after this (same as future-transition fade in)
 
-    // During fade-in phase (200px-600px), use phase2Opacity
+    // During fade-in phase (200px-600px)
     if (latest >= fadeInStart && latest < fadeInEnd) {
       const progress = (latest - fadeInStart) / (fadeInEnd - fadeInStart);
       return Math.min(1, Math.max(0, progress));
     }
+    
+    // During fade-out phase (2700px-2800px) - smooth cross-fade with future-transition
+    if (latest >= fadeOutStart && latest < fadeOutEnd) {
+      const progress = (latest - fadeOutStart) / (fadeOutEnd - fadeOutStart);
+      return 1 - Math.min(1, Math.max(0, progress)); // Fade out from 1 to 0
+    }
+    
+    // Before fade-in: invisible
+    if (latest < fadeInStart) return 0;
+    
+    // After fade-out: invisible
+    if (latest >= fadeOutEnd) return 0;
+    
+    // Between fade-in and fade-out: fully visible
+    return 1;
 
     // Before fade-in starts, opacity is 0
     if (latest < fadeInStart) return 0;
@@ -495,15 +510,30 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       }
 
       if (scrollY < transitionStart && showFutureTransition) {
-        // Switch back to present video if scrolling back up
-        setShowFutureTransition(false);
-        setShowFutureMain(false);
-        futureTransitionVideoOpacity.set(1);
-        futureMainVideoOpacity.set(0);
-        futureTransitionCombinedOpacity.set(0);
-        if (phase2VideoRef.current) {
-          phase2VideoRef.current.play().catch(() => {});
+        // Smoothly switch back to present video if scrolling back up
+        // Let the opacity transforms handle the smooth fade (they work bidirectionally)
+        
+        // Reset future-main state immediately when scrolling back up to allow reverse transition
+        if (showFutureMain) {
+          setShowFutureMain(false);
+          futureMainVideoOpacity.set(0);
+          futureTransitionVideoOpacity.set(1);
+          // Reset future-transition video to beginning for smooth reverse playback
+          if (futureTransitionVideoRef.current) {
+            futureTransitionVideoRef.current.currentTime = 0;
+          }
         }
+        
+        // Only fully reset future-transition state when we're back in present video range
+        if (scrollY < 2600) {
+          // Fully back in present range - reset future video states
+          setShowFutureTransition(false);
+          futureTransitionCombinedOpacity.set(0);
+          if (phase2VideoRef.current) {
+            phase2VideoRef.current.play().catch(() => {});
+          }
+        }
+        // Between 2600-2700: let transforms handle smooth fade (present fades in, future-transition fades out)
       }
     };
 
@@ -787,7 +817,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           }}
         >
           {/* Video Globe */}
-          <div className="w-full h-full flex items-center justify-center relative">
+          <div className="w-full h-full flex items-center justify-center relative" style={{ background: "transparent" }}>
             {/* Past Video */}
             {SHOW_HERO_VIDEOS &&
               !hidePastVideo &&
@@ -803,7 +833,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <WebGLVideo
                     webmSrc="/videos/past.webm"
-                    stackedAlphaSrc="/videos/past-stacked.mp4"
                     className="w-full h-full object-contain"
                     autoPlay={isHeroVisible}
                     loop
@@ -824,6 +853,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   style={{
                     opacity: beeliaOpacity,
                     willChange: "opacity",
+                    background: "transparent",
                   }}
                 >
                   <source src="/videos/past.webm" type="video/webm" />
@@ -843,7 +873,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               >
                 <WebGLVideo
                   webmSrc="/videos/present.webm"
-                  stackedAlphaSrc="/videos/present-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
                   loop
@@ -863,6 +892,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 style={{
                   opacity: presentVideoOpacity,
                   willChange: "opacity",
+                  background: "transparent",
                 }}
               >
                 <source src="/videos/present.webm" type="video/webm" />
@@ -883,7 +913,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               >
                 <WebGLVideo
                   webmSrc="/videos/future-transition.webm"
-                  stackedAlphaSrc="/videos/future-transition-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
                   loop={false}
@@ -905,6 +934,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   opacity: futureTransitionCombinedOpacity,
                   willChange: "opacity",
                   marginLeft: "4px",
+                  background: "transparent",
                 }}
               >
                 <source
@@ -930,7 +960,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <WebGLVideo
                     webmSrc="/videos/future-main.webm"
-                    stackedAlphaSrc="/videos/future-main-stacked.mp4"
                     className="w-full h-full object-contain"
                     autoPlay
                     loop
@@ -952,6 +981,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     opacity: futureMainVideoOpacity,
                     willChange: "opacity",
                     marginLeft: "4px",
+                    background: "transparent",
                   }}
                 >
                   <source src="/videos/future-main.webm" type="video/webm" />

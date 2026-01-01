@@ -44,7 +44,7 @@ export function VideoBox({
     top,
     width,
     height,
-    backgroundColor: "#000000",
+    backgroundColor: "transparent",
     borderRadius: "31.5px",
     zIndex: 10,
     opacity,
@@ -65,30 +65,7 @@ export function VideoBox({
     }
   }, [shouldPlay]);
 
-  // For iOS, use normal .mp4 file directly
-  if (isIOSDevice) {
-    return (
-      <div className="box-video-float pointer-events-none" style={containerStyle}>
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          autoPlay={shouldPlay}
-          loop
-          muted
-          playsInline
-          preload="auto"
-          controls={false}
-          disablePictureInPicture
-          disableRemotePlayback
-          style={{ pointerEvents: "none" }}
-        >
-          <source src={stackedSrc} type="video/mp4" />
-        </video>
-      </div>
-    );
-  }
-
-  // For non-iOS, use webm if available, otherwise fallback to mp4
+  // Use MP4 source directly
   return (
     <div className="box-video-float pointer-events-none" style={containerStyle}>
       <video
@@ -102,16 +79,9 @@ export function VideoBox({
         controls={false}
         disablePictureInPicture
         disableRemotePlayback
-        style={{ pointerEvents: "none" }}
+        style={{ pointerEvents: "none", background: "transparent" }}
       >
-        {src.endsWith('.webm') ? (
-          <>
-            <source src={src} type="video/webm" />
-            <source src={stackedSrc} type="video/mp4" />
-          </>
-        ) : (
-          <source src={stackedSrc} type="video/mp4" />
-        )}
+        <source src={src} type="video/mp4" />
       </video>
     </div>
   );
