@@ -321,12 +321,12 @@ export function HeroContent({
                         left: 0;
                         width: 100%;
                         height: 100%;
-                        background: linear-gradient(135deg, #FF8C32 0%, #FEDA24 50%, #FF8C32 100%);
+                        background: linear-gradient(135deg, #FFB830 0%, #FFA500 50%, #FFB830 100%);
                         transform: translateX(0);
                         z-index: 1;
                         border-radius: 50px;
                         pointer-events: none;
-                        box-shadow: 0 0 20px rgba(254, 218, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                        box-shadow: 0 0 20px rgba(255, 184, 48, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
                       }
                       .mobile-waitlist-btn-wrapper > * {
                         position: relative;

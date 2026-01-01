@@ -115,14 +115,30 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   // Globe becomes scrollable around 3450px scroll position
   const thirdSectionThreshold = 3450;
   const globeY = useTransform(scrollYMotion, (latest) => {
+    // Transition offset: move globe 30px down during past.webm to present.webm transition (200px-600px)
+    const transitionStart = 200;
+    const transitionEnd = 600;
+    let transitionOffset = 0;
+
+    if (latest >= transitionStart && latest <= transitionEnd) {
+      // Smooth interpolation from 0 to 30px during transition
+      const progress =
+        (latest - transitionStart) / (transitionEnd - transitionStart);
+      transitionOffset = progress * 30;
+    } else if (latest > transitionEnd) {
+      // Keep the 30px offset after transition completes
+      transitionOffset = 35;
+    }
+
     // Keep globe fixed until third section threshold OR footer threshold (whichever comes first)
     const threshold = Math.min(
       thirdSectionThreshold,
       globeStopThresholdRef.current
     );
-    if (latest < threshold) return 0;
+    if (latest < threshold) return transitionOffset;
     // After threshold, move globe up with scroll (makes it scroll with page)
-    return -(latest - threshold);
+    // Add transition offset to maintain the downward movement
+    return transitionOffset - (latest - threshold);
   });
 
   // Track scroll Y position

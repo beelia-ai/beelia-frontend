@@ -67,7 +67,7 @@ export function Footer() {
       `}</style>
       <footer
         id="footer"
-        className="relative w-full min-h-screen overflow-hidden"
+        className="relative w-full min-h-screen overflow-x-hidden overflow-y-visible"
       >
         {/* Noise Names Image - Overlay right above blackhole */}
         {/* <div className="absolute bottom-0 left-0 right-0 w-full z-20 pointer-events-none opacity-30">
@@ -86,7 +86,8 @@ export function Footer() {
         <div
           className="absolute left-0 right-0 w-full z-10"
           style={{
-            bottom: isMobile ? "160px" : "-240px",
+            marginTop: isMobile ? "-100px" : "0px",
+            bottom: isMobile ? "50px" : "-240px",
             transform: isMobile
               ? "rotate(-8deg) scale(1.2)"
               : "rotate(-8deg) scale(1)",
