@@ -33,7 +33,7 @@ export const teamGridData: ProfileRowData[] = [
         data: {
           name: "Juan Carlos Calvo Fresno",
           role: "Founder & CEO",
-          image: "/images/juan.png",
+          image: "/images/team/juan.png",
           description: "Vision, execution, fundraising, partnerships, and company direction. Temporarily leading marketing and growth.",
           background: "Founder with a strong entrepreneurial track record from an early age, building digital businesses, testing markets, and creating online traction across multiple projects. Focused on creating scalable, global platforms with strong narrative and execution discipline.",
           responsibilities: [
@@ -72,7 +72,7 @@ export const teamGridData: ProfileRowData[] = [
         data: {
           name: "Arshdeep Singh",
           role: "CTO",
-          image: "/images/arsh.png",
+          image: "/images/team/arsh.png",
           description: "Design, Development, AI Solutions, Tools integration, Tech leadership, and UX Solutions.",
         },
       },
@@ -81,7 +81,7 @@ export const teamGridData: ProfileRowData[] = [
         data: {
           name: "Juan Carlos Calvo Rivera",
           role: "Head of Finance & Strategy",
-          image: "/images/rivera.png",
+          image: "/images/team/rivera.png",
           description: "Financial oversight, capital discipline, and strategic guidance.",
         },
       },
@@ -95,7 +95,7 @@ export const teamGridData: ProfileRowData[] = [
         data: {
           name: "Sanzhar",
           role: "Founding Engineer",
-          image: "/images/sanzhar.png",
+          image: "/images/team/sanzhar.png",
           description: "Platform integrity and post-launch verification processes.",
         },
       },
@@ -104,7 +104,7 @@ export const teamGridData: ProfileRowData[] = [
         data: {
           name: "Naman Bhatt",
           role: "Lead Developer",
-          image: "/images/naman.png",
+          image: "/images/team/naman.png",
           description: "Tech innovation, Development, Tools Integration, Design implementation, App Performance, and App Analytics.",
         },
       },
