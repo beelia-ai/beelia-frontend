@@ -869,7 +869,8 @@ export function AboutProduct({
                       className="w-full flex items-center justify-center"
                       style={{
                         width: "100%",
-                        height: isMobile ? "100px" : "100px", // Square 1:1 aspect ratio for mobile
+                        height: isMobile ? "100px" : "100px",
+                        overflow: "hidden",
                       }}
                       animate={{
                         opacity: isHovered ? 0 : 1,
@@ -880,11 +881,7 @@ export function AboutProduct({
                       }}
                     >
                       <video
-                        src={
-                          isIOSDevice && box.stackedVideo
-                            ? box.stackedVideo
-                            : box.video
-                        }
+                        src={box.stackedVideo || box.video}
                         autoPlay
                         loop
                         muted
@@ -893,18 +890,15 @@ export function AboutProduct({
                         controls={false}
                         disablePictureInPicture
                         disableRemotePlayback
-                        className="w-full h-full object-cover"
                         style={{
                           width: isMobile ? "100px" : "90%",
-                          height: isMobile ? "100px" : "auto",
-                          maxWidth: isMobile
-                            ? "100px"
-                            : box.title === "Discover"
-                            ? "140px"
-                            : "112px",
-                          maxHeight: isMobile ? "100px" : "200px",
-                          aspectRatio: isMobile ? "1 / 1" : "auto",
+                          height: isMobile ? "100px" : "100px",
+                          maxWidth: isMobile ? "100px" : "140px",
+                          maxHeight: isMobile ? "100px" : "100px",
+                          objectFit: "contain",
+                          objectPosition: "center center",
                           pointerEvents: "none",
+                          display: "block",
                         }}
                       />
                     </motion.div>
