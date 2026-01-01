@@ -684,19 +684,18 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const videoSize = isMobile ? 81 : 0; // Size of each video on mobile (0.9x of 90px)
   const videoAngles = [0, 60, 120, 180, 240, 300]; // Degrees for 6 videos
   const mobileVideos = [
-    { src: "/videos/magnify.mp4", stackedSrc: "/videos/magnify-stacked.mp4" },
-    { src: "/videos/shield.mp4", stackedSrc: "/videos/shield-stacked.mp4" },
-    { src: "/videos/bell.mp4", stackedSrc: "/videos/bell-stacked.mp4" },
-    { src: "/videos/upload.mp4", stackedSrc: "/videos/upload-stacked.mp4" },
-    { src: "/videos/dollar.mp4", stackedSrc: "/videos/dollar-stacked.mp4" },
-    { src: "/videos/graph.mp4", stackedSrc: "/videos/graph-stacked.mp4" },
+    { src: "/videos/magnify.mp4" },
+    { src: "/videos/shield.mp4" },
+    { src: "/videos/bell.mp4" },
+    { src: "/videos/upload.mp4" },
+    { src: "/videos/dollar.mp4" },
+    { src: "/videos/graph.mp4" },
   ];
 
   // Desktop video box configuration
   const desktopVideoBoxes = [
     {
       src: "/videos/magnify.mp4",
-      stackedSrc: "/videos/magnify-stacked.mp4",
       left: "201.278px",
       top: "4.5px",
       width: "101.32px",
@@ -704,7 +703,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     },
     {
       src: "/videos/shield.mp4",
-      stackedSrc: "/videos/shield-stacked.mp4",
       left: "11.11px",
       top: "140.411px",
       width: "87.46px",
@@ -713,7 +711,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     },
     {
       src: "/videos/bell.mp4",
-      stackedSrc: "/videos/bell-stacked.mp4",
       left: "157.10px",
       top: "263.571px",
       width: "87.46px",
@@ -722,7 +719,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     },
     {
       src: "/videos/upload.mp4",
-      stackedSrc: "/videos/upload-stacked.mp4",
       left: "803.16px",
       top: "11.43px",
       width: "87.46px",
@@ -731,7 +727,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     },
     {
       src: "/videos/dollar.mp4",
-      stackedSrc: "/videos/dollar-stacked.mp4",
       left: "1003.09px",
       top: "140.411px",
       width: "87.46px",
@@ -740,7 +735,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     },
     {
       src: "/videos/graph.mp4",
-      stackedSrc: "/videos/graph-stacked.mp4",
       left: "849.10px",
       top: "265.08px",
       width: "87.46px",
@@ -966,27 +960,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               const x = Math.cos(angle) * videoRadius;
               const y = Math.sin(angle) * videoRadius;
 
-              return isIOSDevice ? (
-                <div
-                  key={index}
-                  className="absolute rounded-[18px] overflow-hidden"
-                  style={{
-                    width: `${videoSize}px`,
-                    height: `${videoSize}px`,
-                    left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
-                    top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
-                  }}
-                >
-                  <WebGLVideo
-                    webmSrc={video.src}
-                    stackedAlphaSrc={video.stackedSrc}
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                  />
-                </div>
-              ) : (
+              return (
                 <video
                   key={index}
                   ref={(el) => {
@@ -1011,7 +985,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     }
                   }}
                 >
-                  <source src={video.src} type="video/webm" />
+                  <source src={video.src} type="video/mp4" />
                 </video>
               );
             })}
@@ -1066,7 +1040,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     <VideoBox
                       key={index}
                       src={video.src}
-                      stackedSrc={video.stackedSrc}
+                      stackedSrc={video.src}
                       left={video.left}
                       top={video.top}
                       width={video.width}

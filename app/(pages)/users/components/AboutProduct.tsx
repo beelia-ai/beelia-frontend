@@ -74,19 +74,19 @@ const DEFAULT_BOX_DATA = [
     video: "/videos/magnify.webm",
     title: "DISCOVER",
     x: 15.055,
-    stackedVideo: "/videos/magnify-stacked.mp4",
+    stackedVideo: "/videos/magnify.mp4",
   },
   {
     video: "/videos/shield.webm",
     title: "SAFETY",
     x: 391.754,
-    stackedVideo: "/videos/shield-stacked.mp4",
+    stackedVideo: "/videos/shield.mp4",
   },
   {
     video: "/videos/bell.webm",
     title: "SUBSCRIBE",
     x: 767.027,
-    stackedVideo: "/videos/bell-stacked.mp4",
+    stackedVideo: "/videos/bell.mp4",
   },
 ];
 
@@ -859,48 +859,30 @@ export function AboutProduct({
                         ease: "easeInOut",
                       }}
                     >
-                      {isIOSDevice && box.stackedVideo ? (
-                        <WebGLVideo
-                          webmSrc={box.video}
-                          stackedAlphaSrc={box.stackedVideo}
-                          className="w-full h-full object-cover"
-                          style={{
-                            width: isMobile ? "100px" : "90%",
-                            height: isMobile ? "100px" : "auto",
-                            maxWidth: isMobile
-                              ? "100px"
-                              : box.title === "DISCOVER"
-                              ? "140px"
-                              : "112px",
-                            maxHeight: isMobile ? "100px" : "200px",
-                            aspectRatio: isMobile ? "1 / 1" : "auto",
-                          }}
-                          autoPlay
-                          loop
-                          muted
-                        />
-                      ) : (
-                        <video
-                          src={box.video}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          preload="none"
-                          className="w-full h-full object-cover"
-                          style={{
-                            width: isMobile ? "100px" : "90%",
-                            height: isMobile ? "100px" : "auto",
-                            maxWidth: isMobile
-                              ? "100px"
-                              : box.title === "DISCOVER"
-                              ? "140px"
-                              : "112px",
-                            maxHeight: isMobile ? "100px" : "200px",
-                            aspectRatio: isMobile ? "1 / 1" : "auto",
-                          }}
-                        />
-                      )}
+                      <video
+                        src={
+                          isIOSDevice && box.stackedVideo
+                            ? box.stackedVideo
+                            : box.video
+                        }
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="none"
+                        className="w-full h-full object-cover"
+                        style={{
+                          width: isMobile ? "100px" : "90%",
+                          height: isMobile ? "100px" : "auto",
+                          maxWidth: isMobile
+                            ? "100px"
+                            : box.title === "DISCOVER"
+                            ? "140px"
+                            : "112px",
+                          maxHeight: isMobile ? "100px" : "200px",
+                          aspectRatio: isMobile ? "1 / 1" : "auto",
+                        }}
+                      />
                     </motion.div>
                   )}
 

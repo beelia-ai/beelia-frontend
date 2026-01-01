@@ -613,12 +613,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const videoSize = isMobile ? 81 : 0; // Size of each video on mobile (0.9x of 90px)
   const videoAngles = [0, 60, 120, 180, 240, 300]; // Degrees for 6 videos
   const mobileVideos = [
-    { src: "/videos/magnify.webm", stackedSrc: "/videos/magnify-stacked.mp4" },
-    { src: "/videos/shield.webm", stackedSrc: "/videos/shield-stacked.mp4" },
-    { src: "/videos/bell.webm", stackedSrc: "/videos/bell-stacked.mp4" },
-    { src: "/videos/upload.webm", stackedSrc: "/videos/upload-stacked.mp4" },
-    { src: "/videos/dollar.webm", stackedSrc: "/videos/dollar-stacked.mp4" },
-    { src: "/videos/graph.webm", stackedSrc: "/videos/graph-stacked.mp4" },
+    { src: "/videos/magnify.webm", mp4Src: "/videos/magnify.mp4" },
+    { src: "/videos/shield.webm", mp4Src: "/videos/shield.mp4" },
+    { src: "/videos/bell.webm", mp4Src: "/videos/bell.mp4" },
+    { src: "/videos/upload.webm", mp4Src: "/videos/upload.mp4" },
+    { src: "/videos/dollar.webm", mp4Src: "/videos/dollar.mp4" },
+    { src: "/videos/graph.webm", mp4Src: "/videos/graph.mp4" },
   ];
 
   return (
@@ -837,27 +837,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               const x = Math.cos(angle) * videoRadius;
               const y = Math.sin(angle) * videoRadius;
 
-              return isIOSDevice ? (
-                <div
-                  key={index}
-                  className="absolute rounded-[18px] overflow-hidden"
-                  style={{
-                    width: `${videoSize}px`,
-                    height: `${videoSize}px`,
-                    left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
-                    top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
-                  }}
-                >
-                  <WebGLVideo
-                    webmSrc={video.src}
-                    stackedAlphaSrc={video.stackedSrc}
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                  />
-                </div>
-              ) : (
+              return (
                 <video
                   key={index}
                   ref={(el) => {
@@ -882,7 +862,11 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     }
                   }}
                 >
-                  <source src={video.src} type="video/webm" />
+                  {isIOSDevice && video.mp4Src ? (
+                    <source src={video.mp4Src} type="video/mp4" />
+                  ) : (
+                    <source src={video.src} type="video/webm" />
+                  )}
                 </video>
               );
             })}
