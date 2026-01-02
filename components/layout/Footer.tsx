@@ -301,9 +301,8 @@ export function Footer() {
                 position: "relative",
               }}
             >
-              <WebGLVideo
-                webmSrc="/videos/black-hole.webm"
-                stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+              <video
+                src="/videos/black-hole.mp4"
                 className="w-full h-auto"
                 style={{ 
                   objectPosition: "bottom",
@@ -316,6 +315,7 @@ export function Footer() {
                 loop
                 muted
                 playsInline
+                preload="auto"
               />
             </div>
           )}
