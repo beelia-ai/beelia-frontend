@@ -9,7 +9,6 @@ import {
 } from "framer-motion";
 import { FeaturesGrid, FeatureData } from "./FeaturesGrid";
 import { TeamGrid } from "./TeamGrid";
-import { WebGLVideo } from "@/components/ui";
 import { SHOW_HERO_VIDEOS } from "@/lib/constants";
 
 // iOS detection helper
@@ -880,47 +879,33 @@ export function AboutProduct({
                         ease: "easeInOut",
                       }}
                     >
-                      {isMobile && box.stackedVideo ? (
-                        <WebGLVideo
-                          webmSrc={box.video}
-                          stackedAlphaSrc={box.stackedVideo}
-                          className="w-full h-full object-contain"
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            maxWidth: "100px",
-                            maxHeight: "100px",
-                            objectFit: "contain",
-                            objectPosition: "center center",
-                            pointerEvents: "none",
-                          }}
-                          autoPlay
-                          loop
-                          muted
-                        />
-                      ) : (
-                        <video
-                          src={box.stackedVideo || box.video}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          preload="none"
-                          controls={false}
-                          disablePictureInPicture
-                          disableRemotePlayback
-                          style={{
-                            width: isMobile ? "100px" : "90%",
-                            height: isMobile ? "100px" : "100px",
-                            maxWidth: isMobile ? "100px" : "140px",
-                            maxHeight: isMobile ? "100px" : "100px",
-                            objectFit: "contain",
-                            objectPosition: "center center",
-                            pointerEvents: "none",
-                            display: "block",
-                          }}
-                        />
-                      )}
+                      <video
+                        src={box.stackedVideo || box.video}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        controls={false}
+                        disablePictureInPicture
+                        disableRemotePlayback
+                        onLoadedData={(e) => {
+                          const video = e.currentTarget;
+                          if (video.paused) {
+                            video.play().catch(() => {});
+                          }
+                        }}
+                        style={{
+                          width: isMobile ? "100px" : "90%",
+                          height: isMobile ? "100px" : "100px",
+                          maxWidth: isMobile ? "100px" : "140px",
+                          maxHeight: isMobile ? "100px" : "100px",
+                          objectFit: "contain",
+                          objectPosition: "center center",
+                          pointerEvents: "none",
+                          display: "block",
+                        }}
+                      />
                     </motion.div>
                   )}
 
