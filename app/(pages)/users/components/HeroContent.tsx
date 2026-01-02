@@ -84,23 +84,11 @@ export function HeroContent({
         .waitlist-btn-wrapper.no-hover:hover::after {
           transform: translateX(-100%) !important;
         }
-        /* Mobile: show hovered state by default */
+        /* Mobile: same hover behavior as desktop */
         @media (max-width: 767px) {
-          .waitlist-btn-wrapper.mobile-hover::after {
-            transform: translateX(0) !important;
-          }
-          .waitlist-btn-wrapper.mobile-hover .waitlist-btn-text {
-            color: #000000 !important;
-            font-weight: 600 !important;
-          }
-          .waitlist-btn-wrapper.mobile-hover .waitlist-btn-arrow {
-            filter: brightness(0) invert(0) !important;
-          }
-        }
-        /* Ensure mobile text is bold even without mobile-hover class */
-        @media (max-width: 767px) {
-          .waitlist-btn-text {
-            font-weight: 600 !important;
+          .waitlist-btn-wrapper:active::after,
+          .waitlist-btn-wrapper:hover::after {
+            transform: translateX(0);
           }
         }
         .waitlist-btn-wrapper > * {
@@ -132,46 +120,44 @@ export function HeroContent({
         }
       `}</style>
 
-      {/* AIFOR Text - below trace lines */}
-      <div
-        className="flex justify-center px-2 md:px-0 w-full"
+      {/* Title Text */}
+      <h1
+        className="text-center font-editors-note-italic leading-tight px-4 md:px-0"
         style={{
-          marginTop: isMobile ? "0px" : "0px",
+          fontSize: isMobile ? "52px" : "70px",
+          whiteSpace: isMobile ? "normal" : "nowrap",
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
         }}
       >
-        <h1
-          className="text-center font-editors-note-italic text-3xl md:text-6xl lg:text-7xl leading-tight"
-          style={{
-            fontSize: isMobile ? "52px" : "70px",
-            maxWidth: isMobile ? "90vw" : "680px",
-            whiteSpace: isMobile ? "normal" : "nowrap",
-            width: "100%",
-          }}
-        >
-          {title}
-        </h1>
-      </div>
+        {title}
+      </h1>
 
-      {/* Tagline Text - below AIFOR text */}
-      <div className="flex justify-center w-full px-2 md:px-0">
+      {/* Description Text - wrapper for centering */}
+      <div
+        style={{
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
+          display: "flex",
+          justifyContent: "center",
+          marginTop: isMobile ? "8px" : "16px",
+        }}
+      >
         <p
-          className={`text-center text-white/60 ${
-            isMobile ? "mt-2 md:mt-4" : "mt-4"
-          }`}
+          className="text-center text-white/60 px-4 md:px-0"
           style={{
             fontFamily: "var(--font-outfit), sans-serif",
             opacity: 0.7,
             fontWeight: 300,
             fontSize: isMobile ? "18px" : "22px",
             maxWidth: "680px",
-            width: "100%",
           }}
         >
           {description}
         </p>
       </div>
 
-      {/* Join Waitlist Button - below tagline text */}
+      {/* Join Waitlist Button */}
       {(() => {
         const buttonContent = (
           <Link
@@ -185,7 +171,7 @@ export function HeroContent({
             <div
               className={`waitlist-btn-wrapper ${
                 isAnimating ? "no-hover" : ""
-              } ${isMobile && !isAnimating ? "mobile-hover" : ""}`}
+              }`}
             >
               {isMounted ? (
                 <GlassSurface
@@ -386,12 +372,13 @@ export function HeroContent({
           );
         }
 
-        // Desktop: render normally in flow (also used for initial render to match server)
+        // Desktop: render normally in flow with centering
         return (
           <div
             style={{
               marginTop: "24px",
-              position: "relative",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
             {buttonContent}
