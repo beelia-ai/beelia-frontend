@@ -210,7 +210,20 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const supportsSVGFilters = () => {
     if (typeof window === 'undefined') return false;
     
-    // Enable SVG filters for all browsers including Safari/WebKit
+    // Mobile browsers don't support SVG filters in backdrop-filter properly
+    // Even if the CSS property is accepted, it won't render correctly
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+      return false;
+    }
+    
+    // Check if it's Safari on desktop - SVG filters may not work well
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      return false;
+    }
+    
+    // For desktop Chrome/Firefox/Edge, SVG filters work
     const div = document.createElement('div');
     div.style.backdropFilter = `url(#${filterId})`;
     return div.style.backdropFilter !== '';
@@ -258,46 +271,53 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
              0px 16px 56px rgba(17, 17, 26, 0.05) inset`
       };
     } else {
+      // Fallback for mobile browsers and Safari - use enhanced glass effect
       if (isDarkMode) {
         if (!backdropFilterSupported) {
           return {
             ...baseStyles,
-            background: 'rgba(0, 0, 0, 0.4)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.15) inset,
+                        0 0 10px 4px rgba(255, 255, 255, 0.05) inset,
+                        0 4px 16px rgba(0, 0, 0, 0.2),
+                        0 8px 32px rgba(0, 0, 0, 0.15)`
           };
         } else {
           return {
             ...baseStyles,
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(12px) saturate(1.8) brightness(1.2)',
-            WebkitBackdropFilter: 'blur(12px) saturate(1.8) brightness(1.2)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)`
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
+            backdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.2) inset,
+                        0 0 10px 4px rgba(255, 255, 255, 0.08) inset,
+                        0 4px 16px rgba(0, 0, 0, 0.2),
+                        0 8px 32px rgba(0, 0, 0, 0.15)`
           };
         }
       } else {
         if (!backdropFilterSupported) {
           return {
             ...baseStyles,
-            background: 'rgba(255, 255, 255, 0.4)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: `inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.3)`
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.3) inset,
+                        0 0 10px 4px rgba(255, 255, 255, 0.15) inset,
+                        0 4px 16px rgba(0, 0, 0, 0.1),
+                        0 8px 32px rgba(0, 0, 0, 0.08)`
           };
         } else {
           return {
             ...baseStyles,
-            background: 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(12px) saturate(1.8) brightness(1.1)',
-            WebkitBackdropFilter: 'blur(12px) saturate(1.8) brightness(1.1)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: `0 8px 32px 0 rgba(31, 38, 135, 0.2),
-                        0 2px 16px 0 rgba(31, 38, 135, 0.1),
-                        inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
-                        inset 0 -1px 0 0 rgba(255, 255, 255, 0.2)`
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.2) 100%)',
+            backdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.35) inset,
+                        0 0 10px 4px rgba(255, 255, 255, 0.12) inset,
+                        0 4px 16px rgba(0, 0, 0, 0.1),
+                        0 8px 32px rgba(0, 0, 0, 0.08)`
           };
         }
       }
