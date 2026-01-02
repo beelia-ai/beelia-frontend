@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, Outfit } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -41,6 +41,12 @@ export const metadata: Metadata = {
     description: "Discover, purchase, and use AI-powered tools",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover", // Enables safe-area-inset support
 };
 
 export default function RootLayout({

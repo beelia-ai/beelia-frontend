@@ -33,6 +33,7 @@ export function HeroContent({
 }: HeroContentProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isMobileButtonActive, setIsMobileButtonActive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -254,8 +255,13 @@ export function HeroContent({
               href="/waitlist"
               className="group block [perspective:1000px] [transform-style:preserve-3d] cursor-pointer"
               style={{ pointerEvents: "auto" }}
+              onTouchStart={() => setIsMobileButtonActive(true)}
+              onTouchEnd={() => setTimeout(() => setIsMobileButtonActive(false), 300)}
+              onMouseDown={() => setIsMobileButtonActive(true)}
+              onMouseUp={() => setTimeout(() => setIsMobileButtonActive(false), 300)}
+              onMouseLeave={() => setIsMobileButtonActive(false)}
             >
-              <div className="mobile-waitlist-btn-wrapper">
+              <div className={`mobile-waitlist-btn-wrapper ${isMobileButtonActive ? 'active' : ''}`}>
                 {isMounted ? (
                   <GlassSurface
                     width={200}
@@ -284,7 +290,7 @@ export function HeroContent({
                           fontSize: "16px",
                           fontWeight: 800,
                           whiteSpace: "nowrap",
-                          color: "#000000",
+                          color: "#FFFFFF",
                         }}
                       >
                         join waitlist
@@ -294,8 +300,7 @@ export function HeroContent({
                         alt="arrow"
                         width={20}
                         height={20}
-                        className="mobile-waitlist-btn-arrow rotate-45"
-                        style={{ filter: "brightness(0) invert(0)" }}
+                        className="mobile-waitlist-btn-arrow"
                       />
                     </div>
                   </GlassSurface>
@@ -326,23 +331,36 @@ export function HeroContent({
                         left: 0;
                         width: 100%;
                         height: 100%;
-                        background: linear-gradient(135deg, #FFB830 0%, #FFA500 50%, #FFB830 100%);
-                        transform: translateX(0);
+                        background: linear-gradient(135deg, #FF8C32 0%, #FEDA24 50%, #FF8C32 100%);
+                        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                        transform: translateX(-100%);
                         z-index: 1;
                         border-radius: 50px;
                         pointer-events: none;
-                        box-shadow: 0 0 20px rgba(255, 184, 48, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                        box-shadow: 0 0 20px rgba(254, 218, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                      }
+                      .mobile-waitlist-btn-wrapper.active::after {
+                        transform: translateX(0);
                       }
                       .mobile-waitlist-btn-wrapper > * {
                         position: relative;
                         z-index: 2;
                       }
                       .mobile-waitlist-btn-text {
-                        color: #000000 !important;
+                        color: #FFFFFF;
                         font-weight: 800 !important;
+                        transition: color 0.3s ease;
+                      }
+                      .mobile-waitlist-btn-wrapper.active .mobile-waitlist-btn-text {
+                        color: #000000 !important;
                       }
                       .mobile-waitlist-btn-arrow {
+                        filter: brightness(0) invert(1);
+                        transition: filter 0.3s ease, transform 0.5s ease-in-out;
+                      }
+                      .mobile-waitlist-btn-wrapper.active .mobile-waitlist-btn-arrow {
                         filter: brightness(0) invert(0) !important;
+                        transform: rotate(45deg) !important;
                       }
                     `}</style>
                     <div
