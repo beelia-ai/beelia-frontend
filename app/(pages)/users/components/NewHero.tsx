@@ -649,7 +649,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             {/* Past Video */}
             {SHOW_HERO_VIDEOS &&
               !hidePastVideo &&
-              (isIOSDevice ? (
+              (isMobile ? (
                 <motion.div
                   className={`${
                     isMobile ? "w-[280px] h-[280px]" : "w-[444px] h-[444px]"
@@ -689,7 +689,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               ))}
 
             {/* Present Video - Phase 2 */}
-            {SHOW_HERO_VIDEOS && isIOSDevice ? (
+            {SHOW_HERO_VIDEOS && isMobile ? (
               <motion.div
                 className={`${
                   isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
@@ -728,7 +728,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             ) : null}
 
             {/* Future Transition Video */}
-            {SHOW_HERO_VIDEOS && isIOSDevice ? (
+            {SHOW_HERO_VIDEOS && isMobile ? (
               <motion.div
                 className={`${
                   isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
@@ -774,7 +774,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             {/* Future Main Video */}
             {SHOW_HERO_VIDEOS &&
               showFutureMain &&
-              (isIOSDevice ? (
+              (isMobile ? (
                 <motion.div
                   className={`${
                     isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
