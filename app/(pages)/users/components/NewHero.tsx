@@ -699,7 +699,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const mobileVideos = [
     { src: "/videos/magnify.mp4" },
     { src: "/videos/shield.mp4" },
-    { src: "/videos/bell.mp4" },
+    { src: "/videos/bellsm.mp4" },
     { src: "/videos/upload.mp4" },
     { src: "/videos/dollar.mp4" },
     { src: "/videos/graph.mp4" },
