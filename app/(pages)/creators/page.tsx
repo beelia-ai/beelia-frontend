@@ -73,27 +73,27 @@ export default function CreatorsPage() {
         {/* ABOUTPRODUCT - RESTORED with videos */}
         <AboutProduct
           boxData={[
-            { video: "/videos/upload.webm", title: "PUBLISH", x: 15.055, stackedVideo: "/videos/upload-stacked.mp4" },
-            { video: "/videos/dollar.webm", title: "MONETIZE", x: 391.754, stackedVideo: "/videos/dollar-stacked.mp4" },
-            { video: "/videos/graph.webm", title: "DISTRIBUTE", x: 767.027, stackedVideo: "/videos/graph-stacked.mp4" },
+            { video: "/videos/upload.webm", title: "Publish", x: 15.055, stackedVideo: "/videos/upload.mp4" },
+            { video: "/videos/dollar.webm", title: "Monetize", x: 391.754, stackedVideo: "/videos/dollar.mp4" },
+            { video: "/videos/graph.webm", title: "Distribute", x: 767.027, stackedVideo: "/videos/graph.mp4" },
           ]}
           cardData={[
             {
-              title: "PUBLISH",
+              title: "Publish",
               subtitle: "",
               description:
                 "Verified listings help users understand what's legit, what performs, and what's safe, increasing confidence and conversion for your tool.",
               iconPath: "",
             },
             {
-              title: "MONETIZE",
+              title: "Monetize",
               subtitle: "",
               description:
                 "List your AI tool as a standalone product, set your price, and start earning recurring revenue without building a full SaaS or handling payments yourself.",
               iconPath: "",
             },
             {
-              title: "DISTRIBUTE",
+              title: "Distribute",
               subtitle: "",
               description:
                 "Reach builders, businesses, and creators actively looking for AI solutions, without spending time on marketing, SEO, or cold outreach.",

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import LightRays from "@/components/LightRays";
-import TraceLinesAnimated from "@/components/ui/trace-lines-animated";
-import HorizontalBeamAnimated from "@/components/ui/horizontal-beam-animated";
+import { TraceLinesAnimated } from "@/components/ui/trace-lines-animated";
+import { HorizontalBeamAnimated } from "@/components/ui/horizontal-beam-animated";
 import { WebGLVideo } from "@/components/ui";
 import { HeroContent } from "./HeroContent";
+import { VideoBox } from "./VideoBox";
 import {
   motion,
   useScroll,
@@ -306,37 +307,35 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     }
   });
 
-  // Combined opacity for present video: fades in from 200px-600px, visible until 2700px, then fades out
+  // Combined opacity for present video: fades in from 200px-600px, visible until 2700px, then fades out smoothly
   // Present video fades in simultaneously as past.webm fades out (200px-600px)
-  // Then stays fully visible until future-transition starts (2700px)
+  // Stays fully visible until 2700px, then fades out smoothly as future-transition fades in (2700px-2800px)
   const presentVideoOpacity = useTransform(scrollYMotion, (latest) => {
     const fadeInStart = 200; // Start fading in here (same as past.webm fade out)
     const fadeInEnd = 600; // Fully visible after this
-    const futureTransitionStart = 2700; // Start fading out here
-    const futureTransitionEnd = 2800; // Fully faded out here
+    const fadeOutStart = 2700; // Start fading out when future-transition starts
+    const fadeOutEnd = 2800; // Fully faded out after this (same as future-transition fade in)
 
-    // During fade-in phase (200px-600px), use phase2Opacity
+    // During fade-in phase (200px-600px)
     if (latest >= fadeInStart && latest < fadeInEnd) {
       const progress = (latest - fadeInStart) / (fadeInEnd - fadeInStart);
       return Math.min(1, Math.max(0, progress));
     }
-
-    // Before fade-in starts, opacity is 0
-    if (latest < fadeInStart) return 0;
-
-    // Between fade-in complete and future transition start, fully visible
-    if (latest >= fadeInEnd && latest < futureTransitionStart) return 1;
-
-    // During future transition, fade out
-    if (latest >= futureTransitionStart && latest < futureTransitionEnd) {
-      const progress =
-        (latest - futureTransitionStart) /
-        (futureTransitionEnd - futureTransitionStart);
-      return 1 - progress;
+    
+    // During fade-out phase (2700px-2800px) - smooth cross-fade with future-transition
+    if (latest >= fadeOutStart && latest < fadeOutEnd) {
+      const progress = (latest - fadeOutStart) / (fadeOutEnd - fadeOutStart);
+      return 1 - Math.min(1, Math.max(0, progress)); // Fade out from 1 to 0
     }
-
-    // After future transition completes, fully hidden
-    return 0;
+    
+    // Before fade-in: invisible
+    if (latest < fadeInStart) return 0;
+    
+    // After fade-out: invisible
+    if (latest >= fadeOutEnd) return 0;
+    
+    // Between fade-in and fade-out: fully visible
+    return 1;
   });
 
   // Track future-transition video duration when it loads
@@ -345,20 +344,51 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     if (!video) return;
 
     const handleLoadedMetadata = () => {
-      setFutureTransitionDuration(video.duration);
+      if (video.duration && isFinite(video.duration)) {
+        setFutureTransitionDuration(video.duration);
+      }
+    };
+
+    const handleLoadedData = () => {
+      if (video.duration && isFinite(video.duration)) {
+        setFutureTransitionDuration(video.duration);
+      }
+    };
+
+    const handleCanPlay = () => {
+      if (video.duration && isFinite(video.duration)) {
+        setFutureTransitionDuration(video.duration);
+      }
     };
 
     video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("canplay", handleCanPlay);
 
     // If video is already loaded, get duration immediately
-    if (video.readyState >= 1) {
+    if (video.readyState >= 1 && video.duration && isFinite(video.duration)) {
       setFutureTransitionDuration(video.duration);
     }
 
+    // Also check periodically on mobile in case metadata loads late
+    const checkDuration = setInterval(() => {
+      if (
+        video.duration &&
+        isFinite(video.duration) &&
+        !futureTransitionDuration
+      ) {
+        setFutureTransitionDuration(video.duration);
+        clearInterval(checkDuration);
+      }
+    }, 100);
+
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("canplay", handleCanPlay);
+      clearInterval(checkDuration);
     };
-  }, [showFutureTransition]);
+  }, [showFutureTransition, futureTransitionDuration]);
 
   // Track future-transition video playback to fade out 1 second before it ends
   useEffect(() => {
@@ -367,12 +397,28 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     const video = futureTransitionVideoRef.current;
     if (!video) return;
 
+    // Ensure video is playing on mobile
+    const ensureVideoPlaying = () => {
+      if (video.paused && video.readyState >= 2) {
+        video.play().catch(() => {});
+      }
+    };
+
+    // Try to play immediately
+    ensureVideoPlaying();
+
+    // Also ensure it plays after a short delay (for mobile)
+    const playTimeout = setTimeout(ensureVideoPlaying, 100);
+
     let fadeStarted = false;
 
     const checkVideoTime = () => {
       // Once future-main has taken over, stop monitoring future-transition
       // future-main will loop infinitely on its own
       if (showFutureMain) return;
+
+      // Ensure video is still playing
+      ensureVideoPlaying();
 
       const fadeStartTime = futureTransitionDuration - 1; // 1 second before end
 
@@ -404,6 +450,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
     return () => {
       clearInterval(interval);
+      clearTimeout(playTimeout);
     };
   }, [
     showFutureTransition,
@@ -423,21 +470,53 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         // Start showing future-transition video - preload and play
         setShowFutureTransition(true);
         if (futureTransitionVideoRef.current) {
-          futureTransitionVideoRef.current.load();
-          futureTransitionVideoRef.current.play().catch(() => {});
+          const video = futureTransitionVideoRef.current;
+          video.load();
+
+          // Ensure video plays on mobile - try multiple times if needed
+          const playVideo = () => {
+            video.play().catch(() => {
+              // Retry after a short delay on mobile
+              setTimeout(() => {
+                video.play().catch(() => {});
+              }, 100);
+            });
+          };
+
+          // Wait for video to be ready before playing
+          if (video.readyState >= 2) {
+            playVideo();
+          } else {
+            video.addEventListener("canplay", playVideo, { once: true });
+          }
         }
       }
 
       if (scrollY < transitionStart && showFutureTransition) {
-        // Switch back to present video if scrolling back up
-        setShowFutureTransition(false);
-        setShowFutureMain(false);
-        futureTransitionVideoOpacity.set(1);
-        futureMainVideoOpacity.set(0);
-        futureTransitionCombinedOpacity.set(0);
-        if (phase2VideoRef.current) {
-          phase2VideoRef.current.play().catch(() => {});
+        // Smoothly switch back to present video if scrolling back up
+        // Let the opacity transforms handle the smooth fade (they work bidirectionally)
+        
+        // Reset future-main state immediately when scrolling back up to allow reverse transition
+        if (showFutureMain) {
+          setShowFutureMain(false);
+          futureMainVideoOpacity.set(0);
+          futureTransitionVideoOpacity.set(1);
+          // Reset future-transition video to beginning for smooth reverse playback
+          if (futureTransitionVideoRef.current) {
+            futureTransitionVideoRef.current.currentTime = 0;
+          }
         }
+        
+        // Only fully reset future-transition state when we're back in present video range
+        if (scrollY < 2600) {
+          // Fully back in present range - reset future video states
+          setShowFutureTransition(false);
+          futureTransitionCombinedOpacity.set(0);
+          if (phase2VideoRef.current) {
+            phase2VideoRef.current.play().catch(() => {});
+          }
+        }
+        // Between 2600-2700: let transforms handle smooth fade (present fades in, future-transition fades out)
       }
     };
 
@@ -447,7 +526,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [showFutureTransition]);
+  }, [
+    showFutureTransition,
+    futureTransitionVideoOpacity,
+    futureMainVideoOpacity,
+    futureTransitionCombinedOpacity,
+  ]);
 
   // Track window width for responsive scaling
   useEffect(() => {
@@ -613,16 +697,87 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const videoSize = isMobile ? 81 : 0; // Size of each video on mobile (0.9x of 90px)
   const videoAngles = [0, 60, 120, 180, 240, 300]; // Degrees for 6 videos
   const mobileVideos = [
-    { src: "/videos/magnify.webm", stackedSrc: "/videos/magnify-stacked.mp4" },
-    { src: "/videos/shield.webm", stackedSrc: "/videos/shield-stacked.mp4" },
-    { src: "/videos/bell.webm", stackedSrc: "/videos/bell-stacked.mp4" },
-    { src: "/videos/upload.webm", stackedSrc: "/videos/upload-stacked.mp4" },
-    { src: "/videos/dollar.webm", stackedSrc: "/videos/dollar-stacked.mp4" },
-    { src: "/videos/graph.webm", stackedSrc: "/videos/graph-stacked.mp4" },
+    { src: "/videos/magnify.mp4" },
+    { src: "/videos/shield.mp4" },
+    { src: "/videos/bell.mp4" },
+    { src: "/videos/upload.mp4" },
+    { src: "/videos/dollar.mp4" },
+    { src: "/videos/graph.mp4" },
+  ];
+
+  // Desktop video box configuration
+  const desktopVideoBoxes = [
+    {
+      src: "/videos/magnify.mp4",
+      left: "201.278px",
+      top: "4.5px",
+      width: "101.32px",
+      height: "101.32px",
+    },
+    {
+      src: "/videos/shield.mp4",
+      left: "11.11px",
+      top: "140.411px",
+      width: "87.46px",
+      height: "87.46px",
+      animationDelay: "0.3s",
+    },
+    {
+      src: "/videos/bell.mp4",
+      left: "157.10px",
+      top: "263.571px",
+      width: "87.46px",
+      height: "87.46px",
+      animationDelay: "0.6s",
+    },
+    {
+      src: "/videos/upload.mp4",
+      left: "803.16px",
+      top: "11.43px",
+      width: "87.46px",
+      height: "87.46px",
+      animationDelay: "0.15s",
+    },
+    {
+      src: "/videos/dollar.mp4",
+      left: "1003.09px",
+      top: "140.411px",
+      width: "87.46px",
+      height: "87.46px",
+      animationDelay: "0.45s",
+    },
+    {
+      src: "/videos/graph.mp4",
+      left: "849.10px",
+      top: "265.08px",
+      width: "87.46px",
+      height: "87.46px",
+      animationDelay: "0.75s",
+    },
   ];
 
   return (
     <>
+      {/* CSS to hide default video play button on mobile */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          video::-webkit-media-controls {
+            display: none !important;
+          }
+          video::-webkit-media-controls-enclosure {
+            display: none !important;
+          }
+          video::-webkit-media-controls-play-button {
+            display: none !important;
+          }
+          video::-webkit-media-controls-start-playback-button {
+            display: none !important;
+          }
+          video::--webkit-media-controls-overlay-play-button {
+            display: none !important;
+          }
+        `
+      }} />
       <section
         id="hero-section"
         ref={heroRef}
@@ -645,7 +800,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           }}
         >
           {/* Video Globe */}
-          <div className="w-full h-full flex items-center justify-center relative">
+          <div className="w-full h-full flex items-center justify-center relative" style={{ background: "transparent" }}>
             {/* Past Video */}
             {SHOW_HERO_VIDEOS &&
               !hidePastVideo &&
@@ -661,7 +816,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <WebGLVideo
                     webmSrc="/videos/past.webm"
-                    stackedAlphaSrc="/videos/past-stacked.mp4"
                     className="w-full h-full object-contain"
                     autoPlay={isHeroVisible}
                     loop
@@ -682,6 +836,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   style={{
                     opacity: beeliaOpacity,
                     willChange: "opacity",
+                    background: "transparent",
                   }}
                 >
                   <source src="/videos/past.webm" type="video/webm" />
@@ -701,7 +856,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               >
                 <WebGLVideo
                   webmSrc="/videos/present.webm"
-                  stackedAlphaSrc="/videos/present-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
                   loop
@@ -721,6 +875,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 style={{
                   opacity: presentVideoOpacity,
                   willChange: "opacity",
+                  background: "transparent",
                 }}
               >
                 <source src="/videos/present.webm" type="video/webm" />
@@ -741,17 +896,17 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               >
                 <WebGLVideo
                   webmSrc="/videos/future-transition.webm"
-                  stackedAlphaSrc="/videos/future-transition-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
-                  loop
+                  loop={false}
                   muted
+                  videoRef={futureTransitionVideoRef}
                 />
               </motion.div>
             ) : SHOW_HERO_VIDEOS ? (
               <motion.video
                 ref={futureTransitionVideoRef}
-                loop
+                loop={false}
                 muted
                 playsInline
                 preload="none"
@@ -762,6 +917,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   opacity: futureTransitionCombinedOpacity,
                   willChange: "opacity",
                   marginLeft: "4px",
+                  background: "transparent",
                 }}
               >
                 <source
@@ -787,7 +943,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <WebGLVideo
                     webmSrc="/videos/future-main.webm"
-                    stackedAlphaSrc="/videos/future-main-stacked.mp4"
                     className="w-full h-full object-contain"
                     autoPlay
                     loop
@@ -809,6 +964,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     opacity: futureMainVideoOpacity,
                     willChange: "opacity",
                     marginLeft: "4px",
+                    background: "transparent",
                   }}
                 >
                   <source src="/videos/future-main.webm" type="video/webm" />
@@ -837,27 +993,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               const x = Math.cos(angle) * videoRadius;
               const y = Math.sin(angle) * videoRadius;
 
-              return isIOSDevice ? (
-                <div
-                  key={index}
-                  className="absolute rounded-[18px] overflow-hidden"
-                  style={{
-                    width: `${videoSize}px`,
-                    height: `${videoSize}px`,
-                    left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
-                    top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
-                  }}
-                >
-                  <WebGLVideo
-                    webmSrc={video.src}
-                    stackedAlphaSrc={video.stackedSrc}
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                  />
-                </div>
-              ) : (
+              return (
                 <video
                   key={index}
                   ref={(el) => {
@@ -868,12 +1004,16 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   muted
                   playsInline
                   preload="auto"
+                  controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
                   className="absolute rounded-[18px] object-cover"
                   style={{
                     width: `${videoSize}px`,
                     height: `${videoSize}px`,
                     left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
                     top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
+                    pointerEvents: "none",
                   }}
                   onLoadedData={(e) => {
                     const vid = e.currentTarget;
@@ -882,7 +1022,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     }
                   }}
                 >
-                  <source src={video.src} type="video/webm" />
+                  <source src={video.src} type="video/mp4" />
                 </video>
               );
             })}
@@ -933,358 +1073,20 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 animation: float-box-video 2s ease-in-out infinite;
               }
             `}</style>
-                  {/* Left top box */}
-                  {isIOSDevice ? (
-                    <div
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "197.278px",
-                        top: "0.5px",
-                        width: "109.32px",
-                        height: "109.32px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                      }}
-                    >
-                      <WebGLVideo
-                        webmSrc="/videos/magnify.webm"
-                        stackedAlphaSrc="/videos/magnify-stacked.mp4"
-                        className="w-full h-full rounded-[31.5px]"
-                        autoPlay={
-                          isHeroVisible && traceLinesScrollProgress < 0.9
-                        }
-                        loop
-                        muted
-                      />
-                    </div>
-                  ) : (
-                    <video
-                      ref={(el) => {
-                        boxVideoRefs.current[0] = el;
-                      }}
-                      autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "197.278px",
-                        top: "0.5px",
-                        width: "109.32px",
-                        height: "109.32px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                      }}
-                    >
-                      <source src="/videos/magnify.webm" type="video/webm" />
-                    </video>
-                  )}
-                  {/* Left center box */}
-                  {isIOSDevice ? (
-                    <div
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "11.11px",
-                        top: "140.411px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.3s",
-                      }}
-                    >
-                      <WebGLVideo
-                        webmSrc="/videos/shield.webm"
-                        stackedAlphaSrc="/videos/shield-stacked.mp4"
-                        className="w-full h-full rounded-[31.5px]"
-                        autoPlay={
-                          isHeroVisible && traceLinesScrollProgress < 0.9
-                        }
-                        loop
-                        muted
-                      />
-                    </div>
-                  ) : (
-                    <video
-                      ref={(el) => {
-                        boxVideoRefs.current[1] = el;
-                      }}
-                      autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "11.11px",
-                        top: "140.411px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.3s",
-                      }}
-                    >
-                      <source src="/videos/shield.webm" type="video/webm" />
-                    </video>
-                  )}
-                  {/* Left bottom box */}
-                  {isIOSDevice ? (
-                    <div
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "157.10px",
-                        top: "263.571px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.6s",
-                      }}
-                    >
-                      <WebGLVideo
-                        webmSrc="/videos/bell.webm"
-                        stackedAlphaSrc="/videos/bell-stacked.mp4"
-                        className="w-full h-full rounded-[31.5px]"
-                        autoPlay={
-                          isHeroVisible && traceLinesScrollProgress < 0.9
-                        }
-                        loop
-                        muted
-                      />
-                    </div>
-                  ) : (
-                    <video
-                      ref={(el) => {
-                        boxVideoRefs.current[2] = el;
-                      }}
-                      autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "157.10px",
-                        top: "263.571px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.6s",
-                      }}
-                    >
-                      <source src="/videos/bell.webm" type="video/webm" />
-                    </video>
-                  )}
-                  {/* Right top box */}
-                  {isIOSDevice ? (
-                    <div
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "803.16px",
-                        top: "11.43px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.15s",
-                      }}
-                    >
-                      <WebGLVideo
-                        webmSrc="/videos/upload.webm"
-                        stackedAlphaSrc="/videos/upload-stacked.mp4"
-                        className="w-full h-full rounded-[31.5px]"
-                        autoPlay={
-                          isHeroVisible && traceLinesScrollProgress < 0.9
-                        }
-                        loop
-                        muted
-                      />
-                    </div>
-                  ) : (
-                    <video
-                      ref={(el) => {
-                        boxVideoRefs.current[3] = el;
-                      }}
-                      autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "803.16px",
-                        top: "11.43px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.15s",
-                      }}
-                    >
-                      <source src="/videos/upload.webm" type="video/webm" />
-                    </video>
-                  )}
-                  {/* Right center box */}
-                  {isIOSDevice ? (
-                    <div
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "1003.09px",
-                        top: "140.411px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.45s",
-                      }}
-                    >
-                      <WebGLVideo
-                        webmSrc="/videos/dollar.webm"
-                        stackedAlphaSrc="/videos/dollar-stacked.mp4"
-                        className="w-full h-full rounded-[31.5px]"
-                        autoPlay={
-                          isHeroVisible && traceLinesScrollProgress < 0.9
-                        }
-                        loop
-                        muted
-                      />
-                    </div>
-                  ) : (
-                    <video
-                      ref={(el) => {
-                        boxVideoRefs.current[4] = el;
-                      }}
-                      autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "1003.09px",
-                        top: "140.411px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.45s",
-                      }}
-                    >
-                      <source src="/videos/dollar.webm" type="video/webm" />
-                    </video>
-                  )}
-                  {/* Right bottom box */}
-                  {isIOSDevice ? (
-                    <div
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "849.10px",
-                        top: "265.08px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.75s",
-                      }}
-                    >
-                      <WebGLVideo
-                        webmSrc="/videos/graph.webm"
-                        stackedAlphaSrc="/videos/graph-stacked.mp4"
-                        className="w-full h-full rounded-[31.5px]"
-                        autoPlay={
-                          isHeroVisible && traceLinesScrollProgress < 0.9
-                        }
-                        loop
-                        muted
-                      />
-                    </div>
-                  ) : (
-                    <video
-                      ref={(el) => {
-                        boxVideoRefs.current[5] = el;
-                      }}
-                      autoPlay={isHeroVisible && traceLinesScrollProgress < 0.9}
-                      loop
-                      muted
-                      playsInline
-                      preload="none"
-                      className={`absolute box-video-float ${
-                        isMobile ? "object-contain" : "object-cover"
-                      } rounded-[31.5px] pointer-events-none`}
-                      style={{
-                        left: "849.10px",
-                        top: "265.08px",
-                        width: "87.46px",
-                        height: "87.46px",
-                        zIndex: 10,
-                        opacity:
-                          traceLinesScrollProgress > 0
-                            ? 1 - traceLinesScrollProgress
-                            : 1,
-                        animationDelay: "0.75s",
-                      }}
-                    >
-                      <source src="/videos/graph.webm" type="video/webm" />
-                    </video>
-                  )}
+                  {desktopVideoBoxes.map((video, index) => (
+                    <VideoBox
+                      key={index}
+                      src={video.src}
+                      stackedSrc={video.src}
+                      left={video.left}
+                      top={video.top}
+                      width={video.width}
+                      height={video.height}
+                      isHeroVisible={isHeroVisible}
+                      traceLinesScrollProgress={traceLinesScrollProgress}
+                      animationDelay={video.animationDelay}
+                    />
+                  ))}
                 </>
               )}
 
@@ -1325,6 +1127,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           {/* Mobile spacer to maintain content position (replaces trace lines height) */}
           <div className="h-[450px] md:h-0" />
 
+          {/* Content wrapper with scroll animations */}
           {/* Content wrapper with scroll animations */}
           <motion.div
             className="flex flex-col items-center w-full mt-16 md:mt-0"

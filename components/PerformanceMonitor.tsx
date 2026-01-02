@@ -37,7 +37,7 @@ export function PerformanceMonitor() {
   const frameCountRef = useRef(0);
   const lastTimeRef = useRef(performance.now());
   const frameTimesRef = useRef<number[]>([]);
-  const rafIdRef = useRef<number>();
+  const rafIdRef = useRef<number | undefined>(undefined);
 
   // Get GPU info via WebGL
   const getGPUInfo = useCallback(() => {

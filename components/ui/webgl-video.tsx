@@ -15,6 +15,8 @@ interface WebGLVideoProps {
   loop?: boolean;
   muted?: boolean;
   playsInline?: boolean;
+  /** Optional ref to access the internal video element */
+  videoRef?: React.RefObject<HTMLVideoElement | null>;
 }
 
 // Vertex shader - simple passthrough
@@ -125,9 +127,12 @@ export function WebGLVideo({
   loop = true,
   muted = true,
   playsInline = true,
+  videoRef: externalVideoRef,
 }: WebGLVideoProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const internalVideoRef = useRef<HTMLVideoElement>(null);
+  // Use external ref if provided, otherwise use internal ref
+  const videoRef = externalVideoRef || internalVideoRef;
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
   const textureRef = useRef<WebGLTexture | null>(null);
