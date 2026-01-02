@@ -325,12 +325,14 @@ export function WebGLVideo({
     const video = videoRef.current;
     if (!video) return;
 
+    const isMobileDevice = typeof window !== "undefined" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     const handleCanPlay = () => {
       initWebGL();
       rafRef.current = requestAnimationFrame(render);
       
-      // Explicitly play video for iOS (only if user has interacted)
-      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+      // Explicitly play video (after user interaction on mobile browsers)
+      if (autoPlay && video.paused && (!isMobileDevice || userInteracted)) {
         video.play().catch((err) => {
           console.warn("Video autoplay failed:", err);
         });
@@ -338,8 +340,8 @@ export function WebGLVideo({
     };
 
     const handleLoadedData = () => {
-      // Try to play when data is loaded (iOS often needs this, but only after user interaction)
-      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+      // Try to play when data is loaded (after user interaction on mobile browsers)
+      if (autoPlay && video.paused && (!isMobileDevice || userInteracted)) {
         video.play().catch((err) => {
           console.warn("Video autoplay failed:", err);
         });
