@@ -880,27 +880,47 @@ export function AboutProduct({
                         ease: "easeInOut",
                       }}
                     >
-                      <video
-                        src={box.stackedVideo || box.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        controls={false}
-                        disablePictureInPicture
-                        disableRemotePlayback
-                        style={{
-                          width: isMobile ? "100px" : "90%",
-                          height: isMobile ? "100px" : "100px",
-                          maxWidth: isMobile ? "100px" : "140px",
-                          maxHeight: isMobile ? "100px" : "100px",
-                          objectFit: "contain",
-                          objectPosition: "center center",
-                          pointerEvents: "none",
-                          display: "block",
-                        }}
-                      />
+                      {isMobile && box.stackedVideo ? (
+                        <WebGLVideo
+                          webmSrc={box.video}
+                          stackedAlphaSrc={box.stackedVideo}
+                          className="w-full h-full object-contain"
+                          style={{
+                            width: "100px",
+                            height: "100px",
+                            maxWidth: "100px",
+                            maxHeight: "100px",
+                            objectFit: "contain",
+                            objectPosition: "center center",
+                            pointerEvents: "none",
+                          }}
+                          autoPlay
+                          loop
+                          muted
+                        />
+                      ) : (
+                        <video
+                          src={box.stackedVideo || box.video}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="none"
+                          controls={false}
+                          disablePictureInPicture
+                          disableRemotePlayback
+                          style={{
+                            width: isMobile ? "100px" : "90%",
+                            height: isMobile ? "100px" : "100px",
+                            maxWidth: isMobile ? "100px" : "140px",
+                            maxHeight: isMobile ? "100px" : "100px",
+                            objectFit: "contain",
+                            objectPosition: "center center",
+                            pointerEvents: "none",
+                            display: "block",
+                          }}
+                        />
+                      )}
                     </motion.div>
                   )}
 

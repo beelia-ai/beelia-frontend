@@ -218,7 +218,7 @@ export function WebGLVideo({
     });
 
     if (!gl) {
-      console.error("WebGL not supported");
+      console.warn("WebGL not supported, falling back to native video");
       setUseNativeVideo(true);
       return;
     }
@@ -288,7 +288,13 @@ export function WebGLVideo({
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
-    if (!gl || !video || !canvas || video.readyState < 2) {
+    if (!gl || !video || !canvas) {
+      rafRef.current = requestAnimationFrame(render);
+      return;
+    }
+
+    // Wait for video to have dimensions
+    if (video.readyState < 2 || video.videoWidth === 0 || video.videoHeight === 0) {
       rafRef.current = requestAnimationFrame(render);
       return;
     }
@@ -300,10 +306,15 @@ export function WebGLVideo({
       ? video.videoHeight / 2
       : video.videoHeight;
 
-    if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-      canvas.width = displayWidth;
-      canvas.height = displayHeight;
-      gl.viewport(0, 0, displayWidth, displayHeight);
+    if (displayWidth > 0 && displayHeight > 0) {
+      if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+        canvas.width = displayWidth;
+        canvas.height = displayHeight;
+        gl.viewport(0, 0, displayWidth, displayHeight);
+      }
+    } else {
+      rafRef.current = requestAnimationFrame(render);
+      return;
     }
 
     // Update texture with video frame
@@ -426,7 +437,15 @@ export function WebGLVideo({
 
   // WebGL canvas with hidden video source
   return (
-    <div className={className} style={{ position: "relative", ...style }}>
+    <div 
+      className={className} 
+      style={{ 
+        position: "relative", 
+        width: "100%",
+        minHeight: style?.minHeight || "200px",
+        ...style 
+      }}
+    >
       <video
         ref={videoRef}
         src={videoSrc}
@@ -447,7 +466,8 @@ export function WebGLVideo({
         ref={canvasRef}
         style={{
           width: "100%",
-          height: "100%",
+          height: "auto",
+          minHeight: style?.minHeight || "200px",
           display: "block",
           objectFit: style?.objectFit || "contain",
           backgroundColor: "transparent",

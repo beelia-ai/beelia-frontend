@@ -816,6 +816,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <WebGLVideo
                     webmSrc="/videos/past.webm"
+                    stackedAlphaSrc="/videos/past-stacked.mp4"
                     className="w-full h-full object-contain"
                     autoPlay={isHeroVisible}
                     loop
@@ -856,6 +857,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               >
                 <WebGLVideo
                   webmSrc="/videos/present.webm"
+                  stackedAlphaSrc="/videos/present-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
                   loop
@@ -896,6 +898,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               >
                 <WebGLVideo
                   webmSrc="/videos/future-transition.webm"
+                  stackedAlphaSrc="/videos/future-transition-stacked.mp4"
                   className="w-full h-full object-contain"
                   autoPlay={isHeroVisible}
                   loop={false}
@@ -943,6 +946,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 >
                   <WebGLVideo
                     webmSrc="/videos/future-main.webm"
+                    stackedAlphaSrc="/videos/future-main-stacked.mp4"
                     className="w-full h-full object-contain"
                     autoPlay
                     loop

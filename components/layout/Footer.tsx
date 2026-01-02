@@ -297,13 +297,21 @@ export function Footer() {
               style={{
                 transform: "rotate(-8deg) scale(1.3)",
                 transformOrigin: "center center",
+                minHeight: "200px",
+                position: "relative",
               }}
             >
               <WebGLVideo
                 webmSrc="/videos/black-hole.webm"
                 stackedAlphaSrc="/videos/black-hole-stacked.mp4"
-                className="w-full h-auto object-cover"
-                style={{ objectPosition: "bottom" }}
+                className="w-full h-auto"
+                style={{ 
+                  objectPosition: "bottom",
+                  width: "100%",
+                  height: "auto",
+                  minHeight: "200px",
+                  display: "block",
+                }}
                 autoPlay
                 loop
                 muted
