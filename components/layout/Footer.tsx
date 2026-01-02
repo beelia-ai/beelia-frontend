@@ -299,27 +299,16 @@ export function Footer() {
                 transformOrigin: "center center",
               }}
             >
-              {isIOSDevice ? (
-                <WebGLVideo
-                  webmSrc="/videos/black-hole.webm"
-                  stackedAlphaSrc="/videos/black-hole-stacked.mp4"
-                  className="w-full h-auto object-cover"
-                  style={{ objectPosition: "bottom" }}
-                  autoPlay
-                  loop
-                  muted
-                />
-              ) : (
-                <video
-                  src="/videos/black-hole.webm"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-auto object-cover"
-                  style={{ objectPosition: "bottom" }}
-                />
-              )}
+              <WebGLVideo
+                webmSrc="/videos/black-hole.webm"
+                stackedAlphaSrc="/videos/black-hole-stacked.mp4"
+                className="w-full h-auto object-cover"
+                style={{ objectPosition: "bottom" }}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
             </div>
           )}
         </div>

@@ -142,15 +142,13 @@ export function WebGLVideo({
   const [videoSrc, setVideoSrc] = useState(webmSrc);
   const [userInteracted, setUserInteracted] = useState(false);
 
-  // Handle user interaction to enable video playback on iOS
+  // Handle user interaction to enable video playback on mobile browsers (iOS and Android)
   useEffect(() => {
-    if (!isIOS()) return;
-
     const handleUserInteraction = () => {
       setUserInteracted(true);
     };
 
-    // Listen for first user interaction
+    // Listen for first user interaction (needed for iOS and some Android browsers)
     document.addEventListener("touchstart", handleUserInteraction, { once: true });
     document.addEventListener("click", handleUserInteraction, { once: true });
     document.addEventListener("scroll", handleUserInteraction, { once: true, passive: true });
@@ -162,9 +160,9 @@ export function WebGLVideo({
     };
   }, []);
 
-  // Play videos when user interacts (iOS requirement)
+  // Play videos when user interacts (mobile browser requirement)
   useEffect(() => {
-    if (!userInteracted || !isIOS()) return;
+    if (!userInteracted) return;
 
     const video = videoRef.current;
     if (video && autoPlay && video.paused && video.readyState >= 2) {
@@ -371,8 +369,10 @@ export function WebGLVideo({
 
     const video = videoRef.current;
 
+    const isMobileDevice = typeof window !== "undefined" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
     const handleLoadedData = () => {
-      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+      if (autoPlay && video.paused && (!isMobileDevice || userInteracted)) {
         video.play().catch((err) => {
           console.warn("Video autoplay failed:", err);
         });
@@ -380,7 +380,7 @@ export function WebGLVideo({
     };
 
     const handleCanPlay = () => {
-      if (autoPlay && video.paused && (userInteracted || !isIOS())) {
+      if (autoPlay && video.paused && (!isMobileDevice || userInteracted)) {
         video.play().catch((err) => {
           console.warn("Video autoplay failed:", err);
         });
@@ -390,11 +390,13 @@ export function WebGLVideo({
     video.addEventListener("loadeddata", handleLoadedData);
     video.addEventListener("canplay", handleCanPlay);
 
-    // Try to play if already loaded (only after user interaction on iOS)
-    if (video.readyState >= 2 && autoPlay && video.paused && (userInteracted || !isIOS())) {
-      video.play().catch((err) => {
-        console.warn("Video autoplay failed:", err);
-      });
+    // Try to play if already loaded (after user interaction on mobile browsers)
+    if (video.readyState >= 2 && autoPlay && video.paused) {
+      if (!isMobileDevice || userInteracted) {
+        video.play().catch((err) => {
+          console.warn("Video autoplay failed:", err);
+        });
+      }
     }
 
     return () => {
@@ -444,7 +446,9 @@ export function WebGLVideo({
         style={{
           width: "100%",
           height: "100%",
+          display: "block",
           objectFit: style?.objectFit || "contain",
+          backgroundColor: "transparent",
           ...(style?.objectPosition && { objectPosition: style.objectPosition }),
         }}
       />
