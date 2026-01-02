@@ -46,7 +46,12 @@ export function HeroContent({
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center pt-24 md:pt-0">
+    <div 
+      className="w-full flex flex-col items-center pt-24 md:pt-0"
+      style={{
+        paddingBottom: isMobile ? "120px" : "0px",
+      }}
+    >
       {/* Hover fill styles for waitlist button */}
       <style>{`
         .waitlist-btn-wrapper {
@@ -343,14 +348,18 @@ export function HeroContent({
                     <div
                       style={{
                         position: "fixed",
-                        bottom: "20px",
-                        left: "50%",
-                        transform: "translateX(-50%)",
+                        bottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
+                        left: 0,
+                        right: 0,
+                        display: "flex",
+                        justifyContent: "center",
                         zIndex: 50,
-                        pointerEvents: "auto",
+                        pointerEvents: "none",
                       }}
                     >
-                      {mobileButton}
+                      <div style={{ pointerEvents: "auto" }}>
+                        {mobileButton}
+                      </div>
                     </div>
                   </>,
                   document.body
