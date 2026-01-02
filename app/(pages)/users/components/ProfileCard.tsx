@@ -100,7 +100,6 @@ export function ProfileCard({
                         width={28}
                         height={28}
                         className="opacity-80 group-hover:opacity-100 transition-opacity"
-                        style={{ filter: "brightness(0) invert(1)" }}
                       />
                     </a>
                   )}
@@ -118,7 +117,6 @@ export function ProfileCard({
                         width={28}
                         height={28}
                         className="opacity-80 group-hover:opacity-100 transition-opacity"
-                        style={{ filter: "brightness(0) invert(1)" }}
                       />
                     </a>
                   )}

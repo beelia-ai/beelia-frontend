@@ -78,23 +78,11 @@ export function HeroContent({
         .waitlist-btn-wrapper.no-hover:hover::after {
           transform: translateX(-100%) !important;
         }
-        /* Mobile: show hovered state by default */
+        /* Mobile: same hover behavior as desktop */
         @media (max-width: 767px) {
-          .waitlist-btn-wrapper.mobile-hover::after {
-            transform: translateX(0) !important;
-          }
-          .waitlist-btn-wrapper.mobile-hover .waitlist-btn-text {
-            color: #000000 !important;
-            font-weight: 600 !important;
-          }
-          .waitlist-btn-wrapper.mobile-hover .waitlist-btn-arrow {
-            filter: brightness(0) invert(0) !important;
-          }
-        }
-        /* Ensure mobile text is bold even without mobile-hover class */
-        @media (max-width: 767px) {
-          .waitlist-btn-text {
-            font-weight: 600 !important;
+          .waitlist-btn-wrapper:active::after,
+          .waitlist-btn-wrapper:hover::after {
+            transform: translateX(0);
           }
         }
         .waitlist-btn-wrapper > * {
@@ -177,7 +165,7 @@ export function HeroContent({
             <div
               className={`waitlist-btn-wrapper ${
                 isAnimating ? "no-hover" : ""
-              } ${isMobile && !isAnimating ? "mobile-hover" : ""}`}
+              }`}
             >
               {isMounted ? (
                 <GlassSurface
@@ -241,133 +229,29 @@ export function HeroContent({
 
         // Only render mobile portal after mount to prevent hydration mismatch
         if (isMobile && mounted && isMounted) {
-          // Create dedicated mobile button
-          const mobileButton = (
-            <Link
-              href="/waitlist"
-              className="group block [perspective:1000px] [transform-style:preserve-3d] cursor-pointer"
-              style={{ pointerEvents: "auto" }}
-            >
-              <div className="mobile-waitlist-btn-wrapper">
-                {isMounted ? (
-                  <GlassSurface
-                    width={200}
-                    height={60}
-                    borderRadius={50}
-                    chromaticAberration={0.15}
-                    redOffset={0}
-                    greenOffset={10}
-                    blueOffset={20}
-                    distortionScale={-180}
-                    blur={16}
-                    brightness={60}
-                    opacity={0.95}
-                    className="transition-all duration-500 ease-out [transform:translateZ(10px)_rotateX(0deg)_rotateY(0deg)_scale(1)] [box-shadow:0_10px_30px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.1)_inset]"
-                  >
-                    <div
-                      className="w-full flex items-center justify-center gap-3 relative z-10"
-                      style={{
-                        padding: "0 20px",
-                      }}
-                    >
-                      <span
-                        className="mobile-waitlist-btn-text uppercase text-sm leading-[100%] tracking-[0.06em] font-outfit"
-                        style={{
-                          fontFamily: "var(--font-outfit), sans-serif",
-                          fontSize: "16px",
-                          fontWeight: 500,
-                          whiteSpace: "nowrap",
-                          color: "#FFFFFF",
-                        }}
-                      >
-                        join waitlist
-                      </span>
-                      <Image
-                        src="/icons/Vector.svg"
-                        alt="arrow"
-                        width={20}
-                        height={20}
-                        className="mobile-waitlist-btn-arrow"
-                        style={{ filter: "brightness(0) invert(1)" }}
-                      />
-                    </div>
-                  </GlassSurface>
-                ) : null}
-              </div>
-            </Link>
-          );
-
-          // Render button in portal at body level to escape transformed parent
+          // Mobile: render in portal with fixed positioning
           return (
             <>
               {/* Placeholder div for layout on mobile */}
               <div style={{ marginTop: "24px", height: "80px" }} />
               {typeof document !== "undefined" &&
                 createPortal(
-                  <>
-                    {/* Include styles for portal since it's outside the main component DOM */}
-                    <style>{`
-                      .mobile-waitlist-btn-wrapper {
-                        position: relative;
-                        overflow: hidden;
-                        border-radius: 50px;
-                      }
-                      .mobile-waitlist-btn-wrapper::after {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: linear-gradient(135deg, #FF8C32 0%, #FEDA24 50%, #FF8C32 100%);
-                        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-                        transform: translateX(-100%);
-                        z-index: 1;
-                        border-radius: 50px;
-                        pointer-events: none;
-                        box-shadow: 0 0 20px rgba(254, 218, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-                      }
-                      .mobile-waitlist-btn-wrapper:active::after,
-                      .mobile-waitlist-btn-wrapper:hover::after {
-                        transform: translateX(0);
-                      }
-                      .mobile-waitlist-btn-wrapper > * {
-                        position: relative;
-                        z-index: 2;
-                      }
-                      .mobile-waitlist-btn-text {
-                        color: #FFFFFF;
-                        transition: color 0.3s ease;
-                        font-weight: 500;
-                      }
-                      .mobile-waitlist-btn-wrapper:active .mobile-waitlist-btn-text,
-                      .mobile-waitlist-btn-wrapper:hover .mobile-waitlist-btn-text {
-                        color: #000000;
-                        font-weight: 600;
-                      }
-                      .mobile-waitlist-btn-arrow {
-                        filter: brightness(0) invert(1);
-                        transition: filter 0.3s ease, transform 0.5s ease-in-out;
-                      }
-                      .mobile-waitlist-btn-wrapper:active .mobile-waitlist-btn-arrow,
-                      .mobile-waitlist-btn-wrapper:hover .mobile-waitlist-btn-arrow {
-                        filter: brightness(0) invert(0);
-                        transform: rotate(45deg);
-                      }
-                    `}</style>
-                    <div
-                      style={{
-                        position: "fixed",
-                        bottom: "20px",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        zIndex: 50,
-                        pointerEvents: "auto",
-                      }}
-                    >
-                      {mobileButton}
+                  <div
+                    style={{
+                      position: "fixed",
+                      bottom: "20px",
+                      left: 0,
+                      right: 0,
+                      display: "flex",
+                      justifyContent: "center",
+                      zIndex: 50,
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <div style={{ pointerEvents: "auto" }}>
+                      {buttonContent}
                     </div>
-                  </>,
+                  </div>,
                   document.body
                 )}
             </>
