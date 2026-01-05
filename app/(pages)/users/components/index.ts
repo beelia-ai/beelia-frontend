@@ -1,10 +1,8 @@
-export { MainHero } from './MainHero'
-export { AboutCompany } from './AboutCompany'
-export { ScrollSection, ScrollContainer } from './ScrollSection'
-export { SuperHero } from './SuperHero'
-export { NewHero } from './NewHero'
-export { AboutProduct } from './AboutProduct'
-export { FeaturesGrid } from './FeaturesGrid'
-export { HeroContent } from './HeroContent'
-export { VerticalDivider } from './VerticalDivider'
-export { IntersectionDot } from './IntersectionDot'
+export { AboutCompany } from "./AboutCompany";
+export { ScrollSection, ScrollContainer } from "./ScrollSection";
+export { NewHero } from "./NewHero";
+export { AboutProduct } from "./AboutProduct";
+export { FeaturesGrid } from "./FeaturesGrid";
+export { HeroContent } from "./HeroContent";
+export { VerticalDivider } from "./VerticalDivider";
+export { IntersectionDot } from "./IntersectionDot";

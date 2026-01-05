@@ -5,6 +5,7 @@ import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
+import { FontPreloader } from "@/components/FontPreloader";
 
 const inter = Inter({ subsets: ["latin"] });
 const instrumentSerif = Instrument_Serif({
@@ -20,9 +21,21 @@ const outfit = Outfit({
 });
 
 const editorsNoteItalic = localFont({
-  src: "./fonts/EditorsNote-Italic.otf",
+  src: [
+    {
+      path: "./fonts/EditorsNote-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "./fonts/EditorsNote-Italic.otf",
+      weight: "400",
+      style: "italic",
+    },
+  ],
   variable: "--font-editors-note-italic",
-  display: "swap",
+  display: "optional",
+  preload: true,
 });
 
 const editorsNoteMediumItalic = localFont({
@@ -40,6 +53,9 @@ export const metadata: Metadata = {
     title: "Beelia.ai - AI Marketplace",
     description: "Discover, purchase, and use AI-powered tools",
     type: "website",
+  },
+  other: {
+    "font-preload": "/fonts/EditorsNote-Italic.woff2",
   },
 };
 
@@ -60,6 +76,7 @@ export default function RootLayout({
         className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} ${editorsNoteItalic.variable} ${editorsNoteMediumItalic.variable} bg-black overflow-x-hidden`}
         suppressHydrationWarning
       >
+        <FontPreloader />
         <Preloader />
         <NavbarClient />
         <PerformanceMonitor />

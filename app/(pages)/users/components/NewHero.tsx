@@ -16,7 +16,11 @@ import {
   animate,
 } from "framer-motion";
 import { ReactNode } from "react";
-import { SHOW_HERO_VIDEOS } from "@/lib/constants";
+import {
+  SHOW_HERO_VIDEOS,
+  FUTURE_GLOBE_SIZE_MOBILE,
+  FUTURE_GLOBE_SIZE_DESKTOP,
+} from "@/lib/constants";
 
 // iOS detection helper
 function isIOS(): boolean {
@@ -1041,10 +1045,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             {/* Future Transition Video */}
             {SHOW_HERO_VIDEOS && isMobile ? (
               <motion.div
-                className={`${
-                  isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
-                } absolute`}
+                className="absolute"
                 style={{
+                  width: isMobile
+                    ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                    : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
+                  height: isMobile
+                    ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                    : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
                   opacity: futureTransitionCombinedOpacity,
                   willChange: "opacity",
                   marginLeft: "4px",
@@ -1070,10 +1078,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 disablePictureInPicture
                 disableRemotePlayback
                 preload="none"
-                className={`${
-                  isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
-                } object-contain absolute`}
+                className="object-contain absolute"
                 style={{
+                  width: isMobile
+                    ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                    : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
+                  height: isMobile
+                    ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                    : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
                   opacity: futureTransitionCombinedOpacity,
                   willChange: "opacity",
                   marginLeft: "4px",
@@ -1095,10 +1107,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               showFutureMain &&
               (isMobile ? (
                 <motion.div
-                  className={`${
-                    isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
-                  } absolute`}
+                  className="absolute"
                   style={{
+                    width: isMobile
+                      ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                      : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
+                    height: isMobile
+                      ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                      : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
                     opacity: futureMainVideoOpacity,
                     willChange: "opacity",
                     marginLeft: "4px",
@@ -1124,10 +1140,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   disablePictureInPicture
                   disableRemotePlayback
                   preload="none"
-                  className={`${
-                    isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
-                  } object-contain absolute`}
+                  className="object-contain absolute"
                   style={{
+                    width: isMobile
+                      ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                      : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
+                    height: isMobile
+                      ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
+                      : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
                     opacity: futureMainVideoOpacity,
                     willChange: "opacity",
                     marginLeft: "4px",

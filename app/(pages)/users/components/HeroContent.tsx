@@ -128,6 +128,8 @@ export function HeroContent({
           whiteSpace: isMobile ? "normal" : "nowrap",
           width: "100vw",
           marginLeft: "calc(-50vw + 50%)",
+          minHeight: isMobile ? "60px" : "80px",
+          visibility: "visible",
         }}
       >
         {title}

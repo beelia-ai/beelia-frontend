@@ -16,22 +16,36 @@ const nextConfig: NextConfig = {
       allowedOrigins: ['localhost:4000'],
     },
   },
-  // Disable caching in development
-  ...(process.env.NODE_ENV === 'development' && {
-    headers: async () => {
-      return [
+  // Headers configuration
+  headers: async () => {
+    const headers = [];
+    
+    // Disable caching in development
+    if (process.env.NODE_ENV === 'development') {
+      headers.push({
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          },
+        ],
+      });
+    }
+    
+    // Add font caching headers for better LCP
+    headers.push({
+      source: '/fonts/:path*',
+      headers: [
         {
-          source: '/:path*',
-          headers: [
-            {
-              key: 'Cache-Control',
-              value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-            },
-          ],
+          key: 'Cache-Control',
+          value: 'public, max-age=31536000, immutable',
         },
-      ];
-    },
-  }),
+      ],
+    });
+    
+    return headers;
+  },
   // Optimize bundle size
   webpack: (config, { isServer }) => {
     if (!isServer) {

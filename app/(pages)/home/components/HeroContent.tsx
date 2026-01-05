@@ -140,6 +140,8 @@ export function HeroContent({
             maxWidth: isMobile ? "90vw" : "680px",
             whiteSpace: isMobile ? "normal" : "nowrap",
             width: "100%",
+            minHeight: isMobile ? "60px" : "80px",
+            visibility: "visible",
           }}
         >
           {title}
