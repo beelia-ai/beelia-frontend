@@ -34,7 +34,7 @@ const editorsNoteItalic = localFont({
     },
   ],
   variable: "--font-editors-note-italic",
-  display: "optional",
+  display: "swap",
   preload: true,
 });
 

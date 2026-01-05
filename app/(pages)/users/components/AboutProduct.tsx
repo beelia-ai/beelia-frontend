@@ -203,7 +203,7 @@ export function AboutProduct({
   const bottomLinesScale = isMobile
     ? Math.min((windowWidth - 32) / 783, 0.4)
     : 1;
-  
+
   // Calculate globe bottom position for mobile to ensure lines connect properly
   const globeTopMobile = GLOBE_TOP_MOBILE;
   const globeSizeMobile = PAST_VIDEO_SIZE_MOBILE;
@@ -401,8 +401,9 @@ export function AboutProduct({
       style={{ minHeight: "4000px" }}
     >
       {/* CSS to hide default video play button on all mobile browsers */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           video {
             -webkit-appearance: none !important;
             -webkit-tap-highlight-color: transparent !important;
@@ -435,8 +436,9 @@ export function AboutProduct({
               height: 0 !important;
             }
           }
-        `
-      }} />
+        `,
+        }}
+      />
       {/* Section content */}
       <div className="relative z-10 flex flex-col items-center justify-start pt-20 md:pt-32 w-full max-w-full">
         {/* Second Section Header */}
@@ -579,7 +581,7 @@ export function AboutProduct({
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
                   top: isMobile ? "0px" : "120px", // Start at container top (globe bottom) on mobile
                   width: "3px",
-                  height: isMobile 
+                  height: isMobile
                     ? `${107 * openingProgressValue}px` // Same relative distance as desktop (227-120=107)
                     : `${(227 - 120) * openingProgressValue}px`, // Desktop: decreased height by 120px
                   transform: "translateX(-50%)",
@@ -1012,13 +1014,13 @@ export function AboutProduct({
             );
           })}
         </motion.div>
-        
+
         {/* Single mobile tooltip - "tap to read more" - centered in viewport, only shows in cards section when no card is expanded */}
         {isMobile && isCardsSectionVisible && (
           <motion.div
             className="fixed left-1/2 pointer-events-none"
             style={{
-              top: isMobile 
+              top: isMobile
                 ? `calc(${globeBottomMobile}px + 107px + 150px)` // Position below cards (globe bottom + card top + card height + spacing)
                 : "calc(50vh + 200px)",
               transform: "translateX(-50%)",
@@ -1026,8 +1028,8 @@ export function AboutProduct({
               zIndex: 50,
             }}
             initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: hoveredBox ? 0 : 1
+            animate={{
+              opacity: hoveredBox ? 0 : 1,
             }}
             transition={{ delay: 1, duration: 0.5 }}
           >
@@ -1123,7 +1125,7 @@ export function AboutProduct({
             <p
               className="text-center mb-8 md:mb-12 px-4"
               style={{
-                width: windowWidth < 768 ? "100%" : "600px",
+                width: windowWidth < 768 ? "100%" : "650px",
                 height: windowWidth < 768 ? "auto" : "44px",
                 fontFamily: "var(--font-outfit), Outfit, sans-serif",
                 fontWeight: 300,
@@ -1133,11 +1135,13 @@ export function AboutProduct({
                 letterSpacing: "2%",
                 textAlign: "center",
                 color: "#FFFFFF",
-                maxWidth: windowWidth < 768 ? "90vw" : "600px",
+                maxWidth: windowWidth < 768 ? "90vw" : "650px",
                 opacity: 0.7,
               }}
             >
-              The team behind Beelia has spent years building, scaling, and supporting successful technology products, and brings that experience into every part of the platform.
+              The team behind Beelia has spent years building, scaling, and
+              supporting successful technology products, and brings that
+              experience into every part of the platform.
             </p>
           </div>
         </motion.div>
