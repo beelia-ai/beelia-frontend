@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useId } from 'react';
+import React, { useEffect, useRef, useState, useId } from "react";
 
 export interface GlassSurfaceProps {
   children?: React.ReactNode;
@@ -16,28 +16,28 @@ export interface GlassSurfaceProps {
   redOffset?: number;
   greenOffset?: number;
   blueOffset?: number;
-  xChannel?: 'R' | 'G' | 'B';
-  yChannel?: 'R' | 'G' | 'B';
+  xChannel?: "R" | "G" | "B";
+  yChannel?: "R" | "G" | "B";
   chromaticAberration?: number;
   mixBlendMode?:
-    | 'normal'
-    | 'multiply'
-    | 'screen'
-    | 'overlay'
-    | 'darken'
-    | 'lighten'
-    | 'color-dodge'
-    | 'color-burn'
-    | 'hard-light'
-    | 'soft-light'
-    | 'difference'
-    | 'exclusion'
-    | 'hue'
-    | 'saturation'
-    | 'color'
-    | 'luminosity'
-    | 'plus-darker'
-    | 'plus-lighter';
+    | "normal"
+    | "multiply"
+    | "screen"
+    | "overlay"
+    | "darken"
+    | "lighten"
+    | "color-dodge"
+    | "color-burn"
+    | "hard-light"
+    | "soft-light"
+    | "difference"
+    | "exclusion"
+    | "hue"
+    | "saturation"
+    | "color"
+    | "luminosity"
+    | "plus-darker"
+    | "plus-lighter";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -45,14 +45,14 @@ export interface GlassSurfaceProps {
 const useDarkMode = () => {
   // Use lazy initializer to get correct value on first render (avoids flash)
   const [isDark, setIsDark] = useState(() => {
-    if (typeof window === 'undefined') return true; // Default to dark for SSR
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (typeof window === "undefined") return true; // Default to dark for SSR
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     // Only update if different from initial (handles SSR hydration)
     if (mediaQuery.matches !== isDark) {
       setIsDark(mediaQuery.matches);
@@ -61,8 +61,8 @@ const useDarkMode = () => {
     const handler = (e: MediaQueryListEvent) => {
       setIsDark(e.matches);
     };
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
   }, [isDark]);
 
   return isDark;
@@ -75,23 +75,23 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   borderRadius = 20,
   borderWidth = 0.07,
   brightness = 50,
-  opacity = 0.93,
+  opacity = 0.3,
   blur = 11,
   displace = 0,
   backgroundOpacity = 0,
   saturation = 1,
-  distortionScale = -180,
+  distortionScale = -20,
   redOffset = 0,
   greenOffset = 10,
   blueOffset = 20,
-  xChannel = 'R',
-  yChannel = 'G',
-  mixBlendMode = 'difference',
-  chromaticAberration = 0.15,
-  className = '',
-  style = {}
+  xChannel = "R",
+  yChannel = "G",
+  mixBlendMode = "difference",
+  chromaticAberration = 0,
+  className = "",
+  style = {},
 }) => {
-  const uniqueId = useId().replace(/:/g, '-');
+  const uniqueId = useId().replace(/:/g, "-");
   const filterId = `glass-filter-${uniqueId}`;
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
@@ -107,6 +107,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const blueOffsetRef = useRef<SVGFEOffsetElement>(null);
 
   const isDarkMode = useDarkMode();
+  const [isHovered, setIsHovered] = useState(false);
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -129,7 +130,11 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="black"></rect>
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${redGradId})" />
         <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" rx="${borderRadius}" fill="url(#${blueGradId})" style="mix-blend-mode: ${mixBlendMode}" />
-        <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
+        <rect x="${edgeSize}" y="${edgeSize}" width="${
+      actualWidth - edgeSize * 2
+    }" height="${
+      actualHeight - edgeSize * 2
+    }" rx="${borderRadius}" fill="hsl(0 0% ${brightness}% / ${opacity})" style="filter:blur(${blur}px)" />
       </svg>
     `;
 
@@ -137,7 +142,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   };
 
   const updateDisplacementMap = () => {
-    feImageRef.current?.setAttribute('href', generateDisplacementMap());
+    feImageRef.current?.setAttribute("href", generateDisplacementMap());
   };
 
   useEffect(() => {
@@ -145,30 +150,39 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     [
       { ref: redChannelRef, offset: redOffset },
       { ref: greenChannelRef, offset: greenOffset },
-      { ref: blueChannelRef, offset: blueOffset }
+      { ref: blueChannelRef, offset: blueOffset },
     ].forEach(({ ref, offset }) => {
       if (ref.current) {
-        ref.current.setAttribute('scale', (distortionScale + offset).toString());
-        ref.current.setAttribute('xChannelSelector', xChannel);
-        ref.current.setAttribute('yChannelSelector', yChannel);
+        ref.current.setAttribute(
+          "scale",
+          (distortionScale + offset).toString()
+        );
+        ref.current.setAttribute("xChannelSelector", xChannel);
+        ref.current.setAttribute("yChannelSelector", yChannel);
       }
     });
 
-    gaussianBlurRef.current?.setAttribute('stdDeviation', displace.toString());
+    gaussianBlurRef.current?.setAttribute("stdDeviation", displace.toString());
 
     // Apply chromatic aberration offsets
     const aberrationAmount = chromaticAberration * 2; // Scale for visual effect
     if (redOffsetRef.current) {
-      redOffsetRef.current.setAttribute('dx', (-aberrationAmount).toString());
-      redOffsetRef.current.setAttribute('dy', (-aberrationAmount * 0.5).toString());
+      redOffsetRef.current.setAttribute("dx", (-aberrationAmount).toString());
+      redOffsetRef.current.setAttribute(
+        "dy",
+        (-aberrationAmount * 0.5).toString()
+      );
     }
     if (greenOffsetRef.current) {
-      greenOffsetRef.current.setAttribute('dx', '0');
-      greenOffsetRef.current.setAttribute('dy', '0');
+      greenOffsetRef.current.setAttribute("dx", "0");
+      greenOffsetRef.current.setAttribute("dy", "0");
     }
     if (blueOffsetRef.current) {
-      blueOffsetRef.current.setAttribute('dx', aberrationAmount.toString());
-      blueOffsetRef.current.setAttribute('dy', (aberrationAmount * 0.5).toString());
+      blueOffsetRef.current.setAttribute("dx", aberrationAmount.toString());
+      blueOffsetRef.current.setAttribute(
+        "dy",
+        (aberrationAmount * 0.5).toString()
+      );
     }
   }, [
     width,
@@ -186,7 +200,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     xChannel,
     yChannel,
     mixBlendMode,
-    chromaticAberration
+    chromaticAberration,
   ]);
 
   useEffect(() => {
@@ -208,49 +222,55 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   }, [width, height]);
 
   const supportsSVGFilters = () => {
-    if (typeof window === 'undefined') return false;
-    
+    if (typeof window === "undefined") return false;
+
     // Mobile browsers don't support SVG filters in backdrop-filter properly
     // Even if the CSS property is accepted, it won't render correctly
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
     if (isMobile) {
       return false;
     }
-    
+
     // Check if it's Safari on desktop - SVG filters may not work well
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
       return false;
     }
-    
+
     // For desktop Chrome/Firefox/Edge, SVG filters work
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.style.backdropFilter = `url(#${filterId})`;
-    return div.style.backdropFilter !== '';
+    return div.style.backdropFilter !== "";
   };
 
   const supportsBackdropFilter = () => {
-    if (typeof window === 'undefined') return false;
-    return CSS.supports('backdrop-filter', 'blur(10px)');
+    if (typeof window === "undefined") return false;
+    return CSS.supports("backdrop-filter", "blur(4px)");
   };
 
   const getContainerStyles = (): React.CSSProperties => {
     const baseStyles: React.CSSProperties = {
       ...style,
-      width: typeof width === 'number' ? `${width}px` : width,
-      height: typeof height === 'number' ? `${height}px` : height,
+      width: typeof width === "number" ? `${width}px` : width,
+      height: typeof height === "number" ? `${height}px` : height,
       borderRadius: `${borderRadius}px`,
-      '--glass-frost': backgroundOpacity,
-      '--glass-saturation': saturation
+      "--glass-frost": backgroundOpacity,
+      "--glass-saturation": saturation,
     } as React.CSSProperties;
 
     const svgSupported = supportsSVGFilters();
     const backdropFilterSupported = supportsBackdropFilter();
 
-    if (svgSupported) {
+    // Only apply expensive SVG filter when hovered
+    if (svgSupported && isHovered) {
       return {
         ...baseStyles,
-        background: isDarkMode ? `hsl(0 0% 0% / ${backgroundOpacity})` : `hsl(0 0% 100% / ${backgroundOpacity})`,
+        background: isDarkMode
+          ? `hsl(0 0% 0% / ${backgroundOpacity})`
+          : `hsl(0 0% 100% / ${backgroundOpacity})`,
         backdropFilter: `url(#${filterId}) saturate(${saturation})`,
         boxShadow: isDarkMode
           ? `0 0 2px 1px color-mix(in oklch, white, transparent 65%) inset,
@@ -268,7 +288,7 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
              0px 16px 56px rgba(17, 17, 26, 0.05),
              0px 4px 16px rgba(17, 17, 26, 0.05) inset,
              0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`
+             0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
       };
     } else {
       // Fallback for mobile browsers and Safari - use enhanced glass effect
@@ -276,48 +296,52 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
         if (!backdropFilterSupported) {
           return {
             ...baseStyles,
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
+            background:
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
+            border: "1px solid rgba(255, 255, 255, 0.25)",
             boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.15) inset,
                         0 0 10px 4px rgba(255, 255, 255, 0.05) inset,
                         0 4px 16px rgba(0, 0, 0, 0.2),
-                        0 8px 32px rgba(0, 0, 0, 0.15)`
+                        0 8px 32px rgba(0, 0, 0, 0.15)`,
           };
         } else {
           return {
             ...baseStyles,
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)',
-            backdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
-            WebkitBackdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
+            background:
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)",
+            backdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
+            WebkitBackdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
+            border: "1px solid rgba(255, 255, 255, 0.25)",
             boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.2) inset,
                         0 0 10px 4px rgba(255, 255, 255, 0.08) inset,
                         0 4px 16px rgba(0, 0, 0, 0.2),
-                        0 8px 32px rgba(0, 0, 0, 0.15)`
+                        0 8px 32px rgba(0, 0, 0, 0.15)`,
           };
         }
       } else {
         if (!backdropFilterSupported) {
           return {
             ...baseStyles,
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%)',
-            border: '1px solid rgba(255, 255, 255, 0.4)',
+            background:
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%)",
+            border: "1px solid rgba(255, 255, 255, 0.4)",
             boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.3) inset,
                         0 0 10px 4px rgba(255, 255, 255, 0.15) inset,
                         0 4px 16px rgba(0, 0, 0, 0.1),
-                        0 8px 32px rgba(0, 0, 0, 0.08)`
+                        0 8px 32px rgba(0, 0, 0, 0.08)`,
           };
         } else {
           return {
             ...baseStyles,
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.2) 100%)',
-            backdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
-            WebkitBackdropFilter: 'blur(20px) saturate(1.8) brightness(1.1)',
-            border: '1px solid rgba(255, 255, 255, 0.4)',
+            background:
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.2) 100%)",
+            backdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
+            WebkitBackdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
+            border: "1px solid rgba(255, 255, 255, 0.4)",
             boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.35) inset,
                         0 0 10px 4px rgba(255, 255, 255, 0.12) inset,
                         0 4px 16px rgba(0, 0, 0, 0.1),
-                        0 8px 32px rgba(0, 0, 0, 0.08)`
+                        0 8px 32px rgba(0, 0, 0, 0.08)`,
           };
         }
       }
@@ -325,31 +349,54 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   };
 
   const glassSurfaceClasses =
-    'relative flex items-center justify-center overflow-hidden transition-all duration-700 ease-out';
+    "relative flex items-center justify-center overflow-hidden transition-all duration-700 ease-out";
 
   const focusVisibleClasses = isDarkMode
-    ? 'focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2'
-    : 'focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2';
+    ? "focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2"
+    : "focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2";
 
   return (
     <div
       ref={containerRef}
       className={`${glassSurfaceClasses} ${focusVisibleClasses} ${className}`}
       style={getContainerStyles()}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <svg
         className="w-full h-full pointer-events-none absolute inset-0 opacity-0 -z-10 transition-all duration-700 ease-out"
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          filter: 'transition: all 0.7s ease-out',
+          filter: "transition: all 0.7s ease-out",
         }}
       >
         <defs>
-          <filter id={filterId} colorInterpolationFilters="sRGB" x="-10%" y="-10%" width="120%" height="120%">
-            <feImage ref={feImageRef} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" />
+          <filter
+            id={filterId}
+            colorInterpolationFilters="sRGB"
+            x="-10%"
+            y="-10%"
+            width="120%"
+            height="120%"
+          >
+            <feImage
+              ref={feImageRef}
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              preserveAspectRatio="none"
+              result="map"
+            />
 
             {/* Red channel with chromatic aberration offset */}
-            <feDisplacementMap ref={redChannelRef} in="SourceGraphic" in2="map" id="redchannel" result="dispRed" />
+            <feDisplacementMap
+              ref={redChannelRef}
+              in="SourceGraphic"
+              in2="map"
+              id="redchannel"
+              result="dispRed"
+            />
             <feColorMatrix
               in="dispRed"
               type="matrix"
@@ -359,7 +406,13 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
                       0 0 0 1 0"
               result="redChannel"
             />
-            <feOffset ref={redOffsetRef} in="redChannel" result="red" dx="0" dy="0" />
+            <feOffset
+              ref={redOffsetRef}
+              in="redChannel"
+              result="red"
+              dx="0"
+              dy="0"
+            />
 
             {/* Green channel (centered, no offset) */}
             <feDisplacementMap
@@ -378,10 +431,22 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
                       0 0 0 1 0"
               result="greenChannel"
             />
-            <feOffset ref={greenOffsetRef} in="greenChannel" result="green" dx="0" dy="0" />
+            <feOffset
+              ref={greenOffsetRef}
+              in="greenChannel"
+              result="green"
+              dx="0"
+              dy="0"
+            />
 
             {/* Blue channel with chromatic aberration offset */}
-            <feDisplacementMap ref={blueChannelRef} in="SourceGraphic" in2="map" id="bluechannel" result="dispBlue" />
+            <feDisplacementMap
+              ref={blueChannelRef}
+              in="SourceGraphic"
+              in2="map"
+              id="bluechannel"
+              result="dispBlue"
+            />
             <feColorMatrix
               in="dispBlue"
               type="matrix"
@@ -391,12 +456,22 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
                       0 0 0 1 0"
               result="blueChannel"
             />
-            <feOffset ref={blueOffsetRef} in="blueChannel" result="blue" dx="0" dy="0" />
+            <feOffset
+              ref={blueOffsetRef}
+              in="blueChannel"
+              result="blue"
+              dx="0"
+              dy="0"
+            />
 
             {/* Blend RGB channels with chromatic aberration */}
             <feBlend in="red" in2="green" mode="screen" result="rg" />
             <feBlend in="rg" in2="blue" mode="screen" result="output" />
-            <feGaussianBlur ref={gaussianBlurRef} in="output" stdDeviation="0.7" />
+            <feGaussianBlur
+              ref={gaussianBlurRef}
+              in="output"
+              stdDeviation="0.7"
+            />
           </filter>
         </defs>
       </svg>
