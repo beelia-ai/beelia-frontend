@@ -11,8 +11,8 @@ interface HeroContentProps {
   isHovered: boolean;
   setIsHovered: (hovered: boolean) => void;
   isMounted: boolean;
-  title?: ReactNode;
-  description?: string;
+  title: ReactNode;
+  description: string;
 }
 
 export function HeroContent({
@@ -20,16 +20,8 @@ export function HeroContent({
   isHovered,
   setIsHovered,
   isMounted,
-  title = (
-    <>
-      <span className="text-white">AI</span>{" "}
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
-        for Everyone,
-      </span>{" "}
-      <span className="text-white">by Everyone</span>
-    </>
-  ),
-  description = "A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required",
+  title,
+  description,
 }: HeroContentProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);

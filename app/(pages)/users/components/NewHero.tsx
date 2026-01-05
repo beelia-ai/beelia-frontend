@@ -20,6 +20,15 @@ import {
   SHOW_HERO_VIDEOS,
   FUTURE_GLOBE_SIZE_MOBILE,
   FUTURE_GLOBE_SIZE_DESKTOP,
+  PAST_VIDEO_SIZE_MOBILE,
+  PAST_VIDEO_SIZE_DESKTOP,
+  GLOBE_TOP_MOBILE,
+  GLOBE_TOP_DESKTOP,
+  PAST_TO_PRESENT_TRANSITION_START,
+  PAST_TO_PRESENT_TRANSITION_END,
+  PRESENT_TO_FUTURE_TRANSITION_START,
+  PRESENT_TO_FUTURE_TRANSITION_DURATION,
+  FUTURE_TRANSITION_RESET_THRESHOLD,
 } from "@/lib/constants";
 
 // iOS detection helper
@@ -121,11 +130,11 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   // Globe becomes scrollable around 3450px scroll position
   const thirdSectionThreshold = 3450;
   const globeY = useTransform(scrollYMotion, (latest) => {
-    // Transition offset: move globe 30px down during past.webm to present.webm transition (200px-600px)
+    // Transition offset: move globe 30px down during past.webm to present.webm transition
     // Only apply on mobile (desktop should maintain Y position)
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const transitionStart = 200;
-    const transitionEnd = 600;
+    const transitionStart = PAST_TO_PRESENT_TRANSITION_START;
+    const transitionEnd = PAST_TO_PRESENT_TRANSITION_END;
     let transitionOffset = 0;
 
     if (isMobile) {
@@ -138,7 +147,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         // Keep the 35px offset after transition completes
         transitionOffset = 35;
       }
-      
     }
     // Desktop: transitionOffset remains 0, so globe maintains its Y position
 
@@ -213,7 +221,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const transitionStart = 200; // Start transition at 200px
+      const transitionStart = PAST_TO_PRESENT_TRANSITION_START;
 
       if (scrollY >= transitionStart && !showPhase2) {
         // Start showing Phase 2 video - preload and play
@@ -242,11 +250,10 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   }, [showPhase2]);
 
   // Calculate opacity for smooth cross-fade transition based on absolute scroll Y position
-  // Transition starts at 200px and completes at 600px (400px duration)
   // past.webm fades out while present.webm fades in simultaneously
   const phase2Opacity = useTransform(scrollYMotion, (latest) => {
-    const transitionStart = 200;
-    const transitionEnd = 600; // 400px duration for fade transition
+    const transitionStart = PAST_TO_PRESENT_TRANSITION_START;
+    const transitionEnd = PAST_TO_PRESENT_TRANSITION_END;
 
     if (latest < transitionStart) return 0;
     if (latest >= transitionEnd) return 1;
@@ -268,20 +275,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     }
   });
 
-  // Calculate opacity for future-transition video transition at 2700px
-  // Transition duration: 1 second fade-out & fade-in (approximately 100px scroll range)
-  const futureTransitionOpacity = useTransform(scrollYMotion, (latest) => {
-    const transitionStart = 2700;
-    const transitionEnd = 2800; // 100px range for ~1 second transition
-
-    if (latest < transitionStart) return 0;
-    if (latest >= transitionEnd) return 1;
-
-    // Smooth fade between transitionStart and transitionEnd
-    const progress =
-      (latest - transitionStart) / (transitionEnd - transitionStart);
-    return Math.min(1, Math.max(0, progress));
-  });
+  // Opacity for future-transition video fade-in (time-based, triggered at scroll position)
+  // Triggered when scroll reaches PRESENT_TO_FUTURE_TRANSITION_START, animates over PRESENT_TO_FUTURE_TRANSITION_DURATION seconds
+  const futureTransitionOpacity = useMotionValue(0);
 
   // Opacity for future-transition video fade-out (based on video time, not scroll)
   // Fades out 1 second before video ends
@@ -312,35 +308,36 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     }
   });
 
-  // Combined opacity for present video: fades in from 200px-600px, visible until 2700px, then fades out smoothly
-  // Present video fades in simultaneously as past.webm fades out (200px-600px)
-  // Stays fully visible until 2700px, then fades out smoothly as future-transition fades in (2700px-2800px)
-  const presentVideoOpacity = useTransform(scrollYMotion, (latest) => {
-    const fadeInStart = 200; // Start fading in here (same as past.webm fade out)
-    const fadeInEnd = 600; // Fully visible after this
-    const fadeOutStart = 2700; // Start fading out when future-transition starts
-    const fadeOutEnd = 2800; // Fully faded out after this (same as future-transition fade in)
+  // Time-based opacity for present video fade-out (animated when transition is triggered)
+  const presentVideoFadeOut = useMotionValue(1);
 
-    // During fade-in phase (200px-600px)
+  // Combined opacity for present video: scroll-based fade-in, time-based fade-out
+  // Fade-in: scroll-based from PAST_TO_PRESENT_TRANSITION_START to PAST_TO_PRESENT_TRANSITION_END
+  // Fade-out: time-based, triggered at PRESENT_TO_FUTURE_TRANSITION_START, duration PRESENT_TO_FUTURE_TRANSITION_DURATION
+  const presentVideoScrollOpacity = useTransform(scrollYMotion, (latest) => {
+    const fadeInStart = PAST_TO_PRESENT_TRANSITION_START;
+    const fadeInEnd = PAST_TO_PRESENT_TRANSITION_END;
+
+    // During fade-in phase
     if (latest >= fadeInStart && latest < fadeInEnd) {
       const progress = (latest - fadeInStart) / (fadeInEnd - fadeInStart);
       return Math.min(1, Math.max(0, progress));
     }
-    
-    // During fade-out phase (2700px-2800px) - smooth cross-fade with future-transition
-    if (latest >= fadeOutStart && latest < fadeOutEnd) {
-      const progress = (latest - fadeOutStart) / (fadeOutEnd - fadeOutStart);
-      return 1 - Math.min(1, Math.max(0, progress)); // Fade out from 1 to 0
-    }
-    
+
     // Before fade-in: invisible
     if (latest < fadeInStart) return 0;
-    
-    // After fade-out: invisible
-    if (latest >= fadeOutEnd) return 0;
-    
-    // Between fade-in and fade-out: fully visible
+
+    // After fade-in: fully visible (fade-out is handled by presentVideoFadeOut)
     return 1;
+  });
+
+  // Combine scroll-based fade-in with time-based fade-out
+  const presentVideoOpacity = useMotionValue(0);
+  useMotionValueEvent(presentVideoScrollOpacity, "change", (scrollOpacity) => {
+    presentVideoOpacity.set(scrollOpacity * presentVideoFadeOut.get());
+  });
+  useMotionValueEvent(presentVideoFadeOut, "change", (fadeOutOpacity) => {
+    presentVideoOpacity.set(presentVideoScrollOpacity.get() * fadeOutOpacity);
   });
 
   // Track future-transition video duration when it loads
@@ -469,11 +466,22 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const transitionStart = 2700;
+      const transitionStart = PRESENT_TO_FUTURE_TRANSITION_START;
 
       if (scrollY >= transitionStart && !showFutureTransition) {
         // Start showing future-transition video - preload and play
         setShowFutureTransition(true);
+
+        // Start time-based cross-fade animations: present fades out, future-transition fades in
+        animate(presentVideoFadeOut, 0, {
+          duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
+          ease: "linear",
+        });
+        animate(futureTransitionOpacity, 1, {
+          duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
+          ease: "linear",
+        });
+
         if (futureTransitionVideoRef.current) {
           const video = futureTransitionVideoRef.current;
           video.load();
@@ -515,15 +523,17 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             futureTransitionVideoRef.current.play().catch(() => {});
           }
         }
-        
+
         // Only fully reset future-transition state when we're back in present video range
-        if (scrollY < 2600) {
+        if (scrollY < FUTURE_TRANSITION_RESET_THRESHOLD) {
           // Fully back in present range - reset future video states IMMEDIATELY
           setShowFutureTransition(false);
           setShowFutureMain(false);
           futureTransitionCombinedOpacity.set(0);
           futureMainVideoOpacity.set(0);
           futureTransitionVideoOpacity.set(1);
+          futureTransitionOpacity.set(0);
+          presentVideoFadeOut.set(1);
           // Ensure future videos are paused and reset immediately
           if (futureTransitionVideoRef.current) {
             futureTransitionVideoRef.current.pause();
@@ -537,32 +547,28 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           if (phase2VideoRef.current) {
             phase2VideoRef.current.play().catch(() => {});
           }
-        } else if (scrollY < 2700) {
-          // Between 2600-2700: ensure future-transition video is playing for smooth fade
-          // But also ensure present video is playing
-          if (futureTransitionVideoRef.current && futureTransitionVideoRef.current.paused) {
+        } else if (scrollY < transitionStart) {
+          // Between reset threshold and transition start: ensure videos are playing for smooth fade
+          if (
+            futureTransitionVideoRef.current &&
+            futureTransitionVideoRef.current.paused
+          ) {
             futureTransitionVideoRef.current.play().catch(() => {});
           }
           if (phase2VideoRef.current && phase2VideoRef.current.paused) {
             phase2VideoRef.current.play().catch(() => {});
           }
         }
-        // Between 2600-2700: let transforms handle smooth fade (present fades in, future-transition fades out)
       }
-      
-      // Also handle case when scrolling back up from future-main directly (scrollY < 2700 but showFutureMain is true)
-      if (scrollY < 2700 && showFutureMain) {
+
+      // Also handle case when scrolling back up from future-main directly
+      if (scrollY < transitionStart && showFutureMain) {
         // If we're scrolling back up and future-main is showing, reset it immediately
         setShowFutureMain(false);
         futureMainVideoOpacity.set(0);
         if (futureMainVideoRef.current) {
           futureMainVideoRef.current.pause();
           futureMainVideoRef.current.currentTime = 0;
-        }
-        // If we're past 2700 but future-transition should be showing, ensure it's reset
-        if (scrollY >= 2700 && scrollY < 2800 && futureTransitionVideoRef.current) {
-          futureTransitionVideoRef.current.currentTime = 0;
-          futureTransitionVideoRef.current.play().catch(() => {});
         }
         // Ensure present video is playing immediately
         if (phase2VideoRef.current) {
@@ -579,9 +585,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     };
   }, [
     showFutureTransition,
+    showFutureMain,
     futureTransitionVideoOpacity,
     futureMainVideoOpacity,
     futureTransitionCombinedOpacity,
+    futureTransitionOpacity,
+    presentVideoFadeOut,
   ]);
 
   // Track window width for responsive scaling
@@ -737,14 +746,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const mobileScale = isMobile ? Math.min((windowWidth - 32) / 1102, 0.32) : 1;
 
   // Globe responsive sizing - smaller for mobile
-  const globeSize = isMobile ? 280 : 420;
+  const globeSize = isMobile ? PAST_VIDEO_SIZE_MOBILE : PAST_VIDEO_SIZE_DESKTOP;
 
   // Globe top position calculation
-  // Desktop: calc(128px + 182px - 210px) = 100px
-  // Mobile: reduced spacing from top (simplified since trace lines are hidden)
   const globeTop = isMobile
-    ? "120px" // Moved down to prevent overlap with team section descriptions
-    : "calc(128px + 182px - 210px)";
+    ? `${GLOBE_TOP_MOBILE}px`
+    : `${GLOBE_TOP_DESKTOP}px`;
 
   // Circular arrangement for mobile videos
   // 6 videos positioned equidistantly around the globe
@@ -814,8 +821,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   return (
     <>
       {/* CSS to hide default video play button on mobile - Enhanced for all mobile browsers */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           video {
             -webkit-appearance: none !important;
             -webkit-tap-highlight-color: transparent !important;
@@ -920,8 +928,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               height: 0 !important;
             }
           }
-        `
-      }} />
+        `,
+        }}
+      />
       <section
         id="hero-section"
         ref={heroRef}
@@ -944,16 +953,23 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           }}
         >
           {/* Video Globe */}
-          <div className="w-full h-full flex items-center justify-center relative" style={{ background: "transparent" }}>
+          <div
+            className="w-full h-full flex items-center justify-center relative"
+            style={{ background: "transparent" }}
+          >
             {/* Past Video */}
             {SHOW_HERO_VIDEOS &&
               !hidePastVideo &&
               (isMobile ? (
                 <motion.div
-                  className={`${
-                    isMobile ? "w-[280px] h-[280px]" : "w-[444px] h-[444px]"
-                  } mr-0.5 absolute`}
+                  className="mr-0.5 absolute"
                   style={{
+                    width: isMobile
+                      ? `${PAST_VIDEO_SIZE_MOBILE}px`
+                      : `${PAST_VIDEO_SIZE_DESKTOP}px`,
+                    height: isMobile
+                      ? `${PAST_VIDEO_SIZE_MOBILE}px`
+                      : `${PAST_VIDEO_SIZE_DESKTOP}px`,
                     opacity: beeliaOpacity,
                     willChange: "opacity",
                   }}
@@ -978,10 +994,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   disablePictureInPicture
                   disableRemotePlayback
                   preload="none"
-                  className={`${
-                    isMobile ? "w-[280px] h-[280px]" : "w-[444px] h-[444px]"
-                  } object-contain mr-0.5 absolute`}
+                  className="object-contain mr-0.5 absolute"
                   style={{
+                    width: isMobile
+                      ? `${PAST_VIDEO_SIZE_MOBILE}px`
+                      : `${PAST_VIDEO_SIZE_DESKTOP}px`,
+                    height: isMobile
+                      ? `${PAST_VIDEO_SIZE_MOBILE}px`
+                      : `${PAST_VIDEO_SIZE_DESKTOP}px`,
                     opacity: beeliaOpacity,
                     willChange: "opacity",
                     background: "transparent",
@@ -1340,7 +1360,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               setIsHovered={setIsHovered}
               isMounted={isMounted}
               title={title}
-              description={description}
+              description={description || ""}
             />
           </motion.div>
         </div>

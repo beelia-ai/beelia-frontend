@@ -9,7 +9,11 @@ import {
 } from "framer-motion";
 import { FeaturesGrid, FeatureData } from "./FeaturesGrid";
 import { TeamGrid } from "./TeamGrid";
-import { SHOW_HERO_VIDEOS } from "@/lib/constants";
+import {
+  SHOW_HERO_VIDEOS,
+  GLOBE_TOP_MOBILE,
+  PAST_VIDEO_SIZE_MOBILE,
+} from "@/lib/constants";
 
 // iOS detection helper
 function isIOS(): boolean {
@@ -201,10 +205,9 @@ export function AboutProduct({
     : 1;
   
   // Calculate globe bottom position for mobile to ensure lines connect properly
-  // Globe top: 120px, Globe size: 280px (on mobile)
-  const globeTopMobile = 120;
-  const globeSizeMobile = 280;
-  const globeBottomMobile = globeTopMobile + globeSizeMobile; // 400px
+  const globeTopMobile = GLOBE_TOP_MOBILE;
+  const globeSizeMobile = PAST_VIDEO_SIZE_MOBILE;
+  const globeBottomMobile = globeTopMobile + globeSizeMobile;
 
   // Track mounted state to avoid hydration mismatch
   const [isMounted, setIsMounted] = useState(false);

@@ -45,7 +45,18 @@ export default function HomePage() {
 
       {/* Page content */}
       <div className="relative z-10">
-        <NewHero />
+        <NewHero
+          title={
+            <>
+              <span className="text-white">AI</span>{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
+                for Everyone,
+              </span>{" "}
+              <span className="text-white">by Everyone</span>
+            </>
+          }
+          description="A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required"
+        />
         <AboutProduct />
         <FAQ />
         <Footer />
