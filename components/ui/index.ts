@@ -1,6 +1,3 @@
-export { default as LiquidEther } from "./liquid-ether";
-export type { LiquidEtherProps } from "./liquid-ether";
-
 export { Overlay } from "./overlay";
 export type { OverlayProps } from "./overlay";
 
