@@ -46,7 +46,7 @@ export function Footer() {
 
   return (
     <>
-      {/* Animated underline styles */}
+      {/* Animated underline styles and video controls hiding */}
       <style>{`
         .footer-link {
           position: relative;
@@ -63,6 +63,24 @@ export function Footer() {
         }
         .footer-link:hover::after {
           width: 100%;
+        }
+        video {
+          -webkit-appearance: none !important;
+          -webkit-tap-highlight-color: transparent !important;
+        }
+        video::-webkit-media-controls,
+        video::-webkit-media-controls-enclosure,
+        video::-webkit-media-controls-panel,
+        video::-webkit-media-controls-play-button,
+        video::-webkit-media-controls-start-playback-button,
+        video::-webkit-media-controls-overlay-play-button {
+          display: none !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          visibility: hidden !important;
+          -webkit-appearance: none !important;
+          width: 0 !important;
+          height: 0 !important;
         }
       `}</style>
       <footer
@@ -110,8 +128,16 @@ export function Footer() {
                 loop
                 muted
                 playsInline
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
                 className="w-full h-auto object-cover"
-                style={{ objectPosition: "bottom" }}
+                style={{ 
+                  objectPosition: "bottom",
+                  WebkitAppearance: "none",
+                  WebkitTapHighlightColor: "transparent",
+                  pointerEvents: "none",
+                }}
               />
             )}
           </div>
@@ -316,12 +342,25 @@ export function Footer() {
                   height: "auto",
                   minHeight: "200px",
                   display: "block",
+                  WebkitAppearance: "none",
+                  WebkitTapHighlightColor: "transparent",
+                  background: "transparent",
+                  pointerEvents: "none",
                 }}
                 autoPlay
                 loop
                 muted
                 playsInline
                 preload="auto"
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
+                onLoadedData={(e) => {
+                  const video = e.currentTarget;
+                  if (video.paused) {
+                    video.play().catch(() => {});
+                  }
+                }}
               />
             </div>
           )}

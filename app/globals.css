@@ -270,20 +270,75 @@
     visibility: hidden !important;
   }
 
-  /* Hide default video play button overlay on mobile */
+  /* Hide default video play button overlay on all mobile browsers */
+  video {
+    -webkit-appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
   video::-webkit-media-controls {
     display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    -webkit-appearance: none !important;
   }
   video::-webkit-media-controls-enclosure {
     display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    -webkit-appearance: none !important;
+  }
+  video::-webkit-media-controls-panel {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    -webkit-appearance: none !important;
   }
   video::-webkit-media-controls-play-button {
     display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    -webkit-appearance: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
   video::-webkit-media-controls-start-playback-button {
     display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    -webkit-appearance: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
-  video::--webkit-media-controls-overlay-play-button {
+  video::-webkit-media-controls-overlay-play-button {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    -webkit-appearance: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  video::-webkit-media-controls-timeline {
+    display: none !important;
+  }
+  video::-webkit-media-controls-current-time-display {
+    display: none !important;
+  }
+  video::-webkit-media-controls-time-remaining-display {
+    display: none !important;
+  }
+  video::-webkit-media-controls-mute-button {
+    display: none !important;
+  }
+  video::-webkit-media-controls-volume-slider {
+    display: none !important;
+  }
+  video::-webkit-media-controls-fullscreen-button {
     display: none !important;
   }
 }

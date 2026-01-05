@@ -391,23 +391,40 @@ export function AboutProduct({
       className="relative w-full bg-transparent"
       style={{ minHeight: "4000px" }}
     >
-      {/* CSS to hide default video play button on mobile */}
+      {/* CSS to hide default video play button on all mobile browsers */}
       <style dangerouslySetInnerHTML={{
         __html: `
-          video::-webkit-media-controls {
-            display: none !important;
+          video {
+            -webkit-appearance: none !important;
+            -webkit-tap-highlight-color: transparent !important;
           }
-          video::-webkit-media-controls-enclosure {
+          video::-webkit-media-controls,
+          video::-webkit-media-controls-enclosure,
+          video::-webkit-media-controls-panel,
+          video::-webkit-media-controls-play-button,
+          video::-webkit-media-controls-start-playback-button,
+          video::-webkit-media-controls-overlay-play-button {
             display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            -webkit-appearance: none !important;
+            width: 0 !important;
+            height: 0 !important;
           }
-          video::-webkit-media-controls-play-button {
-            display: none !important;
-          }
-          video::-webkit-media-controls-start-playback-button {
-            display: none !important;
-          }
-          video::--webkit-media-controls-overlay-play-button {
-            display: none !important;
+          @media (max-width: 767px) {
+            video::-webkit-media-controls,
+            video::-webkit-media-controls-enclosure,
+            video::-webkit-media-controls-panel,
+            video::-webkit-media-controls-play-button,
+            video::-webkit-media-controls-start-playback-button,
+            video::-webkit-media-controls-overlay-play-button {
+              display: none !important;
+              opacity: 0 !important;
+              visibility: hidden !important;
+              width: 0 !important;
+              height: 0 !important;
+            }
           }
         `
       }} />
@@ -917,6 +934,9 @@ export function AboutProduct({
                           objectPosition: "center center",
                           pointerEvents: "none",
                           display: "block",
+                          WebkitAppearance: "none",
+                          WebkitTapHighlightColor: "transparent",
+                          background: "transparent",
                         }}
                       />
                     </motion.div>
