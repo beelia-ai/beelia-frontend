@@ -6,6 +6,7 @@ import { AboutProduct } from "./components/AboutProduct";
 import { FAQ } from "./components/FAQ";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
+import { PARTICLE_COUNT_MOBILE, PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -34,7 +35,7 @@ export default function HomePage() {
       {/* Particle Sprites Background - reduced particles on mobile */}
       <ParticleSpritesBackground
         className="fixed inset-0 z-0"
-        particleCount={isMobile ? 75 : 150}
+        particleCount={isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP}
         followMouse={true}
         mouseSensitivity={0.05}
         colors={beeliaColors}

@@ -5,6 +5,7 @@ import { AboutProduct } from "../users/components/AboutProduct";
 import { FAQ } from "../users/components/FAQ";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
+import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 import { FeatureData } from "../users/components/FeaturesGrid";
 
 export default function CreatorsPage() {
@@ -48,7 +49,7 @@ export default function CreatorsPage() {
       {/* Particle Sprites Background - RESTORED */}
       <ParticleSpritesBackground
         className="fixed inset-0 z-0"
-        particleCount={150}
+        particleCount={PARTICLE_COUNT_DESKTOP}
         followMouse={true}
         mouseSensitivity={0.05}
         colors={beeliaColors}

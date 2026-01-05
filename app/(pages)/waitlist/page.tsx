@@ -6,6 +6,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
+import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 
 const GlassSurface = dynamic(() => import("@/components/GlassSurface"), {
   ssr: false,
@@ -968,7 +969,7 @@ export default function WaitlistPage() {
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 5 }}>
         <ParticleSpritesBackground
           className="fixed inset-0"
-          particleCount={150}
+          particleCount={PARTICLE_COUNT_DESKTOP}
           followMouse={true}
           mouseSensitivity={0.05}
           colors={beeliaColors}

@@ -18,7 +18,7 @@ export interface ParticleSpritesBackgroundProps {
 
 export function ParticleSpritesBackground({
   className,
-  particleCount = 10000,
+  particleCount = 100,
   fogDensity = 0.0008,
   colors = [
     [1, 0.2, 0.5],
