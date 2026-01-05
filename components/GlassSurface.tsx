@@ -42,32 +42,6 @@ export interface GlassSurfaceProps {
   style?: React.CSSProperties;
 }
 
-const useDarkMode = () => {
-  // Use lazy initializer to get correct value on first render (avoids flash)
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window === "undefined") return true; // Default to dark for SSR
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    // Only update if different from initial (handles SSR hydration)
-    if (mediaQuery.matches !== isDark) {
-      setIsDark(mediaQuery.matches);
-    }
-
-    const handler = (e: MediaQueryListEvent) => {
-      setIsDark(e.matches);
-    };
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, [isDark]);
-
-  return isDark;
-};
-
 const GlassSurface: React.FC<GlassSurfaceProps> = ({
   children,
   width = 200,
@@ -106,7 +80,6 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const greenOffsetRef = useRef<SVGFEOffsetElement>(null);
   const blueOffsetRef = useRef<SVGFEOffsetElement>(null);
 
-  const isDarkMode = useDarkMode();
   const [isHovered, setIsHovered] = useState(false);
 
   const generateDisplacementMap = () => {
@@ -268,82 +241,43 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
     if (svgSupported && isHovered) {
       return {
         ...baseStyles,
-        background: isDarkMode
-          ? `hsl(0 0% 0% / ${backgroundOpacity})`
-          : `hsl(0 0% 100% / ${backgroundOpacity})`,
+        background: `hsl(0 0% 50% / ${backgroundOpacity})`,
         backdropFilter: `url(#${filterId}) saturate(${saturation})`,
-        boxShadow: isDarkMode
-          ? `0 0 2px 1px color-mix(in oklch, white, transparent 65%) inset,
-             0 0 10px 4px color-mix(in oklch, white, transparent 85%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`
-          : `0 0 2px 1px color-mix(in oklch, black, transparent 85%) inset,
-             0 0 10px 4px color-mix(in oklch, black, transparent 90%) inset,
-             0px 4px 16px rgba(17, 17, 26, 0.05),
-             0px 8px 24px rgba(17, 17, 26, 0.05),
-             0px 16px 56px rgba(17, 17, 26, 0.05),
-             0px 4px 16px rgba(17, 17, 26, 0.05) inset,
-             0px 8px 24px rgba(17, 17, 26, 0.05) inset,
-             0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
+        boxShadow: `0 0 2px 1px color-mix(in oklch, white, transparent 75%) inset,
+                    0 0 10px 4px color-mix(in oklch, white, transparent 87%) inset,
+                    0px 4px 16px rgba(17, 17, 26, 0.05),
+                    0px 8px 24px rgba(17, 17, 26, 0.05),
+                    0px 16px 56px rgba(17, 17, 26, 0.05),
+                    0px 4px 16px rgba(17, 17, 26, 0.05) inset,
+                    0px 8px 24px rgba(17, 17, 26, 0.05) inset,
+                    0px 16px 56px rgba(17, 17, 26, 0.05) inset`,
       };
     } else {
       // Fallback for mobile browsers and Safari - use enhanced glass effect
-      if (isDarkMode) {
-        if (!backdropFilterSupported) {
-          return {
-            ...baseStyles,
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
-            border: "1px solid rgba(255, 255, 255, 0.25)",
-            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.15) inset,
-                        0 0 10px 4px rgba(255, 255, 255, 0.05) inset,
-                        0 4px 16px rgba(0, 0, 0, 0.2),
-                        0 8px 32px rgba(0, 0, 0, 0.15)`,
-          };
-        } else {
-          return {
-            ...baseStyles,
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%)",
-            backdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
-            WebkitBackdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
-            border: "1px solid rgba(255, 255, 255, 0.25)",
-            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.2) inset,
-                        0 0 10px 4px rgba(255, 255, 255, 0.08) inset,
-                        0 4px 16px rgba(0, 0, 0, 0.2),
-                        0 8px 32px rgba(0, 0, 0, 0.15)`,
-          };
-        }
+      if (!backdropFilterSupported) {
+        return {
+          ...baseStyles,
+          background:
+            "radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.2) 100%)",
+          border: "1px solid rgba(255, 255, 255, 0.3)",
+          boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.2) inset,
+                      0 0 10px 4px rgba(255, 255, 255, 0.1) inset,
+                      0 4px 16px rgba(0, 0, 0, 0.15),
+                      0 8px 32px rgba(0, 0, 0, 0.1)`,
+        };
       } else {
-        if (!backdropFilterSupported) {
-          return {
-            ...baseStyles,
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.3) 100%)",
-            border: "1px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.3) inset,
-                        0 0 10px 4px rgba(255, 255, 255, 0.15) inset,
-                        0 4px 16px rgba(0, 0, 0, 0.1),
-                        0 8px 32px rgba(0, 0, 0, 0.08)`,
-          };
-        } else {
-          return {
-            ...baseStyles,
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.2) 100%)",
-            backdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
-            WebkitBackdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
-            border: "1px solid rgba(255, 255, 255, 0.4)",
-            boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.35) inset,
-                        0 0 10px 4px rgba(255, 255, 255, 0.12) inset,
-                        0 4px 16px rgba(0, 0, 0, 0.1),
-                        0 8px 32px rgba(0, 0, 0, 0.08)`,
-          };
-        }
+        return {
+          ...baseStyles,
+          background:
+            "radial-gradient(circle at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.15) 100%)",
+          backdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
+          WebkitBackdropFilter: "blur(20px) saturate(1.8) brightness(1.1)",
+          border: "1px solid rgba(255, 255, 255, 0.3)",
+          boxShadow: `0 0 2px 1px rgba(255, 255, 255, 0.25) inset,
+                      0 0 10px 4px rgba(255, 255, 255, 0.1) inset,
+                      0 4px 16px rgba(0, 0, 0, 0.15),
+                      0 8px 32px rgba(0, 0, 0, 0.1)`,
+        };
       }
     }
   };
@@ -351,9 +285,8 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
   const glassSurfaceClasses =
     "relative flex items-center justify-center overflow-hidden transition-all duration-700 ease-out";
 
-  const focusVisibleClasses = isDarkMode
-    ? "focus-visible:outline-2 focus-visible:outline-[#0A84FF] focus-visible:outline-offset-2"
-    : "focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2";
+  const focusVisibleClasses =
+    "focus-visible:outline-2 focus-visible:outline-[#007AFF] focus-visible:outline-offset-2";
 
   return (
     <div

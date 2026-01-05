@@ -1,5 +1,3 @@
-export { AboutCompany } from "./AboutCompany";
-export { ScrollSection, ScrollContainer } from "./ScrollSection";
 export { NewHero } from "./NewHero";
 export { AboutProduct } from "./AboutProduct";
 export { FeaturesGrid } from "./FeaturesGrid";
