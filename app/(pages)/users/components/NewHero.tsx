@@ -981,6 +981,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     autoPlay={isHeroVisible}
                     loop
                     muted
+                    preload="auto"
                   />
                 </motion.div>
               ) : (
@@ -993,7 +994,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   controls={false}
                   disablePictureInPicture
                   disableRemotePlayback
-                  preload="none"
+                  preload="auto"
                   className="object-contain mr-0.5 absolute"
                   style={{
                     width: isMobile
@@ -1032,6 +1033,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   autoPlay={isHeroVisible}
                   loop
                   muted
+                  preload="auto"
                 />
               </motion.div>
             ) : SHOW_HERO_VIDEOS ? (
@@ -1045,7 +1047,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 controls={false}
                 disablePictureInPicture
                 disableRemotePlayback
-                preload="none"
+                preload="auto"
                 className={`${
                   isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
                 } object-contain mr-0.5 absolute`}
@@ -1086,6 +1088,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   loop={false}
                   muted
                   videoRef={futureTransitionVideoRef}
+                  preload="auto"
                 />
               </motion.div>
             ) : SHOW_HERO_VIDEOS ? (
@@ -1097,7 +1100,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 controls={false}
                 disablePictureInPicture
                 disableRemotePlayback
-                preload="none"
+                preload="auto"
                 className="object-contain absolute"
                 style={{
                   width: isMobile
@@ -1147,6 +1150,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     autoPlay
                     loop
                     muted
+                    preload="auto"
                   />
                 </motion.div>
               ) : (
@@ -1159,7 +1163,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   controls={false}
                   disablePictureInPicture
                   disableRemotePlayback
-                  preload="none"
+                  preload="auto"
                   className="object-contain absolute"
                   style={{
                     width: isMobile

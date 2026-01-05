@@ -924,7 +924,7 @@ export function AboutProduct({
                         loop
                         muted
                         playsInline
-                        preload="auto"
+                        preload="none"
                         controls={false}
                         disablePictureInPicture
                         disableRemotePlayback

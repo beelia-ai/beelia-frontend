@@ -17,6 +17,8 @@ interface WebGLVideoProps {
   playsInline?: boolean;
   /** Optional ref to access the internal video element */
   videoRef?: React.RefObject<HTMLVideoElement | null>;
+  /** Preload behavior for the video */
+  preload?: "auto" | "none" | "metadata";
 }
 
 // Vertex shader - simple passthrough
@@ -128,6 +130,7 @@ export function WebGLVideo({
   muted = true,
   playsInline = true,
   videoRef: externalVideoRef,
+  preload = "auto",
 }: WebGLVideoProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const internalVideoRef = useRef<HTMLVideoElement>(null);
@@ -430,7 +433,7 @@ export function WebGLVideo({
         loop={loop}
         muted={muted}
         playsInline={playsInline}
-        preload="auto"
+        preload={preload}
       />
     );
   }
@@ -453,7 +456,7 @@ export function WebGLVideo({
         loop={loop}
         muted={muted}
         playsInline={playsInline}
-        preload="auto"
+        preload={preload}
         style={{
           position: "absolute",
           opacity: 0,

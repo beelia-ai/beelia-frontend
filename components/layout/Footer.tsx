@@ -120,6 +120,7 @@ export function Footer() {
                 autoPlay
                 loop
                 muted
+                preload="none"
               />
             ) : (
               <video
@@ -131,6 +132,7 @@ export function Footer() {
                 controls={false}
                 disablePictureInPicture
                 disableRemotePlayback
+                preload="none"
                 className="w-full h-auto object-cover"
                 style={{ 
                   objectPosition: "bottom",
@@ -351,7 +353,7 @@ export function Footer() {
                 loop
                 muted
                 playsInline
-                preload="auto"
+                preload="none"
                 controls={false}
                 disablePictureInPicture
                 disableRemotePlayback

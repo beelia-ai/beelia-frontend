@@ -12,6 +12,7 @@ interface VideoBoxProps {
   isHeroVisible: boolean;
   traceLinesScrollProgress: number;
   animationDelay?: string;
+  preload?: "auto" | "none" | "metadata";
 }
 
 // iOS detection helper
@@ -33,6 +34,7 @@ export function VideoBox({
   isHeroVisible,
   traceLinesScrollProgress,
   animationDelay,
+  preload = "auto",
 }: VideoBoxProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const opacity =
@@ -75,7 +77,7 @@ export function VideoBox({
         loop
         muted
         playsInline
-        preload="auto"
+        preload={preload}
         controls={false}
         disablePictureInPicture
         disableRemotePlayback
