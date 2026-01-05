@@ -199,6 +199,12 @@ export function AboutProduct({
   const bottomLinesScale = isMobile
     ? Math.min((windowWidth - 32) / 783, 0.4)
     : 1;
+  
+  // Calculate globe bottom position for mobile to ensure lines connect properly
+  // Globe top: 120px, Globe size: 280px (on mobile)
+  const globeTopMobile = 120;
+  const globeSizeMobile = 280;
+  const globeBottomMobile = globeTopMobile + globeSizeMobile; // 400px
 
   // Track mounted state to avoid hydration mismatch
   const [isMounted, setIsMounted] = useState(false);
@@ -492,12 +498,12 @@ export function AboutProduct({
           className="fixed left-1/2 pointer-events-none"
           style={{
             top: isMobile
-              ? "clamp(280px, 35vh, 400px)"
+              ? `${globeBottomMobile}px` // Position container top at globe bottom
               : windowWidth < 1024
               ? "clamp(400px, 50vh, 520px)"
               : "520px",
             marginTop: isMobile
-              ? "-120px"
+              ? "-55px" // Move up 55px from globe bottom
               : windowWidth < 1024
               ? "-200px"
               : "-265px",
@@ -538,16 +544,18 @@ export function AboutProduct({
                 }}
               />
 
-              {/* Center vertical line (from top to box) */}
+              {/* Center vertical line (from globe bottom to box) */}
               <div
                 className="absolute overflow-hidden"
                 style={{
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.centerX}px`
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
-                  top: "120px", // Moved down even more from top
+                  top: isMobile ? "0px" : "120px", // Start at container top (globe bottom) on mobile
                   width: "3px",
-                  height: `${(227 - 120) * openingProgressValue}px`, // Decreased height by 120px
+                  height: isMobile 
+                    ? `${107 * openingProgressValue}px` // Same relative distance as desktop (227-120=107)
+                    : `${(227 - 120) * openingProgressValue}px`, // Desktop: decreased height by 120px
                   transform: "translateX(-50%)",
                 }}
               >
@@ -584,7 +592,7 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.centerX}px`
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
-                  top: "159px",
+                  top: isMobile ? "39px" : "159px", // Maintain same relative offset (39px) as desktop
                   width: `${
                     (isMobile
                       ? STROKE_GEOMETRY.mobile.leftDiagonal.length
@@ -636,9 +644,11 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.leftX}px`
                     : `${STROKE_GEOMETRY.desktop.leftX}px`,
-                  top: "208px",
+                  top: isMobile ? "88px" : "208px", // Maintain same relative offset (88px) as desktop
                   width: "3px",
-                  height: `${(227 - 208) * openingProgressValue}px`,
+                  height: isMobile
+                    ? `${(107 - 88) * openingProgressValue}px` // Same relative distance as desktop (227-208=19)
+                    : `${(227 - 208) * openingProgressValue}px`,
                   transform: "translateX(-50%)",
                 }}
               >
@@ -660,7 +670,7 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.centerX}px`
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
-                  top: "159px",
+                  top: isMobile ? "39px" : "159px", // Maintain same relative offset (39px) as desktop
                   width: `${
                     (isMobile
                       ? STROKE_GEOMETRY.mobile.rightDiagonal.length
@@ -712,9 +722,11 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.rightX}px`
                     : `${STROKE_GEOMETRY.desktop.rightX}px`,
-                  top: "208px",
+                  top: isMobile ? "88px" : "208px", // Maintain same relative offset (88px) as desktop
                   width: "3px",
-                  height: `${(227 - 208) * openingProgressValue}px`,
+                  height: isMobile
+                    ? `${(107 - 88) * openingProgressValue}px` // Same relative distance as desktop (227-208=19)
+                    : `${(227 - 208) * openingProgressValue}px`,
                   transform: "translateX(-50%)",
                 }}
               >
@@ -736,7 +748,7 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.centerX}px`
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
-                  top: "159px",
+                  top: isMobile ? "39px" : "159px", // Where diagonals branch off (matches diagonal top)
                   width: "4px",
                   height: "4px",
                   background: "white",
@@ -751,7 +763,7 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.leftX}px`
                     : `${STROKE_GEOMETRY.desktop.leftX}px`,
-                  top: "208px",
+                  top: isMobile ? "88px" : "208px", // Where vertical starts (matches vertical top)
                   width: "4px",
                   height: "4px",
                   background: "white",
@@ -766,7 +778,7 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.rightX}px`
                     : `${STROKE_GEOMETRY.desktop.rightX}px`,
-                  top: "208px",
+                  top: isMobile ? "88px" : "208px", // Where vertical starts (matches vertical top)
                   width: "4px",
                   height: "4px",
                   background: "white",
@@ -784,12 +796,12 @@ export function AboutProduct({
           className="fixed left-1/2 pointer-events-none"
           style={{
             top: isMobile
-              ? "clamp(280px, 40vh, 400px)"
+              ? `${globeBottomMobile}px` // Position at globe bottom to match stroke container
               : windowWidth < 1024
               ? "clamp(400px, 50vh, 520px)"
               : "520px",
             marginTop: isMobile
-              ? "-120px"
+              ? "-55px" // Move up 55px to match stroke container
               : windowWidth < 1024
               ? "-200px"
               : "-265px",
@@ -842,7 +854,7 @@ export function AboutProduct({
                 className="absolute flex flex-col items-center pointer-events-auto"
                 style={{
                   left: `${boxX}px`,
-                  top: isMobile ? "clamp(160px, 25vh, 200px)" : "227px", // Position at stroke end Y coordinate - responsive for mobile
+                  top: isMobile ? "107px" : "227px", // Same relative distance as desktop (227-120=107), attached to globe bottom
                   transform: "translateX(-50%)", // Center box on stroke
                 }}
                 onMouseEnter={() => setHoveredBox(box.title)}
