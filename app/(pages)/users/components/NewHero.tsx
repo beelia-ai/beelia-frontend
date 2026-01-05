@@ -494,29 +494,75 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
       if (scrollY < transitionStart && showFutureTransition) {
         // Smoothly switch back to present video if scrolling back up
-        // Let the opacity transforms handle the smooth fade (they work bidirectionally)
-        
         // Reset future-main state immediately when scrolling back up to allow reverse transition
         if (showFutureMain) {
           setShowFutureMain(false);
           futureMainVideoOpacity.set(0);
           futureTransitionVideoOpacity.set(1);
-          // Reset future-transition video to beginning for smooth reverse playback
+          // Pause and reset future-main video immediately
+          if (futureMainVideoRef.current) {
+            futureMainVideoRef.current.pause();
+            futureMainVideoRef.current.currentTime = 0;
+          }
+          // Reset future-transition video to beginning and ensure it plays
           if (futureTransitionVideoRef.current) {
             futureTransitionVideoRef.current.currentTime = 0;
+            futureTransitionVideoRef.current.play().catch(() => {});
           }
         }
         
         // Only fully reset future-transition state when we're back in present video range
         if (scrollY < 2600) {
-          // Fully back in present range - reset future video states
+          // Fully back in present range - reset future video states IMMEDIATELY
           setShowFutureTransition(false);
+          setShowFutureMain(false);
           futureTransitionCombinedOpacity.set(0);
+          futureMainVideoOpacity.set(0);
+          futureTransitionVideoOpacity.set(1);
+          // Ensure future videos are paused and reset immediately
+          if (futureTransitionVideoRef.current) {
+            futureTransitionVideoRef.current.pause();
+            futureTransitionVideoRef.current.currentTime = 0;
+          }
+          if (futureMainVideoRef.current) {
+            futureMainVideoRef.current.pause();
+            futureMainVideoRef.current.currentTime = 0;
+          }
+          // Resume present video immediately - ensure it's visible and playing
           if (phase2VideoRef.current) {
+            phase2VideoRef.current.play().catch(() => {});
+          }
+        } else if (scrollY < 2700) {
+          // Between 2600-2700: ensure future-transition video is playing for smooth fade
+          // But also ensure present video is playing
+          if (futureTransitionVideoRef.current && futureTransitionVideoRef.current.paused) {
+            futureTransitionVideoRef.current.play().catch(() => {});
+          }
+          if (phase2VideoRef.current && phase2VideoRef.current.paused) {
             phase2VideoRef.current.play().catch(() => {});
           }
         }
         // Between 2600-2700: let transforms handle smooth fade (present fades in, future-transition fades out)
+      }
+      
+      // Also handle case when scrolling back up from future-main directly (scrollY < 2700 but showFutureMain is true)
+      if (scrollY < 2700 && showFutureMain) {
+        // If we're scrolling back up and future-main is showing, reset it immediately
+        setShowFutureMain(false);
+        futureMainVideoOpacity.set(0);
+        if (futureMainVideoRef.current) {
+          futureMainVideoRef.current.pause();
+          futureMainVideoRef.current.currentTime = 0;
+        }
+        // If we're past 2700 but future-transition should be showing, ensure it's reset
+        if (scrollY >= 2700 && scrollY < 2800 && futureTransitionVideoRef.current) {
+          futureTransitionVideoRef.current.currentTime = 0;
+          futureTransitionVideoRef.current.play().catch(() => {});
+        }
+        // Ensure present video is playing immediately
+        if (phase2VideoRef.current) {
+          phase2VideoRef.current.play().catch(() => {});
+        }
       }
     };
 
@@ -641,6 +687,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         futureTransitionVideoRef.current.play().catch(() => {});
       } else if (opacity === 0 && !futureTransitionVideoRef.current.paused) {
         futureTransitionVideoRef.current.pause();
+        // Reset video to beginning when it becomes invisible (scrolling back up)
+        futureTransitionVideoRef.current.currentTime = 0;
       }
     }
   });
@@ -652,6 +700,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         futureMainVideoRef.current.play().catch(() => {});
       } else if (opacity === 0 && !futureMainVideoRef.current.paused) {
         futureMainVideoRef.current.pause();
+        // Reset video to beginning when it becomes invisible (scrolling back up)
+        futureMainVideoRef.current.currentTime = 0;
       }
     }
   });
@@ -1134,13 +1184,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           {/* Content wrapper with scroll animations */}
           {/* Content wrapper with scroll animations */}
           <motion.div
-            className="flex flex-col items-center w-full mt-16 md:mt-0"
+            className="flex flex-col items-center w-full md:mt-0"
             style={{
               opacity: contentOpacity,
               scale: contentScale,
               filter: contentBlurFilter,
               transformStyle: "preserve-3d",
               willChange: "opacity, transform, filter",
+              marginTop: isMobile ? "clamp(200px, 25vh, 240px)" : "0px", // Increased spacing for small screens like iPhone SE to prevent overlap
             }}
           >
             <HeroContent

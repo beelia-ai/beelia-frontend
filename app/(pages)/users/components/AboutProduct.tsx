@@ -492,7 +492,7 @@ export function AboutProduct({
           className="fixed left-1/2 pointer-events-none"
           style={{
             top: isMobile
-              ? "clamp(280px, 40vh, 400px)"
+              ? "clamp(280px, 35vh, 400px)"
               : windowWidth < 1024
               ? "clamp(400px, 50vh, 520px)"
               : "520px",
@@ -842,7 +842,7 @@ export function AboutProduct({
                 className="absolute flex flex-col items-center pointer-events-auto"
                 style={{
                   left: `${boxX}px`,
-                  top: "227px", // Position at stroke end Y coordinate
+                  top: isMobile ? "clamp(160px, 25vh, 200px)" : "227px", // Position at stroke end Y coordinate - responsive for mobile
                   transform: "translateX(-50%)", // Center box on stroke
                 }}
                 onMouseEnter={() => setHoveredBox(box.title)}
@@ -931,20 +931,20 @@ export function AboutProduct({
                     {box.title}
                   </motion.span>
 
-                  {/* Description text - appears from bottom on hover */}
+                  {/* Description text - appears from top on hover with consistent spacing */}
                   {matchingCardData && (
                     <motion.div
                       className="absolute w-full px-3"
                       style={{
                         pointerEvents: isHovered ? "auto" : "none",
-                        bottom: isMobile ? "16px" : "24px", // Match paddingBottom for desktop
+                        top: isMobile ? "44px" : "60px", // paddingTop (12px/20px) + title height (20px/30px) + spacing (12px/10px)
                         left: 0,
                         right: 0,
                       }}
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: -10 }}
                       animate={{
                         opacity: isHovered ? 1 : 0,
-                        y: isHovered ? 0 : 20,
+                        y: isHovered ? 0 : -10,
                       }}
                       transition={{
                         duration: 0.3,
@@ -956,7 +956,7 @@ export function AboutProduct({
                         style={{
                           fontFamily: "var(--font-outfit), Outfit, sans-serif",
                           fontWeight: 300,
-                          fontSize: isMobile ? "10px" : "12px",
+                          fontSize: isMobile ? "8px" : "12px",
                           lineHeight: "140%",
                           color: "rgba(255, 255, 255, 0.7)",
                         }}
