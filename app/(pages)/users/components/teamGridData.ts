@@ -59,7 +59,7 @@ export const teamGridData: ProfileRowData[] = [
       {
         type: "quote",
         data: {
-          quote: "\"Beelia was built from the belief that AI should be easy to use, easy to trust, and viable to monetize. We're creating the missing layer that connects powerful AI tools with real users, giving creators a clear path to distribution and revenue, and giving users access to intelligence that actually works in the real world.\"",
+          quote: "\"Beelia was built from the belief that AI should be easy to use, easy to trust, and viable to monetize.\"",
         },
       },
     ],
