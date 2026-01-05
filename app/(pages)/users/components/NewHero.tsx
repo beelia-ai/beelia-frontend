@@ -809,24 +809,35 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
   return (
     <>
-      {/* CSS to hide default video play button on mobile - Enhanced for iOS */}
+      {/* CSS to hide default video play button on mobile - Enhanced for all mobile browsers */}
       <style dangerouslySetInnerHTML={{
         __html: `
           video {
             -webkit-appearance: none !important;
             -webkit-tap-highlight-color: transparent !important;
+            object-fit: contain !important;
           }
+          /* Hide all media controls */
           video::-webkit-media-controls {
             display: none !important;
             opacity: 0 !important;
             pointer-events: none !important;
             visibility: hidden !important;
+            -webkit-appearance: none !important;
           }
           video::-webkit-media-controls-enclosure {
             display: none !important;
             opacity: 0 !important;
             pointer-events: none !important;
             visibility: hidden !important;
+            -webkit-appearance: none !important;
+          }
+          video::-webkit-media-controls-panel {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            -webkit-appearance: none !important;
           }
           video::-webkit-media-controls-play-button {
             display: none !important;
@@ -834,6 +845,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             pointer-events: none !important;
             visibility: hidden !important;
             -webkit-appearance: none !important;
+            width: 0 !important;
+            height: 0 !important;
           }
           video::-webkit-media-controls-start-playback-button {
             display: none !important;
@@ -841,6 +854,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             pointer-events: none !important;
             visibility: hidden !important;
             -webkit-appearance: none !important;
+            width: 0 !important;
+            height: 0 !important;
           }
           video::-webkit-media-controls-overlay-play-button {
             display: none !important;
@@ -848,8 +863,32 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
             pointer-events: none !important;
             visibility: hidden !important;
             -webkit-appearance: none !important;
+            width: 0 !important;
+            height: 0 !important;
           }
-          /* Additional iOS-specific hiding */
+          video::-webkit-media-controls-timeline {
+            display: none !important;
+          }
+          video::-webkit-media-controls-current-time-display {
+            display: none !important;
+          }
+          video::-webkit-media-controls-time-remaining-display {
+            display: none !important;
+          }
+          video::-webkit-media-controls-mute-button {
+            display: none !important;
+          }
+          video::-webkit-media-controls-volume-slider {
+            display: none !important;
+          }
+          video::-webkit-media-controls-fullscreen-button {
+            display: none !important;
+          }
+          /* Android Chrome specific */
+          video::-webkit-media-controls-fullscreen-button-container {
+            display: none !important;
+          }
+          /* Additional mobile browser support */
           @supports (-webkit-touch-callout: none) {
             video::-webkit-media-controls-panel {
               display: none !important;
@@ -857,23 +896,24 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               pointer-events: none !important;
               visibility: hidden !important;
             }
-            video::-webkit-media-controls-timeline {
-              display: none !important;
+          }
+          /* Ensure no controls show on any mobile device */
+          @media (max-width: 767px) {
+            video {
+              -webkit-appearance: none !important;
             }
-            video::-webkit-media-controls-current-time-display {
+            video::-webkit-media-controls,
+            video::-webkit-media-controls-enclosure,
+            video::-webkit-media-controls-panel,
+            video::-webkit-media-controls-play-button,
+            video::-webkit-media-controls-start-playback-button,
+            video::-webkit-media-controls-overlay-play-button {
               display: none !important;
-            }
-            video::-webkit-media-controls-time-remaining-display {
-              display: none !important;
-            }
-            video::-webkit-media-controls-mute-button {
-              display: none !important;
-            }
-            video::-webkit-media-controls-volume-slider {
-              display: none !important;
-            }
-            video::-webkit-media-controls-fullscreen-button {
-              display: none !important;
+              opacity: 0 !important;
+              pointer-events: none !important;
+              visibility: hidden !important;
+              width: 0 !important;
+              height: 0 !important;
             }
           }
         `
@@ -1026,8 +1066,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 loop={false}
                 muted
                 playsInline
-                webkit-playsinline="true"
-                x-webkit-airplay="deny"
                 controls={false}
                 disablePictureInPicture
                 disableRemotePlayback
@@ -1148,6 +1186,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     pointerEvents: "none",
                     WebkitAppearance: "none",
                     WebkitTapHighlightColor: "transparent",
+                    background: "transparent",
+                    objectFit: "cover",
                   }}
                   onLoadedData={(e) => {
                     const vid = e.currentTarget;
