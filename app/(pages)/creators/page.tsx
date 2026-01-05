@@ -74,8 +74,8 @@ export default function CreatorsPage() {
         <AboutProduct
           boxData={[
             { video: "/videos/upload.webm", title: "Publish", x: 15.055, stackedVideo: "/videos/upload.mp4" },
-            { video: "/videos/dollar.webm", title: "Monetize", x: 391.754, stackedVideo: "/videos/dollar.mp4" },
-            { video: "/videos/graph.webm", title: "Distribute", x: 767.027, stackedVideo: "/videos/graph.mp4" },
+            { video: "/videos/graph.webm", title: "Distribute", x: 391.754, stackedVideo: "/videos/graph.mp4" },
+            { video: "/videos/dollar.webm", title: "Monetize", x: 767.027, stackedVideo: "/videos/dollar.mp4" },
           ]}
           cardData={[
             {
@@ -86,21 +86,22 @@ export default function CreatorsPage() {
               iconPath: "",
             },
             {
-              title: "Monetize",
-              subtitle: "",
-              description:
-                "List your AI tool as a standalone product, set your price, and start earning recurring revenue without building a full SaaS or handling payments yourself.",
-              iconPath: "",
-            },
-            {
               title: "Distribute",
               subtitle: "",
               description:
                 "Reach builders, businesses, and creators actively looking for AI solutions, without spending time on marketing, SEO, or cold outreach.",
               iconPath: "",
             },
+            {
+              title: "Monetize",
+              subtitle: "",
+              description:
+                "List your AI tool as a standalone product, set your price, and start earning recurring revenue without building a full SaaS or handling payments yourself.",
+              iconPath: "",
+            },
           ]}
           features={creatorFeatures}
+          descriptionText="A platform to publish, distribute, and grow AI tools, with real users and real revenue."
         />
         <FAQ />
         <Footer />

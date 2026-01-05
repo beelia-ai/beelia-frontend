@@ -57,7 +57,7 @@ const DEFAULT_CARD_DATA = [
       "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0",
   },
   {
-    title: "Safety",
+    title: "Trust",
     subtitle: "",
     description:
       "Adopt AI with confidence. Every tool and creator goes through a verification process, with clear information on access, usage, and ownership.",
@@ -76,16 +76,16 @@ const DEFAULT_BOX_DATA = [
     stackedVideo: "/videos/magnify.mp4",
   },
   {
-    video: "/videos/shield.webm",
-    title: "Safety",
-    x: 391.754,
-    stackedVideo: "/videos/shield.mp4",
-  },
-  {
     video: "/videos/bell.webm",
     title: "Subscribe",
-    x: 767.027,
+    x: 391.754,
     stackedVideo: "/videos/bell.mp4",
+  },
+  {
+    video: "/videos/shield.webm",
+    title: "Trust",
+    x: 767.027,
+    stackedVideo: "/videos/shield.mp4",
   },
 ];
 
@@ -107,6 +107,7 @@ interface AboutProductProps {
   boxData?: BoxData[];
   cardData?: CardData[];
   features?: FeatureData[];
+  descriptionText?: string;
 }
 
 // Pre-calculated stroke geometry to avoid hydration mismatch
@@ -190,6 +191,7 @@ export function AboutProduct({
   boxData = DEFAULT_BOX_DATA,
   cardData = DEFAULT_CARD_DATA,
   features,
+  descriptionText = "A single place to discover, trust, and access AI tools, without setup, guesswork, or fragmentation",
 }: AboutProductProps = {}) {
   const windowWidth = useWindowWidth();
   // Calculate responsive scale factor for mobile bottom lines
@@ -474,8 +476,7 @@ export function AboutProduct({
                 opacity: 0.7,
               }}
             >
-              A single place to discover, trust, and access AI tools, without
-              setup, guesswork, or fragmentation
+              {descriptionText}
             </p>
           </div>
         </motion.div>
@@ -820,12 +821,12 @@ export function AboutProduct({
               // Map box titles to mobile positions (users page titles)
               if (box.title === "Discover" || box.title === "Publish") {
                 boxX = STROKE_GEOMETRY.mobile.leftX;
-              } else if (box.title === "Safety" || box.title === "Monetize") {
-                boxX = STROKE_GEOMETRY.mobile.centerX;
               } else if (
                 box.title === "Subscribe" ||
                 box.title === "Distribute"
               ) {
+                boxX = STROKE_GEOMETRY.mobile.centerX;
+              } else if (box.title === "Trust" || box.title === "Monetize") {
                 boxX = STROKE_GEOMETRY.mobile.rightX;
               } else {
                 // Fallback: use index to determine position
@@ -1062,8 +1063,7 @@ export function AboutProduct({
                 opacity: 0.7,
               }}
             >
-              Powerhouse of talent and dedication, we tackle challenges head-on
-              and celebrate our collective achievements
+              The team behind Beelia has spent years building, scaling, and supporting successful technology products, and brings that experience into every part of the platform.
             </p>
           </div>
         </motion.div>

@@ -186,7 +186,10 @@ export function Footer() {
               </p>
 
               {/* Powered By */}
-              <p
+              <a
+                href="https://cesno.eu"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   fontFamily: "var(--font-outfit), sans-serif",
                   fontWeight: 100,
@@ -198,10 +201,13 @@ export function Footer() {
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   color: "transparent",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                  display: "inline-block",
                 }}
               >
                 Powered by <b>CESNO</b>
-              </p>
+              </a>
             </div>
 
             {/* Right Side - Links */}

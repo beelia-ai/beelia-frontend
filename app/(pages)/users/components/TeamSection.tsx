@@ -131,8 +131,7 @@ export function TeamSection() {
             maxWidth: windowWidth < 768 ? "90vw" : "600px",
           }}
         >
-          —powerhouse of talent and dedication, we tackle challenges head-on
-          and celebrate our collective achievements
+          The team behind Beelia has spent years building, scaling, and supporting successful technology products, and brings that experience into every part of the platform.
         </p>
       </div>
     </motion.div>

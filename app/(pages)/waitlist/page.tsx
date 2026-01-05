@@ -883,7 +883,7 @@ function WaitlistHero() {
                       letterSpacing: "-0.02em",
                     }}
                   >
-                    Q1 &apos;25
+                    Q2 &apos;26
                   </p>
                   <p
                     className="text-white/30"
