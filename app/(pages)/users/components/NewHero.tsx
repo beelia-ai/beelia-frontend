@@ -134,6 +134,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         // Keep the 35px offset after transition completes
         transitionOffset = 35;
       }
+      
     }
     // Desktop: transitionOffset remains 0, so globe maintains its Y position
 
@@ -738,7 +739,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   // Desktop: calc(128px + 182px - 210px) = 100px
   // Mobile: reduced spacing from top (simplified since trace lines are hidden)
   const globeTop = isMobile
-    ? "80px" // Moved higher
+    ? "120px" // Moved down to prevent overlap with team section descriptions
     : "calc(128px + 182px - 210px)";
 
   // Circular arrangement for mobile videos
@@ -808,23 +809,72 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
   return (
     <>
-      {/* CSS to hide default video play button on mobile */}
+      {/* CSS to hide default video play button on mobile - Enhanced for iOS */}
       <style dangerouslySetInnerHTML={{
         __html: `
+          video {
+            -webkit-appearance: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
           video::-webkit-media-controls {
             display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
           }
           video::-webkit-media-controls-enclosure {
             display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
           }
           video::-webkit-media-controls-play-button {
             display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            -webkit-appearance: none !important;
           }
           video::-webkit-media-controls-start-playback-button {
             display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            -webkit-appearance: none !important;
           }
-          video::--webkit-media-controls-overlay-play-button {
+          video::-webkit-media-controls-overlay-play-button {
             display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            visibility: hidden !important;
+            -webkit-appearance: none !important;
+          }
+          /* Additional iOS-specific hiding */
+          @supports (-webkit-touch-callout: none) {
+            video::-webkit-media-controls-panel {
+              display: none !important;
+              opacity: 0 !important;
+              pointer-events: none !important;
+              visibility: hidden !important;
+            }
+            video::-webkit-media-controls-timeline {
+              display: none !important;
+            }
+            video::-webkit-media-controls-current-time-display {
+              display: none !important;
+            }
+            video::-webkit-media-controls-time-remaining-display {
+              display: none !important;
+            }
+            video::-webkit-media-controls-mute-button {
+              display: none !important;
+            }
+            video::-webkit-media-controls-volume-slider {
+              display: none !important;
+            }
+            video::-webkit-media-controls-fullscreen-button {
+              display: none !important;
+            }
           }
         `
       }} />
@@ -880,6 +930,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   loop
                   muted
                   playsInline
+                  controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
                   preload="none"
                   className={`${
                     isMobile ? "w-[280px] h-[280px]" : "w-[444px] h-[444px]"
@@ -888,6 +941,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     opacity: beeliaOpacity,
                     willChange: "opacity",
                     background: "transparent",
+                    pointerEvents: "none",
+                    WebkitAppearance: "none",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                 >
                   <source src="/videos/past.webm" type="video/webm" />
@@ -920,6 +976,11 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 loop
                 muted
                 playsInline
+                webkit-playsinline="true"
+                x-webkit-airplay="deny"
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
                 preload="none"
                 className={`${
                   isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
@@ -928,6 +989,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   opacity: presentVideoOpacity,
                   willChange: "opacity",
                   background: "transparent",
+                  pointerEvents: "none",
+                  WebkitAppearance: "none",
+                  WebkitTapHighlightColor: "transparent",
                 }}
               >
                 <source src="/videos/present.webm" type="video/webm" />
@@ -962,6 +1026,11 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 loop={false}
                 muted
                 playsInline
+                webkit-playsinline="true"
+                x-webkit-airplay="deny"
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
                 preload="none"
                 className={`${
                   isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
@@ -971,6 +1040,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   willChange: "opacity",
                   marginLeft: "4px",
                   background: "transparent",
+                  pointerEvents: "none",
+                  WebkitAppearance: "none",
+                  WebkitTapHighlightColor: "transparent",
                 }}
               >
                 <source
@@ -1010,6 +1082,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                   loop
                   muted
                   playsInline
+                  controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
                   preload="none"
                   className={`${
                     isMobile ? "w-[280px] h-[280px]" : "w-[400px] h-[400px]"
@@ -1019,6 +1094,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     willChange: "opacity",
                     marginLeft: "4px",
                     background: "transparent",
+                    pointerEvents: "none",
+                    WebkitAppearance: "none",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                 >
                   <source src="/videos/future-main.webm" type="video/webm" />
@@ -1068,6 +1146,8 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                     left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
                     top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
                     pointerEvents: "none",
+                    WebkitAppearance: "none",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                   onLoadedData={(e) => {
                     const vid = e.currentTarget;
