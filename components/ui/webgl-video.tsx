@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import * as THREE from "three";
+import { createWebGLRenderer, disposeRenderer } from "@/lib/webgl-context";
 
 interface WebGLVideoProps {
   /** WebM source for browsers that support alpha (Chrome, Firefox) */
@@ -21,32 +23,30 @@ interface WebGLVideoProps {
   preload?: "auto" | "none" | "metadata";
 }
 
-// Vertex shader - simple passthrough
-const vertexShaderSource = `
-  attribute vec2 a_position;
-  attribute vec2 a_texCoord;
-  varying vec2 v_texCoord;
+// Three.js vertex shader - simple passthrough
+const vertexShader = `
+  varying vec2 vUv;
   
   void main() {
-    gl_Position = vec4(a_position, 0.0, 1.0);
-    v_texCoord = a_texCoord;
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `;
 
 // Fragment shader for stacked alpha (top half = color, bottom half = alpha)
 const fragmentShaderStackedAlpha = `
   precision mediump float;
-  varying vec2 v_texCoord;
-  uniform sampler2D u_video;
+  varying vec2 vUv;
+  uniform sampler2D uVideo;
   
   void main() {
     // Sample color from top half
-    vec2 colorCoord = vec2(v_texCoord.x, v_texCoord.y * 0.5);
-    vec4 color = texture2D(u_video, colorCoord);
+    vec2 colorCoord = vec2(vUv.x, vUv.y * 0.5);
+    vec4 color = texture2D(uVideo, colorCoord);
     
     // Sample alpha from bottom half (use red channel as alpha)
-    vec2 alphaCoord = vec2(v_texCoord.x, 0.5 + v_texCoord.y * 0.5);
-    float alpha = texture2D(u_video, alphaCoord).r;
+    vec2 alphaCoord = vec2(vUv.x, 0.5 + vUv.y * 0.5);
+    float alpha = texture2D(uVideo, alphaCoord).r;
     
     gl_FragColor = vec4(color.rgb, alpha);
   }
@@ -55,54 +55,13 @@ const fragmentShaderStackedAlpha = `
 // Fragment shader for regular video (passthrough)
 const fragmentShaderRegular = `
   precision mediump float;
-  varying vec2 v_texCoord;
-  uniform sampler2D u_video;
+  varying vec2 vUv;
+  uniform sampler2D uVideo;
   
   void main() {
-    gl_FragColor = texture2D(u_video, v_texCoord);
+    gl_FragColor = texture2D(uVideo, vUv);
   }
 `;
-
-function createShader(
-  gl: WebGLRenderingContext,
-  type: number,
-  source: string
-): WebGLShader | null {
-  const shader = gl.createShader(type);
-  if (!shader) return null;
-
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error("Shader compile error:", gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
-  }
-
-  return shader;
-}
-
-function createProgram(
-  gl: WebGLRenderingContext,
-  vertexShader: WebGLShader,
-  fragmentShader: WebGLShader
-): WebGLProgram | null {
-  const program = gl.createProgram();
-  if (!program) return null;
-
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error("Program link error:", gl.getProgramInfoLog(program));
-    gl.deleteProgram(program);
-    return null;
-  }
-
-  return program;
-}
 
 function isIOS(): boolean {
   if (typeof window === "undefined") return false;
@@ -136,9 +95,12 @@ export function WebGLVideo({
   const internalVideoRef = useRef<HTMLVideoElement>(null);
   // Use external ref if provided, otherwise use internal ref
   const videoRef = externalVideoRef || internalVideoRef;
-  const glRef = useRef<WebGLRenderingContext | null>(null);
-  const programRef = useRef<WebGLProgram | null>(null);
-  const textureRef = useRef<WebGLTexture | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.OrthographicCamera | null>(null);
+  const meshRef = useRef<THREE.Mesh | null>(null);
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
+  const videoTextureRef = useRef<THREE.VideoTexture | null>(null);
   const rafRef = useRef<number>(0);
   const [useStackedAlpha, setUseStackedAlpha] = useState(false);
   const [useNativeVideo, setUseNativeVideo] = useState(false);
@@ -209,89 +171,60 @@ export function WebGLVideo({
     }
   }, [webmSrc, stackedAlphaSrc, hevcAlphaSrc]);
 
-  // Initialize WebGL
+  // Initialize Three.js WebGL
   const initWebGL = useCallback(() => {
     if (!canvasRef.current || !videoRef.current || useNativeVideo) return;
 
     const canvas = canvasRef.current;
-    const gl = canvas.getContext("webgl", {
-      alpha: true,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
+    const video = videoRef.current;
+
+    // Create Three.js renderer using shared utility
+    const renderer = createWebGLRenderer(canvas);
+    rendererRef.current = renderer;
+
+    // Create scene and camera
+    const scene = new THREE.Scene();
+    sceneRef.current = scene;
+
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    cameraRef.current = camera;
+
+    // Create video texture
+    const videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.format = THREE.RGBAFormat;
+    videoTextureRef.current = videoTexture;
+
+    // Create shader material
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader: useStackedAlpha ? fragmentShaderStackedAlpha : fragmentShaderRegular,
+      uniforms: {
+        uVideo: { value: videoTexture },
+      },
+      transparent: true,
+      depthWrite: false,
     });
+    materialRef.current = material;
 
-    if (!gl) {
-      console.warn("WebGL not supported, falling back to native video");
-      setUseNativeVideo(true);
-      return;
-    }
-
-    glRef.current = gl;
-
-    // Create shaders
-    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(
-      gl,
-      gl.FRAGMENT_SHADER,
-      useStackedAlpha ? fragmentShaderStackedAlpha : fragmentShaderRegular
-    );
-
-    if (!vertexShader || !fragmentShader) return;
-
-    // Create program
-    const program = createProgram(gl, vertexShader, fragmentShader);
-    if (!program) return;
-
-    programRef.current = program;
-    gl.useProgram(program);
-
-    // Set up geometry (full-screen quad)
-    const positions = new Float32Array([
-      -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1,
-    ]);
-
-    const texCoords = new Float32Array([0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0]);
-
-    // Position buffer
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-
-    const positionLocation = gl.getAttribLocation(program, "a_position");
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-    // TexCoord buffer
-    const texCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, texCoords, gl.STATIC_DRAW);
-
-    const texCoordLocation = gl.getAttribLocation(program, "a_texCoord");
-    gl.enableVertexAttribArray(texCoordLocation);
-    gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-    // Create texture
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-
-    textureRef.current = texture;
-
-    // Enable alpha blending
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // Create full-screen quad
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    meshRef.current = mesh;
+    scene.add(mesh);
   }, [useStackedAlpha, useNativeVideo]);
 
   // Render loop
   const render = useCallback(() => {
-    const gl = glRef.current;
+    const renderer = rendererRef.current;
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    const scene = sceneRef.current;
+    const camera = cameraRef.current;
+    const videoTexture = videoTextureRef.current;
 
-    if (!gl || !video || !canvas) {
+    if (!renderer || !video || !canvas || !scene || !camera) {
       rafRef.current = requestAnimationFrame(render);
       return;
     }
@@ -313,21 +246,20 @@ export function WebGLVideo({
       if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
         canvas.width = displayWidth;
         canvas.height = displayHeight;
-        gl.viewport(0, 0, displayWidth, displayHeight);
+        renderer.setSize(displayWidth, displayHeight);
       }
     } else {
       rafRef.current = requestAnimationFrame(render);
       return;
     }
 
-    // Update texture with video frame
-    gl.bindTexture(gl.TEXTURE_2D, textureRef.current);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+    // Update video texture if needed
+    if (videoTexture && video.readyState >= 2) {
+      videoTexture.needsUpdate = true;
+    }
 
-    // Clear and draw
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    // Render scene
+    renderer.render(scene, camera);
 
     rafRef.current = requestAnimationFrame(render);
   }, [useStackedAlpha]);
@@ -376,6 +308,32 @@ export function WebGLVideo({
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
+
+      // Cleanup Three.js resources
+      if (videoTextureRef.current) {
+        videoTextureRef.current.dispose();
+        videoTextureRef.current = null;
+      }
+
+      if (materialRef.current) {
+        materialRef.current.dispose();
+        materialRef.current = null;
+      }
+
+      if (meshRef.current) {
+        if (meshRef.current.geometry) {
+          meshRef.current.geometry.dispose();
+        }
+        if (sceneRef.current) {
+          sceneRef.current.remove(meshRef.current);
+        }
+        meshRef.current = null;
+      }
+
+      disposeRenderer(rendererRef.current);
+      rendererRef.current = null;
+      sceneRef.current = null;
+      cameraRef.current = null;
     };
   }, [initWebGL, render, useNativeVideo, autoPlay, userInteracted]);
 

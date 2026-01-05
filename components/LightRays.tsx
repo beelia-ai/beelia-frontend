@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import { Renderer, Program, Triangle, Mesh } from 'ogl';
+import * as THREE from 'three';
+import { createWebGLRenderer, disposeRenderer } from '@/lib/webgl-context';
 
 export type RaysOrigin =
   | 'top-center'
@@ -97,12 +98,14 @@ const LightRays: React.FC<LightRaysProps> = ({
   className = ''
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const uniformsRef = useRef<Uniforms | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.OrthographicCamera | null>(null);
+  const meshRef = useRef<THREE.Mesh | null>(null);
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
   const animationIdRef = useRef<number | null>(null);
-  const meshRef = useRef<Mesh | null>(null);
   const cleanupFunctionRef = useRef<(() => void) | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -143,27 +146,34 @@ const LightRays: React.FC<LightRaysProps> = ({
 
       if (!containerRef.current) return;
 
-      const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
-        alpha: true
-      });
-      rendererRef.current = renderer;
-
-      const gl = renderer.gl;
-      gl.canvas.style.width = '100%';
-      gl.canvas.style.height = '100%';
+      // Create canvas
+      const canvas = document.createElement('canvas');
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.display = 'block';
 
       while (containerRef.current.firstChild) {
         containerRef.current.removeChild(containerRef.current.firstChild);
       }
-      containerRef.current.appendChild(gl.canvas);
+      containerRef.current.appendChild(canvas);
 
+      // Create Three.js renderer using shared utility
+      const renderer = createWebGLRenderer(canvas);
+      rendererRef.current = renderer;
+
+      // Create scene and camera
+      const scene = new THREE.Scene();
+      sceneRef.current = scene;
+
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+      cameraRef.current = camera;
+
+      // Three.js provides position (vec3) and uv (vec2) automatically - do NOT redeclare them
       const vert = `
-attribute vec2 position;
 varying vec2 vUv;
 void main() {
-  vUv = position * 0.5 + 0.5;
-  gl_Position = vec4(position, 0.0, 1.0);
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }`;
 
       const frag = `precision highp float;
@@ -279,29 +289,34 @@ void main() {
         noiseAmount: { value: noiseAmount },
         distortion: { value: distortion }
       };
-      uniformsRef.current = uniforms;
 
-      const geometry = new Triangle(gl);
-      const program = new Program(gl, {
-        vertex: vert,
-        fragment: frag,
-        uniforms
+      // Create Three.js shader material
+      const material = new THREE.ShaderMaterial({
+        vertexShader: vert,
+        fragmentShader: frag,
+        uniforms: uniforms as any,
+        transparent: true,
+        depthWrite: false,
       });
-      const mesh = new Mesh(gl, { geometry, program });
+      materialRef.current = material;
+
+      // Create full-screen quad geometry
+      const geometry = new THREE.PlaneGeometry(2, 2);
+      const mesh = new THREE.Mesh(geometry, material);
       meshRef.current = mesh;
+      scene.add(mesh);
 
       const updatePlacement = () => {
-        if (!containerRef.current || !renderer) return;
-
-        renderer.dpr = Math.min(window.devicePixelRatio, 2);
+        if (!containerRef.current || !renderer || !materialRef.current) return;
 
         const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
         renderer.setSize(wCSS, hCSS);
 
-        const dpr = renderer.dpr;
+        const dpr = Math.min(window.devicePixelRatio, 2);
         const w = wCSS * dpr;
         const h = hCSS * dpr;
 
+        const uniforms = materialRef.current.uniforms as any;
         uniforms.iResolution.value = [w, h];
 
         const { anchor, dir } = getAnchorAndDir(raysOrigin, w, h);
@@ -315,7 +330,7 @@ void main() {
       let lastFrameTime = 0;
 
       const loop = (t: number) => {
-        if (!rendererRef.current || !uniformsRef.current || !meshRef.current) {
+        if (!rendererRef.current || !materialRef.current || !sceneRef.current || !cameraRef.current) {
           return;
         }
 
@@ -327,6 +342,7 @@ void main() {
         }
         lastFrameTime = t - (elapsed % frameInterval);
 
+        const uniforms = materialRef.current.uniforms as any;
         uniforms.iTime.value = t * 0.001;
 
         if (followMouse && mouseInfluence > 0.0) {
@@ -339,7 +355,7 @@ void main() {
         }
 
         try {
-          renderer.render({ scene: mesh });
+          rendererRef.current.render(sceneRef.current, cameraRef.current);
           animationIdRef.current = requestAnimationFrame(loop);
         } catch (error) {
           return;
@@ -358,25 +374,26 @@ void main() {
 
         window.removeEventListener('resize', updatePlacement);
 
-        if (renderer) {
-          try {
-            const canvas = renderer.gl.canvas;
-            const loseContextExt = renderer.gl.getExtension('WEBGL_lose_context');
-            if (loseContextExt) {
-              loseContextExt.loseContext();
-            }
-
-            if (canvas && canvas.parentNode) {
-              canvas.parentNode.removeChild(canvas);
-            }
-          } catch (error) {
-            // Error during cleanup - ignore
-          }
+        // Cleanup Three.js resources
+        if (materialRef.current) {
+          materialRef.current.dispose();
+          materialRef.current = null;
         }
 
+        if (meshRef.current) {
+          if (meshRef.current.geometry) {
+            meshRef.current.geometry.dispose();
+          }
+          if (sceneRef.current) {
+            sceneRef.current.remove(meshRef.current);
+          }
+          meshRef.current = null;
+        }
+
+        disposeRenderer(rendererRef.current);
         rendererRef.current = null;
-        uniformsRef.current = null;
-        meshRef.current = null;
+        sceneRef.current = null;
+        cameraRef.current = null;
       };
     };
 
@@ -405,27 +422,27 @@ void main() {
   ]);
 
   useEffect(() => {
-    if (!uniformsRef.current || !containerRef.current || !rendererRef.current) return;
+    if (!materialRef.current || !containerRef.current || !rendererRef.current) return;
 
-    const u = uniformsRef.current;
+    const uniforms = materialRef.current.uniforms as any;
     const renderer = rendererRef.current;
 
-    u.raysColor.value = hexToRgb(raysColor);
-    u.raysSpeed.value = raysSpeed;
-    u.lightSpread.value = lightSpread;
-    u.rayLength.value = rayLength;
-    u.pulsating.value = pulsating ? 1.0 : 0.0;
-    u.fadeDistance.value = fadeDistance;
-    u.saturation.value = saturation;
-    u.mouseInfluence.value = mouseInfluence;
-    u.noiseAmount.value = noiseAmount;
-    u.distortion.value = distortion;
+    uniforms.raysColor.value = hexToRgb(raysColor);
+    uniforms.raysSpeed.value = raysSpeed;
+    uniforms.lightSpread.value = lightSpread;
+    uniforms.rayLength.value = rayLength;
+    uniforms.pulsating.value = pulsating ? 1.0 : 0.0;
+    uniforms.fadeDistance.value = fadeDistance;
+    uniforms.saturation.value = saturation;
+    uniforms.mouseInfluence.value = mouseInfluence;
+    uniforms.noiseAmount.value = noiseAmount;
+    uniforms.distortion.value = distortion;
 
     const { clientWidth: wCSS, clientHeight: hCSS } = containerRef.current;
-    const dpr = renderer.dpr;
+    const dpr = Math.min(window.devicePixelRatio, 2);
     const { anchor, dir } = getAnchorAndDir(raysOrigin, wCSS * dpr, hCSS * dpr);
-    u.rayPos.value = anchor;
-    u.rayDir.value = dir;
+    uniforms.rayPos.value = anchor;
+    uniforms.rayDir.value = dir;
   }, [
     raysColor,
     raysSpeed,

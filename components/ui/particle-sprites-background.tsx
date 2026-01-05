@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { cn } from '@/lib/utils'
+import { createWebGLRenderer, disposeRenderer } from '@/lib/webgl-context'
 
 export interface ParticleSpritesBackgroundProps {
   readonly className?: string
@@ -97,12 +98,13 @@ export function ParticleSpritesBackground({
     camera.position.z = 1000
     cameraRef.current = camera
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    renderer.setPixelRatio(window.devicePixelRatio)
+    // Renderer setup - create canvas first
+    const canvas = document.createElement('canvas')
+    containerRef.current.appendChild(canvas)
+    
+    // Use shared renderer utility
+    const renderer = createWebGLRenderer(canvas)
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setClearColor(0x000000, 0)
-    containerRef.current.appendChild(renderer.domElement)
     rendererRef.current = renderer
 
     // Create geometry with vertices
@@ -281,11 +283,9 @@ export function ParticleSpritesBackground({
         particle.geometry.dispose()
       })
 
-      // Dispose of renderer
-      if (rendererRef.current) {
-        rendererRef.current.dispose()
-        rendererRef.current.domElement.remove()
-      }
+      // Dispose of renderer using shared utility
+      disposeRenderer(rendererRef.current)
+      rendererRef.current = null
     }
   }, [particleCount, fogDensity, colors, sizes, followMouse, mouseSensitivity, cycleColors, speed])
 
