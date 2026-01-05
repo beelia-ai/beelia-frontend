@@ -216,6 +216,7 @@ export function AboutProduct({
 
   // Track hover state for each box
   const [hoveredBox, setHoveredBox] = useState<string | null>(null);
+  const [isCardsSectionVisible, setIsCardsSectionVisible] = useState(false);
 
   // Track absolute scroll Y position for scale animation
   const { scrollY: scrollYMotion } = useScroll();
@@ -343,6 +344,11 @@ export function AboutProduct({
 
   useMotionValueEvent(openingProgress, "change", (latest) => {
     setOpeningProgressValue(latest);
+  });
+
+  // Track when cards section is visible (boxesOpacity > 0)
+  useMotionValueEvent(boxesOpacity, "change", (latest) => {
+    setIsCardsSectionVisible(latest > 0);
   });
 
   // Third section animations - appear at 3000px scroll
@@ -1003,6 +1009,39 @@ export function AboutProduct({
             );
           })}
         </motion.div>
+        
+        {/* Single mobile tooltip - "tap to read more" - centered in viewport, only shows in cards section when no card is expanded */}
+        {isMobile && isCardsSectionVisible && (
+          <motion.div
+            className="fixed left-1/2 pointer-events-none"
+            style={{
+              top: isMobile 
+                ? `calc(${globeBottomMobile}px + 107px + 150px)` // Position below cards (globe bottom + card top + card height + spacing)
+                : "calc(50vh + 200px)",
+              transform: "translateX(-50%)",
+              whiteSpace: "nowrap",
+              zIndex: 50,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: hoveredBox ? 0 : 1
+            }}
+            transition={{ delay: 1, duration: 0.5 }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-outfit), Outfit, sans-serif",
+                fontSize: "11px",
+                color: "rgba(255, 255, 255, 0.7)",
+                fontWeight: 300,
+                letterSpacing: "0.02em",
+                textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
+              }}
+            >
+              tap to read more
+            </span>
+          </motion.div>
+        )}
 
         {/* Features Grid Section - positioned below the fixed elements */}
         {/* Position FeaturesGrid to appear around 800px scroll (600px before exit animations start) */}
