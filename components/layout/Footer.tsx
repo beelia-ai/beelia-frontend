@@ -68,24 +68,7 @@ export function Footer() {
           height: 0 !important;
         }
       `}</style>
-      <footer
-        id="footer"
-        className="relative w-full"
-        style={{ overflowX: "clip", overflowY: isMobile ? "visible" : "clip" }}
-      >
-        {/* Noise Names Image - Overlay right above blackhole */}
-        {/* <div className="absolute bottom-0 left-0 right-0 w-full z-20 pointer-events-none opacity-30">
-          <Image
-            src="/images/noise-overlay-image.png"
-            alt="Noise names overlay"
-            width={1920}
-            height={400}
-            className="w-full h-auto object-cover"
-            style={{ objectPosition: "bottom" }}
-            priority
-          />
-        </div> */}
-
+      <footer id="footer" className="relative w-full">
         {/* Content - BEELIA and sections in same flex column */}
         <div
           className="relative z-20 flex flex-col px-4 sm:px-6 md:px-16 lg:px-24 pb-8 md:pb-12"
@@ -264,7 +247,6 @@ export function Footer() {
               </div>
             </div>
           </div>
-
         </div>
       </footer>
     </>
