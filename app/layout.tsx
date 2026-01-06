@@ -36,12 +36,28 @@ const editorsNoteItalic = localFont({
   variable: "--font-editors-note-italic",
   display: "swap",
   preload: true,
+  fallback: ["serif"],
+  adjustFontFallback: false,
 });
 
 const editorsNoteMediumItalic = localFont({
-  src: "./fonts/EditorsNote-MediumItalic.otf",
+  src: [
+    {
+      path: "./fonts/EditorsNote-MediumItalic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "./fonts/EditorsNote-MediumItalic.otf",
+      weight: "500",
+      style: "italic",
+    },
+  ],
   variable: "--font-editors-note-medium-italic",
   display: "swap",
+  preload: true,
+  fallback: ["serif"],
+  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {

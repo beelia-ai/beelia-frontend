@@ -31,12 +31,6 @@ import {
   FUTURE_TRANSITION_RESET_THRESHOLD,
 } from "@/lib/constants";
 
-// #region agent log
-const heroDebugLog = (msg: string, data: Record<string, unknown>) => {
-  console.log(`[DEBUG-HERO] ${msg}`, JSON.stringify(data));
-};
-// #endregion
-
 // iOS detection helper
 function isIOS(): boolean {
   if (typeof window === "undefined") return false;
@@ -208,15 +202,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
   // Track when animation starts to disable hover effects and update trace lines retraction
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // #region agent log
-    if (latest > 0 && latest < 0.1) {
-      heroDebugLog("ScrollYProgress changed", {
-        scrollYProgress: latest,
-        hypothesisId: "D",
-      });
-    }
-    // #endregion
-
     // Update hero scroll progress value for dots fade animation
     setHeroScrollProgressValue(latest);
 
@@ -621,13 +606,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   useEffect(() => {
     setIsMounted(true);
     setIsIOSDevice(isIOS());
-    // #region agent log
-    heroDebugLog("Hero mounted", {
-      isIOS: isIOS(),
-      windowHeight: window.innerHeight,
-      windowWidth: window.innerWidth,
-    });
-    // #endregion
   }, []);
 
   // Ensure mobile videos play when mounted
@@ -659,20 +637,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   // This is the KEY performance optimization - videos only play when user can see them
   useEffect(() => {
     if (!heroRef.current) return;
-
-    // #region agent log
-    const heroEl = heroRef.current;
-    const heroRect = heroEl.getBoundingClientRect();
-    const heroStyles = getComputedStyle(heroEl);
-    heroDebugLog("Hero section dimensions", {
-      height: heroRect.height,
-      width: heroRect.width,
-      overflow: heroStyles.overflow,
-      position: heroStyles.position,
-      touchAction: heroStyles.touchAction,
-      hypothesisId: "A-B",
-    });
-    // #endregion
 
     const observer = new IntersectionObserver(
       (entries) => {

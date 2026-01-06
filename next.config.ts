@@ -33,13 +33,21 @@ const nextConfig: NextConfig = {
       });
     }
     
-    // Add font caching headers for better LCP
+    // Add font caching headers for better LCP and CORS for Safari
     headers.push({
       source: '/fonts/:path*',
       headers: [
         {
           key: 'Cache-Control',
           value: 'public, max-age=31536000, immutable',
+        },
+        {
+          key: 'Access-Control-Allow-Origin',
+          value: '*',
+        },
+        {
+          key: 'Access-Control-Allow-Methods',
+          value: 'GET',
         },
       ],
     });

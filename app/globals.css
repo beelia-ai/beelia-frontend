@@ -93,6 +93,49 @@
     /* Enable smooth scrolling on mobile */
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+    /* Safari font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Ensure Safari properly applies font-family variables */
+  /* Safari fallback: use direct font-family if CSS variable fails */
+  .font-editors-note-italic {
+    font-family: var(--font-editors-note-italic, 'Editors Note'), serif;
+    font-style: italic;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  .font-editors-note-medium-italic {
+    font-family: var(--font-editors-note-medium-italic, 'Editors Note'), serif;
+    font-style: italic;
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Safari-specific: Add explicit @font-face with the font name */
+  @supports (-webkit-appearance: none) {
+    @font-face {
+      font-family: 'Editors Note';
+      src: url('/fonts/EditorsNote-Italic.woff2') format('woff2'),
+           url('/fonts/EditorsNote-Italic.otf') format('opentype');
+      font-weight: 400;
+      font-style: italic;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'Editors Note';
+      src: url('/fonts/EditorsNote-MediumItalic.woff2') format('woff2'),
+           url('/fonts/EditorsNote-MediumItalic.otf') format('opentype');
+      font-weight: 500;
+      font-style: italic;
+      font-display: swap;
+    }
   }
   html {
     /* Ensure html allows vertical scrolling */
