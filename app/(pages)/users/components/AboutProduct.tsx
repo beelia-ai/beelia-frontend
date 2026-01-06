@@ -349,10 +349,41 @@ export function AboutProduct({
     setOpeningProgressValue(latest);
   });
 
-  // Track when cards section is visible (boxesOpacity > 0)
+  // Track when cards section is visible (boxesOpacity > 0.7 - meaning cards are clearly visible)
+  // Only show tooltip when cards are fully visible, not during fade in/out
   useMotionValueEvent(boxesOpacity, "change", (latest) => {
-    setIsCardsSectionVisible(latest > 0);
+    // Only show when opacity is high enough (cards are clearly visible)
+    // Also check scroll position to ensure we're in the right range
+    const currentScrollY = window.scrollY;
+    const inCorrectRange = currentScrollY >= 1200 && currentScrollY < 1450;
+    setIsCardsSectionVisible(latest >= 0.7 && inCorrectRange);
   });
+
+  // Initialize cards section visibility on mount and scroll
+  // This ensures the tooltip shows even if user is already scrolled to cards section
+  useEffect(() => {
+    const checkCardsVisibility = () => {
+      const currentScrollY = window.scrollY;
+      // Cards section is fully visible when scrollY is between 1200px and 1450px
+      // (tightened range to avoid showing in FeaturesGrid/waitlist section)
+      const isVisible = currentScrollY >= 1200 && currentScrollY < 1450;
+      setIsCardsSectionVisible(isVisible);
+    };
+
+    // Check immediately on mount
+    checkCardsVisibility();
+
+    // Also check after a short delay to account for any timing issues
+    const timeoutId = setTimeout(checkCardsVisibility, 50);
+
+    // Also listen to scroll events as a backup
+    window.addEventListener("scroll", checkCardsVisibility, { passive: true });
+    
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("scroll", checkCardsVisibility);
+    };
+  }, []);
 
   // Third section animations - appear at 3000px scroll
   const thirdSectionScale = useTransform(scrollYMotion, (latest) => {
@@ -434,6 +465,17 @@ export function AboutProduct({
               visibility: hidden !important;
               width: 0 !important;
               height: 0 !important;
+            }
+            /* Ensure tooltip is visible on mobile Safari - prevent clipping */
+            body {
+              overflow-x: hidden;
+            }
+            /* Ensure fixed positioning works correctly on iOS Safari */
+            [data-tooltip-container] {
+              position: fixed !important;
+              z-index: 9999 !important;
+              -webkit-transform: translateX(-50%) !important;
+              transform: translateX(-50%) !important;
             }
           }
         `,
@@ -980,7 +1022,7 @@ export function AboutProduct({
                       className="absolute w-full px-3"
                       style={{
                         pointerEvents: isHovered ? "auto" : "none",
-                        top: isMobile ? "44px" : "60px", // paddingTop (12px/20px) + title height (20px/30px) + spacing (12px/10px)
+                        top: isMobile ? "54px" : "72px", // paddingTop (12px/20px) + title height (20px/30px) + spacing (22px/22px) - increased spacing
                         left: 0,
                         right: 0,
                       }}
@@ -1015,23 +1057,29 @@ export function AboutProduct({
           })}
         </motion.div>
 
-        {/* Single mobile tooltip - "tap to read more" - centered in viewport, only shows in cards section when no card is expanded */}
+        {/* Single mobile tooltip - "tap to read more" - positioned just below center card */}
         {isMobile && isCardsSectionVisible && (
           <motion.div
+            data-tooltip-container
             className="fixed left-1/2 pointer-events-none"
             style={{
-              top: isMobile
-                ? `calc(${globeBottomMobile}px + 107px + 150px)` // Position below cards (globe bottom + card top + card height + spacing)
-                : "calc(50vh + 200px)",
+              // Position relative to cards container: globeBottomMobile - 55px (container top) + 107px (card top) + 128px (card height) + 15px spacing + 17px extra spacing
+              top: `${globeBottomMobile - 55 + 107 + 128 + 15 + 17}px`,
+              // Center card is at centerX (391.5px) which is the center of the 783px container
+              // Since container is centered at 50%, center card is also at 50%
+              left: "50%",
               transform: "translateX(-50%)",
               whiteSpace: "nowrap",
-              zIndex: 50,
+              zIndex: 9999, // Very high z-index to ensure visibility above all content
+              WebkitTransform: "translateX(-50%)", // Safari-specific transform
+              position: "fixed", // Explicitly set position
+              willChange: "opacity", // Optimize for animations
             }}
             initial={{ opacity: 0 }}
             animate={{
               opacity: hoveredBox ? 0 : 1,
             }}
-            transition={{ delay: 1, duration: 0.5 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
           >
             <span
               style={{
@@ -1041,6 +1089,9 @@ export function AboutProduct({
                 fontWeight: 300,
                 letterSpacing: "0.02em",
                 textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
+                display: "block", // Ensure it's displayed as block
+                WebkitFontSmoothing: "antialiased", // Better text rendering on iOS
+                MozOsxFontSmoothing: "grayscale", // Better text rendering on macOS
               }}
             >
               tap to read more

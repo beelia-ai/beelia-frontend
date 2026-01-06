@@ -67,7 +67,10 @@ export default function HomePage() {
       </div>
 
       {/* Blackhole Video - z-5 to be behind particles (z-10) but scroll with page */}
-      <div className="relative z-[5]" style={{ marginTop: "-300px" }}>
+      <div
+        className="relative z-[5]"
+        style={{ marginTop: isMobile ? "0px" : "-300px" }}
+      >
         <BlackholeVideo />
       </div>
     </div>

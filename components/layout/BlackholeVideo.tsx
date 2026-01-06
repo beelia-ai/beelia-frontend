@@ -109,13 +109,13 @@ export function BlackholeVideo() {
     );
   }
 
-  // Mobile version
+  // Mobile version - positioned after footer content
   return (
     <div
       className="w-full pointer-events-none"
       style={{
         minHeight: "200px",
-        marginTop: "-80px",
+        marginTop: "0px", // No negative margin - appears after footer content
         marginBottom: "-20px",
         maxHeight: "150vh",
         overflow: "clip",

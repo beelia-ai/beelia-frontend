@@ -909,6 +909,18 @@ function WaitlistHero() {
 }
 
 export default function WaitlistPage() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
     [0, 0, 1], // Pure white - glossy white
@@ -992,7 +1004,10 @@ export default function WaitlistPage() {
       </div>
 
       {/* Blackhole Video - z-5 to be behind particles (z-10) but scroll with page */}
-      <div className="relative" style={{ zIndex: 5, marginTop: "-300px" }}>
+      <div
+        className="relative"
+        style={{ zIndex: 5, marginTop: isMobile ? "0px" : "-300px" }}
+      >
         <BlackholeVideo />
       </div>
     </main>
