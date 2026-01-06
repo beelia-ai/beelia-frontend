@@ -72,6 +72,9 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const [futureTransitionDuration, setFutureTransitionDuration] = useState<
     number | null
   >(null);
+  // Store animation controls to cancel them when scrolling back up
+  const presentFadeOutAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const futureTransitionAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
 
   // Track scroll progress for this section
   const { scrollYProgress } = useScroll({
@@ -467,15 +470,23 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       const transitionStart = PRESENT_TO_FUTURE_TRANSITION_START;
 
       if (scrollY >= transitionStart && !showFutureTransition) {
+        // Cancel any existing animations first
+        if (presentFadeOutAnimationRef.current) {
+          presentFadeOutAnimationRef.current.stop();
+        }
+        if (futureTransitionAnimationRef.current) {
+          futureTransitionAnimationRef.current.stop();
+        }
+
         // Start showing future-transition video - preload and play
         setShowFutureTransition(true);
 
         // Start time-based cross-fade animations: present fades out, future-transition fades in
-        animate(presentVideoFadeOut, 0, {
+        presentFadeOutAnimationRef.current = animate(presentVideoFadeOut, 0, {
           duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
           ease: "linear",
         });
-        animate(futureTransitionOpacity, 1, {
+        futureTransitionAnimationRef.current = animate(futureTransitionOpacity, 1, {
           duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
           ease: "linear",
         });
@@ -504,6 +515,16 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       }
 
       if (scrollY < transitionStart && showFutureTransition) {
+        // Cancel any running animations immediately
+        if (presentFadeOutAnimationRef.current) {
+          presentFadeOutAnimationRef.current.stop();
+          presentFadeOutAnimationRef.current = null;
+        }
+        if (futureTransitionAnimationRef.current) {
+          futureTransitionAnimationRef.current.stop();
+          futureTransitionAnimationRef.current = null;
+        }
+
         // Smoothly switch back to present video if scrolling back up
         // Reset future-main state immediately when scrolling back up to allow reverse transition
         if (showFutureMain) {
@@ -518,7 +539,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           // Reset future-transition video to beginning and ensure it plays
           if (futureTransitionVideoRef.current) {
             futureTransitionVideoRef.current.currentTime = 0;
-            futureTransitionVideoRef.current.play().catch(() => {});
+            futureTransitionVideoRef.current.pause();
           }
         }
 
@@ -543,10 +564,20 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           }
           // Resume present video immediately - ensure it's visible and playing
           if (phase2VideoRef.current) {
+            phase2VideoRef.current.currentTime = 0;
             phase2VideoRef.current.play().catch(() => {});
           }
         } else if (scrollY < transitionStart) {
-          // Between reset threshold and transition start: ensure videos are playing for smooth fade
+          // Between reset threshold and transition start: reverse the animations smoothly
+          // Calculate reverse progress based on scroll position
+          const reverseProgress = (transitionStart - scrollY) / (transitionStart - FUTURE_TRANSITION_RESET_THRESHOLD);
+          const clampedProgress = Math.min(1, Math.max(0, reverseProgress));
+          
+          // Set opacity values directly based on scroll position for smooth reverse
+          presentVideoFadeOut.set(clampedProgress);
+          futureTransitionOpacity.set(1 - clampedProgress);
+          
+          // Ensure videos are playing for smooth fade
           if (
             futureTransitionVideoRef.current &&
             futureTransitionVideoRef.current.paused
