@@ -114,7 +114,7 @@ export function HeroContent({
 
       {/* Title Text */}
       <h1
-        className="text-center font-editors-note-italic leading-tight px-4 md:px-0"
+        className="text-center font-editors-note-italic px-4 md:px-0"
         style={{
           fontSize: isMobile ? "52px" : "70px",
           whiteSpace: isMobile ? "normal" : "nowrap",
@@ -122,6 +122,7 @@ export function HeroContent({
           marginLeft: "calc(-50vw + 50%)",
           minHeight: isMobile ? "60px" : "80px",
           visibility: "visible",
+          lineHeight: isMobile ? "58px" : "62px",
         }}
       >
         {title}

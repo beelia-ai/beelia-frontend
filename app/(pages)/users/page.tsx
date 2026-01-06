@@ -6,6 +6,7 @@ import { AboutProduct } from "./components/AboutProduct";
 import { FAQ } from "./components/FAQ";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
+import { BlackholeVideo } from "@/components/layout/BlackholeVideo";
 import { PARTICLE_COUNT_MOBILE, PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 
 export default function HomePage() {
@@ -32,9 +33,9 @@ export default function HomePage() {
 
   return (
     <div className="relative w-full bg-transparent">
-      {/* Particle Sprites Background - reduced particles on mobile */}
+      {/* Particle Sprites Background - reduced particles on mobile - z-10 to be above blackhole (z-5) */}
       <ParticleSpritesBackground
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 z-10"
         particleCount={
           isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP
         }
@@ -46,8 +47,8 @@ export default function HomePage() {
         speed={0.3}
       />
 
-      {/* Page content */}
-      <div className="relative z-10">
+      {/* Page content - z-20 to be above particles */}
+      <div className="relative z-20">
         <NewHero
           title={
             <>
@@ -63,6 +64,11 @@ export default function HomePage() {
         <AboutProduct />
         <FAQ />
         <Footer />
+      </div>
+
+      {/* Blackhole Video - z-5 to be behind particles (z-10) but scroll with page */}
+      <div className="relative z-[5]" style={{ marginTop: "-300px" }}>
+        <BlackholeVideo />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { AboutProduct } from "../users/components/AboutProduct";
 import { FAQ } from "../users/components/FAQ";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
+import { BlackholeVideo } from "@/components/layout/BlackholeVideo";
 import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 import { FeatureData } from "../users/components/FeaturesGrid";
 
@@ -46,9 +47,9 @@ export default function CreatorsPage() {
 
   return (
     <div className="relative w-full bg-transparent">
-      {/* Particle Sprites Background - RESTORED */}
+      {/* Particle Sprites Background - z-10 to be above blackhole (z-5) */}
       <ParticleSpritesBackground
-        className="fixed inset-0 z-0"
+        className="fixed inset-0 z-10"
         particleCount={PARTICLE_COUNT_DESKTOP}
         followMouse={true}
         mouseSensitivity={0.05}
@@ -58,8 +59,8 @@ export default function CreatorsPage() {
         speed={0.3}
       />
 
-      {/* Page content */}
-      <div className="relative z-10">
+      {/* Page content - z-20 to be above particles */}
+      <div className="relative z-20">
         <NewHero
           title={
             <>
@@ -74,9 +75,24 @@ export default function CreatorsPage() {
         {/* ABOUTPRODUCT - RESTORED with videos */}
         <AboutProduct
           boxData={[
-            { video: "/videos/upload.webm", title: "Publish", x: 15.055, stackedVideo: "/videos/upload.mp4" },
-            { video: "/videos/graph.webm", title: "Distribute", x: 391.754, stackedVideo: "/videos/graph.mp4" },
-            { video: "/videos/dollar.webm", title: "Monetize", x: 767.027, stackedVideo: "/videos/dollar.mp4" },
+            {
+              video: "/videos/upload.webm",
+              title: "Publish",
+              x: 15.055,
+              stackedVideo: "/videos/upload.mp4",
+            },
+            {
+              video: "/videos/graph.webm",
+              title: "Distribute",
+              x: 391.754,
+              stackedVideo: "/videos/graph.mp4",
+            },
+            {
+              video: "/videos/dollar.webm",
+              title: "Monetize",
+              x: 767.027,
+              stackedVideo: "/videos/dollar.mp4",
+            },
           ]}
           cardData={[
             {
@@ -106,6 +122,11 @@ export default function CreatorsPage() {
         />
         <FAQ />
         <Footer />
+      </div>
+
+      {/* Blackhole Video - z-5 to be behind particles (z-10) but scroll with page */}
+      <div className="relative z-[5]">
+        <BlackholeVideo />
       </div>
     </div>
   );

@@ -1064,7 +1064,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               </motion.video>
             ) : null}
 
-            {/* Future Transition Video */}
+            {/* Future Transition Video - Always rendered for preloading, hidden until scroll */}
             {SHOW_HERO_VIDEOS && isMobile ? (
               <motion.div
                 className="absolute"

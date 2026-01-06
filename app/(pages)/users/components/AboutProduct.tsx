@@ -903,7 +903,7 @@ export function AboutProduct({
                     minHeight: isMobile ? "128px" : "148px", // Fixed height: video + title + padding
                   }}
                 >
-                  {/* Video container - fades out on hover */}
+                  {/* Video container - uses same video files as hero section (browser will use cached versions) */}
                   {SHOW_HERO_VIDEOS && (
                     <motion.div
                       className="w-full flex items-center justify-center"

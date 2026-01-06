@@ -26,6 +26,10 @@ export const PRESENT_TO_FUTURE_TRANSITION_DURATION = 5; // seconds - time-based 
 // Reset threshold: when scrolling back, reset future videos when below this position
 export const FUTURE_TRANSITION_RESET_THRESHOLD = 2600; // px - reset future videos when scrolling back up past this point
 
+// Video loading scroll positions - videos only load when scroll reaches these positions
+export const ABOUT_PRODUCT_VIDEOS_LOAD_START = 400; // px - start loading AboutProduct videos when scroll reaches this position
+export const FOOTER_VIDEO_LOAD_START = 2000; // px - start loading Footer video when scroll reaches this position
+
 // Particle background settings
 export const PARTICLE_COUNT_MOBILE = 75;
 export const PARTICLE_COUNT_DESKTOP = 100;

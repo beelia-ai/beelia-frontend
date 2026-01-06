@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
-import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { FontPreloader } from "@/components/FontPreloader";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -95,7 +94,6 @@ export default function RootLayout({
         <FontPreloader />
         <Preloader />
         <NavbarClient />
-        <PerformanceMonitor />
         <div className="relative" style={{ zIndex: 1 }}>
           {children}
         </div>

@@ -6,6 +6,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
+import { BlackholeVideo } from "@/components/layout/BlackholeVideo";
 import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 
 const GlassSurface = dynamic(() => import("@/components/GlassSurface"), {
@@ -965,8 +966,8 @@ export default function WaitlistPage() {
         />
       </div>
 
-      {/* Particles Background - Fixed, above grid but below content */}
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 5 }}>
+      {/* Particles Background - Fixed, above blackhole (z-5) but below content (z-20) */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 10 }}>
         <ParticleSpritesBackground
           className="fixed inset-0"
           particleCount={PARTICLE_COUNT_DESKTOP}
@@ -980,14 +981,19 @@ export default function WaitlistPage() {
       </div>
 
       {/* Content - Above particles */}
-      <div className="absolute inset-0" style={{ zIndex: 10 }}>
+      <div className="absolute inset-0" style={{ zIndex: 20 }}>
         {/* Waitlist Hero Content */}
         <WaitlistHero />
       </div>
 
       {/* Footer - Above particles */}
-      <div className="relative" style={{ zIndex: 10 }}>
+      <div className="relative" style={{ zIndex: 20 }}>
         <Footer />
+      </div>
+
+      {/* Blackhole Video - z-5 to be behind particles (z-10) but scroll with page */}
+      <div className="relative" style={{ zIndex: 5, marginTop: "-300px" }}>
+        <BlackholeVideo />
       </div>
     </main>
   );

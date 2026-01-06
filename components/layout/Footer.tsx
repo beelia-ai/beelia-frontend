@@ -3,17 +3,7 @@
 import { useEffect, useState } from "react";
 import { FooterLink } from "./FooterLink";
 import { LegalModal } from "./LegalModal";
-import { WebGLVideo } from "@/components/ui";
 import legalContent from "./legal-content.json";
-
-// iOS detection helper
-function isIOS(): boolean {
-  if (typeof window === "undefined") return false;
-  return (
-    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
-  );
-}
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -34,15 +24,10 @@ function useWindowWidth() {
 export function Footer() {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
-  const [isIOSDevice, setIsIOSDevice] = useState(false);
 
   // Load content from JSON file
   const termsContent = legalContent.terms.content;
   const privacyContent = legalContent.policies.content;
-
-  useEffect(() => {
-    setIsIOSDevice(isIOS());
-  }, []);
 
   return (
     <>
@@ -101,53 +86,9 @@ export function Footer() {
           />
         </div> */}
 
-        {/* Blackhole Video - Absolute positioned at bottom for desktop */}
-        {!isMobile && (
-          <div
-            className="absolute left-0 right-0 w-full z-10"
-            style={{
-              bottom: "-240px",
-              transform: "rotate(-8deg) scale(1)",
-              transformOrigin: "center center",
-            }}
-          >
-            {isIOSDevice ? (
-              <WebGLVideo
-                webmSrc="/videos/black-hole.webm"
-                stackedAlphaSrc="/videos/black-hole-stacked.mp4"
-                className="w-full h-auto object-cover"
-                style={{ objectPosition: "bottom" }}
-                autoPlay
-                loop
-                muted
-                preload="none"
-              />
-            ) : (
-              <video
-                src="/videos/black-hole.webm"
-                autoPlay
-                loop
-                muted
-                playsInline
-                controls={false}
-                disablePictureInPicture
-                disableRemotePlayback
-                preload="none"
-                className="w-full h-auto object-cover"
-                style={{ 
-                  objectPosition: "bottom",
-                  WebkitAppearance: "none",
-                  WebkitTapHighlightColor: "transparent",
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-          </div>
-        )}
-
         {/* Content - BEELIA and sections in same flex column */}
         <div
-          className="relative z-10 flex flex-col px-4 sm:px-6 md:px-16 lg:px-24 pb-8 md:pb-12"
+          className="relative z-20 flex flex-col px-4 sm:px-6 md:px-16 lg:px-24 pb-8 md:pb-12"
           style={{
             paddingTop: isMobile
               ? "clamp(40px, 5vw, 80px)"
@@ -324,48 +265,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Blackhole Video - Mobile: Right below Connect & Legal links */}
-          {isMobile && (
-            <div
-              className="w-full mt-12 -mb-20"
-              style={{
-                transform: "rotate(-8deg) scale(1.3)",
-                transformOrigin: "center center",
-                minHeight: "200px",
-                position: "relative",
-              }}
-            >
-              <video
-                src="/videos/black-hole.mp4"
-                className="w-full h-auto"
-                style={{ 
-                  objectPosition: "bottom",
-                  width: "100%",
-                  height: "auto",
-                  minHeight: "200px",
-                  display: "block",
-                  WebkitAppearance: "none",
-                  WebkitTapHighlightColor: "transparent",
-                  background: "transparent",
-                  pointerEvents: "none",
-                }}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="none"
-                controls={false}
-                disablePictureInPicture
-                disableRemotePlayback
-                onLoadedData={(e) => {
-                  const video = e.currentTarget;
-                  if (video.paused) {
-                    video.play().catch(() => {});
-                  }
-                }}
-              />
-            </div>
-          )}
         </div>
       </footer>
     </>
