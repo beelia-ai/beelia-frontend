@@ -2,7 +2,7 @@
 
 /**
  * Shared WebGL Renderer Manager
- * 
+ *
  * While we can't truly share WebGL contexts between different canvases,
  * we can optimize by:
  * 1. Using Three.js consistently across all components (instead of mixing OGL, native WebGL, Three.js)
@@ -16,7 +16,9 @@ import * as THREE from "three";
  * Creates a Three.js WebGL renderer with optimized settings
  * All components should use this function to ensure consistent configuration
  */
-export function createWebGLRenderer(canvas: HTMLCanvasElement): THREE.WebGLRenderer {
+export function createWebGLRenderer(
+  canvas: HTMLCanvasElement
+): THREE.WebGLRenderer {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
@@ -37,13 +39,10 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement): THREE.WebGLRende
 export function disposeRenderer(renderer: THREE.WebGLRenderer | null) {
   if (!renderer) return;
 
-  // Dispose of renderer
   renderer.dispose();
 
-  // Remove canvas if it exists
   const canvas = renderer.domElement;
   if (canvas && canvas.parentNode) {
     canvas.parentNode.removeChild(canvas);
   }
 }
-

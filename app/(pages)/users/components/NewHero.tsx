@@ -936,7 +936,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         style={{ touchAction: "pan-y" }}
       >
         {/* Video Globe Container */}
-        {/* <VideoGlobe
+        <VideoGlobe
           globeSize={globeSize}
           globeTop={globeTop}
           globeY={globeY}
@@ -953,7 +953,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           phase2VideoRef={phase2VideoRef}
           futureTransitionVideoRef={futureTransitionVideoRef}
           futureMainVideoRef={futureMainVideoRef}
-        /> */}
+        />
 
         {/* Mobile: Circular video arrangement around globe */}
         {SHOW_HERO_VIDEOS && isMobile && (
