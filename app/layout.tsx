@@ -61,7 +61,7 @@ const editorsNoteMediumItalic = localFont({
 
 export const metadata: Metadata = {
   title: "Beelia.ai - AI Marketplace",
-  description: "Discover, purchase, and use AI-powered tools",
+  description: "Discover, purchase, and monetize AI tools",
   keywords: ["AI", "marketplace", "tools", "machine learning"],
   authors: [{ name: "Beelia Team" }],
   icons: {
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Beelia.ai - AI Marketplace",
-    description: "Discover, purchase, and use AI-powered tools",
+    description: "Discover, purchase, and monetize AI tools",
     type: "website",
   },
   other: {
