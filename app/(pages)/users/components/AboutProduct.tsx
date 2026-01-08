@@ -378,7 +378,7 @@ export function AboutProduct({
 
     // Also listen to scroll events as a backup
     window.addEventListener("scroll", checkCardsVisibility, { passive: true });
-    
+
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener("scroll", checkCardsVisibility);
@@ -621,10 +621,10 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.centerX}px`
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
-                  top: isMobile ? "0px" : "120px", // Start at container top (globe bottom) on mobile
+                  top: isMobile ? "-20px" : "120px", // Start 20px above container top on mobile, at container top (globe bottom) on desktop
                   width: "3px",
                   height: isMobile
-                    ? `${107 * openingProgressValue}px` // Same relative distance as desktop (227-120=107)
+                    ? `${127 * openingProgressValue}px` // Increased by 20px to maintain connection point (107 + 20 = 127)
                     : `${(227 - 120) * openingProgressValue}px`, // Desktop: decreased height by 120px
                   transform: "translateX(-50%)",
                 }}
@@ -1099,15 +1099,16 @@ export function AboutProduct({
           </motion.div>
         )}
 
-        {/* Desktop tooltip - "hover to read more" - positioned just below center card */}
+        {/* Desktop tooltip - "hover to read more" - positioned outside the box below center card */}
         {!isMobile && isCardsSectionVisible && (
           <motion.div
             className="fixed left-1/2 pointer-events-none"
             style={{
-              // Position relative to cards container: container top (520px - 265px = 255px for large screens) + 227px (card top) + 148px (card height) + 15px spacing
-              top: windowWidth < 1024
-                ? `calc(clamp(400px, 50vh, 520px) - 200px + 227px + 148px + 15px)`
-                : `calc(520px - 265px + 227px + 148px + 15px)`,
+              // Position relative to cards container: container top (520px - 265px = 255px for large screens) + 227px (card top) + 148px (card height) + 40px spacing to ensure it's clearly outside the box
+              top:
+                windowWidth < 1024
+                  ? `calc(clamp(400px, 50vh, 520px) - 200px + 227px + 148px + 52px)`
+                  : `calc(520px - 265px + 227px + 148px + 52px)`,
               left: "50%",
               transform: "translateX(-50%)",
               whiteSpace: "nowrap",
@@ -1123,14 +1124,13 @@ export function AboutProduct({
             <span
               style={{
                 fontFamily: "var(--font-outfit), Outfit, sans-serif",
-                fontSize: "11px",
-                color: "rgba(255, 255, 255, 0.7)",
+                fontSize: "12px",
+                color: "rgba(255, 255, 255, 0.5)",
                 fontWeight: 300,
                 letterSpacing: "0.02em",
-                textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
-                display: "block",
-                WebkitFontSmoothing: "antialiased",
-                MozOsxFontSmoothing: "grayscale",
+                display: "block", // Ensure it's displayed as block
+                WebkitFontSmoothing: "antialiased", // Better text rendering on iOS
+                MozOsxFontSmoothing: "grayscale", // Better text rendering on macOS
               }}
             >
               hover to read more
