@@ -67,24 +67,36 @@ export function VideoBox({
     }
   }, [shouldPlay]);
 
-  // Use MP4 source directly
+  // Check if source is a GIF
+  const isGif = src?.endsWith(".gif");
+
+  // Use MP4 source directly, or img for GIFs
   return (
     <div className="box-video-float pointer-events-none" style={containerStyle}>
-      <video
-        ref={videoRef}
-        className="w-full h-full object-cover"
-        autoPlay={shouldPlay}
-        loop
-        muted
-        playsInline
-        preload={preload}
-        controls={false}
-        disablePictureInPicture
-        disableRemotePlayback
-        style={{ pointerEvents: "none", background: "transparent" }}
-      >
-        <source src={src} type="video/mp4" />
-      </video>
+      {isGif ? (
+        <img
+          src={src}
+          alt=""
+          className="w-full h-full object-cover"
+          style={{ pointerEvents: "none", background: "transparent" }}
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          autoPlay={shouldPlay}
+          loop
+          muted
+          playsInline
+          preload={preload}
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
+          style={{ pointerEvents: "none", background: "transparent" }}
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+      )}
     </div>
   );
 }

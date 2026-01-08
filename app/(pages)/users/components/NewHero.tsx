@@ -788,25 +788,25 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   const videoSize = isMobile ? 81 : 0; // Size of each video on mobile (0.9x of 90px)
   const videoAngles = [0, 60, 120, 180, 240, 300]; // Degrees for 6 videos
   const mobileVideos = [
-    { src: "/videos/magnify.mp4" },
-    { src: "/videos/shield.mp4" },
-    { src: "/videos/bell.mp4" },
-    { src: "/videos/upload.mp4" },
-    { src: "/videos/dollar.mp4" },
-    { src: "/videos/graph.mp4" },
+    { src: "/videos/magnify.gif" },
+    { src: "/videos/shield.gif" },
+    { src: "/videos/bell.gif" },
+    { src: "/videos/upload.gif" },
+    { src: "/videos/dollar.gif" },
+    { src: "/videos/graph.gif" },
   ];
 
   // Desktop video box configuration
   const desktopVideoBoxes = [
     {
-      src: "/videos/magnify.mp4",
+      src: "/videos/magnify.gif",
       left: "201.278px",
       top: "4.5px",
       width: "101.32px",
       height: "101.32px",
     },
     {
-      src: "/videos/shield.mp4",
+      src: "/videos/shield.gif",
       left: "11.11px",
       top: "140.411px",
       width: "87.46px",
@@ -814,7 +814,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       animationDelay: "0.3s",
     },
     {
-      src: "/videos/bell.mp4",
+      src: "/videos/bell.gif",
       left: "157.10px",
       top: "263.571px",
       width: "87.46px",
@@ -822,7 +822,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       animationDelay: "0.6s",
     },
     {
-      src: "/videos/upload.mp4",
+      src: "/videos/upload.gif",
       left: "803.16px",
       top: "11.43px",
       width: "87.46px",
@@ -830,7 +830,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       animationDelay: "0.15s",
     },
     {
-      src: "/videos/dollar.mp4",
+      src: "/videos/dollar.gif",
       left: "1003.09px",
       top: "140.411px",
       width: "87.46px",
@@ -838,7 +838,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       animationDelay: "0.45s",
     },
     {
-      src: "/videos/graph.mp4",
+      src: "/videos/graph.gif",
       left: "849.10px",
       top: "265.08px",
       width: "87.46px",
@@ -1005,8 +1005,27 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
               const angle = (videoAngles[index] * Math.PI) / 180;
               const x = Math.cos(angle) * videoRadius;
               const y = Math.sin(angle) * videoRadius;
+              const isGif = video.src?.endsWith(".gif");
 
-              return (
+              return isGif ? (
+                <img
+                  key={index}
+                  src={video.src}
+                  alt=""
+                  className="absolute rounded-[18px] object-cover"
+                  style={{
+                    width: `${videoSize}px`,
+                    height: `${videoSize}px`,
+                    left: `calc(50% + ${x}px - ${videoSize / 2}px)`,
+                    top: `calc(50% + ${y}px - ${videoSize / 2}px)`,
+                    pointerEvents: "none",
+                    WebkitAppearance: "none",
+                    WebkitTapHighlightColor: "transparent",
+                    background: "transparent",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
                 <video
                   key={index}
                   ref={(el) => {

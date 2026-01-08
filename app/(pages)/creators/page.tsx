@@ -76,22 +76,22 @@ export default function CreatorsPage() {
         <AboutProduct
           boxData={[
             {
-              video: "/videos/upload.webm",
+              video: "/videos/upload.gif",
               title: "Publish",
               x: 15.055,
-              stackedVideo: "/videos/upload.mp4",
+              stackedVideo: "/videos/upload.gif",
             },
             {
-              video: "/videos/graph.webm",
+              video: "/videos/graph.gif",
               title: "Distribute",
               x: 391.754,
-              stackedVideo: "/videos/graph.mp4",
+              stackedVideo: "/videos/graph.gif",
             },
             {
-              video: "/videos/dollar.webm",
+              video: "/videos/dollar.gif",
               title: "Monetize",
               x: 767.027,
-              stackedVideo: "/videos/dollar.mp4",
+              stackedVideo: "/videos/dollar.gif",
             },
           ]}
           cardData={[

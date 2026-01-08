@@ -74,22 +74,22 @@ const DEFAULT_CARD_DATA = [
 // Default box data for users
 const DEFAULT_BOX_DATA = [
   {
-    video: "/videos/magnify.webm",
+    video: "/videos/magnify.gif",
     title: "Discover",
     x: 15.055,
-    stackedVideo: "/videos/magnify.mp4",
+    stackedVideo: "/videos/magnify.gif",
   },
   {
-    video: "/videos/bell.webm",
+    video: "/videos/bell.gif",
     title: "Subscribe",
     x: 391.754,
-    stackedVideo: "/videos/bell.mp4",
+    stackedVideo: "/videos/bell.gif",
   },
   {
-    video: "/videos/shield.webm",
+    video: "/videos/shield.gif",
     title: "Trust",
     x: 767.027,
-    stackedVideo: "/videos/shield.mp4",
+    stackedVideo: "/videos/shield.gif",
   },
 ];
 
@@ -962,36 +962,56 @@ export function AboutProduct({
                         ease: "easeInOut",
                       }}
                     >
-                      <video
-                        src={box.stackedVideo || box.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="none"
-                        controls={false}
-                        disablePictureInPicture
-                        disableRemotePlayback
-                        onLoadedData={(e) => {
-                          const video = e.currentTarget;
-                          if (video.paused) {
-                            video.play().catch(() => {});
-                          }
-                        }}
-                        style={{
-                          width: isMobile ? "100px" : "90%",
-                          height: isMobile ? "100px" : "100px",
-                          maxWidth: isMobile ? "100px" : "140px",
-                          maxHeight: isMobile ? "100px" : "100px",
-                          objectFit: "contain",
-                          objectPosition: "center center",
-                          pointerEvents: "none",
-                          display: "block",
-                          WebkitAppearance: "none",
-                          WebkitTapHighlightColor: "transparent",
-                          background: "transparent",
-                        }}
-                      />
+                      {(box.stackedVideo || box.video)?.endsWith(".gif") ? (
+                        <img
+                          src={box.stackedVideo || box.video}
+                          alt={box.title}
+                          style={{
+                            width: isMobile ? "100px" : "90%",
+                            height: isMobile ? "100px" : "100px",
+                            maxWidth: isMobile ? "100px" : "140px",
+                            maxHeight: isMobile ? "100px" : "100px",
+                            objectFit: "contain",
+                            objectPosition: "center center",
+                            pointerEvents: "none",
+                            display: "block",
+                            WebkitAppearance: "none",
+                            WebkitTapHighlightColor: "transparent",
+                            background: "transparent",
+                          }}
+                        />
+                      ) : (
+                        <video
+                          src={box.stackedVideo || box.video}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          preload="none"
+                          controls={false}
+                          disablePictureInPicture
+                          disableRemotePlayback
+                          onLoadedData={(e) => {
+                            const video = e.currentTarget;
+                            if (video.paused) {
+                              video.play().catch(() => {});
+                            }
+                          }}
+                          style={{
+                            width: isMobile ? "100px" : "90%",
+                            height: isMobile ? "100px" : "100px",
+                            maxWidth: isMobile ? "100px" : "140px",
+                            maxHeight: isMobile ? "100px" : "100px",
+                            objectFit: "contain",
+                            objectPosition: "center center",
+                            pointerEvents: "none",
+                            display: "block",
+                            WebkitAppearance: "none",
+                            WebkitTapHighlightColor: "transparent",
+                            background: "transparent",
+                          }}
+                        />
+                      )}
                     </motion.div>
                   )}
 
