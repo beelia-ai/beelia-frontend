@@ -64,6 +64,11 @@ export const metadata: Metadata = {
   description: "Discover, purchase, and use AI-powered tools",
   keywords: ["AI", "marketplace", "tools", "machine learning"],
   authors: [{ name: "Beelia Team" }],
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
   openGraph: {
     title: "Beelia.ai - AI Marketplace",
     description: "Discover, purchase, and use AI-powered tools",
