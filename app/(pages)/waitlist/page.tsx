@@ -47,6 +47,7 @@ function WaitlistHero() {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [buttonHeight, setButtonHeight] = useState(60);
+  const [waitlistCount, setWaitlistCount] = useState<string>("500+");
 
   useEffect(() => {
     setIsMounted(true);
@@ -56,6 +57,29 @@ function WaitlistHero() {
     updateHeight();
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
+  // Fetch waitlist count on mount
+  useEffect(() => {
+    const fetchWaitlistCount = async () => {
+      try {
+        const response = await fetch("/api/waitlist");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.displayCount) {
+            setWaitlistCount(data.displayCount);
+          } else {
+            setWaitlistCount("500+");
+          }
+        } else {
+          setWaitlistCount("500+");
+        }
+      } catch {
+        // Keep default 500+ on failure
+        setWaitlistCount("500+");
+      }
+    };
+    fetchWaitlistCount();
   }, []);
 
   // Step 1: Submit email
@@ -707,6 +731,7 @@ function WaitlistHero() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
+                  suppressHydrationWarning
                   className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
                     width: "100%",
@@ -857,8 +882,9 @@ function WaitlistHero() {
                       fontSize: "20px",
                       letterSpacing: "-0.02em",
                     }}
+                    suppressHydrationWarning
                   >
-                    500+
+                    {isMounted ? waitlistCount : "500+"}
                   </p>
                   <p
                     className="text-white/30"

@@ -99,7 +99,7 @@ export default function CreatorsPage() {
               title: "Publish",
               subtitle: "",
               description:
-                "Verified listings help users understand what's legit, what performs, and what's safe, increasing confidence and conversion for your tool.",
+                "Publish your AI tool on Beelia with a clear profile, transparent pricing, and built-in trust signals, so users know what it does and how to use it.",
               iconPath: "",
             },
             {

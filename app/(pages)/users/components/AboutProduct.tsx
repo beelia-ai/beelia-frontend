@@ -1057,7 +1057,7 @@ export function AboutProduct({
           })}
         </motion.div>
 
-        {/* Single mobile tooltip - "tap to read more" - positioned just below center card */}
+        {/* Mobile tooltip - "tap to read more" - positioned just below center card */}
         {isMobile && isCardsSectionVisible && (
           <motion.div
             data-tooltip-container
@@ -1095,6 +1095,45 @@ export function AboutProduct({
               }}
             >
               tap to read more
+            </span>
+          </motion.div>
+        )}
+
+        {/* Desktop tooltip - "hover to read more" - positioned just below center card */}
+        {!isMobile && isCardsSectionVisible && (
+          <motion.div
+            className="fixed left-1/2 pointer-events-none"
+            style={{
+              // Position relative to cards container: container top (520px - 265px = 255px for large screens) + 227px (card top) + 148px (card height) + 15px spacing
+              top: windowWidth < 1024
+                ? `calc(clamp(400px, 50vh, 520px) - 200px + 227px + 148px + 15px)`
+                : `calc(520px - 265px + 227px + 148px + 15px)`,
+              left: "50%",
+              transform: "translateX(-50%)",
+              whiteSpace: "nowrap",
+              zIndex: 9999,
+              willChange: "opacity",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: hoveredBox ? 0 : 1,
+            }}
+            transition={{ delay: 0.1, duration: 0.3 }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-outfit), Outfit, sans-serif",
+                fontSize: "11px",
+                color: "rgba(255, 255, 255, 0.7)",
+                fontWeight: 300,
+                letterSpacing: "0.02em",
+                textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)",
+                display: "block",
+                WebkitFontSmoothing: "antialiased",
+                MozOsxFontSmoothing: "grayscale",
+              }}
+            >
+              hover to read more
             </span>
           </motion.div>
         )}

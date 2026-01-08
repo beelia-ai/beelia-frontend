@@ -1,7 +1,0 @@
-{"location":"webgl-context.tsx:dispose","message":"Disposing WebGL renderer","data":{"remainingRenderers":0},"timestamp":1767686278712,"sessionId":"debug-session","hypothesisId":"E"}
-{"location":"webgl-context.tsx:create","message":"Creating WebGL renderer","data":{"rendererId":1,"totalRenderers":1,"canvasId":"no-id"},"timestamp":1767686278716,"sessionId":"debug-session","hypothesisId":"A"}
-{"location":"webgl-video.tsx:unmount","message":"WebGLVideo unmounted","data":{"instanceId":1},"timestamp":1767686377209,"sessionId":"debug-session","hypothesisId":"K"}
-{"location":"webgl-video.tsx:unmount","message":"WebGLVideo unmounted","data":{"instanceId":5},"timestamp":1767686377215,"sessionId":"debug-session","hypothesisId":"K"}
-{"location":"webgl-video.tsx:unmount","message":"WebGLVideo unmounted","data":{"instanceId":3},"timestamp":1767686377214,"sessionId":"debug-session","hypothesisId":"K"}
-{"location":"webgl-context.tsx:dispose","message":"Disposing WebGL renderer","data":{"remainingRenderers":0},"timestamp":1767686378322,"sessionId":"debug-session","hypothesisId":"E"}
-{"location":"webgl-context.tsx:create","message":"Creating WebGL renderer","data":{"rendererId":1,"totalRenderers":1,"canvasId":"no-id"},"timestamp":1767686378334,"sessionId":"debug-session","hypothesisId":"A"}
