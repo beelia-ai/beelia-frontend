@@ -11,7 +11,7 @@ export const PAST_VIDEO_SIZE_MOBILE = 292; // px
 export const PAST_VIDEO_SIZE_DESKTOP = 452; // px
 
 // Globe top position from top of viewport
-export const GLOBE_TOP_MOBILE = 120; // px
+export const GLOBE_TOP_MOBILE = 100; // px
 export const GLOBE_TOP_DESKTOP = 84; // px
 
 // Video transition scroll positions

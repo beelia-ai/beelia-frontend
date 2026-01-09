@@ -73,8 +73,12 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     number | null
   >(null);
   // Store animation controls to cancel them when scrolling back up
-  const presentFadeOutAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
-  const futureTransitionAnimationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const presentFadeOutAnimationRef = useRef<ReturnType<typeof animate> | null>(
+    null
+  );
+  const futureTransitionAnimationRef = useRef<ReturnType<
+    typeof animate
+  > | null>(null);
 
   // Track scroll progress for this section
   const { scrollYProgress } = useScroll({
@@ -95,11 +99,18 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       const footerTop = footerRect.top + window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      // Globe is fixed at ~100px from top, height 420px (scaled up to 1.3x = 546px)
+      // Determine if mobile based on current window width
+      const isMobile = windowWidth < 768;
+
+      // Globe is fixed at GLOBE_TOP from top, height PAST_VIDEO_SIZE (scaled up to 1.3x)
       // We want globe to stop when its bottom would hit above the footer
-      // Globe visual bottom = 100px + (420px * 1.3) / 2 + (420px * 1.3) / 2 ≈ 100px + 273px = 373px from top
+      // Globe visual bottom = GLOBE_TOP + PAST_VIDEO_SIZE * 1.3
       // Add margin for the footer content area
-      const globeBottomFromTop = 100 + 120 * 1.3;
+      const globeTop = isMobile ? GLOBE_TOP_MOBILE : GLOBE_TOP_DESKTOP;
+      const globeSize = isMobile
+        ? PAST_VIDEO_SIZE_MOBILE
+        : PAST_VIDEO_SIZE_DESKTOP;
+      const globeBottomFromTop = globeTop + globeSize * 1.3;
       const marginAboveFooter = 100; // Stop 100px above footer
 
       // Threshold is when footer top enters the viewport at globeBottomFromTop + margin
@@ -117,7 +128,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
       window.removeEventListener("resize", calculateThreshold);
       clearTimeout(timeout);
     };
-  }, []);
+  }, [windowWidth]);
 
   // Globe scale animation from 1 to 1.1 based on scroll Y position (0px to 900px)
   const globeScale = useTransform(scrollYMotion, (latest) => {
@@ -486,10 +497,14 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
           duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
           ease: "linear",
         });
-        futureTransitionAnimationRef.current = animate(futureTransitionOpacity, 1, {
-          duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
-          ease: "linear",
-        });
+        futureTransitionAnimationRef.current = animate(
+          futureTransitionOpacity,
+          1,
+          {
+            duration: PRESENT_TO_FUTURE_TRANSITION_DURATION,
+            ease: "linear",
+          }
+        );
 
         if (futureTransitionVideoRef.current) {
           const video = futureTransitionVideoRef.current;
@@ -570,13 +585,15 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
         } else if (scrollY < transitionStart) {
           // Between reset threshold and transition start: reverse the animations smoothly
           // Calculate reverse progress based on scroll position
-          const reverseProgress = (transitionStart - scrollY) / (transitionStart - FUTURE_TRANSITION_RESET_THRESHOLD);
+          const reverseProgress =
+            (transitionStart - scrollY) /
+            (transitionStart - FUTURE_TRANSITION_RESET_THRESHOLD);
           const clampedProgress = Math.min(1, Math.max(0, reverseProgress));
-          
+
           // Set opacity values directly based on scroll position for smooth reverse
           presentVideoFadeOut.set(clampedProgress);
           futureTransitionOpacity.set(1 - clampedProgress);
-          
+
           // Ensure videos are playing for smooth fade
           if (
             futureTransitionVideoRef.current &&

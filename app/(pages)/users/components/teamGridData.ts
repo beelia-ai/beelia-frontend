@@ -8,7 +8,6 @@ export interface ProfileCardData {
   coreStrengths?: string[];
   socials?: {
     linkedin?: string;
-    instagram?: string;
   };
 }
 
@@ -51,8 +50,7 @@ export const teamGridData: ProfileRowData[] = [
             "Decision-making under uncertainty"
           ],
           socials: {
-            linkedin: "https://www.linkedin.com/in/juan-carlos-calvo-fresno-a62414331?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-            instagram: "https://www.instagram.com/jccalvof?igsh=MWFpdHJieWkxc2Y4bg%3D%3D&utm_source=qr"
+            linkedin: "https://www.linkedin.com/in/juan-carlos-calvo-fresno-a62414331?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           }
         },
       },
@@ -148,8 +146,7 @@ export const teamGridData: ProfileRowData[] = [
             "Support in early-stage technical environments"
           ],
           socials: {
-            linkedin: "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
-            instagram: "https://www.instagram.com/sanzhar.beelia?igsh=MXFqbWJlYWxpN2Qydw=="
+            linkedin: "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           }
         },
       },

@@ -73,6 +73,20 @@ export const metadata: Metadata = {
     title: "Beelia.ai - AI Marketplace",
     description: "Discover, purchase, and monetize AI tools",
     type: "website",
+    images: [
+      {
+        url: "/images/beelia-colored-background-with-white-logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Beelia.ai - AI Marketplace",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Beelia.ai - AI Marketplace",
+    description: "Discover, purchase, and monetize AI tools",
+    images: ["/images/beelia-colored-background-with-white-logo.png"],
   },
   other: {
     "font-preload": "/fonts/EditorsNote-Italic.woff2",

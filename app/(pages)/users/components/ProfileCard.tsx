@@ -15,7 +15,6 @@ interface ProfileCardProps {
   coreStrengths?: string[];
   socials?: {
     linkedin?: string;
-    instagram?: string;
   };
 }
 
@@ -97,23 +96,6 @@ export function ProfileCard({
                       <Image
                         src="/icons/linkedin.svg"
                         alt="LinkedIn"
-                        width={28}
-                        height={28}
-                        className="opacity-80 group-hover:opacity-100 transition-opacity"
-                      />
-                    </a>
-                  )}
-                  {socials.instagram && (
-                    <a
-                      href={socials.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center rounded-full border border-white/15 hover:border-white/40 transition-all group"
-                      style={{ width: "60px", height: "60px" }}
-                    >
-                      <Image
-                        src="/icons/instagram.svg"
-                        alt="Instagram"
                         width={28}
                         height={28}
                         className="opacity-80 group-hover:opacity-100 transition-opacity"
