@@ -48,7 +48,8 @@ const fragmentShaderStackedAlpha = `
     vec2 alphaCoord = vec2(v_texCoord.x, 0.5 + v_texCoord.y * 0.5);
     float alpha = texture2D(u_video, alphaCoord).r;
     
-    gl_FragColor = vec4(color.rgb, alpha);
+    // Use premultiplied alpha to avoid edge artifacts
+    gl_FragColor = vec4(color.rgb * alpha, alpha);
   }
 `;
 
@@ -112,8 +113,17 @@ function isIOS(): boolean {
   );
 }
 
+function isSafari(): boolean {
+  if (typeof window === "undefined") return false;
+  const ua = navigator.userAgent;
+  // Safari but not Chrome (Chrome also includes "Safari" in UA)
+  return /Safari/.test(ua) && !/Chrome/.test(ua) && !/Chromium/.test(ua);
+}
+
 function supportsWebMAlpha(): boolean {
   if (typeof document === "undefined") return true;
+  // Safari (including macOS) doesn't support WebM with alpha transparency
+  if (isSafari()) return false;
   const video = document.createElement("video");
   return video.canPlayType('video/webm; codecs="vp9"') === "probably";
 }
@@ -223,7 +233,7 @@ export function WebGLVideo({
     const canvas = canvasRef.current;
     const gl = canvas.getContext("webgl", {
       alpha: true,
-      premultipliedAlpha: false,
+      premultipliedAlpha: true,
       preserveDrawingBuffer: false,
     });
 
@@ -282,7 +292,8 @@ export function WebGLVideo({
     textureRef.current = texture;
 
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // Use premultiplied alpha blending for cleaner edges
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   }, [sourceReady, useStackedAlpha, useNativeVideo]);
 
   // Render loop

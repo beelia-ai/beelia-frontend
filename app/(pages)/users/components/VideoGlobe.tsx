@@ -1,6 +1,6 @@
 "use client";
 
-import React, { RefObject } from "react";
+import React, { RefObject, useState, useEffect } from "react";
 import { motion, MotionValue } from "framer-motion";
 import { WebGLVideo } from "@/components/ui";
 import {
@@ -10,6 +10,13 @@ import {
   PAST_VIDEO_SIZE_MOBILE,
   PAST_VIDEO_SIZE_DESKTOP,
 } from "@/lib/constants";
+
+// Safari detection - Safari doesn't support WebM with alpha
+function isSafari(): boolean {
+  if (typeof window === "undefined") return false;
+  const ua = navigator.userAgent;
+  return /Safari/.test(ua) && !/Chrome/.test(ua) && !/Chromium/.test(ua);
+}
 
 interface VideoGlobeProps {
   globeSize: number;
@@ -48,6 +55,16 @@ export function VideoGlobe({
   futureTransitionVideoRef,
   futureMainVideoRef,
 }: VideoGlobeProps) {
+  // Detect Safari at runtime - Safari needs WebGLVideo for alpha transparency
+  const [needsWebGLVideo, setNeedsWebGLVideo] = useState(false);
+  
+  useEffect(() => {
+    setNeedsWebGLVideo(isSafari());
+  }, []);
+
+  // Use WebGLVideo for mobile OR Safari (Safari doesn't support WebM with alpha)
+  const useWebGLVideo = isMobile || needsWebGLVideo;
+
   return (
     <motion.div
       className="fixed left-1/2 pointer-events-none"
@@ -71,7 +88,7 @@ export function VideoGlobe({
         {/* Past Video */}
         {SHOW_HERO_VIDEOS &&
           !hidePastVideo &&
-          (isMobile ? (
+          (useWebGLVideo ? (
             <motion.div
               className="mr-0.5 absolute"
               style={{
@@ -127,7 +144,7 @@ export function VideoGlobe({
           ))}
 
         {/* Present Video - Phase 2 */}
-        {SHOW_HERO_VIDEOS && isMobile ? (
+        {SHOW_HERO_VIDEOS && useWebGLVideo ? (
           <motion.div
             className={`${
               isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
@@ -176,7 +193,7 @@ export function VideoGlobe({
         ) : null}
 
         {/* Future Transition Video - Always rendered for preloading, hidden until scroll */}
-        {SHOW_HERO_VIDEOS && isMobile ? (
+        {SHOW_HERO_VIDEOS && useWebGLVideo ? (
           <motion.div
             className="absolute"
             style={{
@@ -239,7 +256,7 @@ export function VideoGlobe({
         {/* Future Main Video */}
         {SHOW_HERO_VIDEOS &&
           showFutureMain &&
-          (isMobile ? (
+          (useWebGLVideo ? (
             <motion.div
               className="absolute"
               style={{
