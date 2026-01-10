@@ -88,6 +88,7 @@ function WaitlistHero() {
     if (!email) return;
 
     setIsLoading(true);
+    console.log("[Waitlist] Submitting email:", email);
 
     try {
       const response = await fetch("/api/waitlist", {
@@ -98,7 +99,9 @@ function WaitlistHero() {
         body: JSON.stringify({ email }),
       });
 
+      console.log("[Waitlist] Email response status:", response.status);
       const data = await response.json();
+      console.log("[Waitlist] Email response data:", data);
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to join waitlist");
@@ -107,6 +110,7 @@ function WaitlistHero() {
       // Move to step 2 - details form with user type selection
       setStep("details");
     } catch (error) {
+      console.error("[Waitlist] Email submission error:", error);
       alert(
         error instanceof Error
           ? error.message
@@ -140,6 +144,8 @@ function WaitlistHero() {
       if (userType === "creator") {
         payload.platformLink = platformLink;
       }
+      
+      console.log("[Waitlist] Submitting details:", payload);
 
       const response = await fetch("/api/waitlist", {
         method: "POST",
@@ -149,7 +155,9 @@ function WaitlistHero() {
         body: JSON.stringify(payload),
       });
 
+      console.log("[Waitlist] Details response status:", response.status);
       const data = await response.json();
+      console.log("[Waitlist] Details response data:", data);
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to update details");
@@ -158,6 +166,7 @@ function WaitlistHero() {
       // Move to complete state
       setStep("complete");
     } catch (error) {
+      console.error("[Waitlist] Details submission error:", error);
       alert(
         error instanceof Error
           ? error.message
@@ -196,7 +205,8 @@ function WaitlistHero() {
           border-radius: 50px;
           pointer-events: none;
         }
-        .glass-btn-wrapper:hover::after {
+        .glass-btn-wrapper:hover::after,
+        .glass-btn-wrapper.selected::after {
           clip-path: inset(0 0 0 0);
         }
         .glass-btn-wrapper > * {
@@ -343,9 +353,7 @@ function WaitlistHero() {
                     <button
                       type="button"
                       onClick={() => handleUserTypeSelect("user")}
-                      className={`flex-1 group cursor-pointer transition-all duration-300 ${
-                        userType === "user" ? "opacity-100" : "opacity-50"
-                      }`}
+                      className="flex-1 group cursor-pointer transition-all duration-300 opacity-100"
                       style={{
                         perspective: "1000px",
                         transformStyle: "preserve-3d",
@@ -354,23 +362,23 @@ function WaitlistHero() {
                       onMouseLeave={() => setIsButtonHovered(false)}
                     >
                       <div
-                        className="glass-btn-wrapper"
+                        className={`glass-btn-wrapper ${
+                          userType === "user" ? "selected" : ""
+                        }`}
                         style={{ width: "100%", display: "block" }}
                       >
                         <GlassSurface
                           width="100%"
                           height={buttonHeight}
                           borderRadius={50}
-                          chromaticAberration={
-                            userType === "user" && isButtonHovered ? 0.3 : 0.15
-                          }
+                          chromaticAberration={userType === "user" ? 0.3 : 0.15}
                           style={{
                             transform:
-                              userType === "user" && isButtonHovered
+                              userType === "user"
                                 ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
                                 : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
                             boxShadow:
-                              userType === "user" && isButtonHovered
+                              userType === "user"
                                 ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
                                 : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
                             transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -400,9 +408,7 @@ function WaitlistHero() {
                     <button
                       type="button"
                       onClick={() => handleUserTypeSelect("creator")}
-                      className={`flex-1 group cursor-pointer transition-all duration-300 ${
-                        userType === "creator" ? "opacity-100" : "opacity-50"
-                      }`}
+                      className="flex-1 group cursor-pointer transition-all duration-300 opacity-100"
                       style={{
                         perspective: "1000px",
                         transformStyle: "preserve-3d",
@@ -411,7 +417,9 @@ function WaitlistHero() {
                       onMouseLeave={() => setIsButtonHovered(false)}
                     >
                       <div
-                        className="glass-btn-wrapper"
+                        className={`glass-btn-wrapper ${
+                          userType === "creator" ? "selected" : ""
+                        }`}
                         style={{ width: "100%", display: "block" }}
                       >
                         <GlassSurface
@@ -419,17 +427,15 @@ function WaitlistHero() {
                           height={buttonHeight}
                           borderRadius={50}
                           chromaticAberration={
-                            userType === "creator" && isButtonHovered
-                              ? 0.3
-                              : 0.15
+                            userType === "creator" ? 0.3 : 0.15
                           }
                           style={{
                             transform:
-                              userType === "creator" && isButtonHovered
+                              userType === "creator"
                                 ? "translateZ(20px) rotateX(-1deg) rotateY(1deg) scale(1.02)"
                                 : "translateZ(10px) rotateX(0deg) rotateY(0deg) scale(1)",
                             boxShadow:
-                              userType === "creator" && isButtonHovered
+                              userType === "creator"
                                 ? "0 20px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.15) inset, 0 0 50px rgba(147, 51, 234, 0.4)"
                                 : "0 15px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 40px rgba(147, 51, 234, 0.2)",
                             transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -461,9 +467,7 @@ function WaitlistHero() {
                     <button
                       type="button"
                       onClick={() => handleUserTypeSelect("user")}
-                      className={`flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 ${
-                        userType === "user" ? "opacity-100" : "opacity-50"
-                      }`}
+                      className="flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 opacity-100"
                       style={{
                         background: "rgba(255, 255, 255, 0.1)",
                         border:
@@ -488,9 +492,7 @@ function WaitlistHero() {
                     <button
                       type="button"
                       onClick={() => handleUserTypeSelect("creator")}
-                      className={`flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 ${
-                        userType === "creator" ? "opacity-100" : "opacity-50"
-                      }`}
+                      className="flex-1 h-[50px] sm:h-[60px] rounded-full flex items-center justify-center gap-2 sm:gap-3 transition-all duration-300 opacity-100"
                       style={{
                         background: "rgba(255, 255, 255, 0.1)",
                         border:

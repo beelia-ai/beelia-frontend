@@ -175,20 +175,37 @@ export async function POST(request: NextRequest) {
 
     // Get response text first to see what we're getting
     const responseText = await response.text();
+    console.log("GAS Response Status:", response.status);
+    console.log("GAS Response Text:", responseText);
 
     if (!response.ok) {
+      console.error("GAS Error:", response.status, responseText);
       throw new Error(
         `Google Apps Script error: ${response.status} - ${responseText}`
       );
     }
 
-    // Try to parse JSON, but handle text responses too
+    // Try to parse JSON. If it fails, it's an error (likely HTML returned due to permissions)
     let result;
     try {
       result = JSON.parse(responseText);
-    } catch {
-      // If not JSON, treat as success if status is OK
-      result = { message: responseText || "Success" };
+    } catch (e) {
+      console.error("Failed to parse GAS response as JSON:", responseText.substring(0, 200));
+      throw new Error(
+        `Invalid response from Google Apps Script. Expected JSON but got: ${responseText.substring(0, 50)}... (Likely permission issue)`
+      );
+    }
+
+    // Check for explicit error in the result from Apps Script
+    if (result && (result.success === false || result.error)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: result.error || "Google Apps Script returned an error",
+          data: result,
+        },
+        { status: 400 }
+      );
     }
 
     return NextResponse.json(
@@ -203,6 +220,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
+    console.error("API Route Error:", error);
     return NextResponse.json(
       {
         error: "Failed to process request",
