@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import GlassSurface from "@/components/GlassSurface";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
 
 interface NavbarProps {
   forceShow?: boolean;
@@ -18,9 +19,12 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const [isMobile, setIsMobile] = useState(false);
   const scrollThresholdRef = useRef(0);
   const pathname = usePathname();
-  const isWaitlistPage = pathname === "/waitlist";
-  const isUsersPage = pathname === "/users";
-  const isCreatorsPage = pathname === "/creators";
+  const locale = useLocale();
+  const t = useTranslations('Navbar');
+  
+  const isWaitlistPage = pathname === "/waitlist" || pathname === `/${locale}/waitlist`; 
+  const isUsersPage = pathname === "/users" || pathname === `/${locale}/users`;
+  const isCreatorsPage = pathname === "/creators" || pathname === `/${locale}/creators`;
 
   // Track window size for responsive button sizing
   useEffect(() => {
@@ -249,7 +253,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     display: "block",
                   }}
                 >
-                  Users
+                  {t('users')}
                 </Link>
                 <Link
                   href="/creators"
@@ -279,7 +283,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     display: "block",
                   }}
                 >
-                  Creators
+                  {t('creators')}
                 </Link>
                 <a
                   href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
@@ -296,8 +300,40 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     zIndex: 10001,
                   }}
                 >
-                  Contact
+                  {t('contact')}
                 </a>
+                <button
+                  onClick={() => {
+                    let currentPath = window.location.pathname;
+                    
+                    // Clean localized prefixes first to get "raw" path
+                    currentPath = currentPath.replace(/^\/(es|en)(\/|$)/, '/');
+
+                    if (locale === 'es') {
+                      // Switch to English (default) - use cleaned path (which is effectively /en hidden)
+                      window.location.href = currentPath;
+                    } else {
+                      // Switch to Spanish
+                      const newPath = `/es${currentPath === '/' ? '' : currentPath}`;
+                      window.location.href = newPath;
+                    }
+                  }}
+                  className="nav-link cursor-pointer"
+                  style={{
+                    fontFamily: "var(--font-outfit), sans-serif",
+                    fontSize: isMobile ? "16px" : "16px",
+                    fontWeight: 400,
+                    background: "none",
+                    border: "none",
+                    textDecoration: "none",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    zIndex: 10001,
+                    marginLeft: "8px", 
+                  }}
+                >
+                  <span id="lang-toggle-text">{locale === 'en' ? t('spanish') : t('english')}</span>
+                </button>
               </div>
             )}
           </motion.div>
@@ -350,7 +386,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                         letterSpacing: isMobile ? "0.04em" : "0.06em",
                       }}
                     >
-                      {isWaitlistPage ? "back to users" : "join waitlist"}
+                      {isWaitlistPage ? t('backToUsers') : t('joinWaitlist')}
                     </span>
                     {!isWaitlistPage && (
                       <Image

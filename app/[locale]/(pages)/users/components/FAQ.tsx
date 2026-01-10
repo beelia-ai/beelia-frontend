@@ -2,29 +2,37 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import FAQ_DATA_JSON from "./faq-data.json";
+import { useTranslations } from "next-intl";
 
-type FAQCategory =
-  | "What is Beelia?"
-  | "For Users"
-  | "For Creators"
-  | "Trust, Security & Vision";
+type FAQCategoryKey =
+  | "whatIsBeelia"
+  | "forUsers"
+  | "forCreators"
+  | "trustSecurity";
 
 interface FAQItem {
   question: string;
   answer: string;
 }
 
-const FAQ_DATA = FAQ_DATA_JSON as Record<FAQCategory, FAQItem[]>;
+const CATEGORY_KEYS: FAQCategoryKey[] = [
+  "whatIsBeelia",
+  "forUsers",
+  "forCreators",
+  "trustSecurity",
+];
 
 export function FAQ() {
+  const t = useTranslations('FAQ');
   const [selectedCategory, setSelectedCategory] =
-    useState<FAQCategory>("What is Beelia?");
+    useState<FAQCategoryKey>("whatIsBeelia");
   const [hoveredQuestion, setHoveredQuestion] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const currentFAQs = FAQ_DATA[selectedCategory];
+  // Get items for selected category. We cast t.raw() result to expected type.
+  // Note: Ensure messages.json has the structure 'items.categoryKey' -> array of objects
+  const currentFAQs = t.raw(`items.${selectedCategory}`) as FAQItem[];
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -118,36 +126,29 @@ export function FAQ() {
 
             {/* Category Navigation */}
             <nav className="flex flex-row lg:flex-col gap-2 lg:gap-0 overflow-x-auto lg:overflow-visible">
-              {(
-                [
-                  "What is Beelia?",
-                  "For Users",
-                  "For Creators",
-                  "Trust, Security & Vision",
-                ] as FAQCategory[]
-              ).map((category) => (
+              {CATEGORY_KEYS.map((categoryKey) => (
                 <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  key={categoryKey}
+                  onClick={() => setSelectedCategory(categoryKey)}
                   className={`text-left transition-all duration-200 whitespace-nowrap px-3 py-2 lg:px-5 lg:py-4 text-[13px] lg:text-[21px]`}
                   style={{
                     fontFamily: "var(--font-outfit), Outfit, sans-serif",
-                    fontWeight: selectedCategory === category ? 500 : 300,
+                    fontWeight: selectedCategory === categoryKey ? 500 : 300,
                     borderRadius: "24px",
                     border:
-                      selectedCategory === category
+                      selectedCategory === categoryKey
                         ? "1px solid #FFFFFF"
                         : "none",
                     backgroundColor:
-                      selectedCategory === category
+                      selectedCategory === categoryKey
                         ? "rgba(255, 255, 255, 0.1)"
                         : "transparent",
                     color:
-                      selectedCategory === category ? "#FFFFFF" : "#FFFFFF",
-                    opacity: selectedCategory === category ? 1 : 0.7,
+                      selectedCategory === categoryKey ? "#FFFFFF" : "#FFFFFF",
+                    opacity: selectedCategory === categoryKey ? 1 : 0.7,
                   }}
                 >
-                  {category}
+                  {t(`categories.${categoryKey}`)}
                 </button>
               ))}
             </nav>
@@ -156,7 +157,7 @@ export function FAQ() {
           {/* Right Content Area */}
           <div className="flex-1">
             <div className="flex flex-col">
-              {currentFAQs.map((faq, index) => (
+              {currentFAQs?.map((faq, index) => (
                 <div
                   key={index}
                   className="relative faq-item rounded-lg transition-all duration-300"

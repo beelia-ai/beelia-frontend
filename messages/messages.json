@@ -1,0 +1,600 @@
+{
+  "en": {
+    "HomePage": {
+      "title": "Welcome to Beelia",
+      "description": "The future of creator tools"
+    },
+    "Waitlist": {
+      "get": "Get",
+      "earlyAccess": "Early Access",
+      "description": "Being early is rare. This is one of those moments.",
+      "emailPlaceholder": "Enter your email",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "almostThere": "Almost there!",
+      "tellUsMore": "Tell us a bit more about yourself (optional)",
+      "user": "User",
+      "creator": "Creator",
+      "namePlaceholder": "Your name",
+      "platformLinkPlaceholder": "Link to your platform",
+      "skipForNow": "Skip for now",
+      "youreAllSet": "You're all set!",
+      "thanksJoining": "Thanks for joining, {name}!",
+      "notifyLaunch": "We'll notify you when Beelia launches.",
+      "backHome": "Back Home",
+      "joining": "Joining...",
+      "joinWaitlistBtn": "Join Waitlist",
+      "waitlistLabel": "Waitlist",
+      "launchLabel": "Launch",
+      "noSpam": "No spam. Unsubscribe anytime."
+    },
+    "Navbar": {
+      "users": "Users",
+      "creators": "Creators",
+      "contact": "Contact",
+      "english": "English",
+      "spanish": "Español",
+      "backToUsers": "back to users",
+      "joinWaitlist": "join waitlist"
+    },
+    "UsersPage": {
+      "heroTitleAI": "AI",
+      "heroTitleForEveryone": "for Everyone,",
+      "heroTitleByEveryone": "by Everyone",
+      "heroDescription": "A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required",
+      "features": {
+        "unifiedBilling": {
+          "title": "Unified Billing",
+          "description": "Manage all your AI subscriptions from a single dashboard. View invoices, track renewals, cancel anytime, and keep all receipts organized in one place."
+        },
+        "centralizedAccess": {
+          "title": "Centralized Access",
+          "description": "Get clear activation steps and direct access links for every subscribed AI tool. Everything you need to get started, stored in one place, no lost emails, no confusion."
+        },
+        "historyLesson": {
+          "title": "AI is where apps were in 2008",
+          "description": "Before the App Store, software was fragmented, hard to trust, and painful to manage. AI tools today are in that same phase. Beelia is built to bring structure, clarity, and simplicity to the next generation of software."
+        },
+        "onePlace": {
+          "title": "One place for the AI you actually use",
+          "description": "As AI becomes part of everyday work, managing it shouldn't feel experimental. Beelia is building the home where your AI tools live, today and as the ecosystem evolves."
+        }
+      }
+    },
+    "AboutProduct": {
+      "open": "open",
+      "aiMarketplace": "AI Marketplace",
+      "description": "A single place to discover, trust, and access AI tools, without setup, guesswork, or fragmentation",
+      "cards": {
+        "discover": "Discover",
+        "discoverDesc": "Find the right AI tool without searching endlessly. Tools are clearly organized and presented so users can quickly understand what each one does and whether it fits their needs.",
+        "subscribe": "Subscribe",
+        "subscribeDesc": "Activate AI instantly. One-click subscriptions, unified billing, and immediate access so you can start using tools the moment you subscribe.",
+        "trust": "Trust",
+        "trustDesc": "Adopt AI with confidence. Every tool and creator goes through a verification process, with clear information on access, usage, and ownership."
+      }
+    },
+    "FAQ": {
+      "categories": {
+        "whatIsBeelia": "What is Beelia?",
+        "forUsers": "For Users",
+        "forCreators": "For Creators",
+        "trustSecurity": "Trust, Security & Vision"
+      },
+      "items": {
+        "whatIsBeelia": [
+          { "question": "What is Beelia?", "answer": "Beelia is an open marketplace where people can discover, subscribe to, and use AI tools, and where creators can monetize their AI tools." },
+          { "question": "How is Beelia different from AI directories or lists?", "answer": "Directories only link you out. Beelia lets you subscribe, manage, and use AI tools in one place with verified creators and unified billing." },
+          { "question": "How is Beelia different from ChatGPT’s App Store?", "answer": "ChatGPT helps you interact with AI inside chat. Beelia helps you adopt AI tools that live outside chat, with real dashboards, APIs, pricing, and ownership." },
+          { "question": "Is Beelia an app store for AI?", "answer": "Yes, conceptually. We’re doing for AI tools what app stores did for mobile apps: distribution, trust, and monetization." },
+          { "question": "Who is Beelia built for?", "answer": "Non-technical users, businesses, creators, developers, and teams who want AI that actually works, without complexity." },
+          { "question": "What problem does Beelia solve?", "answer": "AI is powerful but fragmented, unorganized, and hard to trust. Beelia centralizes discovery, access, and monetization." },
+          { "question": "Why build Beelia now?", "answer": "AI adoption is exploding, but there’s no clear marketplace leader yet. Timing matters, and this is the window." }
+        ],
+        "forUsers": [
+          { "question": "Why would I use Beelia instead of Google or directories?", "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store." },
+          { "question": "Do I have to switch tools if I stop using Beelia?", "answer": "No. Tools are independent. Beelia never locks you in." },
+          { "question": "Can I manage multiple AI subscriptions in one place?", "answer": "Yes. Beelia gives you a unified place to track subscriptions, access details, and renewals." },
+          { "question": "Can I try tools before committing?", "answer": "Many tools offer demos, previews, or trial access depending on the creator." },
+          { "question": "How does billing work?", "answer": "One account, one dashboard, one place to manage all subscriptions and receipts." },
+          { "question": "Can I cancel subscriptions anytime?", "answer": "Yes. No lock-ins. Full control from your dashboard." },
+          { "question": "How do I know which tools are trustworthy?", "answer": "Beelia verifies both creators and tools, and uses reviews and performance signals." },
+          { "question": "Is my data safe?", "answer": "We enforce platform-level security standards and transparency around how tools handle data." },
+          { "question": "How do I know which AI tool is right for me?", "answer": "Tools are categorized, described clearly, and compared based on real use cases, not hype." },
+          { "question": "Can Beelia replace multiple AI subscriptions?", "answer": "That’s the goal, one platform instead of scattered tools everywhere." },
+          { "question": "What problems does Beelia save me from?", "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time." }
+        ],
+        "forCreators": [
+          { "question": "Who can sell AI tools on Beelia?", "answer": "Anyone with a functional AI tool, from indie developers to startups or big corporations." },
+          { "question": "Do I need to build a full SaaS to sell on Beelia?", "answer": "No. Beelia removes the need to build billing, marketing, or distribution from scratch." },
+          { "question": "How do creators make money?", "answer": "Creators set prices. Beelia takes a platform commission on subscriptions." },
+          { "question": "How does Beelia help with discovery?", "answer": "Search, categories, rankings, boosts, and featured placements drive visibility." },
+          { "question": "Can I promote my tool on Beelia?", "answer": "Yes. Boosts and highlights increase exposure inside the marketplace." },
+          { "question": "Do creators keep ownership of their IP?", "answer": "Yes. You own your models and tools, Beelia is the distribution layer." },
+          { "question": "How fast can I launch a tool?", "answer": "In minutes, not months." },
+          { "question": "Why choose Beelia over building my own site?", "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments." }
+        ],
+        "trustSecurity": [
+          { "question": "How does Beelia ensure tool quality?", "answer": "Through verification processes, clear disclosures, and ongoing review systems." },
+          { "question": "How does Beelia handle low-quality tools?", "answer": "Poor-performing tools are deprioritized or removed to protect the ecosystem." },
+          { "question": "Is Beelia a closed or open platform?", "answer": "Open. Anyone can build, list, and subscribe, no gatekeeping." },
+          { "question": "How does Beelia compare to ChatGPT’s app ecosystem?", "answer": "Beelia is open, tool-agnostic, and not limited to one AI provider or interface." },
+          { "question": "Can Beelia remove tools from the marketplace?", "answer": "Yes, if they violate trust, security, or quality standards." },
+          { "question": "What’s Beelia’s long-term vision?", "answer": "To become the default marketplace and infrastructure layer for AI." },
+          { "question": "Is Beelia available globally?", "answer": "Yes. Built for a global creator and user economy from day one." },
+          { "question": "Will Beelia always stay open and neutral?", "answer": "That’s core to the mission: independence from any single AI platform." }
+        ]
+      }
+    },
+    "CreatorsPage": {
+      "heroTitleAI": "AI",
+      "heroTitleForEveryone": "for Everyone,",
+      "heroTitleByEveryone": "by Everyone",
+      "heroDescription": "An open marketplace where AI creators turn their tools into real products, and real revenue.",
+      "features": {
+        "payments": {
+          "title": "Payments handled for you",
+          "description": "Beelia handles subscriptions, billing, and payments automatically, so you can focus on improving your AI while we take care of the money flow."
+        },
+        "dashboard": {
+          "title": "Your creator dashboard",
+          "description": "Manage your listings, pricing, and subscriptions from one place. Update your tool, track active users, and control your monetization without extra infrastructure."
+        },
+        "marketplace": {
+          "title": "Selling AI shouldn’t require a startup",
+          "description": "Today, great AI tools get lost on directories, GitHub, and random landing pages. Beelia is built to give creators a proper marketplace, where AI can be sold like software, not services."
+        },
+        "focus": {
+          "title": "Focus on building, not selling",
+          "description": "You build the intelligence. Beelia handles distribution, payments, and access, so your work can reach users without turning you into a marketer or salesperson."
+        }
+      },
+      "AboutProduct": {
+        "description": "A platform to publish, distribute, and grow AI tools, with real users and real revenue.",
+        "cards": {
+          "publish": "Publish",
+          "publishDesc": "Publish your AI tool on Beelia with a clear profile, transparent pricing, and built-in trust signals, so users know what it does and how to use it.",
+          "distribute": "Distribute",
+          "distributeDesc": "Reach builders, businesses, and creators actively looking for AI solutions, without spending time on marketing, SEO, or cold outreach.",
+          "monetize": "Monetize",
+          "monetizeDesc": "List your AI tool as a standalone product, set your price, and start earning recurring revenue without building a full SaaS or handling payments yourself."
+        }
+      }
+    },
+    "Team": {
+      "title": "team",
+      "subtitle": "FROM THE FUTURE",
+      "description": "The team behind Beelia has spent years building, scaling, and supporting successful technology products, and brings that experience into every part of the platform.",
+      "quote": "\"Beelia was built from the belief that AI should be easy to use, easy to trust, and viable to monetize.\"",
+      "members": [
+        {
+          "name": "Juan Carlos Calvo Fresno",
+          "role": "Founder & CEO",
+          "image": "/images/team/juan.png",
+          "description": "Vision, execution, fundraising, partnerships, and company direction. Temporarily leading marketing and growth.",
+          "background": "Founder with a strong entrepreneurial track record from an early age, building digital businesses, testing markets, and creating online traction across multiple projects. Focused on creating scalable, global platforms with strong narrative and execution discipline.",
+          "responsibilities": [
+            "Defines company vision, mission, and long-term direction",
+            "Leads fundraising, investor relations, and strategic partnerships",
+            "Sets priorities across product, tech, and growth",
+            "Oversees go-to-market strategy and positioning",
+            "Temporarily leads marketing, distribution, and growth execution"
+          ],
+          "coreStrengths": [
+            "Vision & long-term strategy",
+            "Fundraising & investor storytelling",
+            "Marketplace and platform thinking",
+            "Growth experimentation & marketing strategy",
+            "Decision-making under uncertainty"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/juan-carlos-calvo-fresno-a62414331?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Arshdeep Singh",
+          "role": "CTO",
+          "image": "/images/team/arsh.png",
+          "description": "Design, Development, AI Solutions, Tools integration, Tech leadership, and UX Solutions.",
+          "background": "Forward-thinking entrepreneur and product innovator with a proven track record of building successful ventures. Bringing over 5 years of experience in building products and leading teams.",
+          "responsibilities": [
+            "Leads technical architecture decisions and establishes development standards",
+            "Manages engineering team workflows and planning for product delivery",
+            "Evaluates and integrates AI tools and third-party services into the platform",
+            "Builds strategic technical partnerships and manages vendor relationships",
+            "Oversees platform development and ensures design implementation quality"
+          ],
+          "coreStrengths": [
+            "Product Design & UI/UX Expertise",
+            "High-Agency Leadership & Execution",
+            "Project & Product Management",
+            "Networking & Resource Orchestration",
+            "Software Development & Technical Foundation"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/065rsh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Juan Carlos Calvo Rivera",
+          "role": "Head of Finance & Strategy",
+          "image": "/images/team/rivera.png",
+          "description": "Financial oversight, capital discipline, and strategic guidance.",
+          "background": "Founder and CEO of Certia Group, an international infrastructure consulting firm, with over two decades of experience leading large-scale civil engineering and public–private partnership (PPP) projects across Europe, the Middle East, and North America. Brings senior-level operational, financial, and governance experience from managing complex, capital-intensive ventures.",
+          "responsibilities": [
+            "Oversees financial planning and budgeting",
+            "Manages runway, burn rate, and capital discipline",
+            "Supports strategic decision-making with financial insight",
+            "Advises on fundraising structure and governance",
+            "Acts as a strategic advisor to the CEO"
+          ],
+          "coreStrengths": [
+            "Financial planning & capital discipline",
+            "Strategic oversight of large-scale projects",
+            "Risk management and governance",
+            "Public–private partnership (PPP) structuring",
+            "Leadership of large, multidisciplinary teams"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/juan-carlos-c-36212422?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Sanzhar Tashbenbetov",
+          "role": "Founding Engineer",
+          "image": "/images/team/sanzhar.png",
+          "description": "Platform integrity and post-launch verification processes.",
+          "background": "Early technical contributor to Beelia involved during the foundational stages of the platform. Brings continuity and deep system familiarity that supports long-term platform reliability as Beelia transitions from MVP to public launch.",
+          "responsibilities": [
+            "Acts as a foundational technical reference for the platform",
+            "Supports engineering efforts as needed during the pre-launch phase",
+            "Takes responsibility for AI tool verification and platform trust processes post-launch",
+            "Helps ensure quality, reliability, and integrity of listed tools after launch"
+          ],
+          "coreStrengths": [
+            "System understanding and continuity",
+            "Technical analysis and validation",
+            "Platform reliability mindset",
+            "Detail-oriented problem assessment",
+            "Support in early-stage technical environments"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Naman Bhatt",
+          "role": "Lead Developer",
+          "image": "/images/team/naman.png",
+          "description": "Tech innovation, Development, Tools Integration, Design implementation, App Performance, and App Analytics.",
+          "background": "Full-stack software engineer with a strong foundation in frontend technologies and modern web development. Brings expertise in building scalable, performant applications and implementing cutting-edge design solutions.",
+          "responsibilities": [
+            "Leads development of core platform features and technical integrations",
+            "Conducts code reviews and establishes technical standards for the engineering team",
+            "Implements performance monitoring and optimization strategies across the application",
+            "Collaborates with product and design teams to translate requirements into technical solutions",
+            "Troubleshoots and resolves critical production issues to ensure platform stability"
+          ],
+          "coreStrengths": [
+            "Fast-Paced Problem Solving & Execution",
+            "Scalable Architecture & Infrastructure Design",
+            "Performance Optimization & User Experience",
+            "Cross-Functional Collaboration & Technical Communication",
+            "Software Development Excellence"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/naman-bhatt-7881581b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        }
+      ]
+    },
+    "Footer": {
+      "aiMarketplace": "The AI Marketplace",
+      "tagline": "Where AI tools meet the people who need them.",
+      "poweredBy": "Powered by",
+      "connect": "Connect",
+      "legal": "Legal",
+      "policies": "Policies",
+      "terms": "Terms"
+    }
+  },
+  "es": {
+    "HomePage": {
+      "title": "Bienvenido a Beelia",
+      "description": "El futuro de las herramientas para creadores"
+    },
+    "Waitlist": {
+      "get": "Obtén",
+      "earlyAccess": "Acceso Anticipado",
+      "description": "Llegar temprano es raro. Este es uno de esos momentos.",
+      "emailPlaceholder": "Ingresa tu correo",
+      "submit": "Enviar",
+      "submitting": "Enviando...",
+      "almostThere": "¡Ya casi estás!",
+      "tellUsMore": "Cuéntanos un poco más sobre ti (opcional)",
+      "user": "Usuario",
+      "creator": "Creador",
+      "namePlaceholder": "Tu nombre",
+      "platformLinkPlaceholder": "Enlace a tu plataforma",
+      "skipForNow": "Saltar por ahora",
+      "youreAllSet": "¡Todo listo!",
+      "thanksJoining": "¡Gracias por unirte, {name}!",
+      "notifyLaunch": "Te avisaremos cuando Beelia se lance.",
+      "backHome": "Volver al Inicio",
+      "joining": "Uniéndose...",
+      "joinWaitlistBtn": "Unirse a la lista",
+      "waitlistLabel": "Lista de espera",
+      "launchLabel": "Lanzamiento",
+      "noSpam": "Sin spam. Cancela en cualquier momento."
+    },
+    "Navbar": {
+      "users": "Usuarios",
+      "creators": "Creadores",
+      "contact": "Contacto",
+      "english": "English",
+      "spanish": "Español",
+      "backToUsers": "volver a usuarios",
+      "joinWaitlist": "unirse a lista"
+    },
+    "UsersPage": {
+      "heroTitleAI": "IA",
+      "heroTitleForEveryone": "para Todos,",
+      "heroTitleByEveryone": "por Todos",
+      "heroDescription": "Un mercado de IA curado donde cualquiera puede descubrir, confiar y usar las herramientas adecuadas al instante, sin conocimientos técnicos",
+      "features": {
+        "unifiedBilling": {
+          "title": "Facturación unificada",
+          "description": "Gestiona todas tus suscripciones de IA desde un solo panel. Ve facturas, rastrea renovaciones, cancela en cualquier momento y mantén todos los recibos organizados en un solo lugar."
+        },
+        "centralizedAccess": {
+          "title": "Acceso centralizado",
+          "description": "Obtén pasos de activación claros y enlaces de acceso directo para cada herramienta de IA suscrita. Todo lo que necesitas para comenzar, almacenado en un solo lugar, sin correos perdidos ni confusión."
+        },
+        "historyLesson": {
+          "title": "La IA está donde estaban las apps en 2008",
+          "description": "Antes de la App Store, el software estaba fragmentado, era difícil de confiar y doloroso de gestionar. Las herramientas de IA hoy están en esa misma fase. Beelia está construido para traer estructura, claridad y simplicidad a la próxima generación de software."
+        },
+        "onePlace": {
+          "title": "Un lugar para la IA que realmente usas",
+          "description": "A medida que la IA se convierte en parte del trabajo diario, gestionarla no debería sentirse experimental. Beelia está construyendo el hogar donde viven tus herramientas de IA, hoy y a medida que el ecosistema evoluciona."
+        }
+      }
+    },
+    "CreatorsPage": {
+      "heroTitleAI": "IA",
+      "heroTitleForEveryone": "para Todos,",
+      "heroTitleByEveryone": "por Todos",
+      "heroDescription": "Un mercado abierto donde los creadores de IA convierten sus herramientas en productos reales y ganancias reales.",
+      "features": {
+        "payments": {
+          "title": "Pagos gestionados por ti",
+          "description": "Beelia maneja suscripciones, facturación y pagos automáticamente, para que puedas concentrarte en mejorar tu IA mientras nosotros nos ocupamos del flujo de dinero."
+        },
+        "dashboard": {
+          "title": "Tu panel de creador",
+          "description": "Gestiona tus listados, precios y suscripciones desde un solo lugar. Actualiza tu herramienta, rastrea usuarios activos y controla tu monetización sin infraestructura extra."
+        },
+        "marketplace": {
+          "title": "Vender IA no debería requerir una startup",
+          "description": "Hoy, las grandes herramientas de IA se pierden en directorios, GitHub y páginas de destino aleatorias. Beelia está construido para dar a los creadores un mercado adecuado, donde la IA se pueda vender como software, no como servicios."
+        },
+        "focus": {
+          "title": "Céntrate en construir, no en vender",
+          "description": "Tú construyes la inteligencia. Beelia maneja la distribución, los pagos y el acceso, para que tu trabajo pueda llegar a los usuarios sin convertirte en un vendedor."
+        }
+      },
+      "AboutProduct": {
+        "description": "Una plataforma para publicar, distribuir y hacer crecer herramientas de IA, con usuarios reales y ganancias reales.",
+        "cards": {
+          "publish": "Publicar",
+          "publishDesc": "Publica tu herramienta de IA en Beelia con un perfil claro, precios transparentes y señales de confianza integradas, para que los usuarios sepan qué hace y cómo usarla.",
+          "distribute": "Distribuir",
+          "distributeDesc": "Llega a constructores, empresas y creadores que buscan activamente soluciones de IA, sin perder tiempo en marketing o SEO.",
+          "monetize": "Monetizar",
+          "monetizeDesc": "Lista tu herramienta de IA como un producto independiente, establece tu precio y comienza a obtener ingresos recurrentes sin construir un SaaS completo ni manejar pagos."
+        }
+      }
+    },
+    "Team": {
+      "title": "equipo",
+      "subtitle": "DEL FUTURO",
+      "description": "El equipo detrás de Beelia ha pasado años construyendo, escalando y apoyando productos tecnológicos exitosos, y trae esa experiencia a cada parte de la plataforma.",
+      "quote": "\"Beelia se construyó desde la creencia de que la IA debe ser fácil de usar, fácil de confiar y viable de monetizar.\"",
+      "members": [
+        {
+          "name": "Juan Carlos Calvo Fresno",
+          "role": "Fundador y CEO",
+          "image": "/images/team/juan.png",
+          "description": "Visión, ejecución, recaudación de fondos, asociaciones y dirección de la empresa. Liderando temporalmente marketing y crecimiento.",
+          "background": "Fundador con un fuerte historial empresarial desde temprana edad, construyendo negocios digitales, probando mercados y creando tracción en línea en múltiples proyectos. Enfocado en crear plataformas globales escalables con una narrativa sólida y disciplina de ejecución.",
+          "responsibilities": [
+            "Define la visión, misión y dirección a largo plazo de la empresa",
+            "Lidera la recaudación de fondos, relaciones con inversores y asociaciones estratégicas",
+            "Establece prioridades en producto, tecnología y crecimiento",
+            "Supervisa la estrategia de lanzamiento al mercado y posicionamiento",
+            "Lidera temporalmente la ejecución de marketing, distribución y crecimiento"
+          ],
+          "coreStrengths": [
+            "Visión y estrategia a largo plazo",
+            "Recaudación de fondos y narración para inversores",
+            "Pensamiento de mercado y plataforma",
+            "Experimentación de crecimiento y estrategia de marketing",
+            "Toma de decisiones bajo incertidumbre"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/juan-carlos-calvo-fresno-a62414331?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Arshdeep Singh",
+          "role": "CTO",
+          "image": "/images/team/arsh.png",
+          "description": "Diseño, desarrollo, soluciones de IA, integración de herramientas, liderazgo técnico y soluciones de UX.",
+          "background": "Emprendedor con visión de futuro e innovador de productos con un historial probado de construcción de empresas exitosas. Aportando más de 5 años de experiencia en la construcción de productos y liderazgo de equipos.",
+          "responsibilities": [
+            "Lidera las decisiones de arquitectura técnica y establece estándares de desarrollo",
+            "Gestiona los flujos de trabajo del equipo de ingeniería y la planificación para la entrega del producto",
+            "Evalúa e integra herramientas de IA y servicios de terceros en la plataforma",
+            "Construye asociaciones técnicas estratégicas y gestiona relaciones con proveedores",
+            "Supervisa el desarrollo de la plataforma y asegura la calidad de la implementación del diseño"
+          ],
+          "coreStrengths": [
+            "Diseño de producto y experiencia en UI/UX",
+            "Liderazgo y ejecución de alta agencia",
+            "Gestión de proyectos y productos",
+            "Redes y orquestación de recursos",
+            "Desarrollo de software y base técnica"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/065rsh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Juan Carlos Calvo Rivera",
+          "role": "Jefe de Finanzas y Estrategia",
+          "image": "/images/team/rivera.png",
+          "description": "Supervisión financiera, disciplina de capital y orientación estratégica.",
+          "background": "Fundador y CEO de Certia Group, una firma internacional de consultoría de infraestructura, con más de dos décadas de experiencia liderando proyectos de ingeniería civil a gran escala y asociaciones público-privadas (APP) en Europa, Medio Oriente y América del Norte. Aporta experiencia operativa, financiera y de gobernanza de nivel senior.",
+          "responsibilities": [
+            "Supervisa la planificación financiera y el presupuesto",
+            "Gestiona la pista, la tasa de consumo y la disciplina de capital",
+            "Apoya la toma de decisiones estratégicas con visión financiera",
+            "Asesora sobre la estructura de recaudación de fondos y gobernanza",
+            "Actúa como asesor estratégico del CEO"
+          ],
+          "coreStrengths": [
+            "Planificación financiera y disciplina de capital",
+            "Supervisión estratégica de proyectos a gran escala",
+            "Gestión de riesgos y gobernanza",
+            "Estructuración de asociaciones público-privadas (APP)",
+            "Liderazgo de grandes equipos multidisciplinarios"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/juan-carlos-c-36212422?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Sanzhar Tashbenbetov",
+          "role": "Ingeniero Fundador",
+          "image": "/images/team/sanzhar.png",
+          "description": "Integridad de la plataforma y procesos de verificación posteriores al lanzamiento.",
+          "background": "Contribuyente técnico temprano a Beelia involucrado durante las etapas fundamentales de la plataforma. Aporta continuidad y profunda familiaridad con el sistema que respalda la fiabilidad de la plataforma a largo plazo.",
+          "responsibilities": [
+            "Actúa como referencia técnica fundamental para la plataforma",
+            "Apoya los esfuerzos de ingeniería según sea necesario durante la fase previa al lanzamiento",
+            "Asume la responsabilidad de la verificación de herramientas de IA y los procesos de confianza de la plataforma después del lanzamiento",
+            "Ayuda a garantizar la calidad, fiabilidad e integridad de las herramientas listadas después del lanzamiento"
+          ],
+          "coreStrengths": [
+            "Comprensión del sistema y continuidad",
+            "Análisis técnico y validación",
+            "Mentalidad de fiabilidad de la plataforma",
+            "Evaluación de problemas orientada al detalle",
+            "Soporte en entornos técnicos de etapa temprana"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Naman Bhatt",
+          "role": "Desarrollador Líder",
+          "image": "/images/team/naman.png",
+          "description": "Innovación tecnológica, desarrollo, integración de herramientas, implementación de diseño, rendimiento de aplicaciones y análisis de aplicaciones.",
+          "background": "Ingeniero de software full-stack con una sólida base en tecnologías frontend y desarrollo web moderno. Aporta experiencia en la construcción de aplicaciones escalables y de alto rendimiento y en la implementación de soluciones de diseño de vanguardia.",
+          "responsibilities": [
+            "Lidera el desarrollo de características principales de la plataforma e integraciones técnicas",
+            "Realiza revisiones de código y establece estándares técnicos para el equipo de ingeniería",
+            "Implementa estrategias de monitoreo y optimización del rendimiento en toda la aplicación",
+            "Colabora con los equipos de producto y diseño para traducir los requisitos en soluciones técnicas",
+            "Soluciona y resuelve problemas críticos de producción para garantizar la estabilidad de la plataforma"
+          ],
+          "coreStrengths": [
+            "Resolución de problemas y ejecución rápida",
+            "Diseño de arquitectura e infraestructura escalable",
+            "Optimización del rendimiento y experiencia del usuario",
+            "Colaboración interfuncional y comunicación técnica",
+            "Excelencia en el desarrollo de software"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/naman-bhatt-7881581b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        }
+      ]
+    },
+    "AboutProduct": {
+      "open": "abierto",
+      "aiMarketplace": "Mercado de IA",
+      "description": "Un único lugar para descubrir, confiar y acceder a herramientas de IA, sin configuración, conjeturas ni fragmentación",
+      "cards": {
+        "discover": "Descubrir",
+        "discoverDesc": "Encuentra la herramienta de IA adecuada sin buscar interminablemente. Las herramientas están organizadas y presentadas claramente.",
+        "subscribe": "Suscribirse",
+        "subscribeDesc": "Activa la IA al instante. Suscripciones con un clic, facturación unificada y acceso inmediato.",
+        "trust": "Confiar",
+        "trustDesc": "Adopta la IA con confianza. Cada herramienta y creador pasa por un proceso de verificación."
+      }
+    },
+    "FAQ": {
+      "categories": {
+        "whatIsBeelia": "¿Qué es Beelia?",
+        "forUsers": "Para Usuarios",
+        "forCreators": "Para Creadores",
+        "trustSecurity": "Confianza, Seguridad y Visión"
+      },
+      "items": {
+        "whatIsBeelia": [
+          { "question": "¿Qué es Beelia?", "answer": "Beelia es un mercado abierto donde las personas pueden descubrir, suscribirse y usar herramientas de IA, y donde los creadores pueden monetizar sus herramientas de IA." },
+          { "question": "¿En qué se diferencia de directorios de IA?", "answer": "Los directorios solo te envían fuera. Beelia te permite suscribirte, gestionar y usar herramientas en un solo lugar con creadores verificados y facturación unificada." },
+          { "question": "¿Diferencia con la tienda de ChatGPT?", "answer": "ChatGPT es para chat. Beelia es para herramientas externas con paneles reales, APIs, precios y propiedad." },
+          { "question": "¿Es una tienda de apps para IA?", "answer": "Sí, conceptualmente. Hacemos por la IA lo que las tiendas hicieron por las apps móviles: distribución, confianza y monetización." },
+          { "question": "¿Para quién es Beelia?", "answer": "Usuarios no técnicos, empresas, creadores y equipos que quieren IA que funcione sin complejidad." },
+          { "question": "¿Qué problema resuelve?", "answer": "La IA está fragmentada y es difícil de confiar. Beelia centraliza el descubrimiento, acceso y monetización." },
+          { "question": "¿Por qué ahora?", "answer": "La adopción de IA explota, pero no hay un líder de mercado claro. El momento es ahora." }
+        ],
+        "forUsers": [
+          { "question": "¿Por qué usar Beelia?", "answer": "Porque descubrir herramientas hoy es caótico. Beelia trae estructura para que las herramientas sean accesibles y comparables." },
+          { "question": "¿Debo cambiar si dejo de usar Beelia?", "answer": "No. Las herramientas son independientes. Beelia no te encierra." },
+          { "question": "¿Puedo gestionar múltiples suscripciones?", "answer": "Sí. Un lugar unificado para rastrear suscripciones y renovaciones." },
+          { "question": "¿Puedo probar antes de comprometerme?", "answer": "Muchas herramientas ofrecen demos o pruebas." },
+          { "question": "¿Cómo funciona la facturación?", "answer": "Una cuenta, un panel, un lugar para todas las suscripciones." },
+          { "question": "¿Puedo cancelar en cualquier momento?", "answer": "Sí. Sin ataduras. Control total desde tu panel." },
+          { "question": "¿Cómo sé qué es confiable?", "answer": "Beelia verifica creadores y herramientas, y usa reseñas." },
+          { "question": "¿Mis datos están seguros?", "answer": "Aplicamos estándares de seguridad y transparencia." },
+          { "question": "¿Cómo sé qué herramienta es para mí?", "answer": "Las herramientas están categorizadas y descritas claramente." },
+          { "question": "¿Puede reemplazar múltiples suscripciones?", "answer": "Esa es la meta, una plataforma en lugar de herramientas dispersas." },
+          { "question": "¿De qué problemas me salva?", "answer": "Sobrecarga de herramientas, plataformas dudosas, precios poco claros y tiempo perdido." }
+        ],
+        "forCreators": [
+          { "question": "¿Quién puede vender en Beelia?", "answer": "Cualquiera con una herramienta de IA funcional." },
+          { "question": "¿Necesito un SaaS completo?", "answer": "No. Beelia maneja facturación y distribución." },
+          { "question": "¿Cómo ganan dinero los creadores?", "answer": "Tú pones el precio. Beelia cobra una comisión." },
+          { "question": "¿Ayuda con el descubrimiento?", "answer": "Búsqueda, categorías, rankings y destacados." },
+          { "question": "¿Puedo promocionar mi herramienta?", "answer": "Sí. Impulsos y destacados aumentan la exposición." },
+          { "question": "¿Mantengo mi propiedad intelectual?", "answer": "Sí. Tú eres dueño de tus modelos y herramientas." },
+          { "question": "¿Qué tan rápido puedo lanzar?", "answer": "En minutos, no meses." },
+          { "question": "¿Por qué elegir Beelia?", "answer": "Porque la distribución supera a la infraestructura. Beelia trae usuarios y confianza." }
+        ],
+        "trustSecurity": [
+          { "question": "¿Cómo aseguran la calidad?", "answer": "Verificación, divulgación clara y revisión continua." },
+          { "question": "¿Cómo manejan herramientas de baja calidad?", "answer": "Se despriorizan o eliminan." },
+          { "question": "¿Es una plataforma cerrada o abierta?", "answer": "Abierta. Cualquiera puede construir y listar." },
+          { "question": "¿Comparación con ecosistema de ChatGPT?", "answer": "Beelia es agnóstica a herramientas y proveedores." },
+          { "question": "¿Pueden eliminar herramientas?", "answer": "Sí, si violan estándares." },
+          { "question": "¿Visión a largo plazo?", "answer": "Ser el mercado e infraestructura por defecto para IA." },
+          { "question": "¿Disponible globalmente?", "answer": "Sí." },
+          { "question": "¿Se mantendrá neutral?", "answer": "Esa es la misión central." }
+        ]
+      }
+    },
+    "Footer": {
+      "aiMarketplace": "El Mercado de IA",
+      "tagline": "Donde las herramientas de IA encuentran a las personas que las necesitan.",
+      "poweredBy": "Impulsado por",
+      "connect": "Conectar",
+      "legal": "Legal",
+      "policies": "Políticas",
+      "terms": "Términos"
+    }
+  }
+}

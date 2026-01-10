@@ -191,13 +191,62 @@ STROKE_GEOMETRY.mobile.rightDiagonal.angle =
       1000
   ) / 1000;
 
+import { useTranslations } from "next-intl";
+
 export function AboutProduct({
-  boxData = DEFAULT_BOX_DATA,
-  cardData = DEFAULT_CARD_DATA,
+  boxData: boxDataProp,
+  cardData: cardDataProp,
   features,
-  descriptionText = "A single place to discover, trust, and access AI tools, without setup, guesswork, or fragmentation",
+  descriptionText: descriptionTextProp,
 }: AboutProductProps = {}) {
+  const t = useTranslations('AboutProduct');
+  const tTeam = useTranslations('Team');
   const windowWidth = useWindowWidth();
+
+  // Translated defaults
+  const descriptionText = descriptionTextProp || t('description');
+  
+  const cardData = cardDataProp || [
+    {
+      title: t('cards.discover'),
+      subtitle: "",
+      description: t('cards.discoverDesc'),
+      iconPath: "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z",
+    },
+    {
+      title: t('cards.subscribe'),
+      subtitle: "",
+      description: t('cards.subscribeDesc'),
+      iconPath: "M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0",
+    },
+    {
+      title: t('cards.trust'),
+      subtitle: "",
+      description: t('cards.trustDesc'),
+      iconPath: "M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z",
+    },
+  ];
+
+  const boxData = boxDataProp || [
+    {
+      video: "/videos/magnify.gif",
+      title: t('cards.discover'),
+      x: 15.055,
+      stackedVideo: "/videos/magnify.gif",
+    },
+    {
+      video: "/videos/bell.gif",
+      title: t('cards.subscribe'),
+      x: 391.754,
+      stackedVideo: "/videos/bell.gif",
+    },
+    {
+      video: "/videos/shield.gif",
+      title: t('cards.trust'),
+      x: 767.027,
+      stackedVideo: "/videos/shield.gif",
+    },
+  ];
   // Calculate responsive scale factor for mobile bottom lines
   const isMobile = windowWidth < 768;
   const bottomLinesScale = isMobile
@@ -516,7 +565,7 @@ export function AboutProduct({
                     fontSize: "clamp(24px, 3vw, 48px)",
                   }}
                 >
-                  open&nbsp;
+                  {t('open')}&nbsp;
                 </span>
                 <span
                   className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
@@ -529,7 +578,7 @@ export function AboutProduct({
                     opacity: 0.9,
                   }}
                 >
-                  AI Marketplace
+                  {t('aiMarketplace')}
                 </span>
               </h2>
             </div>
@@ -1213,7 +1262,7 @@ export function AboutProduct({
                     fontSize: "clamp(24px, 3vw, 48px)",
                   }}
                 >
-                  team&nbsp;
+                  {tTeam('title')}&nbsp;
                 </span>
                 <span
                   className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
@@ -1226,7 +1275,7 @@ export function AboutProduct({
                     opacity: 0.9,
                   }}
                 >
-                  FROM THE FUTURE
+                  {tTeam('subtitle')}
                 </span>
               </h2>
             </div>
@@ -1249,9 +1298,7 @@ export function AboutProduct({
                 opacity: 0.7,
               }}
             >
-              The team behind Beelia has spent years building, scaling, and
-              supporting successful technology products, and brings that
-              experience into every part of the platform.
+              {tTeam('description')}
             </p>
           </div>
         </motion.div>

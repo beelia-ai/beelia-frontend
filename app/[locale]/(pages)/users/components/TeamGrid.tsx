@@ -1,12 +1,12 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ProfileCard } from "./ProfileCard";
 import { QuoteCard } from "./QuoteCard";
 import { HorizontalDivider } from "./HorizontalDivider";
 import { VerticalDivider } from "./VerticalDivider";
 import { IntersectionDot } from "./IntersectionDot";
-import { teamGridData } from "./teamGridData";
 
 interface TeamGridProps {
   scrollStart?: number; // Scroll position where animation starts (default: 3400)
@@ -26,6 +26,53 @@ export function TeamGrid({
   marginTop = "800px",
 }: TeamGridProps) {
   const { scrollY: scrollYMotion } = useScroll();
+  const t = useTranslations('Team');
+  const members = t.raw('members') as any[];
+  const quote = t('quote');
+
+  const teamGridData = [
+    {
+      // First row: 1 profile card + 1 quote card
+      cards: [
+        {
+          type: "profile" as const,
+          data: members[0], // Juan Carlos Calvo Fresno
+        },
+        {
+          type: "quote" as const,
+          data: {
+            quote: quote,
+          },
+        },
+      ],
+    },
+    {
+      // Second row: 2 profile cards
+      cards: [
+        {
+          type: "profile" as const,
+          data: members[1], // Arshdeep Singh
+        },
+        {
+          type: "profile" as const,
+          data: members[2], // Juan Carlos Calvo Rivera
+        },
+      ],
+    },
+    {
+      // Third row: 2 profile cards
+      cards: [
+        {
+          type: "profile" as const,
+          data: members[3], // Sanzhar Tashbenbetov
+        },
+        {
+          type: "profile" as const,
+          data: members[4], // Naman Bhatt
+        },
+      ],
+    },
+  ];
 
   // Find the last profile row index
   const lastProfileRowIndex = teamGridData.reduce((lastIndex, row, index) => {

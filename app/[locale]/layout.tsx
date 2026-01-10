@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, Outfit } from "next/font/google";
 import localFont from "next/font/local";
-import "./globals.css";
+import "../globals.css";
 import { Preloader } from "@/components/Preloader";
 import NavbarClient from "@/components/layout/NavbarClient";
 import { FontPreloader } from "@/components/FontPreloader";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 
 const inter = Inter({ subsets: ["latin"] });
 const instrumentSerif = Instrument_Serif({
@@ -22,12 +24,12 @@ const outfit = Outfit({
 const editorsNoteItalic = localFont({
   src: [
     {
-      path: "./fonts/EditorsNote-Italic.woff2",
+      path: "../fonts/EditorsNote-Italic.woff2",
       weight: "400",
       style: "italic",
     },
     {
-      path: "./fonts/EditorsNote-Italic.otf",
+      path: "../fonts/EditorsNote-Italic.otf",
       weight: "400",
       style: "italic",
     },
@@ -42,12 +44,12 @@ const editorsNoteItalic = localFont({
 const editorsNoteMediumItalic = localFont({
   src: [
     {
-      path: "./fonts/EditorsNote-MediumItalic.woff2",
+      path: "../fonts/EditorsNote-MediumItalic.woff2",
       weight: "500",
       style: "italic",
     },
     {
-      path: "./fonts/EditorsNote-MediumItalic.otf",
+      path: "../fonts/EditorsNote-MediumItalic.otf",
       weight: "500",
       style: "italic",
     },
@@ -99,23 +101,30 @@ export const viewport: Viewport = {
   viewportFit: "cover", // Enables safe-area-inset support
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: {
   readonly children: React.ReactNode;
+  readonly params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning className="overflow-x-hidden">
+    <html lang={locale} suppressHydrationWarning className="overflow-x-hidden">
       <body
         className={`${inter.className} ${instrumentSerif.variable} ${outfit.variable} ${editorsNoteItalic.variable} ${editorsNoteMediumItalic.variable} bg-black overflow-x-hidden`}
         suppressHydrationWarning
       >
-        <FontPreloader />
-        <Preloader />
-        <NavbarClient />
-        <div className="relative" style={{ zIndex: 1 }}>
-          {children}
-        </div>
+        <NextIntlClientProvider messages={messages}>
+          <FontPreloader />
+          <Preloader />
+          <NavbarClient />
+          <div className="relative" style={{ zIndex: 1 }}>
+            {children}
+          </div>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

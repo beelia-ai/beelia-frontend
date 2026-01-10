@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { NewHero } from "./components/NewHero";
 import { AboutProduct } from "./components/AboutProduct";
 import { FAQ } from "./components/FAQ";
@@ -31,6 +32,8 @@ export default function HomePage() {
     [0, 0, 0.95], // Near white - glossy white
   ];
 
+  const t = useTranslations('UsersPage');
+
   return (
     <div className="relative w-full bg-transparent">
       {/* Particle Sprites Background - reduced particles on mobile - z-10 to be above blackhole (z-5) */}
@@ -52,14 +55,14 @@ export default function HomePage() {
         <NewHero
           title={
             <>
-              <span className="text-white">AI</span>{" "}
+              <span className="text-white">{t('heroTitleAI')}</span>{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
-                for Everyone,
+                {t('heroTitleForEveryone')}
               </span>{" "}
-              <span className="text-white">by Everyone</span>
+              <span className="text-white">{t('heroTitleByEveryone')}</span>
             </>
           }
-          description="A curated AI marketplace where anyone can discover, trust, and use the right tools instantly, no technical skills required"
+          description={t('heroDescription')}
         />
         <AboutProduct />
         <FAQ />

@@ -126,36 +126,37 @@ interface FeaturesGridProps {
   features?: FeatureData[];
 }
 
-// Default features for users
-const DEFAULT_FEATURES: FeatureData[] = [
-  {
-    title: "Unified Billing",
-    description:
-      "Manage all your AI subscriptions from a single dashboard. View invoices, track renewals, cancel anytime, and keep all receipts organized in one place.",
-    imageSrc: "/images/unified-billing.png",
-  },
-  {
-    title: "Centralized Access",
-    description:
-      "Get clear activation steps and direct access links for every subscribed AI tool. Everything you need to get started, stored in one place, no lost emails, no confusion.",
-    imageSrc: "/images/centralized-access.png",
-  },
-  {
-    title: "AI is where apps were in 2008",
-    description:
-      "Before the App Store, software was fragmented, hard to trust, and painful to manage. AI tools today are in that same phase. Beelia is built to bring structure, clarity, and simplicity to the next generation of software.",
-  },
-  {
-    title: "One place for the AI you actually use",
-    description:
-      "As AI becomes part of everyday work, managing it shouldn't feel experimental. Beelia is building the home where your AI tools live, today and as the ecosystem evolves.",
-  },
-];
+import { useTranslations } from "next-intl";
 
-export function FeaturesGrid({ features = DEFAULT_FEATURES }: FeaturesGridProps = {}) {
+export function FeaturesGrid({ features }: FeaturesGridProps = {}) {
+  const t = useTranslations('UsersPage.features');
+  
+  const defaultFeatures: FeatureData[] = [
+    {
+      title: t('unifiedBilling.title'),
+      description: t('unifiedBilling.description'),
+      imageSrc: "/images/unified-billing.png",
+    },
+    {
+      title: t('centralizedAccess.title'),
+      description: t('centralizedAccess.description'),
+      imageSrc: "/images/centralized-access.png",
+    },
+    {
+      title: t('historyLesson.title'),
+      description: t('historyLesson.description'),
+    },
+    {
+      title: t('onePlace.title'),
+      description: t('onePlace.description'),
+    },
+  ];
+
+  const displayFeatures = features || defaultFeatures;
+
   // Split features into two rows: first 2 with images, last 2 without
-  const firstRowFeatures = features.slice(0, 2);
-  const secondRowFeatures = features.slice(2, 4);
+  const firstRowFeatures = displayFeatures.slice(0, 2);
+  const secondRowFeatures = displayFeatures.slice(2, 4);
 
   return (
     <div

@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import GlassSurface from "@/components/GlassSurface";
 import { ReactNode, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 
 interface HeroContentProps {
   isAnimating: boolean;
@@ -26,6 +27,7 @@ export function HeroContent({
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isMobileButtonActive, setIsMobileButtonActive] = useState(false);
+  const t = useTranslations('Navbar');
 
   useEffect(() => {
     setMounted(true);
@@ -208,7 +210,7 @@ export function HeroContent({
                         whiteSpace: "nowrap",
                       }}
                     >
-                      join waitlist
+                      {t('joinWaitlist')}
                     </span>
                     <Image
                       src="/icons/Vector.svg"
@@ -274,7 +276,7 @@ export function HeroContent({
                           color: "#FFFFFF",
                         }}
                       >
-                        join waitlist
+                        {t('joinWaitlist')}
                       </span>
                       <Image
                         src="/icons/Vector.svg"

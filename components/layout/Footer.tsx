@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FooterLink } from "./FooterLink";
 import { LegalModal } from "./LegalModal";
 import legalContent from "./legal-content.json";
+import { useTranslations } from "next-intl";
 
 // Track window width for responsive scaling
 function useWindowWidth() {
@@ -24,6 +25,7 @@ function useWindowWidth() {
 export function Footer() {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
+  const t = useTranslations('Footer');
 
   // Load content from JSON file
   const termsContent = legalContent.terms.content;
@@ -119,7 +121,7 @@ export function Footer() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                The AI Marketplace
+                {t('aiMarketplace')}
               </h2>
 
               {/* Description */}
@@ -134,7 +136,7 @@ export function Footer() {
                   opacity: 0.5,
                 }}
               >
-                Where AI tools meet the people who need them.
+                {t('tagline')}
               </p>
 
               {/* Powered By */}
@@ -158,7 +160,7 @@ export function Footer() {
                   display: "inline-block",
                 }}
               >
-                Powered by <b>CESNO</b>
+                {t('poweredBy')} <b>CESNO</b>
               </a>
             </div>
 
@@ -185,7 +187,7 @@ export function Footer() {
                     opacity: 0.5,
                   }}
                 >
-                  Connect
+                  {t('connect')}
                 </h3>
                 <div
                   className="flex flex-col items-start sm:items-end"
@@ -226,7 +228,7 @@ export function Footer() {
                     opacity: 0.5,
                   }}
                 >
-                  Legal
+                  {t('legal')}
                 </h3>
                 <div
                   className="flex flex-col items-start sm:items-end"
@@ -234,13 +236,13 @@ export function Footer() {
                 >
                   {/* LegalModal components with built-in trigger and modal */}
                   <LegalModal
-                    label="Policies"
-                    title="Policies"
+                    label={t('policies')}
+                    title={t('policies')}
                     content={privacyContent}
                   />
                   <LegalModal
-                    label="Terms"
-                    title="Terms"
+                    label={t('terms')}
+                    title={t('terms')}
                     content={termsContent}
                   />
                 </div>

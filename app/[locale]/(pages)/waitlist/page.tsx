@@ -8,6 +8,7 @@ import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
 import { BlackholeVideo } from "@/components/layout/BlackholeVideo";
 import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
+import { useTranslations } from "next-intl";
 
 const GlassSurface = dynamic(() => import("@/components/GlassSurface"), {
   ssr: false,
@@ -38,6 +39,7 @@ function CardSection({ children }: { children: React.ReactNode }) {
 
 // Waitlist Hero Content
 function WaitlistHero() {
+  const t = useTranslations('Waitlist');
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [platformLink, setPlatformLink] = useState("");
@@ -209,6 +211,9 @@ function WaitlistHero() {
         .glass-btn-wrapper.selected::after {
           clip-path: inset(0 0 0 0);
         }
+        .glass-btn-wrapper.selected span {
+          font-weight: 700;
+        }
         .glass-btn-wrapper > * {
           position: relative;
           z-index: 2;
@@ -258,7 +263,7 @@ function WaitlistHero() {
                 letterSpacing: "-0.02em",
               }}
             >
-              You&apos;re all set!
+              {t('youreAllSet')}
             </h1>
 
             <p
@@ -269,8 +274,8 @@ function WaitlistHero() {
                 lineHeight: "170%",
               }}
             >
-              Thanks for joining, {name || "friend"}! <br />
-              We&apos;ll notify you when Beelia launches.
+              {t.rich('thanksJoining', {name: name || "friend"})} <br />
+              {t('notifyLaunch')}
             </p>
 
             <Link
@@ -281,7 +286,7 @@ function WaitlistHero() {
                 fontSize: "14px",
               }}
             >
-              Back Home
+              {t('backHome')}
               <svg
                 width="14"
                 height="14"
@@ -329,7 +334,7 @@ function WaitlistHero() {
                 letterSpacing: "-0.03em",
               }}
             >
-              Almost there!
+              {t('almostThere')}
             </h1>
 
             {/* Description */}
@@ -342,7 +347,7 @@ function WaitlistHero() {
                 lineHeight: "170%",
               }}
             >
-              Tell us a bit more about yourself (optional)
+              {t('tellUsMore')}
             </p>
 
             {/* User Type Toggle Pills */}
@@ -398,7 +403,7 @@ function WaitlistHero() {
                                 letterSpacing: "0.06em",
                               }}
                             >
-                              User
+                              {t('user')}
                             </span>
                           </div>
                         </GlassSurface>
@@ -455,7 +460,7 @@ function WaitlistHero() {
                                 letterSpacing: "0.06em",
                               }}
                             >
-                              Creator
+                              {t('creator')}
                             </span>
                           </div>
                         </GlassSurface>
@@ -485,7 +490,7 @@ function WaitlistHero() {
                           letterSpacing: "0.06em",
                         }}
                       >
-                        User
+                        {t('user')}
                       </span>
                     </button>
 
@@ -510,7 +515,7 @@ function WaitlistHero() {
                           letterSpacing: "0.06em",
                         }}
                       >
-                        Creator
+                        {t('creator')}
                       </span>
                     </button>
                   </>
@@ -525,7 +530,7 @@ function WaitlistHero() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
+                  placeholder={t('namePlaceholder')}
                   className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                   style={{
                     width: "100%",
@@ -541,7 +546,7 @@ function WaitlistHero() {
                     type="url"
                     value={platformLink}
                     onChange={(e) => setPlatformLink(e.target.value)}
-                    placeholder="Link to your platform"
+                    placeholder={t('platformLinkPlaceholder')}
                     className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
                     style={{
                       width: "100%",
@@ -615,7 +620,7 @@ function WaitlistHero() {
                                 textTransform: "uppercase",
                               }}
                             >
-                              Submitting...
+                              {t('submitting')}
                             </span>
                           </span>
                         ) : (
@@ -629,7 +634,7 @@ function WaitlistHero() {
                                 letterSpacing: "0.06em",
                               }}
                             >
-                              Submit
+                              {t('submit')}
                             </span>
                             <Image
                               src="/icons/Vector.svg"
@@ -664,7 +669,7 @@ function WaitlistHero() {
                       letterSpacing: "0.06em",
                     }}
                   >
-                    Submit
+                    {t('submit')}
                   </span>
                 </button>
               )}
@@ -682,7 +687,7 @@ function WaitlistHero() {
                 cursor: "pointer",
               }}
             >
-              Skip for now
+              {t('skipForNow')}
             </button>
           </div>
         ) : (
@@ -699,7 +704,7 @@ function WaitlistHero() {
                 letterSpacing: "-0.03em",
               }}
             >
-              Get{" "}
+              {t('get')}{" "}
               <span
                 className="bg-gradient-to-r from-[#FEDA24] via-[#FFE55C] to-[#EF941F] bg-clip-text text-transparent"
                 style={{
@@ -707,7 +712,7 @@ function WaitlistHero() {
                   fontStyle: "italic",
                 }}
               >
-                Early Access
+                {t('earlyAccess')}
               </span>
             </h1>
 
@@ -721,7 +726,7 @@ function WaitlistHero() {
                 lineHeight: "170%",
               }}
             >
-              Being early is rare. This is one of those moments.
+              {t('description')}
             </p>
 
             {/* Form */}
@@ -731,7 +736,7 @@ function WaitlistHero() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={t('emailPlaceholder')}
                   required
                   suppressHydrationWarning
                   className="w-full h-[50px] sm:h-[60px] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-[15px] bg-white/[0.03] text-white placeholder-white/30 outline-none transition-all duration-300 focus:bg-white/[0.05] rounded-[50px]"
@@ -806,7 +811,7 @@ function WaitlistHero() {
                                 textTransform: "uppercase",
                               }}
                             >
-                              Joining...
+                              {t('joining')}
                             </span>
                           </span>
                         ) : (
@@ -820,7 +825,7 @@ function WaitlistHero() {
                                 letterSpacing: "0.06em",
                               }}
                             >
-                              Join Waitlist
+                              {t('joinWaitlistBtn')}
                             </span>
                             <Image
                               src="/icons/Vector.svg"
@@ -855,7 +860,7 @@ function WaitlistHero() {
                       letterSpacing: "0.06em",
                     }}
                   >
-                    Join Waitlist
+                    {t('joinWaitlistBtn')}
                   </span>
                 </button>
               )}
@@ -869,7 +874,7 @@ function WaitlistHero() {
                 fontSize: "12px",
               }}
             >
-              No spam. Unsubscribe anytime.
+              {t('noSpam')}
             </p>
 
             {/* Social Proof */}
@@ -897,7 +902,7 @@ function WaitlistHero() {
                       letterSpacing: "0.05em",
                     }}
                   >
-                    Waitlist
+                    {t('waitlistLabel')}
                   </p>
                 </div>
 
@@ -924,7 +929,7 @@ function WaitlistHero() {
                       letterSpacing: "0.05em",
                     }}
                   >
-                    Launch
+                    {t('launchLabel')}
                   </p>
                 </div>
               </div>

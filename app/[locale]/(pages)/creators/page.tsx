@@ -8,8 +8,11 @@ import { Footer } from "@/components/layout/Footer";
 import { BlackholeVideo } from "@/components/layout/BlackholeVideo";
 import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 import { FeatureData } from "../users/components/FeaturesGrid";
+import { useTranslations } from "next-intl";
 
 export default function CreatorsPage() {
+  const t = useTranslations('CreatorsPage');
+  
   // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
     [0, 0, 1], // Pure white - glossy white
@@ -22,26 +25,22 @@ export default function CreatorsPage() {
   // Creator-specific features
   const creatorFeatures: FeatureData[] = [
     {
-      title: "Payments handled for you",
-      description:
-        "Beelia handles subscriptions, billing, and payments automatically, so you can focus on improving your AI while we take care of the money flow.",
+      title: t('features.payments.title'),
+      description: t('features.payments.description'),
       imageSrc: "/images/payments.png",
     },
     {
-      title: "Your creator dashboard",
-      description:
-        "Manage your listings, pricing, and subscriptions from one place. Update your tool, track active users, and control your monetization without extra infrastructure.",
+      title: t('features.dashboard.title'),
+      description: t('features.dashboard.description'),
       imageSrc: "/images/creator-dashboard.png",
     },
     {
-      title: "Selling AI shouldn’t require a startup",
-      description:
-        "Today, great AI tools get lost on directories, GitHub, and random landing pages. Beelia is built to give creators a proper marketplace, where AI can be sold like software, not services.",
+      title: t('features.marketplace.title'),
+      description: t('features.marketplace.description'),
     },
     {
-      title: "Focus on building, not selling",
-      description:
-        "You build the intelligence. Beelia handles distribution, payments, and access, so your work can reach users without turning you into a marketer or salesperson.",
+      title: t('features.focus.title'),
+      description: t('features.focus.description'),
     },
   ];
 
@@ -64,61 +63,58 @@ export default function CreatorsPage() {
         <NewHero
           title={
             <>
-              <span className="text-white">AI for Everyone,</span>{" "}
+              <span className="text-white">{t('heroTitleAI')} {t('heroTitleForEveryone')}</span>{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
-                by Everyone
+                {t('heroTitleByEveryone')}
               </span>
             </>
           }
-          description="An open marketplace where AI creators turn their tools into real products, and real revenue."
+          description={t('heroDescription')}
         />
         {/* ABOUTPRODUCT - RESTORED with videos */}
         <AboutProduct
           boxData={[
             {
               video: "/videos/upload.gif",
-              title: "Publish",
+              title: t('AboutProduct.cards.publish'),
               x: 15.055,
               stackedVideo: "/videos/upload.gif",
             },
             {
               video: "/videos/graph.gif",
-              title: "Distribute",
+              title: t('AboutProduct.cards.distribute'),
               x: 391.754,
               stackedVideo: "/videos/graph.gif",
             },
             {
               video: "/videos/dollar.gif",
-              title: "Monetize",
+              title: t('AboutProduct.cards.monetize'),
               x: 767.027,
               stackedVideo: "/videos/dollar.gif",
             },
           ]}
           cardData={[
             {
-              title: "Publish",
+              title: t('AboutProduct.cards.publish'),
               subtitle: "",
-              description:
-                "Publish your AI tool on Beelia with a clear profile, transparent pricing, and built-in trust signals, so users know what it does and how to use it.",
+              description: t('AboutProduct.cards.publishDesc'),
               iconPath: "",
             },
             {
-              title: "Distribute",
+              title: t('AboutProduct.cards.distribute'),
               subtitle: "",
-              description:
-                "Reach builders, businesses, and creators actively looking for AI solutions, without spending time on marketing, SEO, or cold outreach.",
+              description: t('AboutProduct.cards.distributeDesc'),
               iconPath: "",
             },
             {
-              title: "Monetize",
+              title: t('AboutProduct.cards.monetize'),
               subtitle: "",
-              description:
-                "List your AI tool as a standalone product, set your price, and start earning recurring revenue without building a full SaaS or handling payments yourself.",
+              description: t('AboutProduct.cards.monetizeDesc'),
               iconPath: "",
             },
           ]}
           features={creatorFeatures}
-          descriptionText="A platform to publish, distribute, and grow AI tools, with real users and real revenue."
+          descriptionText={t('AboutProduct.description')}
         />
         <FAQ />
         <Footer />
