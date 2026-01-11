@@ -29,11 +29,15 @@ function useWindowWidth() {
   return windowWidth;
 }
 
-export function BlackholeVideo() {
+interface BlackholeVideoProps {
+  forceLoad?: boolean;
+}
+
+export function BlackholeVideo({ forceLoad = false }: BlackholeVideoProps) {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth < 768;
   const [isIOSDevice, setIsIOSDevice] = useState(false);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(forceLoad);
 
   useEffect(() => {
     setIsIOSDevice(isIOS());
@@ -41,6 +45,8 @@ export function BlackholeVideo() {
 
   // Track scroll position and load video when threshold is reached
   useEffect(() => {
+    if (forceLoad || shouldLoadVideo) return;
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       if (scrollY >= FOOTER_VIDEO_LOAD_START && !shouldLoadVideo) {
@@ -50,7 +56,7 @@ export function BlackholeVideo() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Initial check
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [shouldLoadVideo]);
+  }, [shouldLoadVideo, forceLoad]);
 
   if (!shouldLoadVideo) return null;
 

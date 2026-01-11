@@ -1041,7 +1041,7 @@ export default function WaitlistPage() {
         className="relative"
         style={{ zIndex: 5, marginTop: isMobile ? "0px" : "-300px" }}
       >
-        <BlackholeVideo />
+        <BlackholeVideo forceLoad={true} />
       </div>
     </main>
   );
