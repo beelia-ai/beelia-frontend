@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { NewHero } from "../users/components/NewHero";
 import { AboutProduct } from "../users/components/AboutProduct";
 import { FAQ } from "../users/components/FAQ";
@@ -12,6 +13,17 @@ import { useTranslations } from "next-intl";
 
 export default function CreatorsPage() {
   const t = useTranslations('CreatorsPage');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   
   // Glossy white and silver colors in HSL format (normalized 0-1)
   const beeliaColors = [
@@ -121,7 +133,10 @@ export default function CreatorsPage() {
       </div>
 
       {/* Blackhole Video - z-5 to be behind particles (z-10) but scroll with page */}
-      <div className="relative z-[5]">
+      <div 
+        className="relative z-[5]"
+        style={{ marginTop: isMobile ? "0px" : "-300px" }}
+      >
         <BlackholeVideo />
       </div>
     </div>
