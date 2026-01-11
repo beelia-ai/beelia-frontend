@@ -18,6 +18,8 @@ interface ProfileCardProps {
   };
 }
 
+import { useTranslations } from "next-intl";
+
 export function ProfileCard({
   name,
   role,
@@ -29,6 +31,7 @@ export function ProfileCard({
   socials,
 }: ProfileCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const t = useTranslations('Team');
 
   // Disable scroll when expanded
   useEffect(() => {
@@ -186,7 +189,7 @@ export function ProfileCard({
                         fontFamily: "var(--font-outfit), Outfit, sans-serif",
                       }}
                     >
-                      Background
+                      {t('background')}
                     </h4>
                     <p
                       className="text-white/60 leading-[1.6] font-light text-[15px]"
@@ -208,7 +211,7 @@ export function ProfileCard({
                         fontFamily: "var(--font-outfit), Outfit, sans-serif",
                       }}
                     >
-                      Responsibilities at Beelia
+                      {t('responsibilities')}
                     </h4>
                     <ul className="space-y-2">
                       {responsibilities.map((item, index) => (
@@ -237,7 +240,7 @@ export function ProfileCard({
                         fontFamily: "var(--font-outfit), Outfit, sans-serif",
                       }}
                     >
-                      Core Strengths
+                      {t('coreStrengths')}
                     </h4>
                     <ul className="space-y-2">
                       {coreStrengths.map((item, index) => (

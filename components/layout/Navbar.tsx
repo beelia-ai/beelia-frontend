@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { Link } from "@/i18n/routing";
+import { Link, usePathname, useRouter } from "@/i18n/routing";
 import GlassSurface from "@/components/GlassSurface";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
@@ -18,13 +17,15 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const scrollThresholdRef = useRef(0);
+  
   const pathname = usePathname();
+  const router = useRouter();
   const locale = useLocale();
   const t = useTranslations('Navbar');
   
-  const isWaitlistPage = pathname === "/waitlist" || pathname === `/${locale}/waitlist`; 
-  const isUsersPage = pathname === "/users" || pathname === `/${locale}/users`;
-  const isCreatorsPage = pathname === "/creators" || pathname === `/${locale}/creators`;
+  const isWaitlistPage = pathname === "/waitlist"; 
+  const isUsersPage = pathname === "/users";
+  const isCreatorsPage = pathname === "/creators";
 
   // Track window size for responsive button sizing
   useEffect(() => {
@@ -304,19 +305,8 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 </a>
                 <button
                   onClick={() => {
-                    let currentPath = window.location.pathname;
-                    
-                    // Clean localized prefixes first to get "raw" path
-                    currentPath = currentPath.replace(/^\/(es|en)(\/|$)/, '/');
-
-                    if (locale === 'es') {
-                      // Switch to English (default) - use cleaned path (which is effectively /en hidden)
-                      window.location.href = currentPath;
-                    } else {
-                      // Switch to Spanish
-                      const newPath = `/es${currentPath === '/' ? '' : currentPath}`;
-                      window.location.href = newPath;
-                    }
+                    const nextLocale = locale === 'en' ? 'es' : 'en';
+                    router.replace(pathname, { locale: nextLocale });
                   }}
                   className="nav-link cursor-pointer"
                   style={{

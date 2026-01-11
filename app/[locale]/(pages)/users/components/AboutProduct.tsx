@@ -1163,7 +1163,7 @@ export function AboutProduct({
                 MozOsxFontSmoothing: "grayscale", // Better text rendering on macOS
               }}
             >
-              tap to read more
+              {t('tapToReadMore')}
             </span>
           </motion.div>
         )}
@@ -1202,7 +1202,7 @@ export function AboutProduct({
                 MozOsxFontSmoothing: "grayscale", // Better text rendering on macOS
               }}
             >
-              hover to read more
+              {t('hoverToReadMore')}
             </span>
           </motion.div>
         )}

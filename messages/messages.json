@@ -72,7 +72,9 @@
         "subscribeDesc": "Activate AI instantly. One-click subscriptions, unified billing, and immediate access so you can start using tools the moment you subscribe.",
         "trust": "Trust",
         "trustDesc": "Adopt AI with confidence. Every tool and creator goes through a verification process, with clear information on access, usage, and ownership."
-      }
+      },
+      "tapToReadMore": "tap to read more",
+      "hoverToReadMore": "hover to read more"
     },
     "FAQ": {
       "categories": {
@@ -158,7 +160,9 @@
           "distributeDesc": "Reach builders, businesses, and creators actively looking for AI solutions, without spending time on marketing, SEO, or cold outreach.",
           "monetize": "Monetize",
           "monetizeDesc": "List your AI tool as a standalone product, set your price, and start earning recurring revenue without building a full SaaS or handling payments yourself."
-        }
+        },
+        "tapToReadMore": "tap to read more",
+        "hoverToReadMore": "hover to read more"
       }
     },
     "Team": {
@@ -166,6 +170,9 @@
       "subtitle": "FROM THE FUTURE",
       "description": "The team behind Beelia has spent years building, scaling, and supporting successful technology products, and brings that experience into every part of the platform.",
       "quote": "\"Beelia was built from the belief that AI should be easy to use, easy to trust, and viable to monetize.\"",
+      "background": "Background",
+      "responsibilities": "Responsibilities at Beelia",
+      "coreStrengths": "Core Strengths",
       "members": [
         {
           "name": "Juan Carlos Calvo Fresno",
@@ -400,6 +407,9 @@
       "subtitle": "DEL FUTURO",
       "description": "El equipo detrás de Beelia ha pasado años construyendo, escalando y apoyando productos tecnológicos exitosos, y trae esa experiencia a cada parte de la plataforma.",
       "quote": "\"Beelia se construyó desde la creencia de que la IA debe ser fácil de usar, fácil de confiar y viable de monetizar.\"",
+      "background": "Experiencia",
+      "responsibilities": "Responsabilidades en Beelia",
+      "coreStrengths": "Fortalezas Clave",
       "members": [
         {
           "name": "Juan Carlos Calvo Fresno",
@@ -533,7 +543,9 @@
         "subscribeDesc": "Activa la IA al instante. Suscripciones con un clic, facturación unificada y acceso inmediato.",
         "trust": "Confiar",
         "trustDesc": "Adopta la IA con confianza. Cada herramienta y creador pasa por un proceso de verificación."
-      }
+      },
+      "tapToReadMore": "toca para leer más",
+      "hoverToReadMore": "pasa el cursor para leer más"
     },
     "FAQ": {
       "categories": {
