@@ -140,9 +140,17 @@
   html {
     /* Ensure html allows vertical scrolling */
     overflow-y: auto;
+    overflow-x: hidden;
     /* Enable smooth scrolling on mobile */
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+    height: 100%;
+  }
+  body {
+    /* Prevent body from creating its own scroll context */
+    overflow: visible;
+    height: auto;
+    min-height: 100%;
   }
 }
 

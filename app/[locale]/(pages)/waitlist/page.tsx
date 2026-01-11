@@ -964,7 +964,7 @@ export default function WaitlistPage() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-black overflow-x-hidden">
+    <main className="relative min-h-screen bg-black">
       {/* First Section with Grid - Behind particles */}
       <div className="relative min-h-screen">
         {/* Square Grid - Absolute, stays in first section only */}
@@ -1009,6 +1009,11 @@ export default function WaitlistPage() {
               "linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%)",
           }}
         />
+
+        {/* Waitlist Hero Content - moved into flow, z-20 to be above particles */}
+        <div className="relative" style={{ zIndex: 20 }}>
+          <WaitlistHero />
+        </div>
       </div>
 
       {/* Particles Background - Fixed, above blackhole (z-5) but below content (z-20) */}
@@ -1023,12 +1028,6 @@ export default function WaitlistPage() {
           sizes={[5, 5, 5, 5, 5]}
           speed={0.3}
         />
-      </div>
-
-      {/* Content - Above particles */}
-      <div className="absolute inset-0" style={{ zIndex: 20 }}>
-        {/* Waitlist Hero Content */}
-        <WaitlistHero />
       </div>
 
       {/* Footer - Above particles */}
