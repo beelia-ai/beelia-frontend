@@ -147,7 +147,7 @@ export function HeroContent({
             opacity: 0.7,
             fontWeight: 300,
             fontSize: isMobile ? "18px" : "22px",
-            maxWidth: "680px",
+            maxWidth: isMobile ? "680px" : "760px",
           }}
         >
           {description}

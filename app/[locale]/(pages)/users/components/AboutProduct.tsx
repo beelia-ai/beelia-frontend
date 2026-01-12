@@ -191,7 +191,7 @@ STROKE_GEOMETRY.mobile.rightDiagonal.angle =
       1000
   ) / 1000;
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export function AboutProduct({
   boxData: boxDataProp,
@@ -201,6 +201,7 @@ export function AboutProduct({
 }: AboutProductProps = {}) {
   const t = useTranslations('AboutProduct');
   const tTeam = useTranslations('Team');
+  const locale = useLocale();
   const windowWidth = useWindowWidth();
 
   // Translated defaults
@@ -559,27 +560,55 @@ export function AboutProduct({
               style={{ marginBottom: "10px" }}
             >
               <h2 className="text-center whitespace-nowrap">
-                <span
-                  className="font-editors-note-italic text-2xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FEDA24]"
-                  style={{
-                    fontSize: "clamp(24px, 3vw, 48px)",
-                  }}
-                >
-                  {t('open')}&nbsp;
-                </span>
-                <span
-                  className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
-                  style={{
-                    fontFamily: "var(--font-outfit), sans-serif",
-                    fontWeight: 600,
-                    fontSize: "clamp(24px, 2.7vw, 48px)",
-                    lineHeight: "100%",
-                    letterSpacing: "0.05em",
-                    opacity: 0.9,
-                  }}
-                >
-                  {t('aiMarketplace')}
-                </span>
+                {locale === 'es' ? (
+                  <>
+                    <span
+                      className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
+                      style={{
+                        fontFamily: "var(--font-outfit), sans-serif",
+                        fontWeight: 600,
+                        fontSize: "clamp(24px, 2.7vw, 48px)",
+                        lineHeight: "100%",
+                        letterSpacing: "0.05em",
+                        opacity: 0.9,
+                      }}
+                    >
+                      {t('aiMarketplace')}
+                    </span>
+                    <span
+                      className="font-editors-note-italic text-2xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FEDA24]"
+                      style={{
+                        fontSize: "clamp(24px, 3vw, 48px)",
+                      }}
+                    >
+                      &nbsp;{t('open')}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span
+                      className="font-editors-note-italic text-2xl md:text-4xl lg:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FEDA24]"
+                      style={{
+                        fontSize: "clamp(24px, 3vw, 48px)",
+                      }}
+                    >
+                      {t('open')}&nbsp;
+                    </span>
+                    <span
+                      className="font-outfit text-3xl md:text-5xl lg:text-6xl font-bold text-white uppercase tracking-tight"
+                      style={{
+                        fontFamily: "var(--font-outfit), sans-serif",
+                        fontWeight: 600,
+                        fontSize: "clamp(24px, 2.7vw, 48px)",
+                        lineHeight: "100%",
+                        letterSpacing: "0.05em",
+                        opacity: 0.9,
+                      }}
+                    >
+                      {t('aiMarketplace')}
+                    </span>
+                  </>
+                )}
               </h2>
             </div>
 
@@ -587,7 +616,7 @@ export function AboutProduct({
             <p
               className="text-center mb-8 md:mb-12 px-4"
               style={{
-                width: windowWidth < 768 ? "100%" : "457.771484375px",
+                width: windowWidth < 768 ? "100%" : "520px",
                 height: windowWidth < 768 ? "auto" : "44px",
                 fontFamily: "var(--font-outfit), Outfit, sans-serif",
                 fontWeight: 300,
@@ -597,7 +626,7 @@ export function AboutProduct({
                 letterSpacing: "2%",
                 textAlign: "center",
                 color: "#FFFFFF",
-                maxWidth: windowWidth < 768 ? "90vw" : "457.771484375px",
+                maxWidth: windowWidth < 768 ? "90vw" : "520px",
                 opacity: 0.7,
               }}
             >

@@ -48,10 +48,8 @@ function FeatureCard({
     <div className="p-4 sm:p-6 md:p-8 relative">
       <div className="text-white">
         <h3
-          className="md:whitespace-nowrap"
           style={{
             width: "100%",
-            maxWidth: "305px",
             minHeight: "29px",
             fontFamily: "var(--font-outfit), Outfit, sans-serif",
             fontWeight: 600,
