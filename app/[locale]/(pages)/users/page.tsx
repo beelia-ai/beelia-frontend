@@ -8,7 +8,7 @@ import { FAQ } from "./components/FAQ";
 import { ParticleSpritesBackground } from "@/components/ui";
 import { Footer } from "@/components/layout/Footer";
 import { BlackholeVideo } from "@/components/layout/BlackholeVideo";
-import { PARTICLE_COUNT_MOBILE, PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
+import { PARTICLE_COUNT_DESKTOP } from "@/lib/constants";
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
@@ -37,11 +37,10 @@ export default function HomePage() {
   return (
     <div className="relative w-full bg-transparent">
       {/* Particle Sprites Background - reduced particles on mobile - z-10 to be above blackhole (z-5) */}
+      
       <ParticleSpritesBackground
         className="fixed inset-0 z-10"
-        particleCount={
-          isMobile ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP
-        }
+        particleCount={PARTICLE_COUNT_DESKTOP}
         followMouse={true}
         mouseSensitivity={0.05}
         colors={beeliaColors}
@@ -49,7 +48,7 @@ export default function HomePage() {
         sizes={[5, 5, 5, 5, 5]}
         speed={0.3}
       />
-
+      
       {/* Page content - z-20 to be above particles */}
       <div className="relative z-20">
         <NewHero

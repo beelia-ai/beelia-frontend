@@ -1,8 +1,8 @@
 "use client";
 
 import React, { RefObject, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, MotionValue } from "framer-motion";
-import { WebGLVideo } from "@/components/ui";
 import {
   SHOW_HERO_VIDEOS,
   FUTURE_GLOBE_SIZE_MOBILE,
@@ -11,11 +11,16 @@ import {
   PAST_VIDEO_SIZE_DESKTOP,
 } from "@/lib/constants";
 
-// Safari detection - Safari doesn't support WebM with alpha
-function isSafari(): boolean {
+// Detect Safari/iOS - these don't support WebM with alpha transparency
+function needsMp4Fallback(): boolean {
   if (typeof window === "undefined") return false;
   const ua = navigator.userAgent;
-  return /Safari/.test(ua) && !/Chrome/.test(ua) && !/Chromium/.test(ua);
+  // iOS devices
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || 
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  // Safari browser (not Chrome/Chromium)
+  const isSafari = /Safari/.test(ua) && !/Chrome/.test(ua) && !/Chromium/.test(ua);
+  return isIOS || isSafari;
 }
 
 interface VideoGlobeProps {
@@ -55,24 +60,25 @@ export function VideoGlobe({
   futureTransitionVideoRef,
   futureMainVideoRef,
 }: VideoGlobeProps) {
-  // Detect Safari at runtime - Safari needs WebGLVideo for alpha transparency
-  const [needsWebGLVideo, setNeedsWebGLVideo] = useState(false);
-  
+  // Detect if we need MP4 fallback (Safari/iOS don't support WebM with alpha)
+  const [useMp4Only, setUseMp4Only] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    setNeedsWebGLVideo(isSafari());
+    setMounted(true);
+    setUseMp4Only(needsMp4Fallback());
   }, []);
 
-  // Use WebGLVideo for mobile OR Safari (Safari doesn't support WebM with alpha)
-  const useWebGLVideo = isMobile || needsWebGLVideo;
+  if (!mounted) return null;
 
-  return (
+  return createPortal(
     <motion.div
       className="fixed left-1/2 pointer-events-none"
       style={{
         width: `${globeSize}px`,
         height: `${globeSize}px`,
         top: globeTop,
-        zIndex: 51,
+        zIndex: -1,
         x: "-50%",
         y: globeY,
         scale: globeScale,
@@ -85,34 +91,9 @@ export function VideoGlobe({
         className="w-full h-full flex items-center justify-center relative"
         style={{ background: "transparent" }}
       >
-        {/* Past Video */}
+        {/* Past Video - always MP4 */}
         {SHOW_HERO_VIDEOS &&
           !hidePastVideo &&
-          (useWebGLVideo ? (
-            <motion.div
-              className="mr-0.5 absolute"
-              style={{
-                width: isMobile
-                  ? `${PAST_VIDEO_SIZE_MOBILE}px`
-                  : `${PAST_VIDEO_SIZE_DESKTOP}px`,
-                height: isMobile
-                  ? `${PAST_VIDEO_SIZE_MOBILE}px`
-                  : `${PAST_VIDEO_SIZE_DESKTOP}px`,
-                opacity: beeliaOpacity,
-                willChange: "opacity",
-              }}
-            >
-              <WebGLVideo
-                webmSrc="/videos/past.webm"
-                stackedAlphaSrc="/videos/past-stacked.mp4"
-                className="w-full h-full object-contain"
-                autoPlay={isHeroVisible}
-                loop
-                muted
-                preload="auto"
-              />
-            </motion.div>
-          ) : (
             <motion.video
               ref={beeliaVideoRef}
               autoPlay={isHeroVisible}
@@ -139,39 +120,17 @@ export function VideoGlobe({
                 WebkitTapHighlightColor: "transparent",
               }}
             >
-              <source src="/videos/past.webm" type="video/webm" />
+              <source src="/videos/past.mp4" type="video/mp4" />
             </motion.video>
-          ))}
+          }
 
         {/* Present Video - Phase 2 */}
-        {SHOW_HERO_VIDEOS && useWebGLVideo ? (
-          <motion.div
-            className={`${
-              isMobile ? "w-[280px] h-[280px]" : "w-[420px] h-[420px]"
-            } mr-0.5 absolute`}
-            style={{
-              opacity: presentVideoOpacity,
-              willChange: "opacity",
-            }}
-          >
-            <WebGLVideo
-              webmSrc="/videos/present.webm"
-              stackedAlphaSrc="/videos/present-stacked.mp4"
-              className="w-full h-full object-contain"
-              autoPlay={isHeroVisible}
-              loop
-              muted
-              preload="auto"
-            />
-          </motion.div>
-        ) : SHOW_HERO_VIDEOS ? (
+        {SHOW_HERO_VIDEOS && (
           <motion.video
             ref={phase2VideoRef}
             loop
             muted
             playsInline
-            webkit-playsinline="true"
-            x-webkit-airplay="deny"
             controls={false}
             disablePictureInPicture
             disableRemotePlayback
@@ -188,38 +147,19 @@ export function VideoGlobe({
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            <source src="/videos/present.webm" type="video/webm" />
+            {useMp4Only ? (
+              <source src="/videos/present.mp4" type="video/mp4" />
+            ) : (
+              <>
+                <source src="/videos/present.webm" type="video/webm" />
+                <source src="/videos/present.mp4" type="video/mp4" />
+              </>
+            )}
           </motion.video>
-        ) : null}
+        )}
 
         {/* Future Transition Video - Always rendered for preloading, hidden until scroll */}
-        {SHOW_HERO_VIDEOS && useWebGLVideo ? (
-          <motion.div
-            className="absolute"
-            style={{
-              width: isMobile
-                ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
-                : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
-              height: isMobile
-                ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
-                : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
-              opacity: futureTransitionCombinedOpacity,
-              willChange: "opacity",
-              marginLeft: "4px",
-            }}
-          >
-            <WebGLVideo
-              webmSrc="/videos/future-transition.webm"
-              stackedAlphaSrc="/videos/future-transition-stacked.mp4"
-              className="w-full h-full object-contain"
-              autoPlay={isHeroVisible}
-              loop={false}
-              muted
-              videoRef={futureTransitionVideoRef}
-              preload="auto"
-            />
-          </motion.div>
-        ) : SHOW_HERO_VIDEOS ? (
+        {SHOW_HERO_VIDEOS && (
           <motion.video
             ref={futureTransitionVideoRef}
             loop={false}
@@ -246,42 +186,20 @@ export function VideoGlobe({
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            <source
-              src="/videos/future-transition.webm"
-              type="video/webm"
-            />
+            {useMp4Only ? (
+              <source src="/videos/future-transition.mp4" type="video/mp4" />
+            ) : (
+              <>
+                <source src="/videos/future-transition.webm" type="video/webm" />
+                <source src="/videos/future-transition.mp4" type="video/mp4" />
+              </>
+            )}
           </motion.video>
-        ) : null}
+        )}
 
         {/* Future Main Video */}
         {SHOW_HERO_VIDEOS &&
-          showFutureMain &&
-          (useWebGLVideo ? (
-            <motion.div
-              className="absolute"
-              style={{
-                width: isMobile
-                  ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
-                  : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
-                height: isMobile
-                  ? `${FUTURE_GLOBE_SIZE_MOBILE}px`
-                  : `${FUTURE_GLOBE_SIZE_DESKTOP}px`,
-                opacity: futureMainVideoOpacity,
-                willChange: "opacity",
-                marginLeft: "4px",
-              }}
-            >
-              <WebGLVideo
-                webmSrc="/videos/future-main.webm"
-                stackedAlphaSrc="/videos/future-main-stacked.mp4"
-                className="w-full h-full object-contain"
-                autoPlay
-                loop
-                muted
-                preload="auto"
-              />
-            </motion.div>
-          ) : (
+          showFutureMain && (
             <motion.video
               ref={futureMainVideoRef}
               autoPlay
@@ -309,11 +227,18 @@ export function VideoGlobe({
                 WebkitTapHighlightColor: "transparent",
               }}
             >
-              <source src="/videos/future-main.webm" type="video/webm" />
+              {useMp4Only ? (
+                <source src="/videos/future-main.mp4" type="video/mp4" />
+              ) : (
+                <>
+                  <source src="/videos/future-main.webm" type="video/webm" />
+                  <source src="/videos/future-main.mp4" type="video/mp4" />
+                </>
+              )}
             </motion.video>
-          ))}
+          )}
       </div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 }
-

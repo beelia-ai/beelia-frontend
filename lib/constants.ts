@@ -6,7 +6,7 @@ export const SHOW_HERO_VIDEOS = true;
 export const FUTURE_GLOBE_SIZE_MOBILE = 260; // px
 export const FUTURE_GLOBE_SIZE_DESKTOP = 372; // px
 
-// Past video (past.webm) sizes
+// Past video (past.mp4) sizes
 export const PAST_VIDEO_SIZE_MOBILE = 292; // px
 export const PAST_VIDEO_SIZE_DESKTOP = 452; // px
 
@@ -15,7 +15,7 @@ export const GLOBE_TOP_MOBILE = 100; // px
 export const GLOBE_TOP_DESKTOP = 84; // px
 
 // Video transition scroll positions
-// Past to Present transition: cross-fade from past.webm to present.webm
+// Past to Present transition: cross-fade from past.mp4 to present.webm
 export const PAST_TO_PRESENT_TRANSITION_START = 200; // px - start fading out past.webm and fading in present.webm
 export const PAST_TO_PRESENT_TRANSITION_END = 600; // px - transition complete (400px duration)
 

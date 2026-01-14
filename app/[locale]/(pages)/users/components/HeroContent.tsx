@@ -45,6 +45,7 @@ export function HeroContent({
       className="w-full flex flex-col items-center pt-24 md:pt-0"
       style={{
         paddingBottom: isMobile ? "120px" : "0px",
+        zIndex: 100,
       }}
     >
       {/* Hover fill styles for waitlist button */}

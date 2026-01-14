@@ -137,12 +137,15 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     return 1 + (latest / 900) * 0.3; // Linear interpolation from 1 to 1.1
   });
 
+  // Light rays opacity - fades out between scroll 300 and 500
+  const lightRaysOpacity = useTransform(scrollYMotion, [300, 500], [1, 0]);
+
   // Globe Y offset - moves up with scroll after threshold is reached
   // Keep globe fixed until third section ends
   // Globe becomes scrollable around 3450px scroll position
   const thirdSectionThreshold = 3450;
   const globeY = useTransform(scrollYMotion, (latest) => {
-    // Transition offset: move globe 30px down during past.webm to present.webm transition
+    // Transition offset: move globe 30px down during past.mp4 to present.webm transition
     // Only apply on mobile (desktop should maintain Y position)
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
     const transitionStart = PAST_TO_PRESENT_TRANSITION_START;
@@ -173,7 +176,6 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
     return transitionOffset - (latest - threshold);
   });
 
-  // Track scroll Y position
   // Track scroll Y position
   useEffect(() => {
     const handleScroll = () => {
@@ -262,7 +264,7 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
   }, [showPhase2]);
 
   // Calculate opacity for smooth cross-fade transition based on absolute scroll Y position
-  // past.webm fades out while present.webm fades in simultaneously
+  // past.mp4 fades out while present.webm fades in simultaneously
   const phase2Opacity = useTransform(scrollYMotion, (latest) => {
     const transitionStart = PAST_TO_PRESENT_TRANSITION_START;
     const transitionEnd = PAST_TO_PRESENT_TRANSITION_END;
@@ -1084,35 +1086,38 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
 
         {/* Light Rays - RESTORED - Desktop only */}
         {!isMobile && (
-          <LightRays
-            raysOrigin="top-center"
-            raysColor="#F5A83B"
-            raysSpeed={0.6}
-            lightSpread={0.7}
-            rayLength={2.2}
-            fadeDistance={1}
-            saturation={1}
-            followMouse={true}
-            mouseInfluence={0.1}
-            noiseAmount={0}
-            distortion={0}
-            className="absolute -top-48 inset-x-0 bottom-0"
-          />
+          <motion.div
+            className="absolute -top-48 inset-x-0 h-[200vh] pointer-events-none"
+            style={{ opacity: lightRaysOpacity, zIndex: 3 }}
+          >
+            <LightRays
+              raysOrigin="top-center"
+              raysColor="#F5A83B"
+              raysSpeed={0.6}
+              lightSpread={0.7}
+              rayLength={2.2}
+              fadeDistance={1}
+              saturation={1}
+              followMouse={true}
+              mouseInfluence={0.1}
+              noiseAmount={0}
+              distortion={0}
+              className="w-full h-full"
+            />
+          </motion.div>
         )}
 
-        {/* Content container with proper spacing - flex column layout */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 md:pt-32 overflow-visible">
-          {/* Trace Lines Animated SVG - positioned at top with scroll animation - Desktop only */}
-          {!isMobile && (
-            <motion.div
-              className="relative w-[1102px] h-[364px] mb-12"
-              style={{
-                scale: traceLinesScale,
-                willChange: "transform",
-                marginTop: "-5px",
-                transformOrigin: "center center",
-              }}
-            >
+        {/* Trace Lines + Video Boxes Container - BEHIND content with z-[5] */}
+        {!isMobile && (
+          <motion.div
+            className="absolute inset-x-0 top-0 pt-20 md:pt-32 flex justify-center z-[5] pointer-events-none"
+            style={{
+              scale: traceLinesScale,
+              willChange: "transform",
+              transformOrigin: "top center",
+            }}
+          >
+            <div className="relative w-[1102px] h-[364px]" style={{ marginTop: "-5px" }}>
               {/* BOX VIDEOS - RESTORED with optimizations: preload="none", no infinite framer-motion animations */}
               {/* Using CSS animation instead of framer-motion for better GPU performance */}
               {SHOW_HERO_VIDEOS && (
@@ -1174,21 +1179,22 @@ export function NewHero({ title, description }: NewHeroProps = {}) {
                 scrollY={scrollY}
                 heroScrollProgress={heroScrollProgressValue}
               />
-            </motion.div>
-          )}
+            </div>
+          </motion.div>
+        )}
 
+        {/* Content container - ABOVE videos with z-[15] */}
+        <div className="absolute inset-0 z-[150] flex flex-col items-center justify-start pt-20 md:pt-32 overflow-visible pointer-events-none">
           {/* Mobile spacer to maintain content position (replaces trace lines height) */}
-          <div className="h-[450px] md:h-0" />
+          <div className="h-[450px] md:h-[364px]" style={{ marginBottom: isMobile ? "0" : "48px" }} />
 
-          {/* Content wrapper with scroll animations */}
           {/* Content wrapper with scroll animations */}
           <motion.div
-            className="flex flex-col items-center w-full md:mt-0"
+            className="flex flex-col items-center w-full md:mt-0 pointer-events-auto"
             style={{
               opacity: contentOpacity,
               scale: contentScale,
               filter: contentBlurFilter,
-              transformStyle: "preserve-3d",
               willChange: "opacity, transform, filter",
               marginTop: isMobile ? "clamp(200px, 25vh, 240px)" : "0px", // Increased spacing for small screens like iPhone SE to prevent overlap
             }}

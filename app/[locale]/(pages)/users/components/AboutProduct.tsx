@@ -699,11 +699,11 @@ export function AboutProduct({
                   left: isMobile
                     ? `${STROKE_GEOMETRY.mobile.centerX}px`
                     : `${STROKE_GEOMETRY.desktop.centerX}px`,
-                  top: isMobile ? "-20px" : "120px", // Start 20px above container top on mobile, at container top (globe bottom) on desktop
+                  top: isMobile ? "-10px" : "125px", // Start 20px above container top on mobile, at container top (globe bottom) on desktop
                   width: "3px",
                   height: isMobile
-                    ? `${127 * openingProgressValue}px` // Increased by 20px to maintain connection point (107 + 20 = 127)
-                    : `${(227 - 120) * openingProgressValue}px`, // Desktop: decreased height by 120px
+                    ? `${117 * openingProgressValue}px` // Increased by 20px to maintain connection point (107 + 20 = 127)
+                    : `${(227 - 125) * openingProgressValue}px`, // Desktop: decreased height by 120px
                   transform: "translateX(-50%)",
                 }}
               >
