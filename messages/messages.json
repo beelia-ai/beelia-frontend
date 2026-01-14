@@ -346,7 +346,7 @@
     "UsersPage": {
       "heroTitleAI": "IA",
       "heroTitleForEveryone": "para Todos,",
-      "heroTitleByEveryone": "por Todos",
+      "heroTitleByEveryone": "hecha por Todos",
       "heroDescription": "Un mercado de IA curado donde cualquiera puede descubrir, confiar y usar las herramientas adecuadas al instante, sin conocimientos técnicos",
       "features": {
         "unifiedBilling": {
@@ -369,7 +369,7 @@
     },
     "CreatorsPage": {
       "heroTitleAI": "IA",
-      "heroTitleForEveryone": "para Todos,",
+      "heroTitleForEveryone": "para Todos, hecha",
       "heroTitleByEveryone": "por Todos",
       "heroDescription": "Un mercado abierto donde los creadores de IA convierten sus herramientas en productos reales y ganancias reales.",
       "features": {

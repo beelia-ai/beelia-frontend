@@ -106,7 +106,6 @@ export function BlackholeVideo({ forceLoad = false }: BlackholeVideoProps) {
                 WebkitTapHighlightColor: "transparent",
                 pointerEvents: "none",
                 marginBottom: "-300px",
-                marginLeft: "-50px",
               }}
             />
           )}

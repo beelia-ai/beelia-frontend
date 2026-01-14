@@ -157,7 +157,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             width: 1.4px;
             height: 0;
           }
-          .nav-link:hover::after,
+          .nav-link:not(.no-mobile-hover):hover::after,
           .nav-link.active::after {
             height: 100%;
           }
@@ -288,7 +288,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                 </Link>
                 <a
                   href="mailto:juancarloscalvofresno@cesno.eu?subject=Inquiry - Beelia.ai&body=Hello Juan,%0D%0A%0D%0AI'd like to get in touch regarding Beelia.%0D%0APlease see my details below:%0D%0A%0D%0AName:%0D%0ACompany:%0D%0AType of Inquiry (Investment, Partnership, Collaboration, Press, Other):%0D%0AMessage:%0D%0A%0D%0AI confirm that any shared information will remain confidential unless otherwise agreed.%0D%0AI am aware that Beelia is a small early-stage startup, and I understand that responses may take some time.%0D%0A%0D%0AThank you,"
-                  className="nav-link cursor-pointer"
+                  className="nav-link cursor-pointer no-mobile-hover"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontSize: isMobile ? "16px" : "16px",
@@ -308,7 +308,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     const nextLocale = locale === 'en' ? 'es' : 'en';
                     router.replace(pathname, { locale: nextLocale });
                   }}
-                  className="nav-link cursor-pointer"
+                  className="nav-link cursor-pointer no-mobile-hover"
                   style={{
                     fontFamily: "var(--font-outfit), sans-serif",
                     fontSize: isMobile ? "16px" : "16px",

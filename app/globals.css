@@ -138,19 +138,18 @@
     }
   }
   html {
-    /* Ensure html allows vertical scrolling */
-    overflow-y: auto;
+    /* Single scroll context - hide horizontal overflow, allow vertical scroll when needed */
     overflow-x: hidden;
+    overflow-y: auto;
     /* Enable smooth scrolling on mobile */
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
-    height: 100%;
   }
   body {
-    /* Prevent body from creating its own scroll context */
+    /* Body should never create its own scroll context */
     overflow: visible;
-    height: auto;
-    min-height: 100%;
+    overflow-x: hidden !important;
+    min-height: 100vh;
   }
 }
 

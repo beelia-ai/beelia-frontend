@@ -55,7 +55,7 @@ export default function HomePage() {
           title={
             <>
               <span className="text-white">{t('heroTitleAI')}</span>{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C32] to-[#FF6B00] pl-[0.2em] -ml-[0.2em]">
                 {t('heroTitleForEveryone')}
               </span>{" "}
               <span className="text-white">{t('heroTitleByEveryone')}</span>
