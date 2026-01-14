@@ -69,6 +69,55 @@ export function VideoGlobe({
     setUseMp4Only(needsMp4Fallback());
   }, []);
 
+  // Fix seamlessly looping for past.mp4 by seeking before the actual end
+  // This prevents the small millisecond gap/flicker that occurs in some browsers
+  useEffect(() => {
+    if (hidePastVideo || !SHOW_HERO_VIDEOS) return;
+
+    let rafId: number;
+    let timer: NodeJS.Timeout;
+
+    const startLoopCheck = () => {
+      const video = beeliaVideoRef.current;
+      if (!video) return;
+
+      const checkLoop = () => {
+        if (!video.paused && video.duration) {
+          // If within 50ms of the end, seek to beginning
+          if (video.duration - video.currentTime <= 0.05) {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+          }
+        }
+        rafId = requestAnimationFrame(checkLoop);
+      };
+
+      rafId = requestAnimationFrame(checkLoop);
+    };
+
+    // Use a small timeout to ensure ref is populated after render
+    timer = setTimeout(startLoopCheck, 100);
+
+    return () => {
+      clearTimeout(timer);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [hidePastVideo, beeliaVideoRef]);
+
+  // Ensure video plays when visible and respects iOS autoplay policies
+  useEffect(() => {
+    const video = beeliaVideoRef.current;
+    if (!video) return;
+
+    if (isHeroVisible) {
+      video.play().catch(() => {
+        // Autoplay might be prevented
+      });
+    } else {
+      video.pause();
+    }
+  }, [isHeroVisible, beeliaVideoRef]);
+
   if (!mounted) return null;
 
   return createPortal(
@@ -96,7 +145,12 @@ export function VideoGlobe({
           !hidePastVideo &&
             <motion.video
               ref={beeliaVideoRef}
-              autoPlay={isHeroVisible}
+              autoPlay
+              onLoadedData={() => {
+                if (isHeroVisible && beeliaVideoRef.current) {
+                  beeliaVideoRef.current.play().catch(() => {});
+                }
+              }}
               loop
               muted
               playsInline

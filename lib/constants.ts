@@ -32,4 +32,4 @@ export const FOOTER_VIDEO_LOAD_START = 2000; // px - start loading Footer video 
 
 // Particle background settings
 export const PARTICLE_COUNT_MOBILE = 75;
-export const PARTICLE_COUNT_DESKTOP = 100;
+export const PARTICLE_COUNT_DESKTOP = 70;
