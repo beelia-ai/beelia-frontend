@@ -342,7 +342,7 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
             >
               <div className="waitlist-btn-wrapper">
                 <GlassSurface
-                  width={isMobile ? 90 : 200}
+                  width={isMobile ? (locale === 'es' ? 114 : 90) : (locale === 'es' ? 224 : 200)}
                   height={isMobile ? 28 : 55}
                   borderRadius={50}
                   chromaticAberration={isHovered ? 0.4 : 0.25}

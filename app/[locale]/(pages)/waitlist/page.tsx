@@ -38,7 +38,7 @@ function CardSection({ children }: { children: React.ReactNode }) {
 }
 
 // Waitlist Hero Content
-function WaitlistHero() {
+function WaitlistHero({ isMobile }: { isMobile: boolean }) {
   const t = useTranslations('Waitlist');
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -702,6 +702,7 @@ function WaitlistHero() {
                 fontSize: "clamp(36px, 6vw, 52px)",
                 lineHeight: "115%",
                 letterSpacing: "-0.03em",
+                whiteSpace: isMobile ? "normal" : "nowrap"
               }}
             >
               {t('get')}{" "}
@@ -1012,7 +1013,7 @@ export default function WaitlistPage() {
 
         {/* Waitlist Hero Content - moved into flow, z-20 to be above particles */}
         <div className="relative" style={{ zIndex: 20 }}>
-          <WaitlistHero />
+          <WaitlistHero isMobile={isMobile} />
         </div>
       </div>
 

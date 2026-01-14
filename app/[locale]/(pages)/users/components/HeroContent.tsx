@@ -5,7 +5,7 @@ import Image from "next/image";
 import GlassSurface from "@/components/GlassSurface";
 import { ReactNode, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface HeroContentProps {
   isAnimating: boolean;
@@ -28,6 +28,7 @@ export function HeroContent({
   const [mounted, setMounted] = useState(false);
   const [isMobileButtonActive, setIsMobileButtonActive] = useState(false);
   const t = useTranslations('Navbar');
+  const locale = useLocale();
 
   useEffect(() => {
     setMounted(true);
@@ -171,9 +172,9 @@ export function HeroContent({
                 isAnimating ? "no-hover" : ""
               }`}
             >
-              {isMounted ? (
+                {isMounted ? (
                 <GlassSurface
-                  width={isMobile ? 200 : 270}
+                  width={isMobile ? (locale === 'es' ? 224 : 200) : (locale === 'es' ? 294 : 270)}
                   height={isMobile ? 60 : 80}
                   borderRadius={50}
                   chromaticAberration={0.15}
@@ -248,7 +249,7 @@ export function HeroContent({
               <div className={`mobile-waitlist-btn-wrapper ${isMobileButtonActive ? 'active' : ''}`}>
                 {isMounted ? (
                   <GlassSurface
-                    width={200}
+                    width={locale === 'es' ? 224 : 200}
                     height={60}
                     borderRadius={50}
                     chromaticAberration={0.15}
