@@ -97,14 +97,19 @@
           { "question": "Why would I use Beelia instead of Google or directories?", "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store." },
           { "question": "Do I have to switch tools if I stop using Beelia?", "answer": "No. Tools are independent. Beelia never locks you in." },
           { "question": "Can I manage multiple AI subscriptions in one place?", "answer": "Yes. Beelia gives you a unified place to track subscriptions, access details, and renewals." },
-          { "question": "Can I try tools before committing?", "answer": "Many tools offer demos, previews, or trial access depending on the creator." },
+
           { "question": "How does billing work?", "answer": "One account, one dashboard, one place to manage all subscriptions and receipts." },
           { "question": "Can I cancel subscriptions anytime?", "answer": "Yes. No lock-ins. Full control from your dashboard." },
           { "question": "How do I know which tools are trustworthy?", "answer": "Beelia verifies both creators and tools, and uses reviews and performance signals." },
           { "question": "Is my data safe?", "answer": "We enforce platform-level security standards and transparency around how tools handle data." },
           { "question": "How do I know which AI tool is right for me?", "answer": "Tools are categorized, described clearly, and compared based on real use cases, not hype." },
           { "question": "Can Beelia replace multiple AI subscriptions?", "answer": "That’s the goal, one platform instead of scattered tools everywhere." },
-          { "question": "What problems does Beelia save me from?", "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time." }
+          { "question": "What problems does Beelia save me from?", "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time." },
+          { "question": "Why should I subscribe through Beelia instead of directly on the creator’s website?", "answer": "Many users discover AI tools through search, social media, or creator websites, especially to explore demos or free trials. Beelia becomes valuable at the moment you decide to commit. Subscribing through Beelia provides a platform backed relationship, centralized billing, clear records, and long term management, rather than a direct dependency on a single early stage tool or vendor." },
+          { "question": "Will I still use the creator’s own dashboard if I subscribe through Beelia?", "answer": "Yes. AI tools listed on Beelia operate on their own infrastructure and dashboards. Beelia does not replace how you use a tool day to day. Instead, it manages everything around the tool, including subscriptions, billing, records, and trust." },
+          { "question": "If tools have their own dashboards, what does Beelia actually centralize?", "answer": "Beelia centralizes everything outside the product interface. This includes subscriptions, renewals, invoices, access records, change notifications, and accountability, allowing you to manage your AI stack without juggling multiple vendors and payment relationships." },
+          { "question": "Can I still subscribe directly to a tool if I want to?", "answer": "Yes. Beelia does not block or hide creators. However, subscriptions made directly outside Beelia are not managed, monitored, or supported by the platform. Once you leave Beelia and subscribe elsewhere, any payment, access, or dispute is handled solely between you and the creator. Subscriptions made through Beelia benefit from platform level security, verification, and ongoing oversight, reducing the risk of scams, unexpected changes, or loss of access." },
+          { "question": "What happens if a creator changes pricing, access, or disappears?", "answer": "Beelia continuously monitors listed tools and creator activity. If a tool changes materially, raises risk, or becomes unavailable, Beelia can notify users, provide visibility into changes, and maintain a clear record of what you subscribed to and when, reducing long term risk compared to unmanaged direct subscriptions." }
         ],
         "forCreators": [
           { "question": "Who can sell AI tools on Beelia?", "answer": "Anyone with a functional AI tool, from indie developers to startups or big corporations." },
@@ -114,7 +119,8 @@
           { "question": "Can I promote my tool on Beelia?", "answer": "Yes. Boosts and highlights increase exposure inside the marketplace." },
           { "question": "Do creators keep ownership of their IP?", "answer": "Yes. You own your models and tools, Beelia is the distribution layer." },
           { "question": "How fast can I launch a tool?", "answer": "In minutes, not months." },
-          { "question": "Why choose Beelia over building my own site?", "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments." }
+          { "question": "Why choose Beelia over building my own site?", "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments." },
+          { "question": "Why would creators want users to subscribe through Beelia?", "answer": "Beelia gives creators trusted distribution, repeat demand, and a standardized way to reach serious users. Over time, creators often prefer Beelia subscriptions because they reduce friction, improve retention, and create a more stable and transparent customer relationship." }
         ],
         "trustSecurity": [
           { "question": "How does Beelia ensure tool quality?", "answer": "Through verification processes, clear disclosures, and ongoing review systems." },
@@ -568,14 +574,19 @@
           { "question": "¿Por qué usar Beelia?", "answer": "Porque descubrir herramientas hoy es caótico. Beelia trae estructura para que las herramientas sean accesibles y comparables." },
           { "question": "¿Debo cambiar si dejo de usar Beelia?", "answer": "No. Las herramientas son independientes. Beelia no te encierra." },
           { "question": "¿Puedo gestionar múltiples suscripciones?", "answer": "Sí. Un lugar unificado para rastrear suscripciones y renovaciones." },
-          { "question": "¿Puedo probar antes de comprometerme?", "answer": "Muchas herramientas ofrecen demos o pruebas." },
+
           { "question": "¿Cómo funciona la facturación?", "answer": "Una cuenta, un panel, un lugar para todas las suscripciones." },
           { "question": "¿Puedo cancelar en cualquier momento?", "answer": "Sí. Sin ataduras. Control total desde tu panel." },
           { "question": "¿Cómo sé qué es confiable?", "answer": "Beelia verifica creadores y herramientas, y usa reseñas." },
           { "question": "¿Mis datos están seguros?", "answer": "Aplicamos estándares de seguridad y transparencia." },
           { "question": "¿Cómo sé qué herramienta es para mí?", "answer": "Las herramientas están categorizadas y descritas claramente." },
           { "question": "¿Puede reemplazar múltiples suscripciones?", "answer": "Esa es la meta, una plataforma en lugar de herramientas dispersas." },
-          { "question": "¿De qué problemas me salva?", "answer": "Sobrecarga de herramientas, plataformas dudosas, precios poco claros y tiempo perdido." }
+          { "question": "¿De qué problemas me salva?", "answer": "Sobrecarga de herramientas, plataformas dudosas, precios poco claros y tiempo perdido." },
+          { "question": "¿Por qué debería suscribirme a través de Beelia en lugar de directamente en el sitio web del creador?", "answer": "Muchos usuarios descubren herramientas de IA a través de búsquedas, redes sociales o sitios web de creadores, especialmente para explorar demos o pruebas gratuitas. Beelia se vuelve valiosa en el momento en que decides comprometerte. Suscribirse a través de Beelia proporciona una relación respaldada por la plataforma, facturación centralizada, registros claros y gestión a largo plazo, en lugar de una dependencia directa de una única herramienta o proveedor en etapa temprana." },
+          { "question": "¿Seguiré usando el panel del propio creador si me suscribo a través de Beelia?", "answer": "Sí. Las herramientas de IA listadas en Beelia operan en su propia infraestructura y paneles. Beelia no reemplaza cómo usas una herramienta día a día. En su lugar, gestiona todo lo que rodea a la herramienta, incluidas las suscripciones, la facturación, los registros y la confianza." },
+          { "question": "¿Si las herramientas tienen sus propios paneles, qué centraliza realmente Beelia?", "answer": "Beelia centraliza todo fuera de la interfaz del producto. Esto incluye suscripciones, renovaciones, facturas, registros de acceso, notificaciones de cambios y responsabilidad, lo que te permite gestionar tu stack de IA sin hacer malabarismos con múltiples proveedores y relaciones de pago." },
+          { "question": "¿Todavía puedo suscribirme directamente a una herramienta si quiero?", "answer": "Sí. Beelia no bloquea ni oculta a los creadores. Sin embargo, las suscripciones realizadas directamente fuera de Beelia no son gestionadas, monitoreadas ni respaldadas por la plataforma. Una vez que sales de Beelia y te suscribes en otro lugar, cualquier pago, acceso o disputa se maneja únicamente entre tú y el creador. Las suscripciones realizadas a través de Beelia se benefician de la seguridad, verificación y supervisión continua a nivel de plataforma, reduciendo el riesgo de estafas, cambios inesperados o pérdida de acceso." },
+          { "question": "¿Qué sucede si un creador cambia los precios, el acceso o desaparece?", "answer": "Beelia monitorea continuamente las herramientas listadas y la actividad de los creadores. Si una herramienta cambia materialmente, aumenta el riesgo o deja de estar disponible, Beelia puede notificar a los usuarios, proporcionar visibilidad sobre los cambios y mantener un registro claro de a qué te suscribiste y cuándo, reduciendo el riesgo a largo plazo en comparación con las suscripciones directas no gestionadas." }
         ],
         "forCreators": [
           { "question": "¿Quién puede vender en Beelia?", "answer": "Cualquiera con una herramienta de IA funcional." },
@@ -585,7 +596,8 @@
           { "question": "¿Puedo promocionar mi herramienta?", "answer": "Sí. Impulsos y destacados aumentan la exposición." },
           { "question": "¿Mantengo mi propiedad intelectual?", "answer": "Sí. Tú eres dueño de tus modelos y herramientas." },
           { "question": "¿Qué tan rápido puedo lanzar?", "answer": "En minutos, no meses." },
-          { "question": "¿Por qué elegir Beelia?", "answer": "Porque la distribución supera a la infraestructura. Beelia trae usuarios y confianza." }
+          { "question": "¿Por qué elegir Beelia?", "answer": "Porque la distribución supera a la infraestructura. Beelia trae usuarios y confianza." },
+          { "question": "¿Por qué querrían los creadores que los usuarios se suscriban a través de Beelia?", "answer": "Beelia ofrece a los creadores una distribución fiable, demanda recurrente y una forma estandarizada de llegar a usuarios serios. Con el tiempo, los creadores a menudo prefieren las suscripciones de Beelia porque reducen la fricción, mejoran la retención y crean una relación con el cliente más estable y transparente." }
         ],
         "trustSecurity": [
           { "question": "¿Cómo aseguran la calidad?", "answer": "Verificación, divulgación clara y revisión continua." },
