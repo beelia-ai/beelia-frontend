@@ -156,7 +156,7 @@ export function FAQ() {
 
           {/* Right Content Area */}
           <div className="flex-1">
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-2">
               {currentFAQs?.map((faq, index) => (
                 <div
                   key={index}
@@ -177,11 +177,10 @@ export function FAQ() {
                       <div className="relative w-10 h-10">
                         {/* Plus Sign */}
                         <div
-                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${
-                            hoveredQuestion === index
-                              ? "opacity-0 rotate-90 scale-75"
-                              : "opacity-100 rotate-0 scale-100"
-                          }`}
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${hoveredQuestion === index
+                            ? "opacity-0 rotate-90 scale-75"
+                            : "opacity-100 rotate-0 scale-100"
+                            }`}
                         >
                           {/* Circular background for plus */}
                           <div
@@ -221,11 +220,10 @@ export function FAQ() {
 
                         {/* Minus Sign */}
                         <div
-                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${
-                            hoveredQuestion === index
-                              ? "opacity-100 rotate-0 scale-100"
-                              : "opacity-0 -rotate-90 scale-75"
-                          }`}
+                          className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out ${hoveredQuestion === index
+                            ? "opacity-100 rotate-0 scale-100"
+                            : "opacity-0 -rotate-90 scale-75"
+                            }`}
                         >
                           {/* Circular background for minus */}
                           <div
@@ -265,7 +263,7 @@ export function FAQ() {
                           fontWeight: 400,
                           fontSize: "20px",
                           lineHeight: "140%",
-                          height: "44px",
+                          minHeight: "44px",
                           display: "flex",
                           alignItems: "center",
                         }}
