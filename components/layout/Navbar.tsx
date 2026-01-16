@@ -319,10 +319,23 @@ export function Navbar({ forceShow = false }: NavbarProps = {}) {
                     pointerEvents: "auto",
                     position: "relative",
                     zIndex: 10001,
-                    marginLeft: "8px", 
+                    marginLeft: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <span id="lang-toggle-text">{locale === 'en' ? t('spanish') : t('english')}</span>
+                  <Image
+                    src={locale === 'en' ? "/images/Spain.svg" : "/images/England.svg"}
+                    alt={locale === 'en' ? t('spanish') : t('english')}
+                    width={20}
+                    height={20}
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      objectFit: "contain",
+                    }}
+                  />
                 </button>
               </div>
             )}
