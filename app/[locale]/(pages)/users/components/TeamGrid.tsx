@@ -64,11 +64,24 @@ export function TeamGrid({
       cards: [
         {
           type: "profile" as const,
-          data: members[3], // Sanzhar Tashbenbetov
+          data: members[3], // Jinesh Varma
         },
         {
           type: "profile" as const,
-          data: members[4], // Naman Bhatt
+          data: members[4], // Emmanuel Ngwoke
+        },
+      ],
+    },
+    {
+      // Fourth row: 2 profile cards
+      cards: [
+        {
+          type: "profile" as const,
+          data: members[5], // Naman Bhatt
+        },
+        {
+          type: "profile" as const,
+          data: members[6], // Sanzhar Tashbenbetov
         },
       ],
     },
@@ -86,7 +99,7 @@ export function TeamGrid({
 
   const allProfileCards = teamGridData
     .flatMap((row) => row.cards)
-    .filter((card) => card.type === "profile");
+    .filter((card) => card.type === "profile" && card.data);
 
   // Rectangle opacity animation
   const rectangleOpacity = useTransform(scrollYMotion, (latest) => {

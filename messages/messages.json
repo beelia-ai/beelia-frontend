@@ -85,52 +85,168 @@
       },
       "items": {
         "whatIsBeelia": [
-          { "question": "What is Beelia?", "answer": "Beelia is an open marketplace where people can discover, subscribe to, and use AI tools, and where creators can monetize their AI tools." },
-          { "question": "How is Beelia different from AI directories or lists?", "answer": "Directories only link you out. Beelia lets you subscribe, manage, and use AI tools in one place with verified creators and unified billing." },
-          { "question": "How is Beelia different from ChatGPT’s App Store?", "answer": "ChatGPT helps you interact with AI inside chat. Beelia helps you adopt AI tools that live outside chat, with real dashboards, APIs, pricing, and ownership." },
-          { "question": "Is Beelia an app store for AI?", "answer": "Yes, conceptually. We’re doing for AI tools what app stores did for mobile apps: distribution, trust, and monetization." },
-          { "question": "Who is Beelia built for?", "answer": "Non-technical users, businesses, creators, developers, and teams who want AI that actually works, without complexity." },
-          { "question": "What problem does Beelia solve?", "answer": "AI is powerful but fragmented, unorganized, and hard to trust. Beelia centralizes discovery, access, and monetization." },
-          { "question": "Why build Beelia now?", "answer": "AI adoption is exploding, but there’s no clear marketplace leader yet. Timing matters, and this is the window." }
+          {
+            "question": "What is Beelia?",
+            "answer": "Beelia is an open marketplace where people can discover, subscribe to, and use AI tools, and where creators can monetize their AI tools."
+          },
+          {
+            "question": "How is Beelia different from AI directories or lists?",
+            "answer": "Directories only link you out. Beelia lets you subscribe, manage, and use AI tools in one place with verified creators and unified billing."
+          },
+          {
+            "question": "How is Beelia different from ChatGPT’s App Store?",
+            "answer": "ChatGPT helps you interact with AI inside chat. Beelia helps you adopt AI tools that live outside chat, with real dashboards, APIs, pricing, and ownership."
+          },
+          {
+            "question": "Is Beelia an app store for AI?",
+            "answer": "Yes, conceptually. We’re doing for AI tools what app stores did for mobile apps: distribution, trust, and monetization."
+          },
+          {
+            "question": "Who is Beelia built for?",
+            "answer": "Non-technical users, businesses, creators, developers, and teams who want AI that actually works, without complexity."
+          },
+          {
+            "question": "What problem does Beelia solve?",
+            "answer": "AI is powerful but fragmented, unorganized, and hard to trust. Beelia centralizes discovery, access, and monetization."
+          },
+          {
+            "question": "Why build Beelia now?",
+            "answer": "AI adoption is exploding, but there’s no clear marketplace leader yet. Timing matters, and this is the window."
+          }
         ],
         "forUsers": [
-          { "question": "Why would I use Beelia instead of Google or directories?", "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store." },
-          { "question": "Do I have to switch tools if I stop using Beelia?", "answer": "No. Tools are independent. Beelia never locks you in." },
-          { "question": "Can I manage multiple AI subscriptions in one place?", "answer": "Yes. Beelia gives you a unified place to track subscriptions, access details, and renewals." },
-
-          { "question": "How does billing work?", "answer": "One account, one dashboard, one place to manage all subscriptions and receipts." },
-          { "question": "Can I cancel subscriptions anytime?", "answer": "Yes. No lock-ins. Full control from your dashboard." },
-          { "question": "How do I know which tools are trustworthy?", "answer": "Beelia verifies both creators and tools, and uses reviews and performance signals." },
-          { "question": "Is my data safe?", "answer": "We enforce platform-level security standards and transparency around how tools handle data." },
-          { "question": "How do I know which AI tool is right for me?", "answer": "Tools are categorized, described clearly, and compared based on real use cases, not hype." },
-          { "question": "Can Beelia replace multiple AI subscriptions?", "answer": "That’s the goal, one platform instead of scattered tools everywhere." },
-          { "question": "What problems does Beelia save me from?", "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time." },
-          { "question": "Why should I subscribe through Beelia instead of directly on the creator’s website?", "answer": "Many users discover AI tools through search, social media, or creator websites, especially to explore demos or free trials. Beelia becomes valuable at the moment you decide to commit. Subscribing through Beelia provides a platform backed relationship, centralized billing, clear records, and long term management, rather than a direct dependency on a single early stage tool or vendor." },
-          { "question": "Will I still use the creator’s own dashboard if I subscribe through Beelia?", "answer": "Yes. AI tools listed on Beelia operate on their own infrastructure and dashboards. Beelia does not replace how you use a tool day to day. Instead, it manages everything around the tool, including subscriptions, billing, records, and trust." },
-          { "question": "If tools have their own dashboards, what does Beelia actually centralize?", "answer": "Beelia centralizes everything outside the product interface. This includes subscriptions, renewals, invoices, access records, change notifications, and accountability, allowing you to manage your AI stack without juggling multiple vendors and payment relationships." },
-          { "question": "Can I still subscribe directly to a tool if I want to?", "answer": "Yes. Beelia does not block or hide creators. However, subscriptions made directly outside Beelia are not managed, monitored, or supported by the platform. Once you leave Beelia and subscribe elsewhere, any payment, access, or dispute is handled solely between you and the creator. Subscriptions made through Beelia benefit from platform level security, verification, and ongoing oversight, reducing the risk of scams, unexpected changes, or loss of access." },
-          { "question": "What happens if a creator changes pricing, access, or disappears?", "answer": "Beelia continuously monitors listed tools and creator activity. If a tool changes materially, raises risk, or becomes unavailable, Beelia can notify users, provide visibility into changes, and maintain a clear record of what you subscribed to and when, reducing long term risk compared to unmanaged direct subscriptions." }
+          {
+            "question": "Why would I use Beelia instead of Google or directories?",
+            "answer": "Because the way AI tools are discovered today hasn’t caught up with how many of them exist. New tools launch every day, quality varies massively, and it’s increasingly hard to understand what’s worth your time without deep technical knowledge. Beelia exists to bring structure to that chaos, so AI tools feel approachable, comparable, and ready to use. Imagine trying to find a good app to download in a world without the App Store."
+          },
+          {
+            "question": "Do I have to switch tools if I stop using Beelia?",
+            "answer": "No. Tools are independent. Beelia never locks you in."
+          },
+          {
+            "question": "Can I manage multiple AI subscriptions in one place?",
+            "answer": "Yes. Beelia gives you a unified place to track subscriptions, access details, and renewals."
+          },
+          {
+            "question": "How does billing work?",
+            "answer": "One account, one dashboard, one place to manage all subscriptions and receipts."
+          },
+          {
+            "question": "Can I cancel subscriptions anytime?",
+            "answer": "Yes. No lock-ins. Full control from your dashboard."
+          },
+          {
+            "question": "How do I know which tools are trustworthy?",
+            "answer": "Beelia verifies both creators and tools, and uses reviews and performance signals."
+          },
+          {
+            "question": "Is my data safe?",
+            "answer": "We enforce platform-level security standards and transparency around how tools handle data."
+          },
+          {
+            "question": "How do I know which AI tool is right for me?",
+            "answer": "Tools are categorized, described clearly, and compared based on real use cases, not hype."
+          },
+          {
+            "question": "Can Beelia replace multiple AI subscriptions?",
+            "answer": "That’s the goal, one platform instead of scattered tools everywhere."
+          },
+          {
+            "question": "What problems does Beelia save me from?",
+            "answer": "Tool overload, sketchy platforms, unclear pricing, scattered subscriptions, and wasted time."
+          },
+          {
+            "question": "Why should I subscribe through Beelia instead of directly on the creator’s website?",
+            "answer": "Many users discover AI tools through search, social media, or creator websites, especially to explore demos or free trials. Beelia becomes valuable at the moment you decide to commit. Subscribing through Beelia provides a platform backed relationship, centralized billing, clear records, and long term management, rather than a direct dependency on a single early stage tool or vendor."
+          },
+          {
+            "question": "Will I still use the creator’s own dashboard if I subscribe through Beelia?",
+            "answer": "Yes. AI tools listed on Beelia operate on their own infrastructure and dashboards. Beelia does not replace how you use a tool day to day. Instead, it manages everything around the tool, including subscriptions, billing, records, and trust."
+          },
+          {
+            "question": "If tools have their own dashboards, what does Beelia actually centralize?",
+            "answer": "Beelia centralizes everything outside the product interface. This includes subscriptions, renewals, invoices, access records, change notifications, and accountability, allowing you to manage your AI stack without juggling multiple vendors and payment relationships."
+          },
+          {
+            "question": "Can I still subscribe directly to a tool if I want to?",
+            "answer": "Yes. Beelia does not block or hide creators. However, subscriptions made directly outside Beelia are not managed, monitored, or supported by the platform. Once you leave Beelia and subscribe elsewhere, any payment, access, or dispute is handled solely between you and the creator. Subscriptions made through Beelia benefit from platform level security, verification, and ongoing oversight, reducing the risk of scams, unexpected changes, or loss of access."
+          },
+          {
+            "question": "What happens if a creator changes pricing, access, or disappears?",
+            "answer": "Beelia continuously monitors listed tools and creator activity. If a tool changes materially, raises risk, or becomes unavailable, Beelia can notify users, provide visibility into changes, and maintain a clear record of what you subscribed to and when, reducing long term risk compared to unmanaged direct subscriptions."
+          }
         ],
         "forCreators": [
-          { "question": "Who can sell AI tools on Beelia?", "answer": "Anyone with a functional AI tool, from indie developers to startups or big corporations." },
-          { "question": "Do I need to build a full SaaS to sell on Beelia?", "answer": "No. Beelia removes the need to build billing, marketing, or distribution from scratch." },
-          { "question": "How do creators make money?", "answer": "Creators set prices. Beelia takes a platform commission on subscriptions." },
-          { "question": "How does Beelia help with discovery?", "answer": "Search, categories, rankings, boosts, and featured placements drive visibility." },
-          { "question": "Can I promote my tool on Beelia?", "answer": "Yes. Boosts and highlights increase exposure inside the marketplace." },
-          { "question": "Do creators keep ownership of their IP?", "answer": "Yes. You own your models and tools, Beelia is the distribution layer." },
-          { "question": "How fast can I launch a tool?", "answer": "In minutes, not months." },
-          { "question": "Why choose Beelia over building my own site?", "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments." },
-          { "question": "Why would creators want users to subscribe through Beelia?", "answer": "Beelia gives creators trusted distribution, repeat demand, and a standardized way to reach serious users. Over time, creators often prefer Beelia subscriptions because they reduce friction, improve retention, and create a more stable and transparent customer relationship." }
+          {
+            "question": "Who can sell AI tools on Beelia?",
+            "answer": "Anyone with a functional AI tool, from indie developers to startups or big corporations."
+          },
+          {
+            "question": "Do I need to build a full SaaS to sell on Beelia?",
+            "answer": "No. Beelia removes the need to build billing, marketing, or distribution from scratch."
+          },
+          {
+            "question": "How do creators make money?",
+            "answer": "Creators set prices. Beelia takes a platform commission on subscriptions."
+          },
+          {
+            "question": "How does Beelia help with discovery?",
+            "answer": "Search, categories, rankings, boosts, and featured placements drive visibility."
+          },
+          {
+            "question": "Can I promote my tool on Beelia?",
+            "answer": "Yes. Boosts and highlights increase exposure inside the marketplace."
+          },
+          {
+            "question": "Do creators keep ownership of their IP?",
+            "answer": "Yes. You own your models and tools, Beelia is the distribution layer."
+          },
+          {
+            "question": "How fast can I launch a tool?",
+            "answer": "In minutes, not months."
+          },
+          {
+            "question": "Why choose Beelia over building my own site?",
+            "answer": "Because distribution beats infrastructure. Beelia brings users, trust, and payments."
+          },
+          {
+            "question": "Why would creators want users to subscribe through Beelia?",
+            "answer": "Beelia gives creators trusted distribution, repeat demand, and a standardized way to reach serious users. Over time, creators often prefer Beelia subscriptions because they reduce friction, improve retention, and create a more stable and transparent customer relationship."
+          }
         ],
         "trustSecurity": [
-          { "question": "How does Beelia ensure tool quality?", "answer": "Through verification processes, clear disclosures, and ongoing review systems." },
-          { "question": "How does Beelia handle low-quality tools?", "answer": "Poor-performing tools are deprioritized or removed to protect the ecosystem." },
-          { "question": "Is Beelia a closed or open platform?", "answer": "Open. Anyone can build, list, and subscribe, no gatekeeping." },
-          { "question": "How does Beelia compare to ChatGPT’s app ecosystem?", "answer": "Beelia is open, tool-agnostic, and not limited to one AI provider or interface." },
-          { "question": "Can Beelia remove tools from the marketplace?", "answer": "Yes, if they violate trust, security, or quality standards." },
-          { "question": "What’s Beelia’s long-term vision?", "answer": "To become the default marketplace and infrastructure layer for AI." },
-          { "question": "Is Beelia available globally?", "answer": "Yes. Built for a global creator and user economy from day one." },
-          { "question": "Will Beelia always stay open and neutral?", "answer": "That’s core to the mission: independence from any single AI platform." }
+          {
+            "question": "How does Beelia ensure tool quality?",
+            "answer": "Through verification processes, clear disclosures, and ongoing review systems."
+          },
+          {
+            "question": "How does Beelia handle low-quality tools?",
+            "answer": "Poor-performing tools are deprioritized or removed to protect the ecosystem."
+          },
+          {
+            "question": "Is Beelia a closed or open platform?",
+            "answer": "Open. Anyone can build, list, and subscribe, no gatekeeping."
+          },
+          {
+            "question": "How does Beelia compare to ChatGPT’s app ecosystem?",
+            "answer": "Beelia is open, tool-agnostic, and not limited to one AI provider or interface."
+          },
+          {
+            "question": "Can Beelia remove tools from the marketplace?",
+            "answer": "Yes, if they violate trust, security, or quality standards."
+          },
+          {
+            "question": "What’s Beelia’s long-term vision?",
+            "answer": "To become the default marketplace and infrastructure layer for AI."
+          },
+          {
+            "question": "Is Beelia available globally?",
+            "answer": "Yes. Built for a global creator and user economy from day one."
+          },
+          {
+            "question": "Will Beelia always stay open and neutral?",
+            "answer": "That’s core to the mission: independence from any single AI platform."
+          }
         ]
       }
     },
@@ -253,26 +369,51 @@
           }
         },
         {
-          "name": "Sanzhar Tashbenbetov",
-          "role": "Founding Engineer",
-          "image": "/images/team/sanzhar.png",
-          "description": "Platform integrity and post-launch verification processes.",
-          "background": "Early technical contributor to Beelia involved during the foundational stages of the platform. Brings continuity and deep system familiarity that supports long-term platform reliability as Beelia transitions from MVP to public launch.",
+          "name": "Jinesh Varma",
+          "role": "Head of Product Engineering",
+          "image": "/images/jinesh.png",
+          "description": "Software product engineering, MVP execution, and user-centred implementation.",
+          "background": "Product-oriented Software Engineer with a foundation in embedded systems and experience building and executing real-world software products. Currently pursuing a Master’s in High-Tech Entrepreneurship at Harbour.Space, Barcelona. Focused on helping early-stage teams transform ideas into working software MVPs, emphasizing clarity, usability, and fast iteration.",
           "responsibilities": [
-            "Acts as a foundational technical reference for the platform",
-            "Supports engineering efforts as needed during the pre-launch phase",
-            "Takes responsibility for AI tool verification and platform trust processes post-launch",
-            "Helps ensure quality, reliability, and integrity of listed tools after launch"
+            "Leads software product engineering for early-stage MVP",
+            "Translates product ideas and user needs into clear software requirements",
+            "Works closely with founders and technical teams to implement and iterate software features",
+            "Ensures MVP is scalable, understandable, and easy for users to adopt",
+            "Supports rapid experimentation, validation, and feedback-driven product improvement"
           ],
           "coreStrengths": [
-            "System understanding and continuity",
-            "Technical analysis and validation",
-            "Platform reliability mindset",
-            "Detail-oriented problem assessment",
-            "Support in early-stage technical environments"
+            "Software-first product thinking",
+            "Translating complex logic into simple user-facing features",
+            "Clear communication across technical and non-technical teams",
+            "Calm execution in fast-moving, ambiguous environments",
+            "Strong interest in AI-enabled software and everyday digital products"
           ],
           "socials": {
-            "linkedin": "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+            "linkedin": "https://www.linkedin.com/in/jinesh-varma-674a63165/"
+          }
+        },
+        {
+          "name": "Emmanuel Ngwoke",
+          "role": "Founding Designer",
+          "image": "/images/Emmanuel.png",
+          "description": "Product vision, user experience, and feature prioritization.",
+          "background": "Product-focused designer and builder with experience designing and shipping user-centric digital products. Brings a strong understanding of usability, interface design, and translating user needs into scalable product solutions.",
+          "responsibilities": [
+            "Owns product vision and roadmap",
+            "Defines user experience across the platform",
+            "Translates user needs into clear product requirements",
+            "Works closely with CEO and Head of Product Engineering on feature prioritization",
+            "Ensures consistency, usability, and quality across all user-facing surfaces"
+          ],
+          "coreStrengths": [
+            "Product strategy & user discovery",
+            "UX/UI design systems",
+            "Translating user problems into features",
+            "Product prioritization and clarity",
+            "Design-led product thinking"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/emmanuel-ngwoke-92855123a/"
           }
         },
         {
@@ -297,6 +438,30 @@
           ],
           "socials": {
             "linkedin": "https://www.linkedin.com/in/naman-bhatt-7881581b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Sanzhar Tashbenbetov",
+          "role": "Software Engineer",
+          "image": "/images/team/sanzhar.png",
+          "description": "Leads the development of Beelia’s core technical foundation, ensuring reliability, scalability, and long-term viability.",
+          "background": "Early technical contributor to Beelia, involved from the very first stages of the platform. Brings deep familiarity with the system and long-term continuity, which is critical as Beelia scales and the product matures. Focused on making sure what we build is robust, scalable, and ready for real users, with particular attention to AI features, core infrastructure, and data reliability.",
+          "responsibilities": [
+            "Ensures the platform is built on a strong, reliable, and scalable technical foundation",
+            "Owns core system architecture, database stability, and long-term technical decisions",
+            "Oversees the quality and correctness of AI features across the product",
+            "Leads post-launch verification and trust processes for AI tools on the platform",
+            "Acts as a long-term technical anchor as the product and team grow",
+            "Takes on additional technical responsibilities as product needs evolve"
+          ],
+          "coreStrengths": [
+            "Deep understanding of the platform and its evolution",
+            "Strong focus on reliability, stability, and long-term quality",
+            "Clear thinking around AI features and system behavior",
+            "Detail-oriented approach to risk and edge cases"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           }
         }
       ]
@@ -490,26 +655,51 @@
           }
         },
         {
-          "name": "Sanzhar Tashbenbetov",
-          "role": "Ingeniero Fundador",
-          "image": "/images/team/sanzhar.png",
-          "description": "Integridad de la plataforma y procesos de verificación posteriores al lanzamiento.",
-          "background": "Contribuyente técnico temprano a Beelia involucrado durante las etapas fundamentales de la plataforma. Aporta continuidad y profunda familiaridad con el sistema que respalda la fiabilidad de la plataforma a largo plazo.",
+          "name": "Jinesh Varma",
+          "role": "Jefe de Ingeniería de Producto",
+          "image": "/images/jinesh.png",
+          "description": "Ingeniería de productos de software, ejecución de MVP e implementación centrada en el usuario.",
+          "background": "Ingeniero de software orientado al producto con base en sistemas embebidos y experiencia construyendo y ejecutando productos de software reales. Actualmente cursa un Máster en Emprendimiento de Alta Tecnología en Harbour.Space, Barcelona. Enfocado en ayudar a equipos en etapas tempranas a transformar ideas en MVPs de software funcionales, enfatizando la claridad, usabilidad e iteración rápida.",
           "responsibilities": [
-            "Actúa como referencia técnica fundamental para la plataforma",
-            "Apoya los esfuerzos de ingeniería según sea necesario durante la fase previa al lanzamiento",
-            "Asume la responsabilidad de la verificación de herramientas de IA y los procesos de confianza de la plataforma después del lanzamiento",
-            "Ayuda a garantizar la calidad, fiabilidad e integridad de las herramientas listadas después del lanzamiento"
+            "Lidera la ingeniería de productos de software para MVP en etapa temprana",
+            "Traduce ideas de productos y necesidades de los usuarios en requisitos de software claros",
+            "Trabaja en estrecha colaboración con fundadores y equipos técnicos para implementar e iterar características de software",
+            "Asegura que el MVP sea escalable, comprensible y fácil de adoptar para los usuarios",
+            "Apoya la experimentación rápida, validación y mejora del producto impulsada por el feedback"
           ],
           "coreStrengths": [
-            "Comprensión del sistema y continuidad",
-            "Análisis técnico y validación",
-            "Mentalidad de fiabilidad de la plataforma",
-            "Evaluación de problemas orientada al detalle",
-            "Soporte en entornos técnicos de etapa temprana"
+            "Pensamiento de producto centrado en el software",
+            "Traducción de lógica compleja en características simples para el usuario",
+            "Comunicación clara entre equipos técnicos y no técnicos",
+            "Ejecución calmada en entornos ambiguos y de rápido movimiento",
+            "Gran interés en el software habilitado por IA y productos digitales cotidianos"
           ],
           "socials": {
-            "linkedin": "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+            "linkedin": "https://www.linkedin.com/in/jinesh-varma-674a63165/"
+          }
+        },
+        {
+          "name": "Emmanuel Ngwoke",
+          "role": "Diseñador Fundador",
+          "image": "/images/Emmanuel.png",
+          "description": "Visión de producto, experiencia de usuario y priorización de características.",
+          "background": "Diseñador y constructor centrado en el producto con experiencia en el diseño y envío de productos digitales centrados en el usuario. Aporta una sólida comprensión de la usabilidad, el diseño de interfaces y la traducción de las necesidades del usuario en soluciones de productos escalables.",
+          "responsibilities": [
+            "Propietario de la visión y hoja de ruta del producto",
+            "Define la experiencia del usuario en toda la plataforma",
+            "Traduce las necesidades del usuario en requisitos de producto claros",
+            "Trabaja en estrecha colaboración con el CEO y el Jefe de Ingeniería de Producto en la priorización de funciones",
+            "Garantiza la consistencia, usabilidad y calidad en todas las superficies orientadas al usuario"
+          ],
+          "coreStrengths": [
+            "Estrategia de producto y descubrimiento de usuarios",
+            "Sistemas de diseño UX/UI",
+            "Traducción de problemas de los usuarios en funciones",
+            "Priorización y claridad del producto",
+            "Pensamiento de producto liderado por el diseño"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/emmanuel-ngwoke-92855123a/"
           }
         },
         {
@@ -534,6 +724,30 @@
           ],
           "socials": {
             "linkedin": "https://www.linkedin.com/in/naman-bhatt-7881581b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          }
+        },
+        {
+          "name": "Sanzhar Tashbenbetov",
+          "role": "Ingeniero de Software",
+          "image": "/images/team/sanzhar.png",
+          "description": "Lidera el desarrollo de la base técnica central de Beelia, asegurando la fiabilidad, escalabilidad y viabilidad a largo plazo.",
+          "background": "Contribuyente técnico temprano de Beelia, involucrado desde las primeras etapas de la plataforma. Aporta una profunda familiaridad con el sistema y continuidad a largo plazo, lo cual es fundamental a medida que Beelia escala y el producto madura. Enfocado en asegurar que lo que construimos sea robusto, escalable y esté listo para usuarios reales, con especial atención a las funciones de IA, la infraestructura central y la fiabilidad de los datos.",
+          "responsibilities": [
+            "Asegura que la plataforma se construya sobre una base técnica sólida, fiable y escalable",
+            "Propietario de la arquitectura central del sistema, la estabilidad de la base de datos y las decisiones técnicas a largo plazo",
+            "Supervisa la calidad y corrección de las funciones de IA en todo el producto",
+            "Lidera los procesos de verificación y confianza pos-lanzamiento para las herramientas de IA en la plataforma",
+            "Actúa como un ancla técnica a largo plazo a medida que el producto y el equipo crecen",
+            "Asume responsabilidades técnicas adicionales a medida que evolucionan las necesidades del producto"
+          ],
+          "coreStrengths": [
+            "Comprensión profunda de la plataforma y su evolución",
+            "Fuerte enfoque en la fiabilidad, la estabilidad y la calidad a largo plazo",
+            "Pensamiento claro sobre las funciones de IA y el comportamiento del sistema",
+            "Enfoque detallado de los riesgos y casos extremos"
+          ],
+          "socials": {
+            "linkedin": "https://www.linkedin.com/in/sanzhar-tashbenbetov-04a17737a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           }
         }
       ]
@@ -562,52 +776,168 @@
       },
       "items": {
         "whatIsBeelia": [
-          { "question": "¿Qué es Beelia?", "answer": "Beelia es un mercado abierto donde las personas pueden descubrir, suscribirse y usar herramientas de IA, y donde los creadores pueden monetizar sus herramientas de IA." },
-          { "question": "¿En qué se diferencia de directorios de IA?", "answer": "Los directorios solo te envían fuera. Beelia te permite suscribirte, gestionar y usar herramientas en un solo lugar con creadores verificados y facturación unificada." },
-          { "question": "¿Diferencia con la tienda de ChatGPT?", "answer": "ChatGPT es para chat. Beelia es para herramientas externas con paneles reales, APIs, precios y propiedad." },
-          { "question": "¿Es una tienda de apps para IA?", "answer": "Sí, conceptualmente. Hacemos por la IA lo que las tiendas hicieron por las apps móviles: distribución, confianza y monetización." },
-          { "question": "¿Para quién es Beelia?", "answer": "Usuarios no técnicos, empresas, creadores y equipos que quieren IA que funcione sin complejidad." },
-          { "question": "¿Qué problema resuelve?", "answer": "La IA está fragmentada y es difícil de confiar. Beelia centraliza el descubrimiento, acceso y monetización." },
-          { "question": "¿Por qué ahora?", "answer": "La adopción de IA explota, pero no hay un líder de mercado claro. El momento es ahora." }
+          {
+            "question": "¿Qué es Beelia?",
+            "answer": "Beelia es un mercado abierto donde las personas pueden descubrir, suscribirse y usar herramientas de IA, y donde los creadores pueden monetizar sus herramientas de IA."
+          },
+          {
+            "question": "¿En qué se diferencia de directorios de IA?",
+            "answer": "Los directorios solo te envían fuera. Beelia te permite suscribirte, gestionar y usar herramientas en un solo lugar con creadores verificados y facturación unificada."
+          },
+          {
+            "question": "¿Diferencia con la tienda de ChatGPT?",
+            "answer": "ChatGPT es para chat. Beelia es para herramientas externas con paneles reales, APIs, precios y propiedad."
+          },
+          {
+            "question": "¿Es una tienda de apps para IA?",
+            "answer": "Sí, conceptualmente. Hacemos por la IA lo que las tiendas hicieron por las apps móviles: distribución, confianza y monetización."
+          },
+          {
+            "question": "¿Para quién es Beelia?",
+            "answer": "Usuarios no técnicos, empresas, creadores y equipos que quieren IA que funcione sin complejidad."
+          },
+          {
+            "question": "¿Qué problema resuelve?",
+            "answer": "La IA está fragmentada y es difícil de confiar. Beelia centraliza el descubrimiento, acceso y monetización."
+          },
+          {
+            "question": "¿Por qué ahora?",
+            "answer": "La adopción de IA explota, pero no hay un líder de mercado claro. El momento es ahora."
+          }
         ],
         "forUsers": [
-          { "question": "¿Por qué usar Beelia?", "answer": "Porque descubrir herramientas hoy es caótico. Beelia trae estructura para que las herramientas sean accesibles y comparables." },
-          { "question": "¿Debo cambiar si dejo de usar Beelia?", "answer": "No. Las herramientas son independientes. Beelia no te encierra." },
-          { "question": "¿Puedo gestionar múltiples suscripciones?", "answer": "Sí. Un lugar unificado para rastrear suscripciones y renovaciones." },
-
-          { "question": "¿Cómo funciona la facturación?", "answer": "Una cuenta, un panel, un lugar para todas las suscripciones." },
-          { "question": "¿Puedo cancelar en cualquier momento?", "answer": "Sí. Sin ataduras. Control total desde tu panel." },
-          { "question": "¿Cómo sé qué es confiable?", "answer": "Beelia verifica creadores y herramientas, y usa reseñas." },
-          { "question": "¿Mis datos están seguros?", "answer": "Aplicamos estándares de seguridad y transparencia." },
-          { "question": "¿Cómo sé qué herramienta es para mí?", "answer": "Las herramientas están categorizadas y descritas claramente." },
-          { "question": "¿Puede reemplazar múltiples suscripciones?", "answer": "Esa es la meta, una plataforma en lugar de herramientas dispersas." },
-          { "question": "¿De qué problemas me salva?", "answer": "Sobrecarga de herramientas, plataformas dudosas, precios poco claros y tiempo perdido." },
-          { "question": "¿Por qué debería suscribirme a través de Beelia en lugar de directamente en el sitio web del creador?", "answer": "Muchos usuarios descubren herramientas de IA a través de búsquedas, redes sociales o sitios web de creadores, especialmente para explorar demos o pruebas gratuitas. Beelia se vuelve valiosa en el momento en que decides comprometerte. Suscribirse a través de Beelia proporciona una relación respaldada por la plataforma, facturación centralizada, registros claros y gestión a largo plazo, en lugar de una dependencia directa de una única herramienta o proveedor en etapa temprana." },
-          { "question": "¿Seguiré usando el panel del propio creador si me suscribo a través de Beelia?", "answer": "Sí. Las herramientas de IA listadas en Beelia operan en su propia infraestructura y paneles. Beelia no reemplaza cómo usas una herramienta día a día. En su lugar, gestiona todo lo que rodea a la herramienta, incluidas las suscripciones, la facturación, los registros y la confianza." },
-          { "question": "¿Si las herramientas tienen sus propios paneles, qué centraliza realmente Beelia?", "answer": "Beelia centraliza todo fuera de la interfaz del producto. Esto incluye suscripciones, renovaciones, facturas, registros de acceso, notificaciones de cambios y responsabilidad, lo que te permite gestionar tu stack de IA sin hacer malabarismos con múltiples proveedores y relaciones de pago." },
-          { "question": "¿Todavía puedo suscribirme directamente a una herramienta si quiero?", "answer": "Sí. Beelia no bloquea ni oculta a los creadores. Sin embargo, las suscripciones realizadas directamente fuera de Beelia no son gestionadas, monitoreadas ni respaldadas por la plataforma. Una vez que sales de Beelia y te suscribes en otro lugar, cualquier pago, acceso o disputa se maneja únicamente entre tú y el creador. Las suscripciones realizadas a través de Beelia se benefician de la seguridad, verificación y supervisión continua a nivel de plataforma, reduciendo el riesgo de estafas, cambios inesperados o pérdida de acceso." },
-          { "question": "¿Qué sucede si un creador cambia los precios, el acceso o desaparece?", "answer": "Beelia monitorea continuamente las herramientas listadas y la actividad de los creadores. Si una herramienta cambia materialmente, aumenta el riesgo o deja de estar disponible, Beelia puede notificar a los usuarios, proporcionar visibilidad sobre los cambios y mantener un registro claro de a qué te suscribiste y cuándo, reduciendo el riesgo a largo plazo en comparación con las suscripciones directas no gestionadas." }
+          {
+            "question": "¿Por qué usar Beelia?",
+            "answer": "Porque descubrir herramientas hoy es caótico. Beelia trae estructura para que las herramientas sean accesibles y comparables."
+          },
+          {
+            "question": "¿Debo cambiar si dejo de usar Beelia?",
+            "answer": "No. Las herramientas son independientes. Beelia no te encierra."
+          },
+          {
+            "question": "¿Puedo gestionar múltiples suscripciones?",
+            "answer": "Sí. Un lugar unificado para rastrear suscripciones y renovaciones."
+          },
+          {
+            "question": "¿Cómo funciona la facturación?",
+            "answer": "Una cuenta, un panel, un lugar para todas las suscripciones."
+          },
+          {
+            "question": "¿Puedo cancelar en cualquier momento?",
+            "answer": "Sí. Sin ataduras. Control total desde tu panel."
+          },
+          {
+            "question": "¿Cómo sé qué es confiable?",
+            "answer": "Beelia verifica creadores y herramientas, y usa reseñas."
+          },
+          {
+            "question": "¿Mis datos están seguros?",
+            "answer": "Aplicamos estándares de seguridad y transparencia."
+          },
+          {
+            "question": "¿Cómo sé qué herramienta es para mí?",
+            "answer": "Las herramientas están categorizadas y descritas claramente."
+          },
+          {
+            "question": "¿Puede reemplazar múltiples suscripciones?",
+            "answer": "Esa es la meta, una plataforma en lugar de herramientas dispersas."
+          },
+          {
+            "question": "¿De qué problemas me salva?",
+            "answer": "Sobrecarga de herramientas, plataformas dudosas, precios poco claros y tiempo perdido."
+          },
+          {
+            "question": "¿Por qué debería suscribirme a través de Beelia en lugar de directamente en el sitio web del creador?",
+            "answer": "Muchos usuarios descubren herramientas de IA a través de búsquedas, redes sociales o sitios web de creadores, especialmente para explorar demos o pruebas gratuitas. Beelia se vuelve valiosa en el momento en que decides comprometerte. Suscribirse a través de Beelia proporciona una relación respaldada por la plataforma, facturación centralizada, registros claros y gestión a largo plazo, en lugar de una dependencia directa de una única herramienta o proveedor en etapa temprana."
+          },
+          {
+            "question": "¿Seguiré usando el panel del propio creador si me suscribo a través de Beelia?",
+            "answer": "Sí. Las herramientas de IA listadas en Beelia operan en su propia infraestructura y paneles. Beelia no reemplaza cómo usas una herramienta día a día. En su lugar, gestiona todo lo que rodea a la herramienta, incluidas las suscripciones, la facturación, los registros y la confianza."
+          },
+          {
+            "question": "¿Si las herramientas tienen sus propios paneles, qué centraliza realmente Beelia?",
+            "answer": "Beelia centraliza todo fuera de la interfaz del producto. Esto incluye suscripciones, renovaciones, facturas, registros de acceso, notificaciones de cambios y responsabilidad, lo que te permite gestionar tu stack de IA sin hacer malabarismos con múltiples proveedores y relaciones de pago."
+          },
+          {
+            "question": "¿Todavía puedo suscribirme directamente a una herramienta si quiero?",
+            "answer": "Sí. Beelia no bloquea ni oculta a los creadores. Sin embargo, las suscripciones realizadas directamente fuera de Beelia no son gestionadas, monitoreadas ni respaldadas por la plataforma. Una vez que sales de Beelia y te suscribes en otro lugar, cualquier pago, acceso o disputa se maneja únicamente entre tú y el creador. Las suscripciones realizadas a través de Beelia se benefician de la seguridad, verificación y supervisión continua a nivel de plataforma, reduciendo el riesgo de estafas, cambios inesperados o pérdida de acceso."
+          },
+          {
+            "question": "¿Qué sucede si un creador cambia los precios, el acceso o desaparece?",
+            "answer": "Beelia monitorea continuamente las herramientas listadas y la actividad de los creadores. Si una herramienta cambia materialmente, aumenta el riesgo o deja de estar disponible, Beelia puede notificar a los usuarios, proporcionar visibilidad sobre los cambios y mantener un registro claro de a qué te suscribiste y cuándo, reduciendo el riesgo a largo plazo en comparación con las suscripciones directas no gestionadas."
+          }
         ],
         "forCreators": [
-          { "question": "¿Quién puede vender en Beelia?", "answer": "Cualquiera con una herramienta de IA funcional." },
-          { "question": "¿Necesito un SaaS completo?", "answer": "No. Beelia maneja facturación y distribución." },
-          { "question": "¿Cómo ganan dinero los creadores?", "answer": "Tú pones el precio. Beelia cobra una comisión." },
-          { "question": "¿Ayuda con el descubrimiento?", "answer": "Búsqueda, categorías, rankings y destacados." },
-          { "question": "¿Puedo promocionar mi herramienta?", "answer": "Sí. Impulsos y destacados aumentan la exposición." },
-          { "question": "¿Mantengo mi propiedad intelectual?", "answer": "Sí. Tú eres dueño de tus modelos y herramientas." },
-          { "question": "¿Qué tan rápido puedo lanzar?", "answer": "En minutos, no meses." },
-          { "question": "¿Por qué elegir Beelia?", "answer": "Porque la distribución supera a la infraestructura. Beelia trae usuarios y confianza." },
-          { "question": "¿Por qué querrían los creadores que los usuarios se suscriban a través de Beelia?", "answer": "Beelia ofrece a los creadores una distribución fiable, demanda recurrente y una forma estandarizada de llegar a usuarios serios. Con el tiempo, los creadores a menudo prefieren las suscripciones de Beelia porque reducen la fricción, mejoran la retención y crean una relación con el cliente más estable y transparente." }
+          {
+            "question": "¿Quién puede vender en Beelia?",
+            "answer": "Cualquiera con una herramienta de IA funcional."
+          },
+          {
+            "question": "¿Necesito un SaaS completo?",
+            "answer": "No. Beelia maneja facturación y distribución."
+          },
+          {
+            "question": "¿Cómo ganan dinero los creadores?",
+            "answer": "Tú pones el precio. Beelia cobra una comisión."
+          },
+          {
+            "question": "¿Ayuda con el descubrimiento?",
+            "answer": "Búsqueda, categorías, rankings y destacados."
+          },
+          {
+            "question": "¿Puedo promocionar mi herramienta?",
+            "answer": "Sí. Impulsos y destacados aumentan la exposición."
+          },
+          {
+            "question": "¿Mantengo mi propiedad intelectual?",
+            "answer": "Sí. Tú eres dueño de tus modelos y herramientas."
+          },
+          {
+            "question": "¿Qué tan rápido puedo lanzar?",
+            "answer": "En minutos, no meses."
+          },
+          {
+            "question": "¿Por qué elegir Beelia?",
+            "answer": "Porque la distribución supera a la infraestructura. Beelia trae usuarios y confianza."
+          },
+          {
+            "question": "¿Por qué querrían los creadores que los usuarios se suscriban a través de Beelia?",
+            "answer": "Beelia ofrece a los creadores una distribución fiable, demanda recurrente y una forma estandarizada de llegar a usuarios serios. Con el tiempo, los creadores a menudo prefieren las suscripciones de Beelia porque reducen la fricción, mejoran la retención y crean una relación con el cliente más estable y transparente."
+          }
         ],
         "trustSecurity": [
-          { "question": "¿Cómo aseguran la calidad?", "answer": "Verificación, divulgación clara y revisión continua." },
-          { "question": "¿Cómo manejan herramientas de baja calidad?", "answer": "Se despriorizan o eliminan." },
-          { "question": "¿Es una plataforma cerrada o abierta?", "answer": "Abierta. Cualquiera puede construir y listar." },
-          { "question": "¿Comparación con ecosistema de ChatGPT?", "answer": "Beelia es agnóstica a herramientas y proveedores." },
-          { "question": "¿Pueden eliminar herramientas?", "answer": "Sí, si violan estándares." },
-          { "question": "¿Visión a largo plazo?", "answer": "Ser el mercado e infraestructura por defecto para IA." },
-          { "question": "¿Disponible globalmente?", "answer": "Sí." },
-          { "question": "¿Se mantendrá neutral?", "answer": "Esa es la misión central." }
+          {
+            "question": "¿Cómo aseguran la calidad?",
+            "answer": "Verificación, divulgación clara y revisión continua."
+          },
+          {
+            "question": "¿Cómo manejan herramientas de baja calidad?",
+            "answer": "Se despriorizan o eliminan."
+          },
+          {
+            "question": "¿Es una plataforma cerrada o abierta?",
+            "answer": "Abierta. Cualquiera puede construir y listar."
+          },
+          {
+            "question": "¿Comparación con ecosistema de ChatGPT?",
+            "answer": "Beelia es agnóstica a herramientas y proveedores."
+          },
+          {
+            "question": "¿Pueden eliminar herramientas?",
+            "answer": "Sí, si violan estándares."
+          },
+          {
+            "question": "¿Visión a largo plazo?",
+            "answer": "Ser el mercado e infraestructura por defecto para IA."
+          },
+          {
+            "question": "¿Disponible globalmente?",
+            "answer": "Sí."
+          },
+          {
+            "question": "¿Se mantendrá neutral?",
+            "answer": "Esa es la misión central."
+          }
         ]
       }
     },

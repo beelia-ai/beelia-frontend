@@ -32,6 +32,9 @@ export function ProfileCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const t = useTranslations('Team');
 
+  // Return null if data is missing to prevent crash
+  if (!name) return null;
+
   // Unique ID for layout animation
   const layoutId = `profile-${name.replace(/\s+/g, "-").toLowerCase()}`;
 
