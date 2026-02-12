@@ -321,30 +321,6 @@
           }
         },
         {
-          "name": "Arshdeep Singh",
-          "role": "CTO",
-          "image": "/images/team/arsh.png",
-          "description": "Design, Development, AI Solutions, Tools integration, Tech leadership, and UX Solutions.",
-          "background": "Forward-thinking entrepreneur and product innovator with a proven track record of building successful ventures. Bringing over 5 years of experience in building products and leading teams.",
-          "responsibilities": [
-            "Leads technical architecture decisions and establishes development standards",
-            "Manages engineering team workflows and planning for product delivery",
-            "Evaluates and integrates AI tools and third-party services into the platform",
-            "Builds strategic technical partnerships and manages vendor relationships",
-            "Oversees platform development and ensures design implementation quality"
-          ],
-          "coreStrengths": [
-            "Product Design & UI/UX Expertise",
-            "High-Agency Leadership & Execution",
-            "Project & Product Management",
-            "Networking & Resource Orchestration",
-            "Software Development & Technical Foundation"
-          ],
-          "socials": {
-            "linkedin": "https://www.linkedin.com/in/065rsh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
-          }
-        },
-        {
           "name": "Juan Carlos Calvo Rivera",
           "role": "Head of Finance & Strategy",
           "image": "/images/team/rivera.png",
@@ -414,30 +390,6 @@
           ],
           "socials": {
             "linkedin": "https://www.linkedin.com/in/emmanuel-ngwoke-92855123a/"
-          }
-        },
-        {
-          "name": "Naman Bhatt",
-          "role": "Lead Developer",
-          "image": "/images/team/naman.png",
-          "description": "Tech innovation, Development, Tools Integration, Design implementation, App Performance, and App Analytics.",
-          "background": "Full-stack software engineer with a strong foundation in frontend technologies and modern web development. Brings expertise in building scalable, performant applications and implementing cutting-edge design solutions.",
-          "responsibilities": [
-            "Leads development of core platform features and technical integrations",
-            "Conducts code reviews and establishes technical standards for the engineering team",
-            "Implements performance monitoring and optimization strategies across the application",
-            "Collaborates with product and design teams to translate requirements into technical solutions",
-            "Troubleshoots and resolves critical production issues to ensure platform stability"
-          ],
-          "coreStrengths": [
-            "Fast-Paced Problem Solving & Execution",
-            "Scalable Architecture & Infrastructure Design",
-            "Performance Optimization & User Experience",
-            "Cross-Functional Collaboration & Technical Communication",
-            "Software Development Excellence"
-          ],
-          "socials": {
-            "linkedin": "https://www.linkedin.com/in/naman-bhatt-7881581b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           }
         },
         {
@@ -607,30 +559,6 @@
           }
         },
         {
-          "name": "Arshdeep Singh",
-          "role": "CTO",
-          "image": "/images/team/arsh.png",
-          "description": "Diseño, desarrollo, soluciones de IA, integración de herramientas, liderazgo técnico y soluciones de UX.",
-          "background": "Emprendedor con visión de futuro e innovador de productos con un historial probado de construcción de empresas exitosas. Aportando más de 5 años de experiencia en la construcción de productos y liderazgo de equipos.",
-          "responsibilities": [
-            "Lidera las decisiones de arquitectura técnica y establece estándares de desarrollo",
-            "Gestiona los flujos de trabajo del equipo de ingeniería y la planificación para la entrega del producto",
-            "Evalúa e integra herramientas de IA y servicios de terceros en la plataforma",
-            "Construye asociaciones técnicas estratégicas y gestiona relaciones con proveedores",
-            "Supervisa el desarrollo de la plataforma y asegura la calidad de la implementación del diseño"
-          ],
-          "coreStrengths": [
-            "Diseño de producto y experiencia en UI/UX",
-            "Liderazgo y ejecución de alta agencia",
-            "Gestión de proyectos y productos",
-            "Redes y orquestación de recursos",
-            "Desarrollo de software y base técnica"
-          ],
-          "socials": {
-            "linkedin": "https://www.linkedin.com/in/065rsh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
-          }
-        },
-        {
           "name": "Juan Carlos Calvo Rivera",
           "role": "Jefe de Finanzas y Estrategia",
           "image": "/images/team/rivera.png",
@@ -700,30 +628,6 @@
           ],
           "socials": {
             "linkedin": "https://www.linkedin.com/in/emmanuel-ngwoke-92855123a/"
-          }
-        },
-        {
-          "name": "Naman Bhatt",
-          "role": "Desarrollador Líder",
-          "image": "/images/team/naman.png",
-          "description": "Innovación tecnológica, desarrollo, integración de herramientas, implementación de diseño, rendimiento de aplicaciones y análisis de aplicaciones.",
-          "background": "Ingeniero de software full-stack con una sólida base en tecnologías frontend y desarrollo web moderno. Aporta experiencia en la construcción de aplicaciones escalables y de alto rendimiento y en la implementación de soluciones de diseño de vanguardia.",
-          "responsibilities": [
-            "Lidera el desarrollo de características principales de la plataforma e integraciones técnicas",
-            "Realiza revisiones de código y establece estándares técnicos para el equipo de ingeniería",
-            "Implementa estrategias de monitoreo y optimización del rendimiento en toda la aplicación",
-            "Colabora con los equipos de producto y diseño para traducir los requisitos en soluciones técnicas",
-            "Soluciona y resuelve problemas críticos de producción para garantizar la estabilidad de la plataforma"
-          ],
-          "coreStrengths": [
-            "Resolución de problemas y ejecución rápida",
-            "Diseño de arquitectura e infraestructura escalable",
-            "Optimización del rendimiento y experiencia del usuario",
-            "Colaboración interfuncional y comunicación técnica",
-            "Excelencia en el desarrollo de software"
-          ],
-          "socials": {
-            "linkedin": "https://www.linkedin.com/in/naman-bhatt-7881581b1?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           }
         },
         {

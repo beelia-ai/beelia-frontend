@@ -51,11 +51,11 @@ export function TeamGrid({
       cards: [
         {
           type: "profile" as const,
-          data: members[1], // Arshdeep Singh
+          data: members[1], // Juan Carlos Calvo Rivera
         },
         {
           type: "profile" as const,
-          data: members[2], // Juan Carlos Calvo Rivera
+          data: members[2], // Jinesh Varma
         },
       ],
     },
@@ -64,24 +64,11 @@ export function TeamGrid({
       cards: [
         {
           type: "profile" as const,
-          data: members[3], // Jinesh Varma
+          data: members[3], // Emmanuel Ngwoke
         },
         {
           type: "profile" as const,
-          data: members[4], // Emmanuel Ngwoke
-        },
-      ],
-    },
-    {
-      // Fourth row: 2 profile cards
-      cards: [
-        {
-          type: "profile" as const,
-          data: members[5], // Naman Bhatt
-        },
-        {
-          type: "profile" as const,
-          data: members[6], // Sanzhar Tashbenbetov
+          data: members[4], // Sanzhar Tashbenbetov
         },
       ],
     },
